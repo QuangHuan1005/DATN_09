@@ -662,7 +662,6 @@
                     </svg>
                 </button>
             </div>
-   
         </div>
         <div id="svg-defs" class="svg-defs hide">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

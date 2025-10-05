@@ -47,7 +47,7 @@ Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('
 
 // Đơn hàng người dùng
 Route::prefix('orders')
-    ->middleware('auth')
+    // ->middleware('auth')
     ->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('orders.index');
         Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
@@ -55,8 +55,10 @@ Route::prefix('orders')
 
 // Tài khoản cá nhân
 Route::prefix('account')
-    ->middleware('auth')
+    // ->middleware('auth')
     ->group(function () {
+        Route::get('/dashboard', [AccountController::class, 'dashboard'])->name('account.dashboard');
+        Route::get('/orders', [AccountController::class, 'orders'])->name('account.orders');
         Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
         Route::get('/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
     });

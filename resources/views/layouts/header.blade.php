@@ -247,7 +247,7 @@
                                                         <ul class="sub-menu">
                                                             <li
                                                                 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-445">
-                                                                <a href="../my-account/index.html"><span>My
+                                                                <a href="{{ route('account.dashboard') }}"><span>My
                                                                         account</span></a>
                                                             </li>
                                                             <li
