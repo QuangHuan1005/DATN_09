@@ -47,7 +47,7 @@ Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('
 
 // Đơn hàng người dùng
 Route::prefix('orders')
-    ->middleware('auth')
+    // ->middleware('auth')
     ->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('orders.index');
         Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
@@ -55,8 +55,10 @@ Route::prefix('orders')
 
 // Tài khoản cá nhân
 Route::prefix('account')
-    ->middleware('auth')
+    // ->middleware('auth')
     ->group(function () {
+        Route::get('/dashboard', [AccountController::class, 'dashboard'])->name('account.dashboard');
+        Route::get('/orders', [AccountController::class, 'orders'])->name('account.orders');
         Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
         Route::get('/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
     });
@@ -71,10 +73,10 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
-Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
-Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('forgot-password');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot-password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('forgot-password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('forgot-password.update');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
