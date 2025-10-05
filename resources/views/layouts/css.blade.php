@@ -420,9 +420,9 @@
         visibility: visible;
     }
 </style>
-	<link rel='stylesheet' id='woo-variation-swatches-css'
-		href='../../mixtas.b-cdn.net/wp-content/plugins/woo-variation-swatches/assets/css/frontend.mine98f.css?ver=1743737055'
-		type='text/css' media='all' />
+<link rel='stylesheet' id='woo-variation-swatches-css'
+    href='../../mixtas.b-cdn.net/wp-content/plugins/woo-variation-swatches/assets/css/frontend.mine98f.css?ver=1743737055'
+    type='text/css' media='all' />
 <style id='woo-variation-swatches-inline-css' type='text/css'>
     :root {
         --wvs-tick: url("data:image/svg+xml;utf8,%3Csvg filter='drop-shadow(0px 0px 2px rgb(0 0 0 / .8))' xmlns='http://www.w3.org/2000/svg'  viewBox='0 0 30 30'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='4' d='M4 16L11 23 27 7'/%3E%3C/svg%3E");
@@ -1445,4 +1445,24 @@
 				console.log("Failure at Presize of Slider:" + e)
 			}
 			//});
-		};</script>
+		};
+</script>
+<style>
+    .form-actions-extra {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .form-actions-extra a {
+        color: #0073aa;
+        /* xanh nhẹ */
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .form-actions-extra a:hover {
+        text-decoration: underline;
+    }
+</style>
