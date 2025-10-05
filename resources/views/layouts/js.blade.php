@@ -51,6 +51,9 @@
 <link rel='stylesheet' id='wc-blocks-style-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks2656.css?ver=wc-9.7.1'
     type='text/css' media='all' />
+<link rel='stylesheet' id='widget-heading-css'
+    href='../../mixtas.b-cdn.net/wp-content/plugins/elementor/assets/css/widget-heading.min87cc.css?ver=3.28.3'
+    type='text/css' media='all' />
 <link rel='stylesheet' id='kitify-banner-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/banner40d7.css?ver=1759215509'
     type='text/css' media='all' />
@@ -72,12 +75,35 @@
 <link rel='stylesheet' id='kitify-canvas-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/kitify-canvas40d7.css?ver=1759215509'
     type='text/css' media='all' />
+<link rel='stylesheet' id='kitify-breadcrumbs-css'
+    href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/breadcrumbs1a84.css?ver=1759215531'
+    type='text/css' media='all' />
 <link rel='stylesheet' id='elementor-post-1073-css'
     href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-10737d1c.css?ver=1743737314' type='text/css'
     media='all' />
 <link rel='stylesheet' id='kitify-woocommerce-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/kitify-woocommerce40d7.css?ver=1759215509'
     type='text/css' media='all' />
+<link rel='stylesheet' id='novaapf-style-css'
+    href='../../mixtas.b-cdn.net/wp-content/plugins/nova-ajax-product-filter/assets/css/novaapf-styles6c2d.css?ver=6.8.2'
+    type='text/css' media='all' />
+<link rel='stylesheet' id='font-awesome-css'
+    href='../../mixtas.b-cdn.net/wp-content/plugins/elementor/assets/lib/font-awesome/css/font-awesome.min1849.css?ver=4.7.0'
+    type='text/css' media='all' />
+<style id='font-awesome-inline-css' type='text/css'>
+    [data-font="FontAwesome"]:before {
+        font-family: 'FontAwesome' !important;
+        content: attr(data-icon) !important;
+        speak: none !important;
+        font-weight: normal !important;
+        font-variant: normal !important;
+        text-transform: none !important;
+        line-height: 1 !important;
+        font-style: normal !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+    }
+</style>
 <link rel='stylesheet' id='widget-social-icons-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/elementor/assets/css/widget-social-icons.min87cc.css?ver=3.28.3'
     type='text/css' media='all' />
@@ -88,7 +114,7 @@
     href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/custom-widget-icon-list.minbea4.css?ver=1743737085'
     type='text/css' media='all' />
 <link rel='stylesheet' id='kitify-subscribe-form-css'
-    href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/subscribe-form40d7.css?ver=1759215509'
+    href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/subscribe-form1a84.css?ver=1759215531'
     type='text/css' media='all' />
 <link rel='stylesheet' id='widget-image-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/elementor/assets/css/widget-image.min87cc.css?ver=3.28.3'
@@ -263,6 +289,15 @@
 <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/order-attribution.min04d4.js?ver=9.7.1"
     id="wc-order-attribution-js"></script>
+<script type="text/javascript" id="novaapf-script-js-extra">
+    /* <![CDATA[ */
+		var novaapf_price_filter_params = { "currency_symbol": "$", "currency_pos": "left" };
+		var novaapf_params = { "shop_loop_container": ".novaapf-before-products", "not_found_container": ".novaapf-before-products", "pagination_container": ".woocommerce-pagination", "overlay_bg_color": "#fff", "sorting_control": "1", "scroll_to_top": "1", "scroll_to_top_offset": "150", "enable_font_awesome": "", "custom_scripts": "", "disable_transients": "" };
+		/* ]]> */
+</script>
+<script type="text/javascript"
+    src="../../mixtas.b-cdn.net/wp-content/plugins/nova-ajax-product-filter/assets/js/scripts11a8.js?ver=20120206"
+    id="novaapf-script-js"></script>
 <script type="text/javascript" id="wc-cart-fragments-js-extra">
     /* <![CDATA[ */
 		var wc_cart_fragments_params = { "ajax_url": "\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/?wc-ajax=%%endpoint%%", "cart_hash_key": "wc_cart_hash_5d3227775be22d377568ebad71c4a81b", "fragment_name": "wc_fragments_5d3227775be22d377568ebad71c4a81b", "request_timeout": "5000" };
@@ -321,6 +356,11 @@
     src="../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/nova-menu35ee.js?ver=1759215510"
     id="kitify-w__nova-menu-js"></script>
 <script type="text/javascript"
+    src="../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/toggle-sidebarbe54.js?ver=1759215532"
+    id="kitify-w__toggle-sidebar-js"></script>
+<script type="text/javascript"
+    src="../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/tabs35ee.js?ver=1759215510"
+    id="kitify-w__tabs-js"></script>
+<script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/subscribe-form35ee.js?ver=1759215510"
     id="kitify-w__subscribe-form-js"></script>
-<script type="text/javascript"

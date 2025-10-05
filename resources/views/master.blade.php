@@ -43,13 +43,10 @@
     @include('layouts.css')
 </head>
 
-<body
-    class="wp-singular page-template page-template-templates page-template-fullwidth page-template-templatesfullwidth-php page page-id-1052 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-mobile wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-1052 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
-    @include('home.index')
-    <!-- .kitify-site-wrapper -->
+@yield('content')
+<!-- .kitify-site-wrapper -->
 @include('layouts.js')
-        src="../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/tabs35ee.js?ver=1759215510"
-        id="kitify-w__tabs-js"></script>
+
 </body>
 
 <!-- Mirrored from mixtas.novaworks.net/home-v3/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Sep 2025 12:52:44 GMT -->
