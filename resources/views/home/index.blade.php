@@ -1,576 +1,35 @@
-<div class="site-wrapper">
+@extends('master')
+@section('content')
 
-    <div class="kitify-site-wrapper elementor-459kitify">
-        <div data-elementor-type="header" data-elementor-id="459"
-            class="elementor elementor-459 elementor-location-header">
-            <div class="elementor-element elementor-element-022ffb4 elementor-hidden-mobile e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                data-id="022ffb4" data-element_type="container">
-                <div class="e-con-inner">
-                    <div class="elementor-element elementor-element-dffb992 e-con-full elementor-hidden-mobile e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="dffb992" data-element_type="container">
-                        <div class="elementor-element elementor-element-dc6b9df elementor-widget elementor-widget-heading"
-                            data-id="dc6b9df" data-element_type="widget" data-widget_type="heading.default">
-                            <div class="elementor-widget-container">
-                                <span class="elementor-heading-title elementor-size-default">Miễn phí vận chuyển cho đơn
-                                    hàng từ 200k trở lên & Đổi hàng miễn phí</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="elementor-element elementor-element-1a37318 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="1a37318" data-element_type="container">
-                        <div class="elementor-element elementor-element-10d3432 elementor-widget kitify elementor-kitify-nav-menu"
-                            data-id="10d3432" data-element_type="widget" data-widget_type="kitify-nav-menu.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-nav-wrap">
-                                    <div class="menu-language-container">
-                                        <div class="kitify-nav kitify-nav--horizontal">
-                                            <div
-                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children kitify-nav__item-1114 kitify-nav__item">
-                                                <a href="#"
-                                                    class="menu-item-link menu-item-link-depth-0 menu-item-link-top"><span
-                                                        class="kitify-nav-link-text">English</span><i
-                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                <div class="kitify-nav__sub kitify-nav-depth-0">
-                                                    <div
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom kitify-nav__item-1115 kitify-nav__item kitify-nav-item-sub">
-                                                        <a href="#"
-                                                            class="menu-item-link menu-item-link-depth-1 menu-item-link-sub"><span
-                                                                class="kitify-nav-link-text">French</span></a>
-                                                    </div>
-                                                    <div
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom kitify-nav__item-1116 kitify-nav__item kitify-nav-item-sub">
-                                                        <a href="#"
-                                                            class="menu-item-link menu-item-link-depth-1 menu-item-link-sub"><span
-                                                                class="kitify-nav-link-text">German</span></a>
-                                                    </div>
-                                                    <div
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom kitify-nav__item-1117 kitify-nav__item kitify-nav-item-sub">
-                                                        <a href="#"
-                                                            class="menu-item-link menu-item-link-depth-1 menu-item-link-sub"><span
-                                                                class="kitify-nav-link-text">Spanish</span></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-f7ca775 elementor-widget kitify elementor-kitify-nav-menu"
-                            data-id="f7ca775" data-element_type="widget" data-widget_type="kitify-nav-menu.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-nav-wrap">
-                                    <div class="menu-currencies-container">
-                                        <div class="kitify-nav kitify-nav--horizontal">
-                                            <div
-                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children kitify-nav__item-1118 kitify-nav__item">
-                                                <a href="#"
-                                                    class="menu-item-link menu-item-link-depth-0 menu-item-link-top"><span
-                                                        class="kitify-nav-link-text">USD</span><i
-                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                <div class="kitify-nav__sub kitify-nav-depth-0">
-                                                    <div
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom kitify-nav__item-1119 kitify-nav__item kitify-nav-item-sub">
-                                                        <a href="#"
-                                                            class="menu-item-link menu-item-link-depth-1 menu-item-link-sub"><span
-                                                                class="kitify-nav-link-text">EURO</span></a>
-                                                    </div>
-                                                    <div
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom kitify-nav__item-1120 kitify-nav__item kitify-nav-item-sub">
-                                                        <a href="#"
-                                                            class="menu-item-link menu-item-link-depth-1 menu-item-link-sub"><span
-                                                                class="kitify-nav-link-text">AUD</span></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="elementor-element elementor-element-4c7c65b7 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                data-id="4c7c65b7" data-element_type="container"
-                data-settings="{&quot;background_background&quot;:&quot;classic&quot;,&quot;sticky&quot;:&quot;top&quot;,&quot;sticky_on&quot;:[&quot;desktop&quot;,&quot;tablet_extra&quot;,&quot;laptop&quot;],&quot;sticky_effects_offset&quot;:50,&quot;sticky_offset&quot;:0}">
-                <div class="e-con-inner">
-                    <div class="elementor-element elementor-element-1915fa38 e-con-full kitify-col-width-auto-mobile kitify-col-align-left e-flex ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="1915fa38" data-element_type="container">
-                        <div class="elementor-element elementor-element-2e9ed2a7 kitify-widget-align-none elementor-widget kitify elementor-kitify-logo"
-                            data-id="2e9ed2a7" data-element_type="widget" data-widget_type="kitify-logo.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-logo kitify-logo-type-image kitify-logo-display-block">
-                                    <a href="../index.html" class="kitify-logo__link"><img
-                                            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo.svg"
-                                            class="kitify-logo__img kitify-logo-default" alt="Mixtas" width="130"><img
-                                            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo_light.svg"
-                                            class="kitify-logo__img kitify-logo-light" alt="Mixtas" width="130"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="elementor-element elementor-element-3f8ec217 e-con-full kitify-disable-relative-yes e-flex kitify-col-width-auto-no ignore-docs-style-no e-con e-child"
-                        data-id="3f8ec217" data-element_type="container">
-                        <div class="elementor-element elementor-element-3726810d elementor-widget kitify elementor-kitify-nova-menu"
-                            data-id="3726810d" data-element_type="widget" data-widget_type="kitify-nova-menu.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-nova-menu kitify-nova-mobile-menu kitify-nova-menu--style-default"
-                                    data-mobile-breakpoint="1024">
-                                    <div class="kitify-nova-menu__mobile-trigger">
-                                        <a data-toggle="MenuOffCanvas_3726810d">
-                                            <span class="kitify-nova-menu__mobile-trigger-icon kitify-blocks-icon"><i
-                                                    aria-hidden="true" class="novaicon novaicon-menu-8-1"></i></span>
-                                        </a>
-                                    </div>
-                                    <nav class="main-navigation header-primary-nav">
-                                        <ul id="menu-main-menu" class="menu nav-menu">
-                                            <li id="menu-item-766"
-                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
-                                                <a href="../index.html"><span>Home</span><i
-                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                <ul class="sub-menu">
-                                                    <li id="menu-item-1645"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home">
-                                                        <a href="../index.html"><span>Home v1 —
-                                                                ChicCanvas</span></a>
-                                                    </li>
-                                                    <li id="menu-item-941"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../home-v2/index.html"><span>Home v2 —
-                                                                VogueVibes</span></a>
-                                                    </li>
-                                                    <li id="menu-item-1112"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1052 current_page_item">
-                                                        <a href="index.html"><span>Home v3 — ModaMatrix</span></a>
-                                                    </li>
-                                                    <li id="menu-item-1176"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../home-v4/index.html"><span>Home v4 —
-                                                                StyleSymphony</span></a>
-                                                    </li>
-                                                    <li id="menu-item-1316"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../home-v5/index.html"><span>Home v5 —
-                                                                TrendTapestry</span></a>
-                                                    </li>
-                                                    <li id="menu-item-1368"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../home-v6/index.html"><span>Home v6 —
-                                                                HauteHarmony</span></a>
-                                                    </li>
-                                                    <li id="menu-item-1551"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../home-v7/index.html"><span>Home v7 —
-                                                                EleganceEnclave</span></a>
-                                                    </li>
-                                                    <li id="menu-item-1604"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../home-v8/index.html"><span>Home v8 —
-                                                                CoutureCanvas</span></a>
-                                                    </li>
-                                                    <li id="menu-item-1641"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../home-v9/index.html"><span>Home v9 —
-                                                                UrbanUtopia</span></a>
-                                                    </li>
-                                                    <li id="menu-item-1644"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../home-v10/index.html"><span>Home v10 —
-                                                                SilkSculpt</span></a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li
-                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
-                                                <a href="../shop/index.html"><span>Shop</span><i
-                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                <ul class="sub-menu mega-menu">
-
-                                                    <li class="mega-menu-container container-custom"
-                                                        style="width: 1440px">
-
-                                                        <ul class='mega-menu-main'>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_4">
-                                                                <a href="#"><span>Shop Pages</span><i
-                                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                                <ul class="sub-menu">
-                                                                    <li
-                                                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
-                                                                        <a href="../shop/index.html"><span>Shop —
-                                                                                Left Sidebar</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-359">
-                                                                        <a
-                                                                            href="../shop/indexac59.html?theme_template_id=353"><span>Shop
-                                                                                — Right Sidebar</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-368">
-                                                                        <a
-                                                                            href="../shop/indexc1c5.html?theme_template_id=363"><span>Shop
-                                                                                — Fullwidth</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-375">
-                                                                        <a
-                                                                            href="../shop/index9a6d.html?theme_template_id=371"><span>Shop
-                                                                                — No Sidebar</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-382">
-                                                                        <a
-                                                                            href="../shop/index2568.html?theme_template_id=376"><span>Shop
-                                                                                — 2 Columns</span></a>
-                                                                    </li>
-                                                                </ul>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-408 mega-sub-menu col-1_4">
-                                                                <a href="#"><span>Product Layouts</span><i
-                                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                                <ul class="sub-menu">
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-409">
-                                                                        <a
-                                                                            href="../product/carhartt-american-script-sweat-tobacco/index.html"><span>Product
-                                                                                — Layout v1</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-414">
-                                                                        <a
-                                                                            href="../product/carhartt-american-script-sweat-tobacco/indexfab5.html?theme_template_id=410"><span>Product
-                                                                                — Layout v2</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-421">
-                                                                        <a
-                                                                            href="../product/carhartt-american-script-sweat-tobacco/index01cf.html?theme_template_id=417"><span>Product
-                                                                                — Layout v3</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-426">
-                                                                        <a
-                                                                            href="../product/carhartt-american-script-sweat-tobacco/index27db.html?theme_template_id=422"><span>Product
-                                                                                — Layout v4</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-435">
-                                                                        <a
-                                                                            href="../product/carhartt-american-script-sweat-tobacco/index978a.html?theme_template_id=430"><span>Product
-                                                                                — Layout v5</span></a>
-                                                                    </li>
-                                                                </ul>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-436 mega-sub-menu col-1_4">
-                                                                <a href="#"><span>Product Pages</span><i
-                                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                                <ul class="sub-menu">
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-437">
-                                                                        <a
-                                                                            href="../product/carhartt-detroit-jacket-summer-zeus-rigid/index.html"><span>Product
-                                                                                — Simple</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-438">
-                                                                        <a
-                                                                            href="../product/the-north-face-denali-jacket-summit-gold/index.html"><span>Product
-                                                                                — Variable</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-439">
-                                                                        <a
-                                                                            href="../product/carhartt-hooded-coach-jacket-cypress/index.html"><span>Product
-                                                                                — Grouped</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-440">
-                                                                        <a
-                                                                            href="../product/carhartt-windbreaker-pullover-winter-black/index.html"><span>Product
-                                                                                — External / Affiliate</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-441">
-                                                                        <a
-                                                                            href="../product/polar-welcome-to-the-new-age-ls-tee-black/index.html"><span>Product
-                                                                                — Out of Stock</span></a>
-                                                                    </li>
-                                                                </ul>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-442 mega-sub-menu col-1_4">
-                                                                <a href="#"><span>Core Pages</span><i
-                                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                                <ul class="sub-menu">
-                                                                    <li
-                                                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-445">
-                                                                        <a href="../my-account/index.html"><span>My
-                                                                                account</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-447">
-                                                                        <a href="../cart/index.html"><span>Shopping
-                                                                                Cart</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-446">
-                                                                        <a
-                                                                            href="../checkout/index.html"><span>Checkout</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-443">
-                                                                        <a href="../order-tracking/index.html"><span>Order
-                                                                                Tracking</span></a>
-                                                                    </li>
-                                                                    <li
-                                                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-444">
-                                                                        <a
-                                                                            href="../wishlist/index.html"><span>Wishlist</span></a>
-                                                                    </li>
-                                                                </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li id="menu-item-80"
-                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
-                                                <a href="#"><span>Pages</span><i
-                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                <ul class="sub-menu">
-                                                    <li id="menu-item-83"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../about-us/index.html"><span>About Us</span></a>
-                                                    </li>
-                                                    <li id="menu-item-81"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../faqs/index.html"><span>FAQs</span></a>
-                                                    </li>
-                                                    <li id="menu-item-82"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../order-tracking/index.html"><span>Order
-                                                                Tracking</span></a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li id="menu-item-77"
-                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
-                                                <a href="../blog/index.html"><span>Blog</span><i
-                                                        class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                <ul class="sub-menu">
-                                                    <li id="menu-item-644"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                        <a href="../blog/index.html"><span>Blog — Style
-                                                                01</span></a>
-                                                    </li>
-                                                    <li id="menu-item-643"
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom">
-                                                        <a href="../blog/indexc144.html?theme_template_id=637"><span>Blog
-                                                                — Style 02</span></a>
-                                                    </li>
-                                                    <li id="menu-item-652"
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom">
-                                                        <a href="../blog/index0f67.html?theme_template_id=646"><span>Blog
-                                                                — Style 03</span></a>
-                                                    </li>
-                                                    <li id="menu-item-645"
-                                                        class="menu-item menu-item-type-post_type menu-item-object-post">
-                                                        <a
-                                                            href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html"><span>Blog
-                                                                — Single</span></a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li id="menu-item-84"
-                                                class="menu-item menu-item-type-post_type menu-item-object-page"><a
-                                                    href="../contact-us/index.html"><span>Contact Us</span></a></li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="elementor-element elementor-element-40341a82 e-con-full kitify-col-width-auto-mobile kitify-col-align-right e-flex ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="40341a82" data-element_type="container">
-                        <div class="elementor-element elementor-element-789c1abd elementor-widget kitify elementor-kitify-search"
-                            data-id="789c1abd" data-element_type="widget" data-widget_type="kitify-search.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-search">
-                                    <div class="kitify-search__popup-trigger">
-                                        <div class="kitify-search__popup-trigger-container">
-                                            <a id="js_header_search_modal" href="#headerSearchModal"><span
-                                                    class="kitify-search__popup-trigger-icon kitify-blocks-icon"><svg
-                                                        xmlns="http://www.w3.org/2000/svg" width="20" height="21"
-                                                        viewBox="0 0 20 21" fill="none">
-                                                        <path d="M18.4375 18.9376L13.2988 13.7988" stroke="currentColor"
-                                                            stroke-width="1.2" stroke-linecap="round"
-                                                            stroke-linejoin="round"></path>
-                                                        <path
-                                                            d="M8.4375 15.8125C12.2345 15.8125 15.3125 12.7345 15.3125 8.9375C15.3125 5.14054 12.2345 2.0625 8.4375 2.0625C4.64054 2.0625 1.5625 5.14054 1.5625 8.9375C1.5625 12.7345 4.64054 15.8125 8.4375 15.8125Z"
-                                                            stroke="currentColor" stroke-width="1.2"
-                                                            stroke-linecap="round" stroke-linejoin="round"></path>
-                                                    </svg>
-                                                </span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-18b9cccf elementor-widget kitify elementor-kitify-menu-account"
-                            data-id="18b9cccf" data-element_type="widget"
-                            data-widget_type="kitify-menu-account.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-menu-account">
-                                    <div class="kitify-menu-account__box">
-                                        <a data-toggle="AcccountCanvas_Popup">
-                                            <span class="kitify-menu-account__icon kitify-blocks-icon"><svg
-                                                    xmlns="http://www.w3.org/2000/svg" width="20" height="21"
-                                                    viewBox="0 0 20 21" fill="none">
-                                                    <g clip-path="url(#clip0_188_1479)">
-                                                        <path
-                                                            d="M0.833313 19.6666C0.833313 15.0641 4.56415 11.3333 9.16665 11.3333H10.8333C15.4358 11.3333 19.1666 15.0641 19.1666 19.6666"
-                                                            stroke="currentColor" stroke-width="1.2"
-                                                            stroke-linecap="round" stroke-linejoin="round"></path>
-                                                        <path
-                                                            d="M10 11.3333C12.7614 11.3333 15 9.09468 15 6.33325C15 3.57183 12.7614 1.33325 10 1.33325C7.23858 1.33325 5 3.57183 5 6.33325C5 9.09468 7.23858 11.3333 10 11.3333Z"
-                                                            stroke="currentColor" stroke-width="1.2"
-                                                            stroke-linecap="round" stroke-linejoin="round"></path>
-                                                    </g>
-                                                    <defs>
-                                                        <clipPath id="clip0_188_1479">
-                                                            <rect width="20" height="20" fill="white"
-                                                                transform="translate(0 0.5)"></rect>
-                                                        </clipPath>
-                                                    </defs>
-                                                </svg></span> </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-16239ba6 elementor-hidden-mobile elementor-view-default elementor-widget elementor-widget-icon"
-                            data-id="16239ba6" data-element_type="widget" data-widget_type="icon.default">
-                            <div class="elementor-widget-container">
-                                <div class="elementor-icon-wrapper">
-                                    <a class="elementor-icon" href="../wishlist/index.html">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19"
-                                            viewBox="0 0 20 19" fill="none">
-                                            <g clip-path="url(#clip0_188_1484)">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M4.10276 1.53575C1.83186 2.44932 -0.014983 4.82626 0.26654 8.33725C0.477821 10.9722 1.93049 13.1153 3.64664 14.7279C5.36367 16.3412 7.39577 17.4739 8.89721 18.0966C9.41075 18.3095 9.98779 18.3219 10.512 18.1223C12.0881 17.5221 14.1129 16.3949 15.8125 14.7748C17.5105 13.1563 18.9254 11.004 19.1783 8.35972C19.6544 4.79448 17.7508 2.42314 15.4153 1.52878C13.4653 0.782019 11.0862 1.04962 9.7063 2.64136C8.31911 1.03756 6.02213 0.763589 4.10276 1.53575ZM4.59785 2.76642C6.37434 2.05175 8.28816 2.53025 9.1221 4.13032C9.23724 4.35131 9.46656 4.48909 9.71577 4.487C9.96498 4.48493 10.192 4.34333 10.3035 4.12045C11.0791 2.56964 13.0744 2.05275 14.941 2.76758C16.7373 3.45545 18.2576 5.26658 17.8619 8.19549C17.8607 8.20434 17.8596 8.21327 17.8588 8.22211C17.6487 10.4557 16.4499 12.3346 14.8972 13.8147C13.3432 15.2959 11.4761 16.3357 10.0401 16.8826C9.8371 16.9598 9.61062 16.9563 9.40536 16.8713C8.01666 16.2954 6.13049 15.2415 4.55499 13.7611C2.9786 12.28 1.76454 10.4225 1.58883 8.23122C1.35374 5.29932 2.86493 3.46358 4.59785 2.76642Z"
-                                                    fill="currentColor"></path>
-                                            </g>
-                                        </svg> </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-4cfba4d5 elementor-widget kitify elementor-kitify-nova-cart"
-                            data-id="4cfba4d5" data-element_type="widget" data-widget_type="kitify-nova-cart.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-nova-cart kitify-nova-cart-style-default kitify-nova-cart-label-off">
-                                    <a href="javascript:;" data-toggle="MiniCartCanvas_4cfba4d5">
-                                        <div class="header-cart-box">
-                                            <span class="kitify-nova-cart__icon kitify-blocks-icon"><svg
-                                                    xmlns="http://www.w3.org/2000/svg" width="18" height="21"
-                                                    viewBox="0 0 18 21" fill="none">
-                                                    <path
-                                                        d="M3.50856 19.643H13.6343C15.4114 19.643 16.8571 18.1972 16.8571 16.4201V6.78582C16.8571 6.47153 16.6 6.21439 16.2857 6.21439H12.8571V5.35725C12.8571 2.99439 10.9343 1.07153 8.57142 1.07153C6.20856 1.07153 4.2857 2.99439 4.2857 5.35725V6.21439H0.857134C0.542848 6.21439 0.285706 6.47153 0.285706 6.78582V16.4201C0.285706 18.1972 1.73142 19.643 3.50856 19.643ZM5.42856 5.35725C5.42856 3.62296 6.83713 2.21439 8.57142 2.21439C10.3057 2.21439 11.7143 3.62296 11.7143 5.35725V6.21439H5.42856V5.35725ZM1.42856 7.35725H4.2857V8.78582C4.2857 9.1001 4.54285 9.35725 4.85713 9.35725C5.17142 9.35725 5.42856 9.1001 5.42856 8.78582V7.35725H11.7143V8.78582C11.7143 9.1001 11.9714 9.35725 12.2857 9.35725C12.6 9.35725 12.8571 9.1001 12.8571 8.78582V7.35725H15.7143V16.4201C15.7143 17.5658 14.78 18.5001 13.6343 18.5001H3.50856C2.36285 18.5001 1.42856 17.5658 1.42856 16.4201V7.35725Z"
-                                                        fill="currentColor"></path>
-                                                </svg></span>
-                                            <div class="cart-text">
-                                                <div class="count-badge js_count_bag_item">0</div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="site-content" class="site-content-wrapper">
-            <div data-elementor-type="wp-page" data-elementor-id="1052" class="elementor elementor-1052">
-                <div class="elementor-element elementor-element-e97fddb e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                    data-id="e97fddb" data-element_type="container">
-                    <div class="e-con-inner">
-                        <div class="elementor-element elementor-element-0091745 elementor-invisible kitify-has-entrance-animation elementor-widget kitify elementor-kitify-banner"
-                            data-id="0091745" data-element_type="widget"
-                            data-settings="{&quot;_animation&quot;:&quot;kitifyShortFadeInUp&quot;}"
-                            data-widget_type="kitify-banner.default">
-                            <div class="elementor-widget-container">
-                                <figure class="kitify-banner kitify-effect-none"><a href="../shop/index.html"
-                                        class="kitify-banner__link">
-                                        <div class="kitify-banner__overlay"></div><img decoding="async"
-                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_01.jpg"
-                                            alt="m5_banner_01" class="kitify-banner__img">
-                                        <figcaption class="kitify-banner__content">
-                                            <div class="kitify-banner__content-wrap">
-                                                <div class="kitify-banner__sub-title">Urban Muse</div>
-                                                <h2 class="kitify-banner__title">City Chic with a Feminine Twist
-                                                </h2>
-                                                <div class="kitify-banner__button"><button type="button"
-                                                        class="elementor-button"><span
-                                                            class="elementor-button-text">Shop now</span></button>
-                                                </div>
-                                            </div>
-                                        </figcaption>
-                                    </a></figure>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="elementor-element elementor-element-cf77e9d e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                    data-id="cf77e9d" data-element_type="container">
-                    <div class="e-con-inner">
-                        <div class="elementor-element elementor-element-a1fc906 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
-                            data-id="a1fc906" data-element_type="container"
-                            data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;}">
-                            <div class="elementor-element elementor-element-aa1e472 elementor-widget kitify elementor-kitify-banner"
-                                data-id="aa1e472" data-element_type="widget" data-widget_type="kitify-banner.default">
+<body
+    class="wp-singular page-template page-template-templates page-template-fullwidth page-template-templatesfullwidth-php page page-id-1052 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-mobile wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-1052 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
+    <div class="site-wrapper">
+        <div class="kitify-site-wrapper elementor-459kitify">
+            @include('layouts.header')
+            <div id="site-content" class="site-content-wrapper">
+                <div data-elementor-type="wp-page" data-elementor-id="1052" class="elementor elementor-1052">
+                    <div class="elementor-element elementor-element-e97fddb e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        data-id="e97fddb" data-element_type="container">
+                        <div class="e-con-inner">
+                            <div class="elementor-element elementor-element-0091745 elementor-invisible kitify-has-entrance-animation elementor-widget kitify elementor-kitify-banner"
+                                data-id="0091745" data-element_type="widget"
+                                data-settings="{&quot;_animation&quot;:&quot;kitifyShortFadeInUp&quot;}"
+                                data-widget_type="kitify-banner.default">
                                 <div class="elementor-widget-container">
                                     <figure class="kitify-banner kitify-effect-none"><a href="../shop/index.html"
                                             class="kitify-banner__link">
                                             <div class="kitify-banner__overlay"></div><img decoding="async"
-                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_02.jpg"
-                                                alt="m5_banner_02" class="kitify-banner__img">
-                                            <figcaption class="kitify-banner__content">
-                                                <div class="kitify-banner__content-wrap">
-                                                    <h2 class="kitify-banner__title">Travel bags</h2>
-                                                    <div class="kitify-banner__button"><button type="button"
-                                                            class="elementor-button"><span
-                                                                class="elementor-button-text">Shop
-                                                                now</span></button></div>
-                                                </div>
-                                            </figcaption>
-                                        </a></figure>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-5ac6397 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
-                            data-id="5ac6397" data-element_type="container"
-                            data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;,&quot;animation_delay&quot;:500}">
-                            <div class="elementor-element elementor-element-53249df elementor-widget kitify elementor-kitify-banner"
-                                data-id="53249df" data-element_type="widget" data-widget_type="kitify-banner.default">
-                                <div class="elementor-widget-container">
-                                    <figure class="kitify-banner kitify-effect-none"><a href="../shop/index.html"
-                                            class="kitify-banner__link">
-                                            <div class="kitify-banner__overlay"></div><img decoding="async"
-                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_03.jpg"
-                                                alt="m5_banner_03" class="kitify-banner__img">
+                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_01.jpg"
+                                                alt="m5_banner_01" class="kitify-banner__img">
                                             <figcaption class="kitify-banner__content">
                                                 <div class="kitify-banner__content-wrap">
                                                     <div class="kitify-banner__sub-title">Urban Muse</div>
-                                                    <h2 class="kitify-banner__title">Classic Beauties for Modern
-                                                        Women</h2>
+                                                    <h2 class="kitify-banner__title">City Chic with a Feminine Twist
+                                                    </h2>
                                                     <div class="kitify-banner__button"><button type="button"
                                                             class="elementor-button"><span
-                                                                class="elementor-button-text">Shop
-                                                                now</span></button></div>
+                                                                class="elementor-button-text">Shop now</span></button>
+                                                    </div>
                                                 </div>
                                             </figcaption>
                                         </a></figure>
@@ -578,1090 +37,177 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="elementor-element elementor-element-dc8a335 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                    data-id="dc8a335" data-element_type="container">
-                    <div class="e-con-inner">
-                        <div class="elementor-element elementor-element-ea824d9 kitify_tab-full-no elementor-widget kitify elementor-kitify-tabs"
-                            data-id="ea824d9" data-element_type="widget" data-widget_type="kitify-tabs.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-tabs kitify-tabs-style-default kitify-tabs-position-top kitify-tabs-move-up-effect tab-as-dropdown"
-                                    data-settings="{&quot;activeIndex&quot;:0,&quot;event&quot;:&quot;click&quot;,&quot;autoSwitch&quot;:false,&quot;autoSwitchDelay&quot;:3000}">
-                                    <div class="kitify-tabs__control-wrapper">
-                                        <div class="kitify-tabs__controls--dd">
-                                            <div class="intro-text">You are in</div>
-                                            <div class="kitify-tabs__controls--ddw">
-                                                <div class="kitify-tabs__controls">
-                                                    <div id="kitify-tabs-control-2451"
-                                                        class="kitify-tabs__control kitify-tabs__control-icon-left active-tab"
-                                                        data-tab="1" tabindex="2451">
-                                                        <div class="kitify-tabs__control-inner">
-                                                            <div class="kitify-tabs__label">
-                                                                <div class="kitify-tabs__label-text">new arrivals
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                    <div class="elementor-element elementor-element-cf77e9d e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        data-id="cf77e9d" data-element_type="container">
+                        <div class="e-con-inner">
+                            <div class="elementor-element elementor-element-a1fc906 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
+                                data-id="a1fc906" data-element_type="container"
+                                data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;}">
+                                <div class="elementor-element elementor-element-aa1e472 elementor-widget kitify elementor-kitify-banner"
+                                    data-id="aa1e472" data-element_type="widget"
+                                    data-widget_type="kitify-banner.default">
+                                    <div class="elementor-widget-container">
+                                        <figure class="kitify-banner kitify-effect-none"><a href="../shop/index.html"
+                                                class="kitify-banner__link">
+                                                <div class="kitify-banner__overlay"></div><img decoding="async"
+                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_02.jpg"
+                                                    alt="m5_banner_02" class="kitify-banner__img">
+                                                <figcaption class="kitify-banner__content">
+                                                    <div class="kitify-banner__content-wrap">
+                                                        <h2 class="kitify-banner__title">Travel bags</h2>
+                                                        <div class="kitify-banner__button"><button type="button"
+                                                                class="elementor-button"><span
+                                                                    class="elementor-button-text">Shop
+                                                                    now</span></button></div>
                                                     </div>
-                                                    <div id="kitify-tabs-control-2452"
-                                                        class="kitify-tabs__control kitify-tabs__control-icon-left "
-                                                        data-tab="2" tabindex="2452">
-                                                        <div class="kitify-tabs__control-inner">
-                                                            <div class="kitify-tabs__label">
-                                                                <div class="kitify-tabs__label-text">best seller
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                </figcaption>
+                                            </a></figure>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-5ac6397 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
+                                data-id="5ac6397" data-element_type="container"
+                                data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;,&quot;animation_delay&quot;:500}">
+                                <div class="elementor-element elementor-element-53249df elementor-widget kitify elementor-kitify-banner"
+                                    data-id="53249df" data-element_type="widget"
+                                    data-widget_type="kitify-banner.default">
+                                    <div class="elementor-widget-container">
+                                        <figure class="kitify-banner kitify-effect-none"><a href="../shop/index.html"
+                                                class="kitify-banner__link">
+                                                <div class="kitify-banner__overlay"></div><img decoding="async"
+                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_03.jpg"
+                                                    alt="m5_banner_03" class="kitify-banner__img">
+                                                <figcaption class="kitify-banner__content">
+                                                    <div class="kitify-banner__content-wrap">
+                                                        <div class="kitify-banner__sub-title">Urban Muse</div>
+                                                        <h2 class="kitify-banner__title">Classic Beauties for Modern
+                                                            Women</h2>
+                                                        <div class="kitify-banner__button"><button type="button"
+                                                                class="elementor-button"><span
+                                                                    class="elementor-button-text">Shop
+                                                                    now</span></button></div>
                                                     </div>
-                                                    <div id="kitify-tabs-control-2453"
-                                                        class="kitify-tabs__control kitify-tabs__control-icon-left "
-                                                        data-tab="3" tabindex="2453">
-                                                        <div class="kitify-tabs__control-inner">
-                                                            <div class="kitify-tabs__label">
-                                                                <div class="kitify-tabs__label-text">trending</div>
-                                                            </div>
-                                                        </div>
+                                                </figcaption>
+                                            </a></figure>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="elementor-element elementor-element-dc8a335 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        data-id="dc8a335" data-element_type="container">
+                        <div class="e-con-inner">
+                            <div class="elementor-element elementor-element-ea824d9 kitify_tab-full-no elementor-widget kitify elementor-kitify-tabs"
+                                data-id="ea824d9" data-element_type="widget" data-widget_type="kitify-tabs.default">
+                                <div class="elementor-widget-container">
+                                    <div class="kitify-tabs kitify-tabs-style-default kitify-tabs-position-top kitify-tabs-move-up-effect tab-as-dropdown"
+                                        data-settings="{&quot;activeIndex&quot;:0,&quot;event&quot;:&quot;click&quot;,&quot;autoSwitch&quot;:false,&quot;autoSwitchDelay&quot;:3000}">
+                                        <div class="kitify-tabs__control-wrapper">
+                                            <div class="kitify-tabs__controls--dd">
+                                                <div class="intro-text">You are in</div>
+                                                <div class="kitify-tabs__controls--ddw">
+
+                                                    <div class="kitify-tabs__controls__tmp">
+                                                        <div class="kitify-tabs__controls__text">new arrivals</div>
                                                     </div>
-                                                </div>
-                                                <div class="kitify-tabs__controls__tmp">
-                                                    <div class="kitify-tabs__controls__text"></div><span
-                                                        class="dd-icon"><svg xmlns="http://www.w3.org/2000/svg"
-                                                            width="15" height="15" viewBox="0 0 15 15" fill="none">
-                                                            <g clip-path="url(#clip0_47_310)">
-                                                                <path
-                                                                    d="M1.66666 4.58337L7.49999 10.4167L13.3333 4.58337"
-                                                                    stroke="currentColor" stroke-width="2"
-                                                                    stroke-linecap="round" stroke-linejoin="round">
-                                                                </path>
-                                                            </g>
-                                                            <defs>
-                                                                <clipPath id="clip0_47_310">
-                                                                    <rect width="14" height="14" fill="white"
-                                                                        transform="translate(0.5 0.5)"></rect>
-                                                                </clipPath>
-                                                            </defs>
-                                                        </svg></span>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="kitify-tabs__content-wrapper">
-                                        <div id="kitify-tabs-content-2451" class="kitify-tabs__content active-content"
-                                            data-tab="1">
-                                            <div data-elementor-type="container" data-elementor-id="1073"
-                                                class="elementor elementor-1073">
-                                                <div class="elementor-element elementor-element-b2b7765 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                                                    data-id="b2b7765" data-element_type="container">
-                                                    <div class="e-con-inner">
-                                                        <div class="elementor-element elementor-element-b6286c7 custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-widget kitify elementor-kitify-wooproducts"
-                                                            data-id="b6286c7" data-element_type="widget"
-                                                            data-widget_type="kitify-wooproducts.default">
-                                                            <div class="elementor-widget-container">
-                                                                <div class="woocommerce  kitify_wc_widget_b6286c7_0">
-                                                                    <div class="kitify-products">
-                                                                        <div class="kitify-products__list_wrapper">
-                                                                            <ul
-                                                                                class="products ul_products kitify-products__list products-grid products-grid-1 col-row columns-4">
-
-
-                                                                                <li
-                                                                                    class="product_item product-grid-item product type-product post-159 status-publish first instock product_cat-hoodies product_cat-men product_tag-clothing product_tag-etc product_tag-fashion product_tag-m12 product_tag-men product_tag-products has-post-thumbnail shipping-taxable purchasable product-type-simple kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
-
-
-                                                                                    <div class="product-item">
-                                                                                        <div
-                                                                                            class="product-item__badges">
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="product-item__thumbnail">
-                                                                                            <div
-                                                                                                class="product-item__thumbnail_overlay">
-                                                                                            </div>
-                                                                                            <a class="product-item-link"
-                                                                                                href="../product/dime-classic-remastered-hoodie-black/index.html"></a>
-                                                                                            <div
-                                                                                                class="product-item__description--top-actions">
-
-                                                                                                <a href="indexdd10.html?add_to_wishlist=159"
-                                                                                                    data-product-id="159"
-                                                                                                    data-product-type="simple"
-                                                                                                    data-wishlist-url="../wishlist/index.html"
-                                                                                                    data-browse-wishlist-text="Browse wishlist"
-                                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                                    rel="nofollow">
-                                                                                                    <i
-                                                                                                        class="inova ic-favorite"></i>
-                                                                                                    <span
-                                                                                                        class="hidden add-text">Add
-                                                                                                        to
-                                                                                                        wishlist</span>
-                                                                                                    <span
-                                                                                                        class="hidden added-text">Browse
-                                                                                                        wishlist</span>
-                                                                                                </a>
-
-                                                                                                <a href="#"
-                                                                                                    class="nova_product_quick_view_btn"
-                                                                                                    data-product-id="159"
-                                                                                                    rel="nofollow"><i
-                                                                                                        class="inova ic-zoom"></i></a><a
-                                                                                                    href="indexe8b4.html?add-to-cart=159"
-                                                                                                    data-quantity="1"
-                                                                                                    class="button product_type_simple add_to_cart_button ajax_add_to_cart"
-                                                                                                    data-product_id="159"
-                                                                                                    data-product_sku=""
-                                                                                                    aria-label="Add to cart: &ldquo;Dime Classic Remastered Hoodie, black&rdquo;"
-                                                                                                    rel="nofollow"
-                                                                                                    data-success_message="&ldquo;Dime Classic Remastered Hoodie, black&rdquo; has been added to your cart"><svg
-                                                                                                        class="mixtas-addtocart">
-                                                                                                        <use xlink:href="#mixtas-addtocart"
-                                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                                        </use>
-                                                                                                    </svg><span
-                                                                                                        class="text">Add
-                                                                                                        to
-                                                                                                        cart</span></a>
-                                                                                                <span
-                                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_159"
-                                                                                                    class="screen-reader-text">
-                                                                                                </span>
-                                                                                            </div>
-
-
-                                                                                            <div
-                                                                                                class="product-item__thumbnail-placeholder">
-                                                                                                <a
-                                                                                                    href="../product/dime-classic-remastered-hoodie-black/index.html">
-                                                                                                    <img fetchpriority="high"
-                                                                                                        decoding="async"
-                                                                                                        width="700"
-                                                                                                        height="700"
-                                                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-700x700.jpg"
-                                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                                        alt=""
-                                                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1.jpg 1000w"
-                                                                                                        sizes="(max-width: 700px) 100vw, 700px" />
-                                                                                                </a>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div
-                                                                                            class="product-item__description">
-
-                                                                                            <div
-                                                                                                class="product-item__description--info">
-                                                                                                <div class="info-left">
-                                                                                                    <div
-                                                                                                        class="product-item__category">
-                                                                                                        <a class="content-product-cat"
-                                                                                                            href="../product-category/hoodies/index.html"
-                                                                                                            rel="tag">Hoodies</a>
-                                                                                                    </div> <a
-                                                                                                        href="../product/dime-classic-remastered-hoodie-black/index.html"
-                                                                                                        class="title">
-                                                                                                        <h3
-                                                                                                            class="woocommerce-loop-product__title">
-                                                                                                            Dime
-                                                                                                            Classic
-                                                                                                            Remastered
-                                                                                                            Hoodie,
-                                                                                                            black
-                                                                                                        </h3>
-                                                                                                    </a>
+                                        <div class="kitify-tabs__content-wrapper">
+                                            <div id="kitify-tabs-content-2451"
+                                                class="kitify-tabs__content active-content" data-tab="1">
+                                                <div data-elementor-type="container" data-elementor-id="1073"
+                                                    class="elementor elementor-1073">
+                                                    <div class="elementor-element elementor-element-b2b7765 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                                                        data-id="b2b7765" data-element_type="container">
+                                                        <div class="e-con-inner">
+                                                            <div class="elementor-element elementor-element-b6286c7 custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-widget kitify elementor-kitify-wooproducts"
+                                                                data-id="b6286c7" data-element_type="widget"
+                                                                data-widget_type="kitify-wooproducts.default">
+                                                                <div class="elementor-widget-container">
+                                                                    <div
+                                                                        class="woocommerce  kitify_wc_widget_b6286c7_0">
+                                                                        <div class="kitify-products">
+                                                                            <div class="kitify-products__list_wrapper">
+                                                                                <ul
+                                                                                    class="products ul_products kitify-products__list products-grid products-grid-1 col-row columns-4">
+                                                                                    <li
+                                                                                        class="product_item product-grid-item product type-product post-159 status-publish first instock product_cat-hoodies product_cat-men product_tag-clothing product_tag-etc product_tag-fashion product_tag-m12 product_tag-men product_tag-products has-post-thumbnail shipping-taxable purchasable product-type-simple kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
+                                                                                        @foreach ($products as $item)
+                                                                                            <div class="product-item">
+                                                                                                <div class="product-item__badges">
                                                                                                 </div>
-                                                                                                <div class="info-right">
-
-                                                                                                    <span
-                                                                                                        class="price"><span
-                                                                                                            class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                                    class="woocommerce-Price-currencySymbol">&#36;</span>140.00</bdi></span></span>
+                                                                                                <div class="product-item__thumbnail">
+                                                                                                    <div class="product-item__thumbnail_overlay">
+                                                                                                    </div>
+                                                                                                    <a class="product-item-link" href="{{ route('products.show', $item->id) }}"></a>
+                                                                                                    <div class="product-item__description--top-actions">
+                                                                                            
+                                                                                                        <a href="indexdd10.html?add_to_wishlist=159" data-product-id="159" data-product-type="simple"
+                                                                                                            data-wishlist-url="../wishlist/index.html" data-browse-wishlist-text="Browse wishlist"
+                                                                                                            class="nova_product_wishlist_btn add_to_wishlist" rel="nofollow">
+                                                                                                            <i class="inova ic-favorite"></i>
+                                                                                                            <span class="hidden add-text">Add
+                                                                                                                to
+                                                                                                                wishlist</span>
+                                                                                                            <span class="hidden added-text">Browse
+                                                                                                                wishlist</span>
+                                                                                                        </a>
+                                                                                            
+                                                                                                        <a href="#" class="nova_product_quick_view_btn" data-product-id="159" rel="nofollow"><i
+                                                                                                                class="inova ic-zoom"></i></a><a href="indexe8b4.html?add-to-cart=159" data-quantity="1"
+                                                                                                            class="button product_type_simple add_to_cart_button ajax_add_to_cart" data-product_id="159"
+                                                                                                            data-product_sku="" aria-label="Add to cart: &ldquo;Dime Classic Remastered Hoodie, black&rdquo;"
+                                                                                                            rel="nofollow"
+                                                                                                            data-success_message="&ldquo;Dime Classic Remastered Hoodie, black&rdquo; has been added to your cart"><svg
+                                                                                                                class="mixtas-addtocart">
+                                                                                                                <use xlink:href="#mixtas-addtocart" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                                                                                </use>
+                                                                                                            </svg><span class="text">Add
+                                                                                                                to
+                                                                                                                cart</span></a>
+                                                                                                        <span id="woocommerce_loop_add_to_cart_link_describedby_159" class="screen-reader-text">
+                                                                                                        </span>
+                                                                                                    </div>
+                                                                                            
+                                                                                            
+                                                                                                    <div class="product-item__thumbnail-placeholder">
+                                                                                                        <a href="../product/dime-classic-remastered-hoodie-black/index.html">
+                                                                                                            <img fetchpriority="high" decoding="async" width="700" height="700"
+                                                                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-700x700.jpg"
+                                                                                                                class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt=""
+                                                                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_06_1.jpg 1000w"
+                                                                                                                sizes="(max-width: 700px) 100vw, 700px" />
+                                                                                                        </a>
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-
-
-                                                                                </li>
-
-
-                                                                                <li
-                                                                                    class="product_item product-grid-item product type-product post-160 status-publish instock product_cat-men product_cat-tshirts product_tag-clothing product_tag-etc product_tag-fashion product_tag-m12 product_tag-men product_tag-products has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
-
-
-                                                                                    <div class="product-item">
-                                                                                        <div
-                                                                                            class="product-item__badges">
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="product-item__thumbnail">
-                                                                                            <div
-                                                                                                class="product-item__thumbnail_overlay">
-                                                                                            </div>
-                                                                                            <a class="product-item-link"
-                                                                                                href="../product/dime-sunny-tee-forest-green/index.html"></a>
-                                                                                            <div
-                                                                                                class="product-item__description--top-actions">
-
-                                                                                                <a href="indexf647.html?add_to_wishlist=160"
-                                                                                                    data-product-id="160"
-                                                                                                    data-product-type="variable"
-                                                                                                    data-wishlist-url="../wishlist/index.html"
-                                                                                                    data-browse-wishlist-text="Browse wishlist"
-                                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                                    rel="nofollow">
-                                                                                                    <i
-                                                                                                        class="inova ic-favorite"></i>
-                                                                                                    <span
-                                                                                                        class="hidden add-text">Add
-                                                                                                        to
-                                                                                                        wishlist</span>
-                                                                                                    <span
-                                                                                                        class="hidden added-text">Browse
-                                                                                                        wishlist</span>
-                                                                                                </a>
-
-                                                                                                <a href="#"
-                                                                                                    class="nova_product_quick_view_btn"
-                                                                                                    data-product-id="160"
-                                                                                                    rel="nofollow"><i
-                                                                                                        class="inova ic-zoom"></i></a><a
-                                                                                                    href="../product/dime-sunny-tee-forest-green/index.html"
-                                                                                                    data-quantity="1"
-                                                                                                    class="button product_type_variable add_to_cart_button"
-                                                                                                    data-product_id="160"
-                                                                                                    data-product_sku=""
-                                                                                                    aria-label="Select options for &ldquo;Dime Sunny Tee, forest green&rdquo;"
-                                                                                                    rel="nofollow"><svg
-                                                                                                        class="mixtas-addtocart">
-                                                                                                        <use xlink:href="#mixtas-addtocart"
-                                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                                        </use>
-                                                                                                    </svg><span
-                                                                                                        class="text">Select
-                                                                                                        options</span></a>
-                                                                                                <span
-                                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_160"
-                                                                                                    class="screen-reader-text">
-                                                                                                    This product has
-                                                                                                    multiple
-                                                                                                    variants. The
-                                                                                                    options may be
-                                                                                                    chosen on the
-                                                                                                    product page
-                                                                                                </span>
-                                                                                            </div>
-
-
-                                                                                            <div
-                                                                                                class="product-item__thumbnail-placeholder">
-                                                                                                <a
-                                                                                                    href="../product/dime-sunny-tee-forest-green/index.html">
-                                                                                                    <img decoding="async"
-                                                                                                        width="700"
-                                                                                                        height="700"
-                                                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_07_1-700x700.jpg"
-                                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                                        alt=""
-                                                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_07_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_07_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_07_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_07_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_07_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_07_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_07_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_07_1.jpg 1000w"
-                                                                                                        sizes="(max-width: 700px) 100vw, 700px" />
-                                                                                                </a>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div
-                                                                                            class="product-item__description">
-
-                                                                                            <div
-                                                                                                class="product-item__description--info">
-                                                                                                <div class="info-left">
-                                                                                                    <div
-                                                                                                        class="product-item__category">
-                                                                                                        <a class="content-product-cat"
-                                                                                                            href="../product-category/men/index.html"
-                                                                                                            rel="tag">Men</a>
-                                                                                                    </div> <a
-                                                                                                        href="../product/dime-sunny-tee-forest-green/index.html"
-                                                                                                        class="title">
-                                                                                                        <h3
-                                                                                                            class="woocommerce-loop-product__title">
-                                                                                                            Dime
-                                                                                                            Sunny
-                                                                                                            Tee,
-                                                                                                            forest
-                                                                                                            green
-                                                                                                        </h3>
-                                                                                                    </a>
+                                                                                            
+                                                                                                <div class="product-item__description">
+                                                                                            
+                                                                                                    <div class="product-item__description--info">
+                                                                                                        <div class="info-left">
+                                                                                                            <div class="product-item__category">
+                                                                                                                <a class="content-product-cat" href="../product-category/hoodies/index.html" rel="tag">Hoodies</a>
+                                                                                                            </div> <a href="../product/dime-classic-remastered-hoodie-black/index.html" class="title">
+                                                                                                                <h3 class="woocommerce-loop-product__title">
+                                                                                                                   {{ $item->name}}
+                                                                                                                </h3>
+                                                                                                            </a>
+                                                                                                        </div>
+                                                                                                        <div class="info-right">
+                                                                                            
+                                                                                                            <span class="price"><span class="woocommerce-Price-amount amount"><bdi><span
+                                                                                                                            class="woocommerce-Price-currencySymbol">&#36;</span>{{ $item->price }}</bdi></span></span>
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                                <div class="info-right">
-
-                                                                                                    <span
-                                                                                                        class="price"><span
-                                                                                                            class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                                    class="woocommerce-Price-currencySymbol">&#36;</span>55.00</bdi></span></span>
-                                                                                                </div>
+                                                                                            
                                                                                             </div>
-                                                                                        </div>
-
-                                                                                    </div>
-
-
-                                                                                </li>
-
-
-                                                                                <li
-                                                                                    class="product_item product-grid-item product type-product post-162 status-publish instock product_cat-men product_cat-tshirts product_tag-clothing product_tag-etc product_tag-fashion product_tag-m12 product_tag-men product_tag-products has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
-
-
-                                                                                    <div class="product-item">
-                                                                                        <div
-                                                                                            class="product-item__badges">
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="product-item__thumbnail">
-                                                                                            <div
-                                                                                                class="product-item__thumbnail_overlay">
-                                                                                            </div>
-                                                                                            <a class="product-item-link"
-                                                                                                href="../product/dime-classic-small-logo-sweatpants-black/index.html"></a>
-                                                                                            <div
-                                                                                                class="product-item__description--top-actions">
-
-                                                                                                <a href="index2699.html?add_to_wishlist=162"
-                                                                                                    data-product-id="162"
-                                                                                                    data-product-type="variable"
-                                                                                                    data-wishlist-url="../wishlist/index.html"
-                                                                                                    data-browse-wishlist-text="Browse wishlist"
-                                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                                    rel="nofollow">
-                                                                                                    <i
-                                                                                                        class="inova ic-favorite"></i>
-                                                                                                    <span
-                                                                                                        class="hidden add-text">Add
-                                                                                                        to
-                                                                                                        wishlist</span>
-                                                                                                    <span
-                                                                                                        class="hidden added-text">Browse
-                                                                                                        wishlist</span>
-                                                                                                </a>
-
-                                                                                                <a href="#"
-                                                                                                    class="nova_product_quick_view_btn"
-                                                                                                    data-product-id="162"
-                                                                                                    rel="nofollow"><i
-                                                                                                        class="inova ic-zoom"></i></a><a
-                                                                                                    href="../product/dime-classic-small-logo-sweatpants-black/index.html"
-                                                                                                    data-quantity="1"
-                                                                                                    class="button product_type_variable add_to_cart_button"
-                                                                                                    data-product_id="162"
-                                                                                                    data-product_sku=""
-                                                                                                    aria-label="Select options for &ldquo;Dime Classic Small Logo Sweatpants, black&rdquo;"
-                                                                                                    rel="nofollow"><svg
-                                                                                                        class="mixtas-addtocart">
-                                                                                                        <use xlink:href="#mixtas-addtocart"
-                                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                                        </use>
-                                                                                                    </svg><span
-                                                                                                        class="text">Select
-                                                                                                        options</span></a>
-                                                                                                <span
-                                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_162"
-                                                                                                    class="screen-reader-text">
-                                                                                                    This product has
-                                                                                                    multiple
-                                                                                                    variants. The
-                                                                                                    options may be
-                                                                                                    chosen on the
-                                                                                                    product page
-                                                                                                </span>
-                                                                                            </div>
-
-
-                                                                                            <div
-                                                                                                class="product-item__thumbnail-placeholder">
-                                                                                                <a
-                                                                                                    href="../product/dime-classic-small-logo-sweatpants-black/index.html">
-                                                                                                    <img decoding="async"
-                                                                                                        width="700"
-                                                                                                        height="700"
-                                                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_08_1-700x700.jpg"
-                                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                                        alt=""
-                                                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_08_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_08_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_08_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_08_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_08_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_08_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_08_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_08_1.jpg 1000w"
-                                                                                                        sizes="(max-width: 700px) 100vw, 700px" />
-                                                                                                </a>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div
-                                                                                            class="product-item__description">
-
-                                                                                            <div
-                                                                                                class="product-item__description--info">
-                                                                                                <div class="info-left">
-                                                                                                    <div
-                                                                                                        class="product-item__category">
-                                                                                                        <a class="content-product-cat"
-                                                                                                            href="../product-category/men/index.html"
-                                                                                                            rel="tag">Men</a>
-                                                                                                    </div> <a
-                                                                                                        href="../product/dime-classic-small-logo-sweatpants-black/index.html"
-                                                                                                        class="title">
-                                                                                                        <h3
-                                                                                                            class="woocommerce-loop-product__title">
-                                                                                                            Dime
-                                                                                                            Classic
-                                                                                                            Small
-                                                                                                            Logo
-                                                                                                            Sweatpants,
-                                                                                                            black
-                                                                                                        </h3>
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                                <div class="info-right">
-
-                                                                                                    <span
-                                                                                                        class="price"><span
-                                                                                                            class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                                    class="woocommerce-Price-currencySymbol">&#36;</span>135.00</bdi></span></span>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-
-
-                                                                                </li>
-
-
-                                                                                <li
-                                                                                    class="product_item product-grid-item product type-product post-164 status-publish last instock product_cat-men product_cat-sweatshirts product_tag-clothing product_tag-etc product_tag-fashion product_tag-m12 product_tag-men product_tag-products has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
-
-
-                                                                                    <div class="product-item">
-                                                                                        <div
-                                                                                            class="product-item__badges">
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="product-item__thumbnail">
-                                                                                            <div
-                                                                                                class="product-item__thumbnail_overlay">
-                                                                                            </div>
-                                                                                            <a class="product-item-link"
-                                                                                                href="../product/carhartt-american-script-sweat-tobacco/index.html"></a>
-                                                                                            <div
-                                                                                                class="product-item__description--top-actions">
-
-                                                                                                <a href="index3d49.html?add_to_wishlist=164"
-                                                                                                    data-product-id="164"
-                                                                                                    data-product-type="variable"
-                                                                                                    data-wishlist-url="../wishlist/index.html"
-                                                                                                    data-browse-wishlist-text="Browse wishlist"
-                                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                                    rel="nofollow">
-                                                                                                    <i
-                                                                                                        class="inova ic-favorite"></i>
-                                                                                                    <span
-                                                                                                        class="hidden add-text">Add
-                                                                                                        to
-                                                                                                        wishlist</span>
-                                                                                                    <span
-                                                                                                        class="hidden added-text">Browse
-                                                                                                        wishlist</span>
-                                                                                                </a>
-
-                                                                                                <a href="#"
-                                                                                                    class="nova_product_quick_view_btn"
-                                                                                                    data-product-id="164"
-                                                                                                    rel="nofollow"><i
-                                                                                                        class="inova ic-zoom"></i></a><a
-                                                                                                    href="../product/carhartt-american-script-sweat-tobacco/index.html"
-                                                                                                    data-quantity="1"
-                                                                                                    class="button product_type_variable add_to_cart_button"
-                                                                                                    data-product_id="164"
-                                                                                                    data-product_sku=""
-                                                                                                    aria-label="Select options for &ldquo;Carhartt American Script Sweat, tobacco&rdquo;"
-                                                                                                    rel="nofollow"><svg
-                                                                                                        class="mixtas-addtocart">
-                                                                                                        <use xlink:href="#mixtas-addtocart"
-                                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                                        </use>
-                                                                                                    </svg><span
-                                                                                                        class="text">Select
-                                                                                                        options</span></a>
-                                                                                                <span
-                                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_164"
-                                                                                                    class="screen-reader-text">
-                                                                                                    This product has
-                                                                                                    multiple
-                                                                                                    variants. The
-                                                                                                    options may be
-                                                                                                    chosen on the
-                                                                                                    product page
-                                                                                                </span>
-                                                                                            </div>
-
-
-                                                                                            <div
-                                                                                                class="product-item__thumbnail-placeholder">
-                                                                                                <a
-                                                                                                    href="../product/carhartt-american-script-sweat-tobacco/index.html">
-                                                                                                    <img loading="lazy"
-                                                                                                        decoding="async"
-                                                                                                        width="700"
-                                                                                                        height="700"
-                                                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_1-700x700.jpg"
-                                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                                        alt=""
-                                                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_1.jpg 1000w"
-                                                                                                        sizes="(max-width: 700px) 100vw, 700px" />
-                                                                                                </a>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div
-                                                                                            class="product-item__description">
-
-                                                                                            <div
-                                                                                                class="product-item__description--info">
-                                                                                                <div class="info-left">
-                                                                                                    <div
-                                                                                                        class="product-item__category">
-                                                                                                        <a class="content-product-cat"
-                                                                                                            href="../product-category/men/index.html"
-                                                                                                            rel="tag">Men</a>
-                                                                                                    </div> <a
-                                                                                                        href="../product/carhartt-american-script-sweat-tobacco/index.html"
-                                                                                                        class="title">
-                                                                                                        <h3
-                                                                                                            class="woocommerce-loop-product__title">
-                                                                                                            Carhartt
-                                                                                                            American
-                                                                                                            Script
-                                                                                                            Sweat,
-                                                                                                            tobacco
-                                                                                                        </h3>
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                                <div class="info-right">
-
-                                                                                                    <span
-                                                                                                        class="price"><span
-                                                                                                            class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                                    class="woocommerce-Price-currencySymbol">&#36;</span>100.00</bdi></span></span>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-
-
-                                                                                </li>
-
-
-                                                                                <li
-                                                                                    class="product_item product-grid-item product type-product post-166 status-publish first instock product_cat-bags product_cat-men product_tag-clothing product_tag-etc product_tag-fashion product_tag-m12 product_tag-men product_tag-products has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
-
-
-                                                                                    <div class="product-item">
-                                                                                        <div
-                                                                                            class="product-item__badges">
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="product-item__thumbnail">
-                                                                                            <div
-                                                                                                class="product-item__thumbnail_overlay">
-                                                                                            </div>
-                                                                                            <a class="product-item-link"
-                                                                                                href="../product/carhartt-essentials-bag-small-highland/index.html"></a>
-                                                                                            <div
-                                                                                                class="product-item__description--top-actions">
-
-                                                                                                <a href="indexb128.html?add_to_wishlist=166"
-                                                                                                    data-product-id="166"
-                                                                                                    data-product-type="variable"
-                                                                                                    data-wishlist-url="../wishlist/index.html"
-                                                                                                    data-browse-wishlist-text="Browse wishlist"
-                                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                                    rel="nofollow">
-                                                                                                    <i
-                                                                                                        class="inova ic-favorite"></i>
-                                                                                                    <span
-                                                                                                        class="hidden add-text">Add
-                                                                                                        to
-                                                                                                        wishlist</span>
-                                                                                                    <span
-                                                                                                        class="hidden added-text">Browse
-                                                                                                        wishlist</span>
-                                                                                                </a>
-
-                                                                                                <a href="#"
-                                                                                                    class="nova_product_quick_view_btn"
-                                                                                                    data-product-id="166"
-                                                                                                    rel="nofollow"><i
-                                                                                                        class="inova ic-zoom"></i></a><a
-                                                                                                    href="../product/carhartt-essentials-bag-small-highland/index.html"
-                                                                                                    data-quantity="1"
-                                                                                                    class="button product_type_variable add_to_cart_button"
-                                                                                                    data-product_id="166"
-                                                                                                    data-product_sku=""
-                                                                                                    aria-label="Select options for &ldquo;Carhartt Essentials Bag (small), highland&rdquo;"
-                                                                                                    rel="nofollow"><svg
-                                                                                                        class="mixtas-addtocart">
-                                                                                                        <use xlink:href="#mixtas-addtocart"
-                                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                                        </use>
-                                                                                                    </svg><span
-                                                                                                        class="text">Select
-                                                                                                        options</span></a>
-                                                                                                <span
-                                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_166"
-                                                                                                    class="screen-reader-text">
-                                                                                                    This product has
-                                                                                                    multiple
-                                                                                                    variants. The
-                                                                                                    options may be
-                                                                                                    chosen on the
-                                                                                                    product page
-                                                                                                </span>
-                                                                                            </div>
-
-
-                                                                                            <div
-                                                                                                class="product-item__thumbnail-placeholder">
-                                                                                                <a
-                                                                                                    href="../product/carhartt-essentials-bag-small-highland/index.html">
-                                                                                                    <img loading="lazy"
-                                                                                                        decoding="async"
-                                                                                                        width="700"
-                                                                                                        height="700"
-                                                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_10_1-700x700.jpg"
-                                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                                        alt=""
-                                                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_10_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_10_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_10_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_10_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_10_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_10_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_10_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_10_1.jpg 1000w"
-                                                                                                        sizes="(max-width: 700px) 100vw, 700px" />
-                                                                                                </a>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div
-                                                                                            class="product-item__description">
-
-                                                                                            <div
-                                                                                                class="product-item__description--info">
-                                                                                                <div class="info-left">
-                                                                                                    <div
-                                                                                                        class="product-item__category">
-                                                                                                        <a class="content-product-cat"
-                                                                                                            href="../product-category/bags/index.html"
-                                                                                                            rel="tag">Bags</a>
-                                                                                                    </div> <a
-                                                                                                        href="../product/carhartt-essentials-bag-small-highland/index.html"
-                                                                                                        class="title">
-                                                                                                        <h3
-                                                                                                            class="woocommerce-loop-product__title">
-                                                                                                            Carhartt
-                                                                                                            Essentials
-                                                                                                            Bag
-                                                                                                            (small),
-                                                                                                            highland
-                                                                                                        </h3>
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                                <div class="info-right">
-
-                                                                                                    <span
-                                                                                                        class="price"><span
-                                                                                                            class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                                    class="woocommerce-Price-currencySymbol">&#36;</span>55.00</bdi></span></span>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-
-
-                                                                                </li>
-
-
-                                                                                <li
-                                                                                    class="product_item product-grid-item product type-product post-168 status-publish instock product_cat-bags product_cat-men product_tag-clothing product_tag-etc product_tag-fashion product_tag-m12 product_tag-men product_tag-products has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
-
-
-                                                                                    <div class="product-item">
-                                                                                        <div
-                                                                                            class="product-item__badges">
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="product-item__thumbnail">
-                                                                                            <div
-                                                                                                class="product-item__thumbnail_overlay">
-                                                                                            </div>
-                                                                                            <a class="product-item-link"
-                                                                                                href="../product/parra-trees-in-wind-toiletry-bag-camo-green/index.html"></a>
-                                                                                            <div
-                                                                                                class="product-item__description--top-actions">
-
-                                                                                                <a href="indexb4cd.html?add_to_wishlist=168"
-                                                                                                    data-product-id="168"
-                                                                                                    data-product-type="variable"
-                                                                                                    data-wishlist-url="../wishlist/index.html"
-                                                                                                    data-browse-wishlist-text="Browse wishlist"
-                                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                                    rel="nofollow">
-                                                                                                    <i
-                                                                                                        class="inova ic-favorite"></i>
-                                                                                                    <span
-                                                                                                        class="hidden add-text">Add
-                                                                                                        to
-                                                                                                        wishlist</span>
-                                                                                                    <span
-                                                                                                        class="hidden added-text">Browse
-                                                                                                        wishlist</span>
-                                                                                                </a>
-
-                                                                                                <a href="#"
-                                                                                                    class="nova_product_quick_view_btn"
-                                                                                                    data-product-id="168"
-                                                                                                    rel="nofollow"><i
-                                                                                                        class="inova ic-zoom"></i></a><a
-                                                                                                    href="../product/parra-trees-in-wind-toiletry-bag-camo-green/index.html"
-                                                                                                    data-quantity="1"
-                                                                                                    class="button product_type_variable add_to_cart_button"
-                                                                                                    data-product_id="168"
-                                                                                                    data-product_sku=""
-                                                                                                    aria-label="Select options for &ldquo;Parra Trees in Wind Toiletry Bag, camo green&rdquo;"
-                                                                                                    rel="nofollow"><svg
-                                                                                                        class="mixtas-addtocart">
-                                                                                                        <use xlink:href="#mixtas-addtocart"
-                                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                                        </use>
-                                                                                                    </svg><span
-                                                                                                        class="text">Select
-                                                                                                        options</span></a>
-                                                                                                <span
-                                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_168"
-                                                                                                    class="screen-reader-text">
-                                                                                                    This product has
-                                                                                                    multiple
-                                                                                                    variants. The
-                                                                                                    options may be
-                                                                                                    chosen on the
-                                                                                                    product page
-                                                                                                </span>
-                                                                                            </div>
-
-
-                                                                                            <div
-                                                                                                class="product-item__thumbnail-placeholder">
-                                                                                                <a
-                                                                                                    href="../product/parra-trees-in-wind-toiletry-bag-camo-green/index.html">
-                                                                                                    <img loading="lazy"
-                                                                                                        decoding="async"
-                                                                                                        width="700"
-                                                                                                        height="700"
-                                                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_11_1-700x700.jpg"
-                                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                                        alt=""
-                                                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_11_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_11_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_11_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_11_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_11_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_11_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_11_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_11_1.jpg 1000w"
-                                                                                                        sizes="(max-width: 700px) 100vw, 700px" />
-                                                                                                </a>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div
-                                                                                            class="product-item__description">
-
-                                                                                            <div
-                                                                                                class="product-item__description--info">
-                                                                                                <div class="info-left">
-                                                                                                    <div
-                                                                                                        class="product-item__category">
-                                                                                                        <a class="content-product-cat"
-                                                                                                            href="../product-category/bags/index.html"
-                                                                                                            rel="tag">Bags</a>
-                                                                                                    </div> <a
-                                                                                                        href="../product/parra-trees-in-wind-toiletry-bag-camo-green/index.html"
-                                                                                                        class="title">
-                                                                                                        <h3
-                                                                                                            class="woocommerce-loop-product__title">
-                                                                                                            Parra
-                                                                                                            Trees in
-                                                                                                            Wind
-                                                                                                            Toiletry
-                                                                                                            Bag,
-                                                                                                            camo
-                                                                                                            green
-                                                                                                        </h3>
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                                <div class="info-right">
-
-                                                                                                    <span
-                                                                                                        class="price"><span
-                                                                                                            class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                                    class="woocommerce-Price-currencySymbol">&#36;</span>85.00</bdi></span></span>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-
-
-                                                                                </li>
-
-
-                                                                                <li
-                                                                                    class="product_item product-grid-item product type-product post-170 status-publish instock product_cat-men product_cat-tshirts product_tag-clothing product_tag-etc product_tag-fashion product_tag-m12 product_tag-men product_tag-products has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
-
-
-                                                                                    <div class="product-item">
-                                                                                        <div
-                                                                                            class="product-item__badges">
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="product-item__thumbnail">
-                                                                                            <div
-                                                                                                class="product-item__thumbnail_overlay">
-                                                                                            </div>
-                                                                                            <a class="product-item-link"
-                                                                                                href="../product/polar-hijack-tee-plum/index.html"></a>
-                                                                                            <div
-                                                                                                class="product-item__description--top-actions">
-
-                                                                                                <a href="indexa207.html?add_to_wishlist=170"
-                                                                                                    data-product-id="170"
-                                                                                                    data-product-type="variable"
-                                                                                                    data-wishlist-url="../wishlist/index.html"
-                                                                                                    data-browse-wishlist-text="Browse wishlist"
-                                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                                    rel="nofollow">
-                                                                                                    <i
-                                                                                                        class="inova ic-favorite"></i>
-                                                                                                    <span
-                                                                                                        class="hidden add-text">Add
-                                                                                                        to
-                                                                                                        wishlist</span>
-                                                                                                    <span
-                                                                                                        class="hidden added-text">Browse
-                                                                                                        wishlist</span>
-                                                                                                </a>
-
-                                                                                                <a href="#"
-                                                                                                    class="nova_product_quick_view_btn"
-                                                                                                    data-product-id="170"
-                                                                                                    rel="nofollow"><i
-                                                                                                        class="inova ic-zoom"></i></a><a
-                                                                                                    href="../product/polar-hijack-tee-plum/index.html"
-                                                                                                    data-quantity="1"
-                                                                                                    class="button product_type_variable add_to_cart_button"
-                                                                                                    data-product_id="170"
-                                                                                                    data-product_sku=""
-                                                                                                    aria-label="Select options for &ldquo;Polar Hijack Tee, plum&rdquo;"
-                                                                                                    rel="nofollow"><svg
-                                                                                                        class="mixtas-addtocart">
-                                                                                                        <use xlink:href="#mixtas-addtocart"
-                                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                                        </use>
-                                                                                                    </svg><span
-                                                                                                        class="text">Select
-                                                                                                        options</span></a>
-                                                                                                <span
-                                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_170"
-                                                                                                    class="screen-reader-text">
-                                                                                                    This product has
-                                                                                                    multiple
-                                                                                                    variants. The
-                                                                                                    options may be
-                                                                                                    chosen on the
-                                                                                                    product page
-                                                                                                </span>
-                                                                                            </div>
-
-
-                                                                                            <div
-                                                                                                class="product-item__thumbnail-placeholder">
-                                                                                                <a
-                                                                                                    href="../product/polar-hijack-tee-plum/index.html">
-                                                                                                    <img loading="lazy"
-                                                                                                        decoding="async"
-                                                                                                        width="700"
-                                                                                                        height="700"
-                                                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_12_1-700x700.jpg"
-                                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                                        alt=""
-                                                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_12_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_12_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_12_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_12_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_12_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_12_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_12_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_12_1.jpg 1000w"
-                                                                                                        sizes="(max-width: 700px) 100vw, 700px" />
-                                                                                                </a>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div
-                                                                                            class="product-item__description">
-
-                                                                                            <div
-                                                                                                class="product-item__description--info">
-                                                                                                <div class="info-left">
-                                                                                                    <div
-                                                                                                        class="product-item__category">
-                                                                                                        <a class="content-product-cat"
-                                                                                                            href="../product-category/men/index.html"
-                                                                                                            rel="tag">Men</a>
-                                                                                                    </div> <a
-                                                                                                        href="../product/polar-hijack-tee-plum/index.html"
-                                                                                                        class="title">
-                                                                                                        <h3
-                                                                                                            class="woocommerce-loop-product__title">
-                                                                                                            Polar
-                                                                                                            Hijack
-                                                                                                            Tee,
-                                                                                                            plum
-                                                                                                        </h3>
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                                <div class="info-right">
-
-                                                                                                    <span
-                                                                                                        class="price"><span
-                                                                                                            class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                                    class="woocommerce-Price-currencySymbol">&#36;</span>55.00</bdi></span></span>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-
-
-                                                                                </li>
-
-
-                                                                                <li
-                                                                                    class="product_item product-grid-item product type-product post-172 status-publish last outofstock product_cat-men product_cat-sweatshirts product_tag-clothing product_tag-etc product_tag-fashion product_tag-m12 product_tag-men product_tag-products has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
-
-
-                                                                                    <div class="product-item">
-                                                                                        <div
-                                                                                            class="product-item__badges">
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="product-item__thumbnail">
-                                                                                            <div
-                                                                                                class="product-item__thumbnail_overlay">
-                                                                                            </div>
-                                                                                            <a class="product-item-link"
-                                                                                                href="../product/polar-welcome-to-the-new-age-ls-tee-black/index.html"></a>
-                                                                                            <div
-                                                                                                class="product-item__description--top-actions">
-
-                                                                                                <a href="indexd7b3.html?add_to_wishlist=172"
-                                                                                                    data-product-id="172"
-                                                                                                    data-product-type="variable"
-                                                                                                    data-wishlist-url="../wishlist/index.html"
-                                                                                                    data-browse-wishlist-text="Browse wishlist"
-                                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                                    rel="nofollow">
-                                                                                                    <i
-                                                                                                        class="inova ic-favorite"></i>
-                                                                                                    <span
-                                                                                                        class="hidden add-text">Add
-                                                                                                        to
-                                                                                                        wishlist</span>
-                                                                                                    <span
-                                                                                                        class="hidden added-text">Browse
-                                                                                                        wishlist</span>
-                                                                                                </a>
-
-                                                                                                <a href="#"
-                                                                                                    class="nova_product_quick_view_btn"
-                                                                                                    data-product-id="172"
-                                                                                                    rel="nofollow"><i
-                                                                                                        class="inova ic-zoom"></i></a><a
-                                                                                                    href="../product/polar-welcome-to-the-new-age-ls-tee-black/index.html"
-                                                                                                    data-quantity="1"
-                                                                                                    class="button product_type_variable"
-                                                                                                    data-product_id="172"
-                                                                                                    data-product_sku=""
-                                                                                                    aria-label="Select options for &ldquo;Polar Welcome To The New Age LS Tee, black&rdquo;"
-                                                                                                    rel="nofollow"><svg
-                                                                                                        class="mixtas-addtocart">
-                                                                                                        <use xlink:href="#mixtas-addtocart"
-                                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                                        </use>
-                                                                                                    </svg><span
-                                                                                                        class="text">Select
-                                                                                                        options</span></a>
-                                                                                                <span
-                                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_172"
-                                                                                                    class="screen-reader-text">
-                                                                                                    This product has
-                                                                                                    multiple
-                                                                                                    variants. The
-                                                                                                    options may be
-                                                                                                    chosen on the
-                                                                                                    product page
-                                                                                                </span>
-                                                                                            </div>
-
-
-                                                                                            <div
-                                                                                                class="product-item__thumbnail-placeholder">
-                                                                                                <a
-                                                                                                    href="../product/polar-welcome-to-the-new-age-ls-tee-black/index.html">
-                                                                                                    <img loading="lazy"
-                                                                                                        decoding="async"
-                                                                                                        width="700"
-                                                                                                        height="700"
-                                                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_13_1-700x700.jpg"
-                                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                                        alt=""
-                                                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_13_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_13_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_13_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_13_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_13_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_13_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_13_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_13_1.jpg 1000w"
-                                                                                                        sizes="(max-width: 700px) 100vw, 700px" /><span
-                                                                                                        class="stock out-of-stock">Out
-                                                                                                        of
-                                                                                                        stock</span>
-                                                                                                </a>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div
-                                                                                            class="product-item__description">
-
-                                                                                            <div
-                                                                                                class="product-item__description--info">
-                                                                                                <div class="info-left">
-                                                                                                    <div
-                                                                                                        class="product-item__category">
-                                                                                                        <a class="content-product-cat"
-                                                                                                            href="../product-category/men/index.html"
-                                                                                                            rel="tag">Men</a>
-                                                                                                    </div> <a
-                                                                                                        href="../product/polar-welcome-to-the-new-age-ls-tee-black/index.html"
-                                                                                                        class="title">
-                                                                                                        <h3
-                                                                                                            class="woocommerce-loop-product__title">
-                                                                                                            Polar
-                                                                                                            Welcome
-                                                                                                            To The
-                                                                                                            New Age
-                                                                                                            LS Tee,
-                                                                                                            black
-                                                                                                        </h3>
-                                                                                                    </a>
-                                                                                                </div>
-                                                                                                <div class="info-right">
-
-                                                                                                    <span
-                                                                                                        class="price"><span
-                                                                                                            class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                                    class="woocommerce-Price-currencySymbol">&#36;</span>65.00</bdi></span></span>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-
-
-                                                                                </li>
-                                                                            </ul>
+                                                                                        @endforeach
+                                                                                        
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1670,1325 +216,1206 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div id="kitify-tabs-content-2452" class="kitify-tabs__content " data-tab="2">
-                                            <div data-kitify_ajax_loadtemplate="true" data-template-id="1090"><span
-                                                    class="kitify-css-loader"></span></div>
-                                        </div>
-                                        <div id="kitify-tabs-content-2453" class="kitify-tabs__content " data-tab="3">
-                                            <div data-kitify_ajax_loadtemplate="true" data-template-id="1073"><span
-                                                    class="kitify-css-loader"></span></div>
+                                            <div id="kitify-tabs-content-2452" class="kitify-tabs__content "
+                                                data-tab="2">
+                                                <div data-kitify_ajax_loadtemplate="true" data-template-id="1090"><span
+                                                        class="kitify-css-loader"></span></div>
+                                            </div>
+                                            <div id="kitify-tabs-content-2453" class="kitify-tabs__content "
+                                                data-tab="3">
+                                                <div data-kitify_ajax_loadtemplate="true" data-template-id="1073"><span
+                                                        class="kitify-css-loader"></span></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="elementor-element elementor-element-37a4525 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                    data-id="37a4525" data-element_type="container">
-                    <div class="e-con-inner">
-                        <div class="elementor-element elementor-element-b21be73 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
-                            data-id="b21be73" data-element_type="container"
-                            data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;}">
-                            <div class="elementor-element elementor-element-eae3c8d elementor-widget kitify elementor-kitify-banner"
-                                data-id="eae3c8d" data-element_type="widget" data-widget_type="kitify-banner.default">
-                                <div class="elementor-widget-container">
-                                    <figure class="kitify-banner kitify-effect-none"><a href="../shop/index.html"
-                                            class="kitify-banner__link">
-                                            <div class="kitify-banner__overlay"></div><img decoding="async"
-                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_04.jpg"
-                                                alt="m5_banner_04" class="kitify-banner__img">
-                                            <figcaption class="kitify-banner__content">
-                                                <div class="kitify-banner__content-wrap">
-                                                    <div class="kitify-banner__sub-title">sale off up to</div>
-                                                    <h2 class="kitify-banner__title">50%</h2>
-                                                    <div class="kitify-banner__button"><button type="button"
-                                                            class="elementor-button"><span
-                                                                class="elementor-button-text">Shop
-                                                                now</span></button></div>
-                                                </div>
-                                            </figcaption>
-                                        </a></figure>
+                    <div class="elementor-element elementor-element-37a4525 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        data-id="37a4525" data-element_type="container">
+                        <div class="e-con-inner">
+                            <div class="elementor-element elementor-element-b21be73 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
+                                data-id="b21be73" data-element_type="container"
+                                data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;}">
+                                <div class="elementor-element elementor-element-eae3c8d elementor-widget kitify elementor-kitify-banner"
+                                    data-id="eae3c8d" data-element_type="widget"
+                                    data-widget_type="kitify-banner.default">
+                                    <div class="elementor-widget-container">
+                                        <figure class="kitify-banner kitify-effect-none"><a href="../shop/index.html"
+                                                class="kitify-banner__link">
+                                                <div class="kitify-banner__overlay"></div><img decoding="async"
+                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_04.jpg"
+                                                    alt="m5_banner_04" class="kitify-banner__img">
+                                                <figcaption class="kitify-banner__content">
+                                                    <div class="kitify-banner__content-wrap">
+                                                        <div class="kitify-banner__sub-title">sale off up to</div>
+                                                        <h2 class="kitify-banner__title">50%</h2>
+                                                        <div class="kitify-banner__button"><button type="button"
+                                                                class="elementor-button"><span
+                                                                    class="elementor-button-text">Shop
+                                                                    now</span></button></div>
+                                                    </div>
+                                                </figcaption>
+                                            </a></figure>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="elementor-element elementor-element-b5a9b7d e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
-                            data-id="b5a9b7d" data-element_type="container"
-                            data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;,&quot;animation_delay&quot;:500}">
-                            <div class="elementor-element elementor-element-71040e5 elementor-widget kitify elementor-kitify-banner"
-                                data-id="71040e5" data-element_type="widget" data-widget_type="kitify-banner.default">
-                                <div class="elementor-widget-container">
-                                    <figure class="kitify-banner kitify-effect-none"><a href="../shop/index.html"
-                                            class="kitify-banner__link">
-                                            <div class="kitify-banner__overlay"></div><img decoding="async"
-                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_05.jpg"
-                                                alt="m5_banner_05" class="kitify-banner__img">
-                                            <figcaption class="kitify-banner__content">
-                                                <div class="kitify-banner__content-wrap">
-                                                    <div class="kitify-banner__sub-title">new trending</div>
-                                                    <h2 class="kitify-banner__title">A Floral Fantasy Wardrobe</h2>
-                                                    <div class="kitify-banner__button"><button type="button"
-                                                            class="elementor-button"><span
-                                                                class="elementor-button-text">Shop
-                                                                now</span></button></div>
-                                                </div>
-                                            </figcaption>
-                                        </a></figure>
+                            <div class="elementor-element elementor-element-b5a9b7d e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
+                                data-id="b5a9b7d" data-element_type="container"
+                                data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;,&quot;animation_delay&quot;:500}">
+                                <div class="elementor-element elementor-element-71040e5 elementor-widget kitify elementor-kitify-banner"
+                                    data-id="71040e5" data-element_type="widget"
+                                    data-widget_type="kitify-banner.default">
+                                    <div class="elementor-widget-container">
+                                        <figure class="kitify-banner kitify-effect-none"><a href="../shop/index.html"
+                                                class="kitify-banner__link">
+                                                <div class="kitify-banner__overlay"></div><img decoding="async"
+                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_05.jpg"
+                                                    alt="m5_banner_05" class="kitify-banner__img">
+                                                <figcaption class="kitify-banner__content">
+                                                    <div class="kitify-banner__content-wrap">
+                                                        <div class="kitify-banner__sub-title">new trending</div>
+                                                        <h2 class="kitify-banner__title">A Floral Fantasy Wardrobe</h2>
+                                                        <div class="kitify-banner__button"><button type="button"
+                                                                class="elementor-button"><span
+                                                                    class="elementor-button-text">Shop
+                                                                    now</span></button></div>
+                                                    </div>
+                                                </figcaption>
+                                            </a></figure>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="elementor-element elementor-element-d2c747e e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                    data-id="d2c747e" data-element_type="container">
-                    <div class="e-con-inner">
-                        <div class="elementor-element elementor-element-44ea358 custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-invisible kitify-has-entrance-animation elementor-widget kitify elementor-kitify-advanced-carousel"
-                            data-id="44ea358" data-element_type="widget"
-                            data-settings="{&quot;_animation&quot;:&quot;kitifyShortFadeInUp&quot;}"
-                            data-widget_type="kitify-advanced-carousel.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-carousel kitify-carousel--simple simple-style-none"
-                                    data-slider_options="{&quot;content_selector&quot;:&quot;.kitify-carousel__content&quot;,&quot;content_effect_in&quot;:&quot;fadeInUp&quot;,&quot;content_effect_out&quot;:&quot;fadeOutDown&quot;,&quot;slidesToScroll&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;rows&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;autoplaySpeed&quot;:5000,&quot;autoplay&quot;:true,&quot;infinite&quot;:true,&quot;centerMode&quot;:false,&quot;pauseOnHover&quot;:false,&quot;pauseOnInteraction&quot;:false,&quot;reverseDirection&quot;:false,&quot;infiniteEffect&quot;:false,&quot;speed&quot;:500,&quot;arrows&quot;:true,&quot;dots&quot;:false,&quot;variableWidth&quot;:false,&quot;prevArrow&quot;:&quot;.kitify-carousel__prev-arrow-44ea358&quot;,&quot;nextArrow&quot;:&quot;.kitify-carousel__next-arrow-44ea358&quot;,&quot;dotsElm&quot;:&quot;.kitify-carousel__dots_44ea358&quot;,&quot;rtl&quot;:false,&quot;effect&quot;:&quot;slide&quot;,&quot;coverflowEffect&quot;:{&quot;rotate&quot;:null,&quot;stretch&quot;:null,&quot;depth&quot;:null,&quot;modifier&quot;:null,&quot;slideShadows&quot;:null},&quot;dotType&quot;:&quot;bullets&quot;,&quot;direction&quot;:&quot;horizontal&quot;,&quot;uniqueID&quot;:&quot;kitify_carousel_44ea358&quot;,&quot;asFor&quot;:&quot;&quot;,&quot;autoHeight&quot;:false,&quot;slidesToShow&quot;:{&quot;desktop&quot;:&quot;6&quot;,&quot;mobile&quot;:&quot;2&quot;,&quot;mobile_extra&quot;:&quot;4&quot;,&quot;tablet&quot;:&quot;4&quot;,&quot;tablet_extra&quot;:&quot;5&quot;,&quot;laptop&quot;:&quot;6&quot;}}"
-                                    dir="ltr">
-                                    <div class="kitify-carousel-inner">
-                                        <div class="swiper-container" id="kitify_carousel_44ea358">
-                                            <div class="swiper-wrapper">
-                                                <div class="kitify-carousel__item swiper-slide">
-                                                    <div class="kitify-carousel__item-inner">
-                                                        <a class="kitify-carousel__item-link"
-                                                            href="../shop/index.html"><img loading="lazy"
-                                                                decoding="async" width="380" height="285"
-                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_01.png"
-                                                                class="kitify-carousel__item-img attachment-full size-full wp-image-871"
-                                                                alt=""
-                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_01.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_01-300x225.png 300w"
-                                                                sizes="(max-width: 380px) 100vw, 380px" /></a>
-                                                        <div class="kitify-carousel__content"></div>
+                    <div class="elementor-element elementor-element-d2c747e e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        data-id="d2c747e" data-element_type="container">
+                        <div class="e-con-inner">
+                            <div class="elementor-element elementor-element-44ea358 custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-invisible kitify-has-entrance-animation elementor-widget kitify elementor-kitify-advanced-carousel"
+                                data-id="44ea358" data-element_type="widget"
+                                data-settings="{&quot;_animation&quot;:&quot;kitifyShortFadeInUp&quot;}"
+                                data-widget_type="kitify-advanced-carousel.default">
+                                <div class="elementor-widget-container">
+                                    <div class="kitify-carousel kitify-carousel--simple simple-style-none"
+                                        data-slider_options="{&quot;content_selector&quot;:&quot;.kitify-carousel__content&quot;,&quot;content_effect_in&quot;:&quot;fadeInUp&quot;,&quot;content_effect_out&quot;:&quot;fadeOutDown&quot;,&quot;slidesToScroll&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;rows&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;autoplaySpeed&quot;:5000,&quot;autoplay&quot;:true,&quot;infinite&quot;:true,&quot;centerMode&quot;:false,&quot;pauseOnHover&quot;:false,&quot;pauseOnInteraction&quot;:false,&quot;reverseDirection&quot;:false,&quot;infiniteEffect&quot;:false,&quot;speed&quot;:500,&quot;arrows&quot;:true,&quot;dots&quot;:false,&quot;variableWidth&quot;:false,&quot;prevArrow&quot;:&quot;.kitify-carousel__prev-arrow-44ea358&quot;,&quot;nextArrow&quot;:&quot;.kitify-carousel__next-arrow-44ea358&quot;,&quot;dotsElm&quot;:&quot;.kitify-carousel__dots_44ea358&quot;,&quot;rtl&quot;:false,&quot;effect&quot;:&quot;slide&quot;,&quot;coverflowEffect&quot;:{&quot;rotate&quot;:null,&quot;stretch&quot;:null,&quot;depth&quot;:null,&quot;modifier&quot;:null,&quot;slideShadows&quot;:null},&quot;dotType&quot;:&quot;bullets&quot;,&quot;direction&quot;:&quot;horizontal&quot;,&quot;uniqueID&quot;:&quot;kitify_carousel_44ea358&quot;,&quot;asFor&quot;:&quot;&quot;,&quot;autoHeight&quot;:false,&quot;slidesToShow&quot;:{&quot;desktop&quot;:&quot;6&quot;,&quot;mobile&quot;:&quot;2&quot;,&quot;mobile_extra&quot;:&quot;4&quot;,&quot;tablet&quot;:&quot;4&quot;,&quot;tablet_extra&quot;:&quot;5&quot;,&quot;laptop&quot;:&quot;6&quot;}}"
+                                        dir="ltr">
+                                        <div class="kitify-carousel-inner">
+                                            <div class="swiper-container" id="kitify_carousel_44ea358">
+                                                <div class="swiper-wrapper">
+                                                    <div class="kitify-carousel__item swiper-slide">
+                                                        <div class="kitify-carousel__item-inner">
+                                                            <a class="kitify-carousel__item-link"
+                                                                href="../shop/index.html"><img loading="lazy"
+                                                                    decoding="async" width="380" height="285"
+                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_01.png"
+                                                                    class="kitify-carousel__item-img attachment-full size-full wp-image-871"
+                                                                    alt=""
+                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_01.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_01-300x225.png 300w"
+                                                                    sizes="(max-width: 380px) 100vw, 380px" /></a>
+                                                            <div class="kitify-carousel__content"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="kitify-carousel__item swiper-slide">
-                                                    <div class="kitify-carousel__item-inner">
-                                                        <a class="kitify-carousel__item-link"
-                                                            href="../shop/index.html"><img loading="lazy"
-                                                                decoding="async" width="380" height="285"
-                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_02.png"
-                                                                class="kitify-carousel__item-img attachment-full size-full wp-image-872"
-                                                                alt=""
-                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_02.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_02-300x225.png 300w"
-                                                                sizes="(max-width: 380px) 100vw, 380px" /></a>
-                                                        <div class="kitify-carousel__content"></div>
+                                                    <div class="kitify-carousel__item swiper-slide">
+                                                        <div class="kitify-carousel__item-inner">
+                                                            <a class="kitify-carousel__item-link"
+                                                                href="../shop/index.html"><img loading="lazy"
+                                                                    decoding="async" width="380" height="285"
+                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_02.png"
+                                                                    class="kitify-carousel__item-img attachment-full size-full wp-image-872"
+                                                                    alt=""
+                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_02.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_02-300x225.png 300w"
+                                                                    sizes="(max-width: 380px) 100vw, 380px" /></a>
+                                                            <div class="kitify-carousel__content"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="kitify-carousel__item swiper-slide">
-                                                    <div class="kitify-carousel__item-inner">
-                                                        <a class="kitify-carousel__item-link"
-                                                            href="../shop/index.html"><img loading="lazy"
-                                                                decoding="async" width="380" height="285"
-                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_03.png"
-                                                                class="kitify-carousel__item-img attachment-full size-full wp-image-873"
-                                                                alt=""
-                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_03.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_03-300x225.png 300w"
-                                                                sizes="(max-width: 380px) 100vw, 380px" /></a>
-                                                        <div class="kitify-carousel__content"></div>
+                                                    <div class="kitify-carousel__item swiper-slide">
+                                                        <div class="kitify-carousel__item-inner">
+                                                            <a class="kitify-carousel__item-link"
+                                                                href="../shop/index.html"><img loading="lazy"
+                                                                    decoding="async" width="380" height="285"
+                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_03.png"
+                                                                    class="kitify-carousel__item-img attachment-full size-full wp-image-873"
+                                                                    alt=""
+                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_03.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_03-300x225.png 300w"
+                                                                    sizes="(max-width: 380px) 100vw, 380px" /></a>
+                                                            <div class="kitify-carousel__content"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="kitify-carousel__item swiper-slide">
-                                                    <div class="kitify-carousel__item-inner">
-                                                        <a class="kitify-carousel__item-link"
-                                                            href="../shop/index.html"><img loading="lazy"
-                                                                decoding="async" width="380" height="285"
-                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_04.png"
-                                                                class="kitify-carousel__item-img attachment-full size-full wp-image-874"
-                                                                alt=""
-                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_04.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_04-300x225.png 300w"
-                                                                sizes="(max-width: 380px) 100vw, 380px" /></a>
-                                                        <div class="kitify-carousel__content"></div>
+                                                    <div class="kitify-carousel__item swiper-slide">
+                                                        <div class="kitify-carousel__item-inner">
+                                                            <a class="kitify-carousel__item-link"
+                                                                href="../shop/index.html"><img loading="lazy"
+                                                                    decoding="async" width="380" height="285"
+                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_04.png"
+                                                                    class="kitify-carousel__item-img attachment-full size-full wp-image-874"
+                                                                    alt=""
+                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_04.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_04-300x225.png 300w"
+                                                                    sizes="(max-width: 380px) 100vw, 380px" /></a>
+                                                            <div class="kitify-carousel__content"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="kitify-carousel__item swiper-slide">
-                                                    <div class="kitify-carousel__item-inner">
-                                                        <a class="kitify-carousel__item-link"
-                                                            href="../shop/index.html"><img loading="lazy"
-                                                                decoding="async" width="380" height="285"
-                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_05.png"
-                                                                class="kitify-carousel__item-img attachment-full size-full wp-image-875"
-                                                                alt=""
-                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_05.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_05-300x225.png 300w"
-                                                                sizes="(max-width: 380px) 100vw, 380px" /></a>
-                                                        <div class="kitify-carousel__content"></div>
+                                                    <div class="kitify-carousel__item swiper-slide">
+                                                        <div class="kitify-carousel__item-inner">
+                                                            <a class="kitify-carousel__item-link"
+                                                                href="../shop/index.html"><img loading="lazy"
+                                                                    decoding="async" width="380" height="285"
+                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_05.png"
+                                                                    class="kitify-carousel__item-img attachment-full size-full wp-image-875"
+                                                                    alt=""
+                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_05.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_05-300x225.png 300w"
+                                                                    sizes="(max-width: 380px) 100vw, 380px" /></a>
+                                                            <div class="kitify-carousel__content"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="kitify-carousel__item swiper-slide">
-                                                    <div class="kitify-carousel__item-inner">
-                                                        <a class="kitify-carousel__item-link"
-                                                            href="../shop/index.html"><img loading="lazy"
-                                                                decoding="async" width="380" height="285"
-                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_06.png"
-                                                                class="kitify-carousel__item-img attachment-full size-full wp-image-876"
-                                                                alt=""
-                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_06.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_06-300x225.png 300w"
-                                                                sizes="(max-width: 380px) 100vw, 380px" /></a>
-                                                        <div class="kitify-carousel__content"></div>
+                                                    <div class="kitify-carousel__item swiper-slide">
+                                                        <div class="kitify-carousel__item-inner">
+                                                            <a class="kitify-carousel__item-link"
+                                                                href="../shop/index.html"><img loading="lazy"
+                                                                    decoding="async" width="380" height="285"
+                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_06.png"
+                                                                    class="kitify-carousel__item-img attachment-full size-full wp-image-876"
+                                                                    alt=""
+                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_06.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_06-300x225.png 300w"
+                                                                    sizes="(max-width: 380px) 100vw, 380px" /></a>
+                                                            <div class="kitify-carousel__content"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="kitify-carousel__item swiper-slide">
-                                                    <div class="kitify-carousel__item-inner">
-                                                        <a class="kitify-carousel__item-link"
-                                                            href="../shop/index.html"><img loading="lazy"
-                                                                decoding="async" width="380" height="285"
-                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_07.png"
-                                                                class="kitify-carousel__item-img attachment-full size-full wp-image-877"
-                                                                alt=""
-                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_07.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_07-300x225.png 300w"
-                                                                sizes="(max-width: 380px) 100vw, 380px" /></a>
-                                                        <div class="kitify-carousel__content"></div>
+                                                    <div class="kitify-carousel__item swiper-slide">
+                                                        <div class="kitify-carousel__item-inner">
+                                                            <a class="kitify-carousel__item-link"
+                                                                href="../shop/index.html"><img loading="lazy"
+                                                                    decoding="async" width="380" height="285"
+                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_07.png"
+                                                                    class="kitify-carousel__item-img attachment-full size-full wp-image-877"
+                                                                    alt=""
+                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_07.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_07-300x225.png 300w"
+                                                                    sizes="(max-width: 380px) 100vw, 380px" /></a>
+                                                            <div class="kitify-carousel__content"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="kitify-carousel__item swiper-slide">
-                                                    <div class="kitify-carousel__item-inner">
-                                                        <a class="kitify-carousel__item-link"
-                                                            href="../shop/index.html"><img loading="lazy"
-                                                                decoding="async" width="380" height="285"
-                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_08.png"
-                                                                class="kitify-carousel__item-img attachment-full size-full wp-image-878"
-                                                                alt=""
-                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_08.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_08-300x225.png 300w"
-                                                                sizes="(max-width: 380px) 100vw, 380px" /></a>
-                                                        <div class="kitify-carousel__content"></div>
+                                                    <div class="kitify-carousel__item swiper-slide">
+                                                        <div class="kitify-carousel__item-inner">
+                                                            <a class="kitify-carousel__item-link"
+                                                                href="../shop/index.html"><img loading="lazy"
+                                                                    decoding="async" width="380" height="285"
+                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_08.png"
+                                                                    class="kitify-carousel__item-img attachment-full size-full wp-image-878"
+                                                                    alt=""
+                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_08.png 380w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m_logo_08-300x225.png 300w"
+                                                                    sizes="(max-width: 380px) 100vw, 380px" /></a>
+                                                            <div class="kitify-carousel__content"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="kitify-carousel__prev-arrow-44ea358 kitify-arrow prev-arrow"><i
+                                                aria-hidden="true" class="novaicon-arrow-left"></i></div>
+                                        <div class="kitify-carousel__next-arrow-44ea358 kitify-arrow next-arrow"><i
+                                                aria-hidden="true" class="novaicon-arrow-right"></i></div>
                                     </div>
-                                    <div class="kitify-carousel__prev-arrow-44ea358 kitify-arrow prev-arrow"><i
-                                            aria-hidden="true" class="novaicon-arrow-left"></i></div>
-                                    <div class="kitify-carousel__next-arrow-44ea358 kitify-arrow next-arrow"><i
-                                            aria-hidden="true" class="novaicon-arrow-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="elementor-element elementor-element-8beed28 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        data-id="8beed28" data-element_type="container"
+                        data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+                        <div class="e-con-inner">
+                            <div class="elementor-element elementor-element-46c5e53 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
+                                data-id="46c5e53" data-element_type="container"
+                                data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;}">
+                                <div class="elementor-element elementor-element-c55be01 elementor-widget elementor-widget-heading"
+                                    data-id="c55be01" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <span class="elementor-heading-title elementor-size-default">Latest posts</span>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-4197118 elementor-widget elementor-widget-heading"
+                                    data-id="4197118" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <h2 class="elementor-heading-title elementor-size-default">Blog & Insights</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-0b6e4d1 active-object-fit active-object-fit-true custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-invisible kitify-has-entrance-animation elementor-widget kitify elementor-kitify-posts"
+                                data-id="0b6e4d1" data-element_type="widget"
+                                data-settings="{&quot;_animation&quot;:&quot;kitifyShortFadeInUp&quot;,&quot;_animation_delay&quot;:500}"
+                                data-widget_type="kitify-posts.default">
+                                <div class="elementor-widget-container">
+
+                                    <div id="novapost_0b6e4d1"
+                                        class="kitify-posts layout-type-grid preset- grid-1 querycpt--post kitify-posts--grid kitify-carousel"
+                                        data-item_selector=".kitify-posts__item"
+                                        data-slider_options="{&quot;slidesToScroll&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;rows&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;autoplaySpeed&quot;:5000,&quot;autoplay&quot;:true,&quot;infinite&quot;:true,&quot;centerMode&quot;:false,&quot;pauseOnHover&quot;:false,&quot;pauseOnInteraction&quot;:false,&quot;reverseDirection&quot;:false,&quot;infiniteEffect&quot;:false,&quot;speed&quot;:500,&quot;arrows&quot;:true,&quot;dots&quot;:false,&quot;variableWidth&quot;:false,&quot;prevArrow&quot;:&quot;.kitify-carousel__prev-arrow-0b6e4d1&quot;,&quot;nextArrow&quot;:&quot;.kitify-carousel__next-arrow-0b6e4d1&quot;,&quot;dotsElm&quot;:&quot;.kitify-carousel__dots_0b6e4d1&quot;,&quot;rtl&quot;:false,&quot;effect&quot;:&quot;slide&quot;,&quot;coverflowEffect&quot;:{&quot;rotate&quot;:null,&quot;stretch&quot;:null,&quot;depth&quot;:null,&quot;modifier&quot;:null,&quot;slideShadows&quot;:null},&quot;dotType&quot;:&quot;bullets&quot;,&quot;direction&quot;:&quot;horizontal&quot;,&quot;uniqueID&quot;:&quot;kitify_carousel_0b6e4d1&quot;,&quot;asFor&quot;:&quot;&quot;,&quot;autoHeight&quot;:false,&quot;slidesToShow&quot;:{&quot;desktop&quot;:3,&quot;laptop&quot;:3,&quot;tablet&quot;:3,&quot;mobile_extra&quot;:3}}"
+                                        dir="ltr">
+                                        <div class="kitify-carousel-inner">
+                                            <div class="kitify-posts__list_wrapper swiper-container">
+                                                <div class="kitify-posts__list swiper-wrapper"
+                                                    id="kitify_carousel_0b6e4d1">
+                                                    <div
+                                                        class="kitify-posts__item has-post-thumbnail swiper-slide term-53 term-62 term-50 term-52 term-48 term-63">
+                                                        <div class="kitify-posts__outer-box">
+                                                            <div class="kitify-posts__inner-box">
+                                                                <div class="post-thumbnail kitify-posts__thumbnail">
+                                                                    <a href="../2023/12/unveiling-elegance-timeless-fashion-trends-for-women/index.html"
+                                                                        class="kitify-posts__thumbnail-link"><img
+                                                                            loading="lazy" decoding="async" width="1500"
+                                                                            height="1000"
+                                                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04.jpg"
+                                                                            class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
+                                                                            alt=""
+                                                                            srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-1000x667.jpg 1000w"
+                                                                            sizes="(max-width: 1500px) 100vw, 1500px" /></a>
+
+                                                                </div>
+                                                                <div class="kitify-posts__inner-content">
+                                                                    <div class="kitify-posts__inner-content-inner">
+                                                                        <div
+                                                                            class="kitify-posts__meta kitify-posts__meta2">
+                                                                            <div
+                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                                                <span class="meta--label">By</span><span
+                                                                                    class="meta--value"><a
+                                                                                        href="../author/admin/index.html"
+                                                                                        class="posted-by__author"
+                                                                                        rel="author">admin</a></span>
+                                                                            </div>
+                                                                            <div
+                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                                                <span class="meta--value">December 19,
+                                                                                    2023</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <h4 class="kitify-posts__title"><a
+                                                                                href="../2023/12/unveiling-elegance-timeless-fashion-trends-for-women/index.html"
+                                                                                title="Unveiling Elegance: Timeless Fashion Trends for Women"
+                                                                                rel="bookmark">Unveiling Elegance:
+                                                                                Timeless Fashion Trends for Women</a>
+                                                                        </h4>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="kitify-posts__item has-post-thumbnail swiper-slide term-53 term-62 term-50 term-52 term-48 term-63">
+                                                        <div class="kitify-posts__outer-box">
+                                                            <div class="kitify-posts__inner-box">
+                                                                <div class="post-thumbnail kitify-posts__thumbnail">
+                                                                    <a href="../2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/index.html"
+                                                                        class="kitify-posts__thumbnail-link"><img
+                                                                            loading="lazy" decoding="async" width="1500"
+                                                                            height="1000"
+                                                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05.jpg"
+                                                                            class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
+                                                                            alt=""
+                                                                            srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-1000x667.jpg 1000w"
+                                                                            sizes="(max-width: 1500px) 100vw, 1500px" /></a>
+
+                                                                </div>
+                                                                <div class="kitify-posts__inner-content">
+                                                                    <div class="kitify-posts__inner-content-inner">
+                                                                        <div
+                                                                            class="kitify-posts__meta kitify-posts__meta2">
+                                                                            <div
+                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                                                <span class="meta--label">By</span><span
+                                                                                    class="meta--value"><a
+                                                                                        href="../author/admin/index.html"
+                                                                                        class="posted-by__author"
+                                                                                        rel="author">admin</a></span>
+                                                                            </div>
+                                                                            <div
+                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                                                <span class="meta--value">December 19,
+                                                                                    2023</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <h4 class="kitify-posts__title"><a
+                                                                                href="../2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/index.html"
+                                                                                title="Dress to Impress: A Guide to Power Dressing for Success"
+                                                                                rel="bookmark">Dress to Impress: A Guide
+                                                                                to Power Dressing for Success</a></h4>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="kitify-posts__item has-post-thumbnail swiper-slide term-53 term-62 term-50 term-52 term-48 term-63">
+                                                        <div class="kitify-posts__outer-box">
+                                                            <div class="kitify-posts__inner-box">
+                                                                <div class="post-thumbnail kitify-posts__thumbnail">
+                                                                    <a href="../2023/12/fashion-forward-emerging-trends-you-need-to-know/index.html"
+                                                                        class="kitify-posts__thumbnail-link"><img
+                                                                            loading="lazy" decoding="async" width="1500"
+                                                                            height="1000"
+                                                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06.jpg"
+                                                                            class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
+                                                                            alt=""
+                                                                            srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-1000x667.jpg 1000w"
+                                                                            sizes="(max-width: 1500px) 100vw, 1500px" /></a>
+
+                                                                </div>
+                                                                <div class="kitify-posts__inner-content">
+                                                                    <div class="kitify-posts__inner-content-inner">
+                                                                        <div
+                                                                            class="kitify-posts__meta kitify-posts__meta2">
+                                                                            <div
+                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                                                <span class="meta--label">By</span><span
+                                                                                    class="meta--value"><a
+                                                                                        href="../author/admin/index.html"
+                                                                                        class="posted-by__author"
+                                                                                        rel="author">admin</a></span>
+                                                                            </div>
+                                                                            <div
+                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                                                <span class="meta--value">December 19,
+                                                                                    2023</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <h4 class="kitify-posts__title"><a
+                                                                                href="../2023/12/fashion-forward-emerging-trends-you-need-to-know/index.html"
+                                                                                title="Fashion Forward: Emerging Trends You Need to Know"
+                                                                                rel="bookmark">Fashion Forward: Emerging
+                                                                                Trends You Need to Know</a></h4>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="kitify-carousel__prev-arrow-0b6e4d1 kitify-arrow prev-arrow"><i
+                                                aria-hidden="true" class="novaicon-arrow-left"></i></div>
+                                        <div class="kitify-carousel__next-arrow-0b6e4d1 kitify-arrow next-arrow"><i
+                                                aria-hidden="true" class="novaicon-arrow-right"></i></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="elementor-element elementor-element-8beed28 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                    data-id="8beed28" data-element_type="container"
+            </div><!-- .site-content-wrapper -->
+            <div data-elementor-type="footer" data-elementor-id="478"
+                class="elementor elementor-478 elementor-location-footer">
+                <div class="elementor-element elementor-element-22c97ffc e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                    data-id="22c97ffc" data-element_type="container"
                     data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
                     <div class="e-con-inner">
-                        <div class="elementor-element elementor-element-46c5e53 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
-                            data-id="46c5e53" data-element_type="container"
-                            data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;}">
-                            <div class="elementor-element elementor-element-c55be01 elementor-widget elementor-widget-heading"
-                                data-id="c55be01" data-element_type="widget" data-widget_type="heading.default">
+                        <div class="elementor-element elementor-element-861c9ce e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                            data-id="861c9ce" data-element_type="container">
+                            <div class="elementor-element elementor-element-afefbe8 kitify-widget-align-none elementor-widget kitify elementor-kitify-logo"
+                                data-id="afefbe8" data-element_type="widget" data-widget_type="kitify-logo.default">
                                 <div class="elementor-widget-container">
-                                    <span class="elementor-heading-title elementor-size-default">Latest posts</span>
-                                </div>
-                            </div>
-                            <div class="elementor-element elementor-element-4197118 elementor-widget elementor-widget-heading"
-                                data-id="4197118" data-element_type="widget" data-widget_type="heading.default">
-                                <div class="elementor-widget-container">
-                                    <h2 class="elementor-heading-title elementor-size-default">Blog & Insights</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-0b6e4d1 active-object-fit active-object-fit-true custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-invisible kitify-has-entrance-animation elementor-widget kitify elementor-kitify-posts"
-                            data-id="0b6e4d1" data-element_type="widget"
-                            data-settings="{&quot;_animation&quot;:&quot;kitifyShortFadeInUp&quot;,&quot;_animation_delay&quot;:500}"
-                            data-widget_type="kitify-posts.default">
-                            <div class="elementor-widget-container">
-
-                                <div id="novapost_0b6e4d1"
-                                    class="kitify-posts layout-type-grid preset- grid-1 querycpt--post kitify-posts--grid kitify-carousel"
-                                    data-item_selector=".kitify-posts__item"
-                                    data-slider_options="{&quot;slidesToScroll&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;rows&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;autoplaySpeed&quot;:5000,&quot;autoplay&quot;:true,&quot;infinite&quot;:true,&quot;centerMode&quot;:false,&quot;pauseOnHover&quot;:false,&quot;pauseOnInteraction&quot;:false,&quot;reverseDirection&quot;:false,&quot;infiniteEffect&quot;:false,&quot;speed&quot;:500,&quot;arrows&quot;:true,&quot;dots&quot;:false,&quot;variableWidth&quot;:false,&quot;prevArrow&quot;:&quot;.kitify-carousel__prev-arrow-0b6e4d1&quot;,&quot;nextArrow&quot;:&quot;.kitify-carousel__next-arrow-0b6e4d1&quot;,&quot;dotsElm&quot;:&quot;.kitify-carousel__dots_0b6e4d1&quot;,&quot;rtl&quot;:false,&quot;effect&quot;:&quot;slide&quot;,&quot;coverflowEffect&quot;:{&quot;rotate&quot;:null,&quot;stretch&quot;:null,&quot;depth&quot;:null,&quot;modifier&quot;:null,&quot;slideShadows&quot;:null},&quot;dotType&quot;:&quot;bullets&quot;,&quot;direction&quot;:&quot;horizontal&quot;,&quot;uniqueID&quot;:&quot;kitify_carousel_0b6e4d1&quot;,&quot;asFor&quot;:&quot;&quot;,&quot;autoHeight&quot;:false,&quot;slidesToShow&quot;:{&quot;desktop&quot;:3,&quot;laptop&quot;:3,&quot;tablet&quot;:3,&quot;mobile_extra&quot;:3}}"
-                                    dir="ltr">
-                                    <div class="kitify-carousel-inner">
-                                        <div class="kitify-posts__list_wrapper swiper-container">
-                                            <div class="kitify-posts__list swiper-wrapper" id="kitify_carousel_0b6e4d1">
-                                                <div
-                                                    class="kitify-posts__item has-post-thumbnail swiper-slide term-53 term-62 term-50 term-52 term-48 term-63">
-                                                    <div class="kitify-posts__outer-box">
-                                                        <div class="kitify-posts__inner-box">
-                                                            <div class="post-thumbnail kitify-posts__thumbnail">
-                                                                <a href="../2023/12/unveiling-elegance-timeless-fashion-trends-for-women/index.html"
-                                                                    class="kitify-posts__thumbnail-link"><img
-                                                                        loading="lazy" decoding="async" width="1500"
-                                                                        height="1000"
-                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04.jpg"
-                                                                        class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
-                                                                        alt=""
-                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-1000x667.jpg 1000w"
-                                                                        sizes="(max-width: 1500px) 100vw, 1500px" /></a>
-
-                                                            </div>
-                                                            <div class="kitify-posts__inner-content">
-                                                                <div class="kitify-posts__inner-content-inner">
-                                                                    <div class="kitify-posts__meta kitify-posts__meta2">
-                                                                        <div
-                                                                            class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                                                            <span class="meta--label">By</span><span
-                                                                                class="meta--value"><a
-                                                                                    href="../author/admin/index.html"
-                                                                                    class="posted-by__author"
-                                                                                    rel="author">admin</a></span>
-                                                                        </div>
-                                                                        <div
-                                                                            class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                                                            <span class="meta--value">December 19,
-                                                                                2023</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <h4 class="kitify-posts__title"><a
-                                                                            href="../2023/12/unveiling-elegance-timeless-fashion-trends-for-women/index.html"
-                                                                            title="Unveiling Elegance: Timeless Fashion Trends for Women"
-                                                                            rel="bookmark">Unveiling Elegance:
-                                                                            Timeless Fashion Trends for Women</a>
-                                                                    </h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="kitify-posts__item has-post-thumbnail swiper-slide term-53 term-62 term-50 term-52 term-48 term-63">
-                                                    <div class="kitify-posts__outer-box">
-                                                        <div class="kitify-posts__inner-box">
-                                                            <div class="post-thumbnail kitify-posts__thumbnail">
-                                                                <a href="../2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/index.html"
-                                                                    class="kitify-posts__thumbnail-link"><img
-                                                                        loading="lazy" decoding="async" width="1500"
-                                                                        height="1000"
-                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05.jpg"
-                                                                        class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
-                                                                        alt=""
-                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-1000x667.jpg 1000w"
-                                                                        sizes="(max-width: 1500px) 100vw, 1500px" /></a>
-
-                                                            </div>
-                                                            <div class="kitify-posts__inner-content">
-                                                                <div class="kitify-posts__inner-content-inner">
-                                                                    <div class="kitify-posts__meta kitify-posts__meta2">
-                                                                        <div
-                                                                            class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                                                            <span class="meta--label">By</span><span
-                                                                                class="meta--value"><a
-                                                                                    href="../author/admin/index.html"
-                                                                                    class="posted-by__author"
-                                                                                    rel="author">admin</a></span>
-                                                                        </div>
-                                                                        <div
-                                                                            class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                                                            <span class="meta--value">December 19,
-                                                                                2023</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <h4 class="kitify-posts__title"><a
-                                                                            href="../2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/index.html"
-                                                                            title="Dress to Impress: A Guide to Power Dressing for Success"
-                                                                            rel="bookmark">Dress to Impress: A Guide
-                                                                            to Power Dressing for Success</a></h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="kitify-posts__item has-post-thumbnail swiper-slide term-53 term-62 term-50 term-52 term-48 term-63">
-                                                    <div class="kitify-posts__outer-box">
-                                                        <div class="kitify-posts__inner-box">
-                                                            <div class="post-thumbnail kitify-posts__thumbnail">
-                                                                <a href="../2023/12/fashion-forward-emerging-trends-you-need-to-know/index.html"
-                                                                    class="kitify-posts__thumbnail-link"><img
-                                                                        loading="lazy" decoding="async" width="1500"
-                                                                        height="1000"
-                                                                        src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06.jpg"
-                                                                        class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
-                                                                        alt=""
-                                                                        srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-1000x667.jpg 1000w"
-                                                                        sizes="(max-width: 1500px) 100vw, 1500px" /></a>
-
-                                                            </div>
-                                                            <div class="kitify-posts__inner-content">
-                                                                <div class="kitify-posts__inner-content-inner">
-                                                                    <div class="kitify-posts__meta kitify-posts__meta2">
-                                                                        <div
-                                                                            class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                                                            <span class="meta--label">By</span><span
-                                                                                class="meta--value"><a
-                                                                                    href="../author/admin/index.html"
-                                                                                    class="posted-by__author"
-                                                                                    rel="author">admin</a></span>
-                                                                        </div>
-                                                                        <div
-                                                                            class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                                                            <span class="meta--value">December 19,
-                                                                                2023</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <h4 class="kitify-posts__title"><a
-                                                                            href="../2023/12/fashion-forward-emerging-trends-you-need-to-know/index.html"
-                                                                            title="Fashion Forward: Emerging Trends You Need to Know"
-                                                                            rel="bookmark">Fashion Forward: Emerging
-                                                                            Trends You Need to Know</a></h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="kitify-logo kitify-logo-type-image kitify-logo-display-block">
+                                        <a href="../index.html" class="kitify-logo__link"><img
+                                                src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/footer-logo.svg"
+                                                class="kitify-logo__img kitify-logo-default" alt="Mixtas" width="150"
+                                                height="36"><img
+                                                src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo_light.svg"
+                                                class="kitify-logo__img kitify-logo-light" alt="Mixtas" width="150"
+                                                height="36"></a>
                                     </div>
-                                    <div class="kitify-carousel__prev-arrow-0b6e4d1 kitify-arrow prev-arrow"><i
-                                            aria-hidden="true" class="novaicon-arrow-left"></i></div>
-                                    <div class="kitify-carousel__next-arrow-0b6e4d1 kitify-arrow next-arrow"><i
-                                            aria-hidden="true" class="novaicon-arrow-right"></i></div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div><!-- .site-content-wrapper -->
-        <div data-elementor-type="footer" data-elementor-id="478"
-            class="elementor elementor-478 elementor-location-footer">
-            <div class="elementor-element elementor-element-22c97ffc e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                data-id="22c97ffc" data-element_type="container"
-                data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-                <div class="e-con-inner">
-                    <div class="elementor-element elementor-element-861c9ce e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="861c9ce" data-element_type="container">
-                        <div class="elementor-element elementor-element-afefbe8 kitify-widget-align-none elementor-widget kitify elementor-kitify-logo"
-                            data-id="afefbe8" data-element_type="widget" data-widget_type="kitify-logo.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-logo kitify-logo-type-image kitify-logo-display-block">
-                                    <a href="../index.html" class="kitify-logo__link"><img
-                                            src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/footer-logo.svg"
-                                            class="kitify-logo__img kitify-logo-default" alt="Mixtas" width="150"
-                                            height="36"><img
-                                            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo_light.svg"
-                                            class="kitify-logo__img kitify-logo-light" alt="Mixtas" width="150"
-                                            height="36"></a>
+                            <div class="elementor-element elementor-element-7276cec9 elementor-widget elementor-widget-heading"
+                                data-id="7276cec9" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <p class="elementor-heading-title elementor-size-default">Whether you're a
+                                        trendsetter, a minimalist, or an adventurer at heart, Mixtas has something for
+                                        everyone. Our diverse range of styles caters to various personas. </p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="elementor-element elementor-element-7276cec9 elementor-widget elementor-widget-heading"
-                            data-id="7276cec9" data-element_type="widget" data-widget_type="heading.default">
-                            <div class="elementor-widget-container">
-                                <p class="elementor-heading-title elementor-size-default">Whether you're a
-                                    trendsetter, a minimalist, or an adventurer at heart, Mixtas has something for
-                                    everyone. Our diverse range of styles caters to various personas. </p>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-4b1084e8 elementor-shape-circle e-grid-align-left elementor-grid-0 elementor-widget elementor-widget-social-icons"
-                            data-id="4b1084e8" data-element_type="widget" data-widget_type="social-icons.default">
-                            <div class="elementor-widget-container">
-                                <div class="elementor-social-icons-wrapper elementor-grid">
-                                    <span class="elementor-grid-item">
-                                        <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-974b910"
-                                            href="#" target="_blank">
-                                            <span class="elementor-screen-only"></span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="19"
-                                                viewBox="0 0 11 19" fill="none">
-                                                <path
-                                                    d="M9.70117 10.7671H7.06445V18.6421H3.54883V10.7671H0.666016V7.53271H3.54883V5.03662C3.54883 2.22412 5.23633 0.64209 7.80273 0.64209C9.0332 0.64209 10.334 0.888184 10.334 0.888184V3.66553H8.89258C7.48633 3.66553 7.06445 4.50928 7.06445 5.42334V7.53271H10.1934L9.70117 10.7671Z">
-                                                </path>
-                                            </svg> </a>
-                                    </span>
-                                    <span class="elementor-grid-item">
-                                        <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-0171b7d"
-                                            href="#" target="_blank">
-                                            <span class="elementor-screen-only"></span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19"
-                                                viewBox="0 0 19 19" fill="none">
-                                                <path
-                                                    d="M14.1828 2.32959H16.6649L11.2438 8.52412L17.6211 16.9546H12.6289L8.71603 11.8429L4.24415 16.9546H1.75861L7.55587 10.3276L1.4422 2.32959H6.56095L10.0942 7.00186L14.1828 2.32959ZM13.3109 15.471H14.6856L5.81212 3.73584H4.33556L13.3109 15.471Z">
-                                                </path>
-                                            </svg> </a>
-                                    </span>
-                                    <span class="elementor-grid-item">
-                                        <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-ce3448b"
-                                            href="#" target="_blank">
-                                            <span class="elementor-screen-only"></span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="19"
-                                                viewBox="0 0 17 19" fill="none">
-                                                <g clip-path="url(#clip0_89_2537)">
+                            <div class="elementor-element elementor-element-4b1084e8 elementor-shape-circle e-grid-align-left elementor-grid-0 elementor-widget elementor-widget-social-icons"
+                                data-id="4b1084e8" data-element_type="widget" data-widget_type="social-icons.default">
+                                <div class="elementor-widget-container">
+                                    <div class="elementor-social-icons-wrapper elementor-grid">
+                                        <span class="elementor-grid-item">
+                                            <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-974b910"
+                                                href="#" target="_blank">
+                                                <span class="elementor-screen-only"></span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="19"
+                                                    viewBox="0 0 11 19" fill="none">
                                                     <path
-                                                        d="M8.50353 5.59893C6.26759 5.59893 4.46407 7.40244 4.46407 9.63838C4.46407 11.8743 6.26759 13.6778 8.50353 13.6778C10.7395 13.6778 12.543 11.8743 12.543 9.63838C12.543 7.40244 10.7395 5.59893 8.50353 5.59893ZM8.50353 12.2646C7.05861 12.2646 5.87736 11.0868 5.87736 9.63838C5.87736 8.18994 7.05509 7.01221 8.50353 7.01221C9.95197 7.01221 11.1297 8.18994 11.1297 9.63838C11.1297 11.0868 9.94845 12.2646 8.50353 12.2646ZM13.6504 5.43369C13.6504 5.95752 13.2285 6.37588 12.7082 6.37588C12.1844 6.37588 11.766 5.954 11.766 5.43369C11.766 4.91338 12.1879 4.4915 12.7082 4.4915C13.2285 4.4915 13.6504 4.91338 13.6504 5.43369ZM16.3258 6.38994C16.266 5.12783 15.9777 4.00986 15.0531 3.08877C14.132 2.16768 13.0141 1.87939 11.752 1.81611C10.4512 1.74229 6.55236 1.74229 5.25157 1.81611C3.99298 1.87588 2.87501 2.16416 1.9504 3.08525C1.02579 4.00635 0.741028 5.12432 0.677747 6.38643C0.603918 7.68721 0.603918 11.586 0.677747 12.8868C0.737512 14.1489 1.02579 15.2669 1.9504 16.188C2.87501 17.1091 3.98947 17.3974 5.25157 17.4606C6.55236 17.5345 10.4512 17.5345 11.752 17.4606C13.0141 17.4009 14.132 17.1126 15.0531 16.188C15.9742 15.2669 16.2625 14.1489 16.3258 12.8868C16.3996 11.586 16.3996 7.69072 16.3258 6.38994ZM14.6453 14.2825C14.3711 14.9716 13.8402 15.5024 13.1477 15.7802C12.1106 16.1915 9.64962 16.0966 8.50353 16.0966C7.35743 16.0966 4.89298 16.188 3.85939 15.7802C3.17032 15.506 2.63947 14.9751 2.36173 14.2825C1.9504 13.2454 2.04532 10.7845 2.04532 9.63838C2.04532 8.49229 1.95392 6.02783 2.36173 4.99424C2.63595 4.30518 3.16681 3.77432 3.85939 3.49658C4.8965 3.08525 7.35743 3.18018 8.50353 3.18018C9.64962 3.18018 12.1141 3.08877 13.1477 3.49658C13.8367 3.7708 14.3676 4.30166 14.6453 4.99424C15.0567 6.03135 14.9617 8.49229 14.9617 9.63838C14.9617 10.7845 15.0567 13.2489 14.6453 14.2825Z">
+                                                        d="M9.70117 10.7671H7.06445V18.6421H3.54883V10.7671H0.666016V7.53271H3.54883V5.03662C3.54883 2.22412 5.23633 0.64209 7.80273 0.64209C9.0332 0.64209 10.334 0.888184 10.334 0.888184V3.66553H8.89258C7.48633 3.66553 7.06445 4.50928 7.06445 5.42334V7.53271H10.1934L9.70117 10.7671Z">
                                                     </path>
-                                                </g>
-                                            </svg> </a>
-                                    </span>
-                                    <span class="elementor-grid-item">
-                                        <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-aa47dc0"
-                                            href="#" target="_blank">
-                                            <span class="elementor-screen-only"></span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="19"
-                                                viewBox="0 0 15 19" fill="none">
-                                                <g clip-path="url(#clip0_89_2540)">
-                                                    <path
-                                                        d="M7.92188 0.870605C4.31484 0.870605 0.75 3.27529 0.75 7.16709C0.75 9.64209 2.14219 11.0483 2.98594 11.0483C3.33398 11.0483 3.53437 10.078 3.53437 9.80381C3.53437 9.47686 2.70117 8.78076 2.70117 7.42021C2.70117 4.59365 4.85273 2.58975 7.63711 2.58975C10.0312 2.58975 11.8031 3.95029 11.8031 6.4499C11.8031 8.3167 11.0543 11.8183 8.62852 11.8183C7.75313 11.8183 7.0043 11.1854 7.0043 10.2784C7.0043 8.94951 7.93242 7.66279 7.93242 6.2917C7.93242 3.96436 4.63125 4.38623 4.63125 7.19873C4.63125 7.78936 4.70508 8.44326 4.96875 8.98115C4.48359 11.0694 3.49219 14.1808 3.49219 16.3323C3.49219 16.9968 3.58711 17.6507 3.65039 18.3151C3.76992 18.4487 3.71016 18.4347 3.89297 18.3679C5.66484 15.9421 5.60156 15.4675 6.40313 12.2929C6.83555 13.1155 7.95352 13.5585 8.83945 13.5585C12.573 13.5585 14.25 9.91982 14.25 6.63975C14.25 3.14873 11.2336 0.870605 7.92188 0.870605Z">
-                                                    </path>
-                                                </g>
-                                            </svg> </a>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="elementor-element elementor-element-78bc8008 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="78bc8008" data-element_type="container">
-                        <div class="elementor-element elementor-element-675d55a4 elementor-widget elementor-widget-heading"
-                            data-id="675d55a4" data-element_type="widget" data-widget_type="heading.default">
-                            <div class="elementor-widget-container">
-                                <h3 class="elementor-heading-title elementor-size-default">About Us</h3>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-2675c66c elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
-                            data-id="2675c66c" data-element_type="widget" data-widget_type="icon-list.default">
-                            <div class="elementor-widget-container">
-                                <ul class="elementor-icon-list-items">
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../order-tracking/index.html">
-
-                                            <span class="elementor-icon-list-text">Our Story</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../cart/index.html">
-
-                                            <span class="elementor-icon-list-text">Mission & Values</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">Meet the Team</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">Sustainability Efforts</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../faqs/index.html">
-
-                                            <span class="elementor-icon-list-text">Brand Partnerships</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../faqs/index.html">
-
-                                            <span class="elementor-icon-list-text">Influencer Collaborations</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="elementor-element elementor-element-16032d9e e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="16032d9e" data-element_type="container">
-                        <div class="elementor-element elementor-element-4d7c4cfe elementor-widget elementor-widget-heading"
-                            data-id="4d7c4cfe" data-element_type="widget" data-widget_type="heading.default">
-                            <div class="elementor-widget-container">
-                                <h3 class="elementor-heading-title elementor-size-default">Accessibility</h3>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-40eb361b elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
-                            data-id="40eb361b" data-element_type="widget" data-widget_type="icon-list.default">
-                            <div class="elementor-widget-container">
-                                <ul class="elementor-icon-list-items">
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../my-account/index.html">
-
-                                            <span class="elementor-icon-list-text">Accessibility Statement</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../cart/index.html">
-
-                                            <span class="elementor-icon-list-text">Site Map</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">Web Accessibility Options</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">ADA Compliance</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">Privacy Policy</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">Terms of Service</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="elementor-element elementor-element-31de1b1 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="31de1b1" data-element_type="container">
-                        <div class="elementor-element elementor-element-7362d692 elementor-widget elementor-widget-heading"
-                            data-id="7362d692" data-element_type="widget" data-widget_type="heading.default">
-                            <div class="elementor-widget-container">
-                                <h3 class="elementor-heading-title elementor-size-default">Join Our Community</h3>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-1ee74dbf elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
-                            data-id="1ee74dbf" data-element_type="widget" data-widget_type="icon-list.default">
-                            <div class="elementor-widget-container">
-                                <ul class="elementor-icon-list-items">
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../about-us/index.html">
-
-                                            <span class="elementor-icon-list-text">VIP Membership</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../cart/index.html">
-
-                                            <span class="elementor-icon-list-text">Loyalty Program</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">Customer Reviews</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">Style Forums</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">Job Openings</span>
-                                        </a>
-                                    </li>
-                                    <li class="elementor-icon-list-item">
-                                        <a href="../wishlist/index.html">
-
-                                            <span class="elementor-icon-list-text">Culture and Values</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="elementor-element elementor-element-76773236 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="76773236" data-element_type="container">
-                        <div class="elementor-element elementor-element-dd4dd2b elementor-widget elementor-widget-heading"
-                            data-id="dd4dd2b" data-element_type="widget" data-widget_type="heading.default">
-                            <div class="elementor-widget-container">
-                                <h2 class="elementor-heading-title elementor-size-default">Let’s get in touch</h2>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-3a84aaf4 elementor-widget elementor-widget-heading"
-                            data-id="3a84aaf4" data-element_type="widget" data-widget_type="heading.default">
-                            <div class="elementor-widget-container">
-                                <span class="elementor-heading-title elementor-size-default">Sign up for our
-                                    newsletter and receive 10% off your</span>
-                            </div>
-                        </div>
-                        <div class="elementor-element elementor-element-6e184175 elementor-widget kitify elementor-kitify-subscribe-form"
-                            data-id="6e184175" data-element_type="widget"
-                            data-widget_type="kitify-subscribe-form.default">
-                            <div class="elementor-widget-container">
-                                <div class="kitify-subscribe-form kitify-subscribe-form--inline-layout"
-                                    data-settings="{&quot;redirect&quot;:false,&quot;redirect_url&quot;:&quot;#&quot;,&quot;use_target_list_id&quot;:false,&quot;target_list_id&quot;:&quot;&quot;}">
-                                    <form method="POST" action="#" class="kitify-subscribe-form__form">
-                                        <div class="kitify-subscribe-form__input-group">
-                                            <div class="kitify-subscribe-form__fields">
-                                                <input
-                                                    class="kitify-subscribe-form__input kitify-subscribe-form__mail-field"
-                                                    type="email" name="email" placeholder="Enter your email address..."
-                                                    data-instance-data="[]" />
-                                            </div>
-                                            <a class="kitify-subscribe-form__submit elementor-button elementor-size-md"
-                                                href="#"><span class="elementor-icon"><i aria-hidden="true"
-                                                        class="kitify-subscribe-form__submit-icon novaicon novaicon-arrow-right"></i></span><span
-                                                    class="kitify-subscribe-form__submit-text"></span></a>
-                                        </div>
-                                        <div class="kitify-subscribe-form__message">
-                                            <div class="kitify-subscribe-form__message-inner"><span></span></div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="elementor-element elementor-element-54567fd e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                data-id="54567fd" data-element_type="container"
-                data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-                <div class="e-con-inner">
-                    <div class="elementor-element elementor-element-32ef9720 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="32ef9720" data-element_type="container">
-                        <div class="elementor-element elementor-element-55712cf9 elementor-widget elementor-widget-heading"
-                            data-id="55712cf9" data-element_type="widget" data-widget_type="heading.default">
-                            <div class="elementor-widget-container">
-                                <span class="elementor-heading-title elementor-size-default">© 2024 Mixtas All
-                                    rights reserved. Designed by Novaworks</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="elementor-element elementor-element-ba77c84 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
-                        data-id="ba77c84" data-element_type="container">
-                        <div class="elementor-element elementor-element-3f8296cb elementor-widget elementor-widget-image"
-                            data-id="3f8296cb" data-element_type="widget" data-widget_type="image.default">
-                            <div class="elementor-widget-container">
-                                <img width="192" height="14"
-                                    src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/payment_icon.svg"
-                                    class="attachment-large size-large wp-image-477" alt="" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="site-content styling__quickview" id="nova_wc_quickview">
-            <div class="nova_wc_quickview__content site-content"></div>
-        </div>
-    </div><!-- .site-wrapper -->
-    <!-- .site-search -->
-    <div class="off-canvas-wrapper">
-        <div class="site-canvas-menu off-canvas position-left" id="MenuOffCanvas_3726810d" data-off-canvas
-            data-transition="overlap">
-            <div class="row has-scrollbar">
-                <div class="header-mobiles-primary-menu">
-                    <ul id="menu-main-menu-1" class="vertical menu drilldown mobile-menu" data-drilldown
-                        data-back-button="<li class='js-drilldown-back'><a class='js_mobile_menu_back'></a></li>"
-                        data-auto-height="true" data-animate-height="true">
-                        <li
-                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children menu-item-766">
-                            <a href="../index.html"><span>Home</span></a>
-                            <ul class="menu vertical nested">
-                                <li
-                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-1645">
-                                    <a href="../index.html"><span>Home v1 — ChicCanvas</span></a>
-                                </li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-941">
-                                    <a href="../home-v2/index.html"><span>Home v2 — VogueVibes</span></a>
-                                </li>
-                                <li
-                                    class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1052 current_page_item menu-item-1112">
-                                    <a href="index.html" aria-current="page"><span>Home v3 — ModaMatrix</span></a>
-                                </li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1176">
-                                    <a href="../home-v4/index.html"><span>Home v4 — StyleSymphony</span></a>
-                                </li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1316">
-                                    <a href="../home-v5/index.html"><span>Home v5 — TrendTapestry</span></a>
-                                </li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1368">
-                                    <a href="../home-v6/index.html"><span>Home v6 — HauteHarmony</span></a>
-                                </li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1551">
-                                    <a href="../home-v7/index.html"><span>Home v7 — EleganceEnclave</span></a>
-                                </li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1604">
-                                    <a href="../home-v8/index.html"><span>Home v8 — CoutureCanvas</span></a>
-                                </li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1641">
-                                    <a href="../home-v9/index.html"><span>Home v9 — UrbanUtopia</span></a>
-                                </li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1644">
-                                    <a href="../home-v10/index.html"><span>Home v10 — SilkSculpt</span></a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79">
-                            <a href="../shop/index.html"><span>Shop</span></a>
-                            <ul class="menu vertical nested">
-                                <li
-                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358">
-                                    <a href="#"><span>Shop Pages</span></a>
-                                    <ul class="menu vertical nested">
-                                        <li
-                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
-                                            <a href="../shop/index.html"><span>Shop — Left Sidebar</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-359">
-                                            <a href="../shop/indexac59.html?theme_template_id=353"><span>Shop —
-                                                    Right Sidebar</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-368">
-                                            <a href="../shop/indexc1c5.html?theme_template_id=363"><span>Shop —
-                                                    Fullwidth</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-375">
-                                            <a href="../shop/index9a6d.html?theme_template_id=371"><span>Shop — No
-                                                    Sidebar</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-382">
-                                            <a href="../shop/index2568.html?theme_template_id=376"><span>Shop — 2
-                                                    Columns</span></a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li
-                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-408">
-                                    <a href="#"><span>Product Layouts</span></a>
-                                    <ul class="menu vertical nested">
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-409">
-                                            <a href="../product/carhartt-american-script-sweat-tobacco/index.html"><span>Product
-                                                    — Layout v1</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-414">
-                                            <a
-                                                href="../product/carhartt-american-script-sweat-tobacco/indexfab5.html?theme_template_id=410"><span>Product
-                                                    — Layout v2</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-421">
-                                            <a
-                                                href="../product/carhartt-american-script-sweat-tobacco/index01cf.html?theme_template_id=417"><span>Product
-                                                    — Layout v3</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-426">
-                                            <a
-                                                href="../product/carhartt-american-script-sweat-tobacco/index27db.html?theme_template_id=422"><span>Product
-                                                    — Layout v4</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-435">
-                                            <a
-                                                href="../product/carhartt-american-script-sweat-tobacco/index978a.html?theme_template_id=430"><span>Product
-                                                    — Layout v5</span></a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li
-                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-436">
-                                    <a href="#"><span>Product Pages</span></a>
-                                    <ul class="menu vertical nested">
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-437">
-                                            <a href="../product/carhartt-detroit-jacket-summer-zeus-rigid/index.html"><span>Product
-                                                    — Simple</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-438">
-                                            <a href="../product/the-north-face-denali-jacket-summit-gold/index.html"><span>Product
-                                                    — Variable</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-439">
-                                            <a href="../product/carhartt-hooded-coach-jacket-cypress/index.html"><span>Product
-                                                    — Grouped</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-440">
-                                            <a href="../product/carhartt-windbreaker-pullover-winter-black/index.html"><span>Product
-                                                    — External / Affiliate</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-441">
-                                            <a href="../product/polar-welcome-to-the-new-age-ls-tee-black/index.html"><span>Product
-                                                    — Out of Stock</span></a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li
-                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-442">
-                                    <a href="#"><span>Core Pages</span></a>
-                                    <ul class="menu vertical nested">
-                                        <li
-                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-445">
-                                            <a href="../my-account/index.html"><span>My account</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-447">
-                                            <a href="../cart/index.html"><span>Shopping Cart</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-446">
-                                            <a href="../checkout/index.html"><span>Checkout</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-443">
-                                            <a href="../order-tracking/index.html"><span>Order Tracking</span></a>
-                                        </li>
-                                        <li
-                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-444">
-                                            <a href="../wishlist/index.html"><span>Wishlist</span></a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li
-                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-80">
-                            <a href="#"><span>Pages</span></a>
-                            <ul class="menu vertical nested">
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-83"><a
-                                        href="../about-us/index.html"><span>About Us</span></a></li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81"><a
-                                        href="../faqs/index.html"><span>FAQs</span></a></li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-82"><a
-                                        href="../order-tracking/index.html"><span>Order Tracking</span></a></li>
-                            </ul>
-                        </li>
-                        <li
-                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-77">
-                            <a href="../blog/index.html"><span>Blog</span></a>
-                            <ul class="menu vertical nested">
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-644">
-                                    <a href="../blog/index.html"><span>Blog — Style 01</span></a>
-                                </li>
-                                <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-643"><a
-                                        href="../blog/indexc144.html?theme_template_id=637"><span>Blog — Style
-                                            02</span></a></li>
-                                <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-652"><a
-                                        href="../blog/index0f67.html?theme_template_id=646"><span>Blog — Style
-                                            03</span></a></li>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-645">
-                                    <a href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html"><span>Blog
-                                            — Single</span></a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-84"><a
-                                href="../contact-us/index.html"><span>Contact Us</span></a></li>
-                    </ul> <button class="close-button" aria-label="Close menu" type="button" data-close>
-                        <svg class="nova-close-canvas">
-                            <use xlink:href="#nova-close-canvas"></use>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div id="headerSearchModal" class="full-search-reveal">
-            <button id="btn-close-search-modal" class="close-button close-headerSearchModal" aria-label="Close menu"
-                type="button" data-close>
-                <svg class="nova-close-canvas">
-                    <use xlink:href="#nova-close-canvas"></use>
-                </svg>
-            </button>
-            <div class="site-search full-screen">
-                <div class="header-search">
-
-
-                    <form class="header_search_form" role="search" method="get" action="https://mixtas.novaworks.net/">
-                        <div class="header_search_form_inner">
-                            <div class="header_search_input_wrapper">
-                                <input name="s" id="search_548" class="header_search_input" type="search"
-                                    autocomplete="off" value="" data-min-chars="3" placeholder="Product Search" />
-
-                                <input type="hidden" name="post_type" value="product" />
-                            </div>
-                            <div class="header_search_button_wrapper">
-                                <button class="header_search_button" type="submit">
-                                    <svg class="mixtas-btn-search">
-                                        <use xlink:href="#mixtas-btn-search"></use>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="header_search_ajax_loading">
-                            <span></span>
-                        </div>
-                        <div class="header_search_ajax_results_wrapper">
-                            <div class="header_search_ajax_results">
-                                <div class="header_search_icon">
-                                    <svg class="mixtas-search-product-icon">
-                                        <use xlink:href="#mixtas-search-product-icon"></use>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="kitify-offcanvas minicart-canvas site-canvas-menu off-canvas position-right"
-            id="MiniCartCanvas_4cfba4d5" data-off-canvas data-transition="overlap">
-            <h2 class="title">Shopping Cart<span class="nova_js_count_bag_item_canvas count-item-canvas">0</span>
-            </h2>
-            <div class="add_ajax_loading">
-                <span></span>
-            </div>
-            <div class="widget woocommerce widget_shopping_cart">
-                <h2 class="widgettitle">Cart</h2>
-                <div class="widget_shopping_cart_content"></div>
-            </div> <button class="close-button" aria-label="Close menu" type="button" data-close>
-                <svg class="nova-close-canvas">
-                    <use xlink:href="#nova-close-canvas"></use>
-                </svg>
-            </button>
-        </div>
-        <div class="nova-offcanvas login-canvas site-canvas-menu off-canvas position-right" id="AcccountCanvas_Popup"
-            data-off-canvas data-transition="overlap">
-            <div class="nova-offcanvas__content nova_box_ps">
-
-
-                <div class="container">
-
-                    <div class="woocommerce-notices-wrapper"></div>
-                    <div class="nova-login-wrapper is_popup">
-
-                        <div class="nova-form-container">
-
-                            <div id="nova-login-form" class="">
-
-                                <h2 class="page-title">Login</h2>
-
-
-                                <form action="https://mixtas.novaworks.net/my-account/"
-                                    class="woocommerce-form woocommerce-form-login login" method="post">
-
-                                    <input type="hidden" name="redirect" value="../my-account/index.html" />
-
-
-
-                                    <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                                        <input type="text" class="woocommerce-Input woocommerce-Input--text input-text"
-                                            name="username" id="username" placeholder="Username or email address"
-                                            autocomplete="username" value="" />
-                                    </p>
-                                    <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                                        <input class="woocommerce-Input woocommerce-Input--text input-text"
-                                            type="password" name="password" id="password" placeholder="Password"
-                                            autocomplete="current-password" />
-                                    </p>
-
-
-                                    <p class="form-row form-group">
-                                        <label
-                                            class="woocommerce-form__label woocommerce-form__label-for-checkbox woocommerce-form-login__rememberme inline">
-                                            <input class="woocommerce-form__input woocommerce-form__input-checkbox"
-                                                name="rememberme" type="checkbox" id="rememberme" value="forever" />
-                                            <span>Remember me</span>
-                                        </label>
-                                    </p>
-
-                                    <p class="form-actions">
-                                        <input type="hidden" id="woocommerce-login-nonce" name="woocommerce-login-nonce"
-                                            value="00deda4c8e" /><input type="hidden" name="_wp_http_referer"
-                                            value="/home-v3/" /> <button type="submit"
-                                            class="woocommerce-button button woocommerce-form-login__submit"
-                                            name="login" value="Log in">Log in</button>
-                                        <span class="woocommerce-LostPassword lost_password">
-                                            <a href="../my-account/lost-password/index.html">Lost your password?</a>
+                                                </svg> </a>
                                         </span>
-                                    </p>
-
-
-
-                                    <p class="form-actions extra">Not a member?<a href="#nova-register-wrap"
-                                            class="register-link">Register</a></p>
-
-
-
-
-                                </form>
-
-                            </div>
-
-
-
-                            <div id="nova-register-form" class="">
-
-                                <h2 class="page-title">Register</h2>
-
-
-                                <form action="https://mixtas.novaworks.net/my-account/"
-                                    class="woocommerce-form woocommerce-form-register register" method="post">
-
-                                    <input type="hidden" name="redirect" class="et-login-popup-redirect-input"
-                                        value="../my-account/index.html" />
-
-
-
-
-                                    <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                                        <input type="email" class="woocommerce-Input woocommerce-Input--text input-text"
-                                            name="email" id="reg_email" placeholder="Email address" autocomplete="email"
-                                            value="" />
-                                    </p>
-
-
-                                    <p>A password will be sent to your email address.</p>
-
-
-                                    <wc-order-attribution-inputs></wc-order-attribution-inputs>
-                                    <div class="woocommerce-privacy-policy-text">
-                                        <p>Your personal data will be used to support your experience throughout
-                                            this website, to manage access to your account, and for other purposes
-                                            described in our <a href="../index3b72.html?page_id=3"
-                                                class="woocommerce-privacy-policy-link" target="_blank">privacy
-                                                policy</a>.</p>
+                                        <span class="elementor-grid-item">
+                                            <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-0171b7d"
+                                                href="#" target="_blank">
+                                                <span class="elementor-screen-only"></span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19"
+                                                    viewBox="0 0 19 19" fill="none">
+                                                    <path
+                                                        d="M14.1828 2.32959H16.6649L11.2438 8.52412L17.6211 16.9546H12.6289L8.71603 11.8429L4.24415 16.9546H1.75861L7.55587 10.3276L1.4422 2.32959H6.56095L10.0942 7.00186L14.1828 2.32959ZM13.3109 15.471H14.6856L5.81212 3.73584H4.33556L13.3109 15.471Z">
+                                                    </path>
+                                                </svg> </a>
+                                        </span>
+                                        <span class="elementor-grid-item">
+                                            <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-ce3448b"
+                                                href="#" target="_blank">
+                                                <span class="elementor-screen-only"></span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="19"
+                                                    viewBox="0 0 17 19" fill="none">
+                                                    <g clip-path="url(#clip0_89_2537)">
+                                                        <path
+                                                            d="M8.50353 5.59893C6.26759 5.59893 4.46407 7.40244 4.46407 9.63838C4.46407 11.8743 6.26759 13.6778 8.50353 13.6778C10.7395 13.6778 12.543 11.8743 12.543 9.63838C12.543 7.40244 10.7395 5.59893 8.50353 5.59893ZM8.50353 12.2646C7.05861 12.2646 5.87736 11.0868 5.87736 9.63838C5.87736 8.18994 7.05509 7.01221 8.50353 7.01221C9.95197 7.01221 11.1297 8.18994 11.1297 9.63838C11.1297 11.0868 9.94845 12.2646 8.50353 12.2646ZM13.6504 5.43369C13.6504 5.95752 13.2285 6.37588 12.7082 6.37588C12.1844 6.37588 11.766 5.954 11.766 5.43369C11.766 4.91338 12.1879 4.4915 12.7082 4.4915C13.2285 4.4915 13.6504 4.91338 13.6504 5.43369ZM16.3258 6.38994C16.266 5.12783 15.9777 4.00986 15.0531 3.08877C14.132 2.16768 13.0141 1.87939 11.752 1.81611C10.4512 1.74229 6.55236 1.74229 5.25157 1.81611C3.99298 1.87588 2.87501 2.16416 1.9504 3.08525C1.02579 4.00635 0.741028 5.12432 0.677747 6.38643C0.603918 7.68721 0.603918 11.586 0.677747 12.8868C0.737512 14.1489 1.02579 15.2669 1.9504 16.188C2.87501 17.1091 3.98947 17.3974 5.25157 17.4606C6.55236 17.5345 10.4512 17.5345 11.752 17.4606C13.0141 17.4009 14.132 17.1126 15.0531 16.188C15.9742 15.2669 16.2625 14.1489 16.3258 12.8868C16.3996 11.586 16.3996 7.69072 16.3258 6.38994ZM14.6453 14.2825C14.3711 14.9716 13.8402 15.5024 13.1477 15.7802C12.1106 16.1915 9.64962 16.0966 8.50353 16.0966C7.35743 16.0966 4.89298 16.188 3.85939 15.7802C3.17032 15.506 2.63947 14.9751 2.36173 14.2825C1.9504 13.2454 2.04532 10.7845 2.04532 9.63838C2.04532 8.49229 1.95392 6.02783 2.36173 4.99424C2.63595 4.30518 3.16681 3.77432 3.85939 3.49658C4.8965 3.08525 7.35743 3.18018 8.50353 3.18018C9.64962 3.18018 12.1141 3.08877 13.1477 3.49658C13.8367 3.7708 14.3676 4.30166 14.6453 4.99424C15.0567 6.03135 14.9617 8.49229 14.9617 9.63838C14.9617 10.7845 15.0567 13.2489 14.6453 14.2825Z">
+                                                        </path>
+                                                    </g>
+                                                </svg> </a>
+                                        </span>
+                                        <span class="elementor-grid-item">
+                                            <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-aa47dc0"
+                                                href="#" target="_blank">
+                                                <span class="elementor-screen-only"></span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="19"
+                                                    viewBox="0 0 15 19" fill="none">
+                                                    <g clip-path="url(#clip0_89_2540)">
+                                                        <path
+                                                            d="M7.92188 0.870605C4.31484 0.870605 0.75 3.27529 0.75 7.16709C0.75 9.64209 2.14219 11.0483 2.98594 11.0483C3.33398 11.0483 3.53437 10.078 3.53437 9.80381C3.53437 9.47686 2.70117 8.78076 2.70117 7.42021C2.70117 4.59365 4.85273 2.58975 7.63711 2.58975C10.0312 2.58975 11.8031 3.95029 11.8031 6.4499C11.8031 8.3167 11.0543 11.8183 8.62852 11.8183C7.75313 11.8183 7.0043 11.1854 7.0043 10.2784C7.0043 8.94951 7.93242 7.66279 7.93242 6.2917C7.93242 3.96436 4.63125 4.38623 4.63125 7.19873C4.63125 7.78936 4.70508 8.44326 4.96875 8.98115C4.48359 11.0694 3.49219 14.1808 3.49219 16.3323C3.49219 16.9968 3.58711 17.6507 3.65039 18.3151C3.76992 18.4487 3.71016 18.4347 3.89297 18.3679C5.66484 15.9421 5.60156 15.4675 6.40313 12.2929C6.83555 13.1155 7.95352 13.5585 8.83945 13.5585C12.573 13.5585 14.25 9.91982 14.25 6.63975C14.25 3.14873 11.2336 0.870605 7.92188 0.870605Z">
+                                                        </path>
+                                                    </g>
+                                                </svg> </a>
+                                        </span>
                                     </div>
-                                    <p class="woocommerce-form-row form-row">
-                                        <input type="hidden" id="woocommerce-register-nonce"
-                                            name="woocommerce-register-nonce" value="5e3dcee691" /><input type="hidden"
-                                            name="_wp_http_referer" value="/home-v3/" /> <button type="submit"
-                                            class="woocommerce-Button woocommerce-button button woocommerce-form-register__submit"
-                                            name="register" value="Register">Register</button>
-                                    </p>
-
-
-                                    <p class="form-actions extra">Already a member?<a href="#nova-login-wrap"
-                                            class="login-link">Login</a></p>
-
-
-
-                                </form>
-
+                                </div>
                             </div>
-
-
                         </div>
+                        <div class="elementor-element elementor-element-78bc8008 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                            data-id="78bc8008" data-element_type="container">
+                            <div class="elementor-element elementor-element-675d55a4 elementor-widget elementor-widget-heading"
+                                data-id="675d55a4" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <h3 class="elementor-heading-title elementor-size-default">About Us</h3>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-2675c66c elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
+                                data-id="2675c66c" data-element_type="widget" data-widget_type="icon-list.default">
+                                <div class="elementor-widget-container">
+                                    <ul class="elementor-icon-list-items">
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../order-tracking/index.html">
 
+                                                <span class="elementor-icon-list-text">Our Story</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../cart/index.html">
+
+                                                <span class="elementor-icon-list-text">Mission & Values</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">Meet the Team</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">Sustainability Efforts</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../faqs/index.html">
+
+                                                <span class="elementor-icon-list-text">Brand Partnerships</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../faqs/index.html">
+
+                                                <span class="elementor-icon-list-text">Influencer Collaborations</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="elementor-element elementor-element-16032d9e e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                            data-id="16032d9e" data-element_type="container">
+                            <div class="elementor-element elementor-element-4d7c4cfe elementor-widget elementor-widget-heading"
+                                data-id="4d7c4cfe" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <h3 class="elementor-heading-title elementor-size-default">Accessibility</h3>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-40eb361b elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
+                                data-id="40eb361b" data-element_type="widget" data-widget_type="icon-list.default">
+                                <div class="elementor-widget-container">
+                                    <ul class="elementor-icon-list-items">
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../my-account/index.html">
+
+                                                <span class="elementor-icon-list-text">Accessibility Statement</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../cart/index.html">
+
+                                                <span class="elementor-icon-list-text">Site Map</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">Web Accessibility Options</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">ADA Compliance</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">Privacy Policy</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">Terms of Service</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="elementor-element elementor-element-31de1b1 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                            data-id="31de1b1" data-element_type="container">
+                            <div class="elementor-element elementor-element-7362d692 elementor-widget elementor-widget-heading"
+                                data-id="7362d692" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <h3 class="elementor-heading-title elementor-size-default">Join Our Community</h3>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-1ee74dbf elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
+                                data-id="1ee74dbf" data-element_type="widget" data-widget_type="icon-list.default">
+                                <div class="elementor-widget-container">
+                                    <ul class="elementor-icon-list-items">
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../about-us/index.html">
+
+                                                <span class="elementor-icon-list-text">VIP Membership</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../cart/index.html">
+
+                                                <span class="elementor-icon-list-text">Loyalty Program</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">Customer Reviews</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">Style Forums</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">Job Openings</span>
+                                            </a>
+                                        </li>
+                                        <li class="elementor-icon-list-item">
+                                            <a href="../wishlist/index.html">
+
+                                                <span class="elementor-icon-list-text">Culture and Values</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="elementor-element elementor-element-76773236 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                            data-id="76773236" data-element_type="container">
+                            <div class="elementor-element elementor-element-dd4dd2b elementor-widget elementor-widget-heading"
+                                data-id="dd4dd2b" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <h2 class="elementor-heading-title elementor-size-default">Let’s get in touch</h2>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-3a84aaf4 elementor-widget elementor-widget-heading"
+                                data-id="3a84aaf4" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <span class="elementor-heading-title elementor-size-default">Sign up for our
+                                        newsletter and receive 10% off your</span>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-6e184175 elementor-widget kitify elementor-kitify-subscribe-form"
+                                data-id="6e184175" data-element_type="widget"
+                                data-widget_type="kitify-subscribe-form.default">
+                                <div class="elementor-widget-container">
+                                    <div class="kitify-subscribe-form kitify-subscribe-form--inline-layout"
+                                        data-settings="{&quot;redirect&quot;:false,&quot;redirect_url&quot;:&quot;#&quot;,&quot;use_target_list_id&quot;:false,&quot;target_list_id&quot;:&quot;&quot;}">
+                                        <form method="POST" action="#" class="kitify-subscribe-form__form">
+                                            <div class="kitify-subscribe-form__input-group">
+                                                <div class="kitify-subscribe-form__fields">
+                                                    <input
+                                                        class="kitify-subscribe-form__input kitify-subscribe-form__mail-field"
+                                                        type="email" name="email"
+                                                        placeholder="Enter your email address..."
+                                                        data-instance-data="[]" />
+                                                </div>
+                                                <a class="kitify-subscribe-form__submit elementor-button elementor-size-md"
+                                                    href="#"><span class="elementor-icon"><i aria-hidden="true"
+                                                            class="kitify-subscribe-form__submit-icon novaicon novaicon-arrow-right"></i></span><span
+                                                        class="kitify-subscribe-form__submit-text"></span></a>
+                                            </div>
+                                            <div class="kitify-subscribe-form__message">
+                                                <div class="kitify-subscribe-form__message-inner"><span></span></div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-
+                </div>
+                <div class="elementor-element elementor-element-54567fd e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                    data-id="54567fd" data-element_type="container"
+                    data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+                    <div class="e-con-inner">
+                        <div class="elementor-element elementor-element-32ef9720 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                            data-id="32ef9720" data-element_type="container">
+                            <div class="elementor-element elementor-element-55712cf9 elementor-widget elementor-widget-heading"
+                                data-id="55712cf9" data-element_type="widget" data-widget_type="heading.default">
+                                <div class="elementor-widget-container">
+                                    <span class="elementor-heading-title elementor-size-default">© 2024 Mixtas All
+                                        rights reserved. Designed by Novaworks</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="elementor-element elementor-element-ba77c84 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                            data-id="ba77c84" data-element_type="container">
+                            <div class="elementor-element elementor-element-3f8296cb elementor-widget elementor-widget-image"
+                                data-id="3f8296cb" data-element_type="widget" data-widget_type="image.default">
+                                <div class="elementor-widget-container">
+                                    <img width="192" height="14"
+                                        src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/payment_icon.svg"
+                                        class="attachment-large size-large wp-image-477" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button class="close-button" aria-label="Close menu" type="button" data-close>
-                <svg class="nova-close-canvas">
-                    <use xlink:href="#nova-close-canvas"></use>
-                </svg>
-            </button>
+            <div class="site-content styling__quickview" id="nova_wc_quickview">
+                <div class="nova_wc_quickview__content site-content"></div>
+            </div>
+        </div><!-- .site-wrapper -->
+        <!-- .site-search -->
+        <div class="off-canvas-wrapper">
+            <div class="site-canvas-menu off-canvas position-left" id="MenuOffCanvas_3726810d" data-off-canvas
+                data-transition="overlap">
+                <div class="row has-scrollbar">
+                    <div class="header-mobiles-primary-menu">
+                        <ul id="menu-main-menu-1" class="vertical menu drilldown mobile-menu" data-drilldown
+                            data-back-button="<li class='js-drilldown-back'><a class='js_mobile_menu_back'></a></li>"
+                            data-auto-height="true" data-animate-height="true">
+                            <li
+                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children menu-item-766">
+                                <a href="../index.html"><span>Home</span></a>
+                                <ul class="menu vertical nested">
+                                    <li
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-1645">
+                                        <a href="../index.html"><span>Home v1 — ChicCanvas</span></a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-941">
+                                        <a href="../home-v2/index.html"><span>Home v2 — VogueVibes</span></a>
+                                    </li>
+                                    <li
+                                        class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1052 current_page_item menu-item-1112">
+                                        <a href="index.html" aria-current="page"><span>Home v3 — ModaMatrix</span></a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1176">
+                                        <a href="../home-v4/index.html"><span>Home v4 — StyleSymphony</span></a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1316">
+                                        <a href="../home-v5/index.html"><span>Home v5 — TrendTapestry</span></a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1368">
+                                        <a href="../home-v6/index.html"><span>Home v6 — HauteHarmony</span></a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1551">
+                                        <a href="../home-v7/index.html"><span>Home v7 — EleganceEnclave</span></a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1604">
+                                        <a href="../home-v8/index.html"><span>Home v8 — CoutureCanvas</span></a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1641">
+                                        <a href="../home-v9/index.html"><span>Home v9 — UrbanUtopia</span></a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1644">
+                                        <a href="../home-v10/index.html"><span>Home v10 — SilkSculpt</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li
+                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79">
+                                <a href="../shop/index.html"><span>Shop</span></a>
+                                <ul class="menu vertical nested">
+                                    <li
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358">
+                                        <a href="#"><span>Shop Pages</span></a>
+                                        <ul class="menu vertical nested">
+                                            <li
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
+                                                <a href="../shop/index.html"><span>Shop — Left Sidebar</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-359">
+                                                <a href="../shop/indexac59.html?theme_template_id=353"><span>Shop —
+                                                        Right Sidebar</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-368">
+                                                <a href="../shop/indexc1c5.html?theme_template_id=363"><span>Shop —
+                                                        Fullwidth</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-375">
+                                                <a href="../shop/index9a6d.html?theme_template_id=371"><span>Shop — No
+                                                        Sidebar</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-382">
+                                                <a href="../shop/index2568.html?theme_template_id=376"><span>Shop — 2
+                                                        Columns</span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-408">
+                                        <a href="#"><span>Product Layouts</span></a>
+                                        <ul class="menu vertical nested">
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-409">
+                                                <a href="../product/carhartt-american-script-sweat-tobacco/index.html"><span>Product
+                                                        — Layout v1</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-414">
+                                                <a
+                                                    href="../product/carhartt-american-script-sweat-tobacco/indexfab5.html?theme_template_id=410"><span>Product
+                                                        — Layout v2</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-421">
+                                                <a
+                                                    href="../product/carhartt-american-script-sweat-tobacco/index01cf.html?theme_template_id=417"><span>Product
+                                                        — Layout v3</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-426">
+                                                <a
+                                                    href="../product/carhartt-american-script-sweat-tobacco/index27db.html?theme_template_id=422"><span>Product
+                                                        — Layout v4</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-435">
+                                                <a
+                                                    href="../product/carhartt-american-script-sweat-tobacco/index978a.html?theme_template_id=430"><span>Product
+                                                        — Layout v5</span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-436">
+                                        <a href="#"><span>Product Pages</span></a>
+                                        <ul class="menu vertical nested">
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-437">
+                                                <a
+                                                    href="../product/carhartt-detroit-jacket-summer-zeus-rigid/index.html"><span>Product
+                                                        — Simple</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-438">
+                                                <a
+                                                    href="../product/the-north-face-denali-jacket-summit-gold/index.html"><span>Product
+                                                        — Variable</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-439">
+                                                <a href="../product/carhartt-hooded-coach-jacket-cypress/index.html"><span>Product
+                                                        — Grouped</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-440">
+                                                <a
+                                                    href="../product/carhartt-windbreaker-pullover-winter-black/index.html"><span>Product
+                                                        — External / Affiliate</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-441">
+                                                <a
+                                                    href="../product/polar-welcome-to-the-new-age-ls-tee-black/index.html"><span>Product
+                                                        — Out of Stock</span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-442">
+                                        <a href="#"><span>Core Pages</span></a>
+                                        <ul class="menu vertical nested">
+                                            <li
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-445">
+                                                <a href="../my-account/index.html"><span>My account</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-447">
+                                                <a href="../cart/index.html"><span>Shopping Cart</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-446">
+                                                <a href="../checkout/index.html"><span>Checkout</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-443">
+                                                <a href="../order-tracking/index.html"><span>Order Tracking</span></a>
+                                            </li>
+                                            <li
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-444">
+                                                <a href="../wishlist/index.html"><span>Wishlist</span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li
+                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-80">
+                                <a href="#"><span>Pages</span></a>
+                                <ul class="menu vertical nested">
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-83"><a
+                                            href="../about-us/index.html"><span>About Us</span></a></li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81"><a
+                                            href="../faqs/index.html"><span>FAQs</span></a></li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-82"><a
+                                            href="../order-tracking/index.html"><span>Order Tracking</span></a></li>
+                                </ul>
+                            </li>
+                            <li
+                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-77">
+                                <a href="../blog/index.html"><span>Blog</span></a>
+                                <ul class="menu vertical nested">
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-644">
+                                        <a href="../blog/index.html"><span>Blog — Style 01</span></a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-643"><a
+                                            href="../blog/indexc144.html?theme_template_id=637"><span>Blog — Style
+                                                02</span></a></li>
+                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-652"><a
+                                            href="../blog/index0f67.html?theme_template_id=646"><span>Blog — Style
+                                                03</span></a></li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-645">
+                                        <a
+                                            href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html"><span>Blog
+                                                — Single</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-84"><a
+                                    href="../contact-us/index.html"><span>Contact Us</span></a></li>
+                        </ul> <button class="close-button" aria-label="Close menu" type="button" data-close>
+                            <svg class="nova-close-canvas">
+                                <use xlink:href="#nova-close-canvas"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="headerSearchModal" class="full-search-reveal">
+                <button id="btn-close-search-modal" class="close-button close-headerSearchModal" aria-label="Close menu"
+                    type="button" data-close>
+                    <svg class="nova-close-canvas">
+                        <use xlink:href="#nova-close-canvas"></use>
+                    </svg>
+                </button>
+                <div class="site-search full-screen">
+                    <div class="header-search">
+
+
+                        <form class="header_search_form" role="search" method="get"
+                            action="https://mixtas.novaworks.net/">
+                            <div class="header_search_form_inner">
+                                <div class="header_search_input_wrapper">
+                                    <input name="s" id="search_548" class="header_search_input" type="search"
+                                        autocomplete="off" value="" data-min-chars="3" placeholder="Product Search" />
+
+                                    <input type="hidden" name="post_type" value="product" />
+                                </div>
+                                <div class="header_search_button_wrapper">
+                                    <button class="header_search_button" type="submit">
+                                        <svg class="mixtas-btn-search">
+                                            <use xlink:href="#mixtas-btn-search"></use>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="header_search_ajax_loading">
+                                <span></span>
+                            </div>
+                            <div class="header_search_ajax_results_wrapper">
+                                <div class="header_search_ajax_results">
+                                    <div class="header_search_icon">
+                                        <svg class="mixtas-search-product-icon">
+                                            <use xlink:href="#mixtas-search-product-icon"></use>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="kitify-offcanvas minicart-canvas site-canvas-menu off-canvas position-right"
+                id="MiniCartCanvas_4cfba4d5" data-off-canvas data-transition="overlap">
+                <h2 class="title">Shopping Cart<span class="nova_js_count_bag_item_canvas count-item-canvas">0</span>
+                </h2>
+                <div class="add_ajax_loading">
+                    <span></span>
+                </div>
+                <div class="widget woocommerce widget_shopping_cart">
+                    <h2 class="widgettitle">Cart</h2>
+                    <div class="widget_shopping_cart_content"></div>
+                </div> <button class="close-button" aria-label="Close menu" type="button" data-close>
+                    <svg class="nova-close-canvas">
+                        <use xlink:href="#nova-close-canvas"></use>
+                    </svg>
+                </button>
+            </div>
         </div>
-
-
-    </div>
-    <div id="svg-defs" class="svg-defs hide">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <defs>
-                <symbol id="mixtas-burger-menu" fill="none" viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor" d="M0 0h22v2H0zM0 7h10v2H0zM0 14h16v2H0z" />
-                </symbol>
-                <symbol id="mixtas-search" fill="none" viewBox="0 0 19 20">
-                    <path d="M18.0211 18.4375L12.8824 13.2988" stroke="currentColor" stroke-width="1.2"
-                        stroke-linecap="round" stroke-linejoin="round"></path>
-                    <path
-                        d="M8.02112 15.3125C11.8181 15.3125 14.8961 12.2345 14.8961 8.4375C14.8961 4.64054 11.8181 1.5625 8.02112 1.5625C4.22416 1.5625 1.14612 4.64054 1.14612 8.4375C1.14612 12.2345 4.22416 15.3125 8.02112 15.3125Z"
-                        stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-                    </path>
-                </symbol>
-                <symbol id="mixtas-bag" fill="none" viewBox="0 0 18 21" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M3.50856 19.6429H13.6343C15.4114 19.6429 16.8571 18.1972 16.8571 16.42V6.78573C16.8571 6.47144 16.6 6.2143 16.2857 6.2143H12.8571V5.35716C12.8571 2.9943 10.9343 1.07144 8.57142 1.07144C6.20856 1.07144 4.2857 2.9943 4.2857 5.35716V6.2143H0.857134C0.542848 6.2143 0.285706 6.47144 0.285706 6.78573V16.42C0.285706 18.1972 1.73142 19.6429 3.50856 19.6429ZM5.42856 5.35716C5.42856 3.62287 6.83713 2.2143 8.57142 2.2143C10.3057 2.2143 11.7143 3.62287 11.7143 5.35716V6.2143H5.42856V5.35716ZM1.42856 7.35716H4.2857V8.78573C4.2857 9.10001 4.54285 9.35716 4.85713 9.35716C5.17142 9.35716 5.42856 9.10001 5.42856 8.78573V7.35716H11.7143V8.78573C11.7143 9.10001 11.9714 9.35716 12.2857 9.35716C12.6 9.35716 12.8571 9.10001 12.8571 8.78573V7.35716H15.7143V16.42C15.7143 17.5657 14.78 18.5 13.6343 18.5H3.50856C2.36285 18.5 1.42856 17.5657 1.42856 16.42V7.35716Z"
-                        fill="currentColor"></path>
-                </symbol>
-                <symbol fill="none" id="mixtas-wishlist" viewBox="0 0 20 18" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M4.10276 0.535722C1.83186 1.44929 -0.014983 3.82623 0.26654 7.33722C0.477821 9.97215 1.93049 12.1153 3.64664 13.7278C5.36367 15.3411 7.39577 16.4739 8.89721 17.0966C9.41075 17.3094 9.98779 17.3218 10.512 17.1222C12.0881 16.5221 14.1129 15.3949 15.8125 13.7748C17.5105 12.1562 18.9254 10.004 19.1783 7.35969C19.6544 3.79445 17.7508 1.42311 15.4153 0.528745C13.4653 -0.218011 11.0862 0.0495936 9.7063 1.64133C8.31911 0.037531 6.02213 -0.236441 4.10276 0.535722ZM4.59785 1.76639C6.37434 1.05172 8.28816 1.53022 9.1221 3.13029C9.23724 3.35128 9.46656 3.48906 9.71577 3.48697C9.96498 3.4849 10.192 3.3433 10.3035 3.12042C11.0791 1.56961 13.0744 1.05272 14.941 1.76755C16.7373 2.45542 18.2576 4.26655 17.8619 7.19546C17.8607 7.20431 17.8596 7.21324 17.8588 7.22208C17.6487 9.45569 16.4499 11.3346 14.8972 12.8146C13.3432 14.2958 11.4761 15.3357 10.0401 15.8825C9.8371 15.9597 9.61062 15.9563 9.40536 15.8712C8.01666 15.2953 6.13049 14.2415 4.55499 12.761C2.9786 11.2799 1.76454 9.42244 1.58883 7.23119C1.35374 4.29929 2.86493 2.46355 4.59785 1.76639Z"
-                        fill="currentColor"></path>
-                </symbol>
-                <symbol id="mixtas-menu-user" fill="none" viewBox="0 0 20 21" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0_15_749)">
+        <div id="svg-defs" class="svg-defs hide">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <symbol id="mixtas-burger-menu" fill="none" viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor" d="M0 0h22v2H0zM0 7h10v2H0zM0 14h16v2H0z" />
+                    </symbol>
+                    <symbol id="mixtas-search" fill="none" viewBox="0 0 19 20">
+                        <path d="M18.0211 18.4375L12.8824 13.2988" stroke="currentColor" stroke-width="1.2"
+                            stroke-linecap="round" stroke-linejoin="round"></path>
                         <path
-                            d="M0.833313 19.6667C0.833313 15.0642 4.56415 11.3333 9.16665 11.3333H10.8333C15.4358 11.3333 19.1666 15.0642 19.1666 19.6667"
+                            d="M8.02112 15.3125C11.8181 15.3125 14.8961 12.2345 14.8961 8.4375C14.8961 4.64054 11.8181 1.5625 8.02112 1.5625C4.22416 1.5625 1.14612 4.64054 1.14612 8.4375C1.14612 12.2345 4.22416 15.3125 8.02112 15.3125Z"
                             stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
                         </path>
+                    </symbol>
+                    <symbol id="mixtas-bag" fill="none" viewBox="0 0 18 21" xmlns="http://www.w3.org/2000/svg">
                         <path
-                            d="M10 11.3333C12.7614 11.3333 15 9.09477 15 6.33334C15 3.57192 12.7614 1.33334 10 1.33334C7.23858 1.33334 5 3.57192 5 6.33334C5 9.09477 7.23858 11.3333 10 11.3333Z"
-                            stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            d="M3.50856 19.6429H13.6343C15.4114 19.6429 16.8571 18.1972 16.8571 16.42V6.78573C16.8571 6.47144 16.6 6.2143 16.2857 6.2143H12.8571V5.35716C12.8571 2.9943 10.9343 1.07144 8.57142 1.07144C6.20856 1.07144 4.2857 2.9943 4.2857 5.35716V6.2143H0.857134C0.542848 6.2143 0.285706 6.47144 0.285706 6.78573V16.42C0.285706 18.1972 1.73142 19.6429 3.50856 19.6429ZM5.42856 5.35716C5.42856 3.62287 6.83713 2.2143 8.57142 2.2143C10.3057 2.2143 11.7143 3.62287 11.7143 5.35716V6.2143H5.42856V5.35716ZM1.42856 7.35716H4.2857V8.78573C4.2857 9.10001 4.54285 9.35716 4.85713 9.35716C5.17142 9.35716 5.42856 9.10001 5.42856 8.78573V7.35716H11.7143V8.78573C11.7143 9.10001 11.9714 9.35716 12.2857 9.35716C12.6 9.35716 12.8571 9.10001 12.8571 8.78573V7.35716H15.7143V16.42C15.7143 17.5657 14.78 18.5 13.6343 18.5H3.50856C2.36285 18.5 1.42856 17.5657 1.42856 16.42V7.35716Z"
+                            fill="currentColor"></path>
+                    </symbol>
+                    <symbol fill="none" id="mixtas-wishlist" viewBox="0 0 20 18" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M4.10276 0.535722C1.83186 1.44929 -0.014983 3.82623 0.26654 7.33722C0.477821 9.97215 1.93049 12.1153 3.64664 13.7278C5.36367 15.3411 7.39577 16.4739 8.89721 17.0966C9.41075 17.3094 9.98779 17.3218 10.512 17.1222C12.0881 16.5221 14.1129 15.3949 15.8125 13.7748C17.5105 12.1562 18.9254 10.004 19.1783 7.35969C19.6544 3.79445 17.7508 1.42311 15.4153 0.528745C13.4653 -0.218011 11.0862 0.0495936 9.7063 1.64133C8.31911 0.037531 6.02213 -0.236441 4.10276 0.535722ZM4.59785 1.76639C6.37434 1.05172 8.28816 1.53022 9.1221 3.13029C9.23724 3.35128 9.46656 3.48906 9.71577 3.48697C9.96498 3.4849 10.192 3.3433 10.3035 3.12042C11.0791 1.56961 13.0744 1.05272 14.941 1.76755C16.7373 2.45542 18.2576 4.26655 17.8619 7.19546C17.8607 7.20431 17.8596 7.21324 17.8588 7.22208C17.6487 9.45569 16.4499 11.3346 14.8972 12.8146C13.3432 14.2958 11.4761 15.3357 10.0401 15.8825C9.8371 15.9597 9.61062 15.9563 9.40536 15.8712C8.01666 15.2953 6.13049 14.2415 4.55499 12.761C2.9786 11.2799 1.76454 9.42244 1.58883 7.23119C1.35374 4.29929 2.86493 2.46355 4.59785 1.76639Z"
+                            fill="currentColor"></path>
+                    </symbol>
+                    <symbol id="mixtas-menu-user" fill="none" viewBox="0 0 20 21" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_15_749)">
+                            <path
+                                d="M0.833313 19.6667C0.833313 15.0642 4.56415 11.3333 9.16665 11.3333H10.8333C15.4358 11.3333 19.1666 15.0642 19.1666 19.6667"
+                                stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                            <path
+                                d="M10 11.3333C12.7614 11.3333 15 9.09477 15 6.33334C15 3.57192 12.7614 1.33334 10 1.33334C7.23858 1.33334 5 3.57192 5 6.33334C5 9.09477 7.23858 11.3333 10 11.3333Z"
+                                stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-shopbycat" viewBox="0 0 27 14">
+                        <g fill="currentColor" fill-rule="evenodd">
+                            <path
+                                d="M26.085 1.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M26.085 4.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M26.085 7.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M26.085 10.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M14.744 13.342H1.134c-.313 0-.567-.225-.567-.5 0-.278.254-.501.567-.501h13.61c.313 0 .567.223.567.501 0 .275-.254.5-.567.5" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-addtocart" viewBox="0 0 14 16" fill="none">
+                        <path d="M7.6 14.6H1V4.40002H11.8V8.60002" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                        <path
+                            d="M4 6.20002V3.80002C4 2.47462 5.0746 1.40002 6.4 1.40002C7.7254 1.40002 8.8 2.47462 8.8 3.80002V6.20002"
+                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M11.2 11V14.6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         </path>
-                    </g>
-                </symbol>
-                <symbol id="mixtas-shopbycat" viewBox="0 0 27 14">
-                    <g fill="currentColor" fill-rule="evenodd">
-                        <path
-                            d="M26.085 1.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M26.085 4.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M26.085 7.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M26.085 10.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M14.744 13.342H1.134c-.313 0-.567-.225-.567-.5 0-.278.254-.501.567-.501h13.61c.313 0 .567.223.567.501 0 .275-.254.5-.567.5" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-addtocart" viewBox="0 0 14 16" fill="none">
-                    <path d="M7.6 14.6H1V4.40002H11.8V8.60002" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round"></path>
-                    <path
-                        d="M4 6.20002V3.80002C4 2.47462 5.0746 1.40002 6.4 1.40002C7.7254 1.40002 8.8 2.47462 8.8 3.80002V6.20002"
-                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                    <path d="M11.2 11V14.6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                    </path>
-                    <path d="M9.39996 12.8H13" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                    </path>
-                </symbol>
-                <symbol id="mixtas-mc-fb" viewBox="0 0 26 26">
-                    <g fill="none" fill-rule="evenodd">
-                        <path d="M-2-2h30v30H-2z" />
-                        <path
-                            d="M15.1 11.75h-1.7a.4.4 0 0 1-.4-.4v-.85a3.75 3.75 0 0 1 3.75-3.75h2.1c.22 0 .4.18.4.4v1.7a.4.4 0 0 1-.4.4h-2.1c-.69 0-1.25.56-1.25 1.25v.85a.4.4 0 0 1-.4.4z"
-                            fill="var(--site-accent-color)" />
-                        <path
-                            d="M13 23v-7.5h-2a.5.5 0 0 1-.5-.5v-1.5a.5.5 0 0 1 .5-.5h7.75a.5.5 0 0 1 .5.5V15a.5.5 0 0 1-.5.5H15.5V23H18a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5H8a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h5zM8 .5h10A7.5 7.5 0 0 1 25.5 8v10a7.5 7.5 0 0 1-7.5 7.5H8A7.5 7.5 0 0 1 .5 18V8A7.5 7.5 0 0 1 8 .5z"
+                        <path d="M9.39996 12.8H13" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                        </path>
+                    </symbol>
+                    <symbol id="mixtas-mc-fb" viewBox="0 0 26 26">
+                        <g fill="none" fill-rule="evenodd">
+                            <path d="M-2-2h30v30H-2z" />
+                            <path
+                                d="M15.1 11.75h-1.7a.4.4 0 0 1-.4-.4v-.85a3.75 3.75 0 0 1 3.75-3.75h2.1c.22 0 .4.18.4.4v1.7a.4.4 0 0 1-.4.4h-2.1c-.69 0-1.25.56-1.25 1.25v.85a.4.4 0 0 1-.4.4z"
+                                fill="var(--site-accent-color)" />
+                            <path
+                                d="M13 23v-7.5h-2a.5.5 0 0 1-.5-.5v-1.5a.5.5 0 0 1 .5-.5h7.75a.5.5 0 0 1 .5.5V15a.5.5 0 0 1-.5.5H15.5V23H18a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5H8a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h5zM8 .5h10A7.5 7.5 0 0 1 25.5 8v10a7.5 7.5 0 0 1-7.5 7.5H8A7.5 7.5 0 0 1 .5 18V8A7.5 7.5 0 0 1 8 .5z"
+                                fill="currentColor" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-btn-search" viewBox="0 0 22 22">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M14.962 14.12l4.86 4.86a.6.6 0 0 1-.42 1.02.603.603 0 0 1-.422-.177l-4.86-4.86a8.493 8.493 0 0 1-5.592 2.092C3.827 17.055 0 13.228 0 8.528 0 3.827 3.823 0 8.528 0c4.7 0 8.527 3.823 8.527 8.528 0 2.137-.789 4.093-2.093 5.592zM8.523 1.197c-4.04 0-7.33 3.286-7.33 7.33 0 4.045 3.29 7.336 7.33 7.336 4.045 0 7.33-3.295 7.33-7.335s-3.285-7.33-7.33-7.33z"
                             fill="currentColor" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-btn-search" viewBox="0 0 22 22">
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M14.962 14.12l4.86 4.86a.6.6 0 0 1-.42 1.02.603.603 0 0 1-.422-.177l-4.86-4.86a8.493 8.493 0 0 1-5.592 2.092C3.827 17.055 0 13.228 0 8.528 0 3.827 3.823 0 8.528 0c4.7 0 8.527 3.823 8.527 8.528 0 2.137-.789 4.093-2.093 5.592zM8.523 1.197c-4.04 0-7.33 3.286-7.33 7.33 0 4.045 3.29 7.336 7.33 7.336 4.045 0 7.33-3.295 7.33-7.335s-3.285-7.33-7.33-7.33z"
-                        fill="currentColor" />
-                </symbol>
-                <symbol id="mixtas-search-product-icon" viewBox="0 0 48 48">
-                    <g transform="translate(.5 .5)" fill="none" stroke="currentColor" stroke-miterlimit="10">
-                        <path data-cap="butt" data-color="color-2" d="M46 43l-5.757-5.757" />
-                        <circle data-color="color-2" stroke-linecap="square" cx="36" cy="33" r="6" />
-                        <path stroke-linecap="square"
-                            d="M24 31H2v0a6 6 0 0 0 6 6h16M6 26V10a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v11M23 12h2" />
-                    </g>
-                </symbol>
-                <symbol id="nova-close-canvas" viewBox="0 0 22 22">
-                    <path
-                        d="M12.592 11.015l8.988-8.939c.43-.426.43-1.117 0-1.542a1.108 1.108 0 0 0-1.558 0l-8.98 8.931L1.977.401A1.1 1.1 0 0 0 .42.4a1.107 1.107 0 0 0 0 1.562l9.057 9.058-9.09 9.039a1.084 1.084 0 0 0 0 1.543c.43.426 1.129.426 1.558 0l9.082-9.032 9.028 9.028a1.1 1.1 0 0 0 1.557 0c.43-.432.43-1.131 0-1.562l-9.02-9.022z"
-                        fill="currentColor" fill-rule="evenodd" />
-                </symbol>
-                <symbol id="mixtas-settings-bar" viewBox="0 0 26 26">
-                    <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="round"
-                        stroke-linejoin="round">
+                    </symbol>
+                    <symbol id="mixtas-search-product-icon" viewBox="0 0 48 48">
+                        <g transform="translate(.5 .5)" fill="none" stroke="currentColor" stroke-miterlimit="10">
+                            <path data-cap="butt" data-color="color-2" d="M46 43l-5.757-5.757" />
+                            <circle data-color="color-2" stroke-linecap="square" cx="36" cy="33" r="6" />
+                            <path stroke-linecap="square"
+                                d="M24 31H2v0a6 6 0 0 0 6 6h16M6 26V10a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v11M23 12h2" />
+                        </g>
+                    </symbol>
+                    <symbol id="nova-close-canvas" viewBox="0 0 22 22">
                         <path
-                            d="M3.694 5.381c.031-.037.069-.081.106-.119.456-.468.919-.924 1.388-1.387.612-.6 1.35-.656 2.05-.156.374.268.75.531 1.112.806.119.087.213.106.356.038.419-.194.838-.37 1.263-.538.137-.05.194-.125.219-.262.074-.475.13-.957.25-1.425a2.87 2.87 0 0 1 .38-.832c.188-.281.52-.381.826-.487h2.618a.554.554 0 0 0 .107.05c.625.175.987.594 1.106 1.225.088.475.169.95.238 1.425.018.137.075.212.212.262.456.175.906.375 1.363.55a.356.356 0 0 0 .287-.025c.394-.262.775-.544 1.163-.819.718-.506 1.443-.45 2.068.17l.306.305M22.07 5.076c.02.02-.03-.03 0 0M22.637 6.175c.063.381-.05.713-.33 1.119-.27.381-.55.756-.807 1.144a.355.355 0 0 0-.031.287c.168.444.362.875.531 1.319.05.131.125.181.25.2.475.075.956.131 1.425.25.281.069.556.2.794.362.287.194.4.525.5.844v2.619a.746.746 0 0 0-.05.1c-.181.631-.607.993-1.25 1.112-.475.088-.95.163-1.425.231-.144.02-.213.088-.263.22-.169.424-.337.85-.525 1.268-.062.144-.05.238.038.356.281.375.544.756.812 1.138.488.694.438 1.425-.156 2.031-.456.469-.919.931-1.387 1.388-.607.593-1.338.65-2.032.156-.394-.275-.781-.563-1.181-.838a.35.35 0 0 0-.262-.031c-.45.175-.894.356-1.332.55a.372.372 0 0 0-.187.244c-.094.475-.163.95-.244 1.425-.094.556-.394.956-.912 1.181-.1.044-.2.075-.3.112h-2.62c-.018-.012-.037-.03-.056-.037-.687-.175-1.062-.631-1.168-1.325-.069-.456-.156-.906-.225-1.356-.019-.138-.075-.213-.213-.269-.094-.038-.181-.069-.275-.106M8.575 21.469a.22.22 0 0 0-.088.037c-.406.275-.8.563-1.2.844-.693.487-1.418.431-2.025-.169-.462-.45-.918-.906-1.368-1.369-.6-.612-.657-1.343-.163-2.05.263-.375.531-.75.806-1.118.094-.119.1-.219.038-.356a18.06 18.06 0 0 1-.525-1.244c-.056-.157-.144-.213-.294-.238-.475-.075-.956-.143-1.425-.243a2.544 2.544 0 0 1-.7-.288c-.337-.206-.469-.563-.594-.919v-.931M1.031 12.113v-.375a.746.746 0 0 0 .05-.1c.182-.638.613-.994 1.25-1.107.475-.087.95-.15 1.425-.244a.363.363 0 0 0 .225-.18c.194-.438.375-.888.544-1.338a.32.32 0 0 0-.025-.263c-.281-.412-.575-.812-.856-1.218a1.862 1.862 0 0 1-.207-.375" />
-                        <path
-                            d="M11.044 16.325c.07.04.03-.04.1 0m1.319.444c.175.025.35.037.525.037 2.087.019 3.83-1.719 3.825-3.812 0-2.094-1.7-3.8-3.807-3.813C10.92 9.162 9.181 10.9 9.181 13c0 .906.319 1.737.85 2.394" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-menu-bar" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 12h22M1 5h22M1 19h22" stroke="currentColor" stroke-width="1" stroke-miterlimit="10"
-                        stroke-linecap="square" />
-                </symbol>
-                <symbol id="mixtas-user-bar" viewBox="0 0 24 25">
-                    <g fill="none" fill-rule="evenodd">
-                        <circle stroke="currentColor" stroke-linecap="round" cx="12" cy="12" r="11.52" />
-                        <path d="M0 0h24v24H0z" />
-                        <path
-                            d="M14.368 17.053c-.07-.773-.043-1.313-.043-2.02.35-.184.978-1.356 1.084-2.347.275-.022.71-.291.837-1.352.069-.57-.204-.89-.37-.991.448-1.349 1.38-5.52-1.722-5.951-.32-.56-1.137-.844-2.2-.844-4.249.078-4.762 3.209-3.83 6.795-.166.1-.438.421-.37.99.128 1.062.562 1.33.837 1.353.106.99.758 2.163 1.11 2.347 0 .707.026 1.247-.044 2.02-.605 1.628-3.714 1.755-5.507 3.324 1.875 1.888 4.913 3.238 8.12 3.238 3.206 0 6.975-2.531 7.602-3.222-1.782-1.584-4.897-1.707-5.504-3.34z"
-                            stroke="currentColor" stroke-linecap="round" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-wishlist-bar" viewBox="0 0 28 25">
-                    <path
-                        d="M3.205 13.395A7.52 7.52 0 1 1 13.837 2.757 7.52 7.52 0 0 1 24.47 13.395L13.837 24 3.205 13.395z"
-                        stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </symbol>
-                <symbol id="mixtas-bag-bar" viewBox="0 0 18 22">
-                    <g stroke="currentColor" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <path
-                            d="M16.106 21H1.45A.457.457 0 0 1 1 20.552V6.448C1 6.207 1.207 6 1.45 6h14.656c.242 0 .45.207.45.448v14.104a.457.457 0 0 1-.45.448z"
+                            d="M12.592 11.015l8.988-8.939c.43-.426.43-1.117 0-1.542a1.108 1.108 0 0 0-1.558 0l-8.98 8.931L1.977.401A1.1 1.1 0 0 0 .42.4a1.107 1.107 0 0 0 0 1.562l9.057 9.058-9.09 9.039a1.084 1.084 0 0 0 0 1.543c.43.426 1.129.426 1.558 0l9.082-9.032 9.028 9.028a1.1 1.1 0 0 0 1.557 0c.43-.432.43-1.131 0-1.562l-9.02-9.022z"
+                            fill="currentColor" fill-rule="evenodd" />
+                    </symbol>
+                    <symbol id="mixtas-settings-bar" viewBox="0 0 26 26">
+                        <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path
+                                d="M3.694 5.381c.031-.037.069-.081.106-.119.456-.468.919-.924 1.388-1.387.612-.6 1.35-.656 2.05-.156.374.268.75.531 1.112.806.119.087.213.106.356.038.419-.194.838-.37 1.263-.538.137-.05.194-.125.219-.262.074-.475.13-.957.25-1.425a2.87 2.87 0 0 1 .38-.832c.188-.281.52-.381.826-.487h2.618a.554.554 0 0 0 .107.05c.625.175.987.594 1.106 1.225.088.475.169.95.238 1.425.018.137.075.212.212.262.456.175.906.375 1.363.55a.356.356 0 0 0 .287-.025c.394-.262.775-.544 1.163-.819.718-.506 1.443-.45 2.068.17l.306.305M22.07 5.076c.02.02-.03-.03 0 0M22.637 6.175c.063.381-.05.713-.33 1.119-.27.381-.55.756-.807 1.144a.355.355 0 0 0-.031.287c.168.444.362.875.531 1.319.05.131.125.181.25.2.475.075.956.131 1.425.25.281.069.556.2.794.362.287.194.4.525.5.844v2.619a.746.746 0 0 0-.05.1c-.181.631-.607.993-1.25 1.112-.475.088-.95.163-1.425.231-.144.02-.213.088-.263.22-.169.424-.337.85-.525 1.268-.062.144-.05.238.038.356.281.375.544.756.812 1.138.488.694.438 1.425-.156 2.031-.456.469-.919.931-1.387 1.388-.607.593-1.338.65-2.032.156-.394-.275-.781-.563-1.181-.838a.35.35 0 0 0-.262-.031c-.45.175-.894.356-1.332.55a.372.372 0 0 0-.187.244c-.094.475-.163.95-.244 1.425-.094.556-.394.956-.912 1.181-.1.044-.2.075-.3.112h-2.62c-.018-.012-.037-.03-.056-.037-.687-.175-1.062-.631-1.168-1.325-.069-.456-.156-.906-.225-1.356-.019-.138-.075-.213-.213-.269-.094-.038-.181-.069-.275-.106M8.575 21.469a.22.22 0 0 0-.088.037c-.406.275-.8.563-1.2.844-.693.487-1.418.431-2.025-.169-.462-.45-.918-.906-1.368-1.369-.6-.612-.657-1.343-.163-2.05.263-.375.531-.75.806-1.118.094-.119.1-.219.038-.356a18.06 18.06 0 0 1-.525-1.244c-.056-.157-.144-.213-.294-.238-.475-.075-.956-.143-1.425-.243a2.544 2.544 0 0 1-.7-.288c-.337-.206-.469-.563-.594-.919v-.931M1.031 12.113v-.375a.746.746 0 0 0 .05-.1c.182-.638.613-.994 1.25-1.107.475-.087.95-.15 1.425-.244a.363.363 0 0 0 .225-.18c.194-.438.375-.888.544-1.338a.32.32 0 0 0-.025-.263c-.281-.412-.575-.812-.856-1.218a1.862 1.862 0 0 1-.207-.375" />
+                            <path
+                                d="M11.044 16.325c.07.04.03-.04.1 0m1.319.444c.175.025.35.037.525.037 2.087.019 3.83-1.719 3.825-3.812 0-2.094-1.7-3.8-3.807-3.813C10.92 9.162 9.181 10.9 9.181 13c0 .906.319 1.737.85 2.394" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-menu-bar" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 12h22M1 5h22M1 19h22" stroke="currentColor" stroke-width="1" stroke-miterlimit="10"
                             stroke-linecap="square" />
-                        <path d="M4.333 6c0-5 4.445-5 4.445-5s4.444 0 4.444 5" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-grid" viewBox="0 0 20 20">
-                    <g stroke="currentColor" fill="none" fill-rule="evenodd">
-                        <path d="M.5.5h8v8h-8zM11.5.5h8v8h-8zM11.5 11.5h8v8h-8zM.5 11.5h8v8h-8z" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-list" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 2H2v7h7V2zM9 15H2v7h7v-7zM14 3h8M14 8h8M14 16h8M14 21h8" stroke="currentColor"
-                        stroke-width="1" stroke-miterlimit="10" stroke-linecap="square" />
-                </symbol>
-                <symbol id="mixtas-product-wishlist-btn" viewBox="0 0 21 19">
-                    <path
-                        d="M2.74 8.648l7.833 8.665 7.81-8.665c.01-.015.021-.033.035-.048a4.515 4.515 0 0 0 1.142-2.995 4.52 4.52 0 0 0-4.518-4.517 4.536 4.536 0 0 0-4.11 2.644c-.132.293-.61.293-.744 0A4.535 4.535 0 0 0 6.08 1.088 4.52 4.52 0 0 0 1.56 5.605c0 1.105.406 2.16 1.143 2.995a.472.472 0 0 1 .037.048zm7.834 9.68a.418.418 0 0 1-.304-.132L2.087 9.148c-.017-.025-.032-.042-.045-.058a5.34 5.34 0 0 1-1.3-3.485A5.34 5.34 0 0 1 6.08.27c1.822 0 3.508.933 4.481 2.439A5.345 5.345 0 0 1 15.042.27a5.34 5.34 0 0 1 5.337 5.335 5.33 5.33 0 0 1-1.304 3.485c-.012.016-.025.033-.04.058l-8.158 9.048a.416.416 0 0 1-.303.131z"
-                        fill="currentColor" fill-rule="evenodd" />
-                </symbol>
-                <symbol id="mixtas-product-quickview-btn" viewBox="0 0 19 12">
-                    <g fill="currentColor" fill-rule="evenodd">
+                    </symbol>
+                    <symbol id="mixtas-user-bar" viewBox="0 0 24 25">
+                        <g fill="none" fill-rule="evenodd">
+                            <circle stroke="currentColor" stroke-linecap="round" cx="12" cy="12" r="11.52" />
+                            <path d="M0 0h24v24H0z" />
+                            <path
+                                d="M14.368 17.053c-.07-.773-.043-1.313-.043-2.02.35-.184.978-1.356 1.084-2.347.275-.022.71-.291.837-1.352.069-.57-.204-.89-.37-.991.448-1.349 1.38-5.52-1.722-5.951-.32-.56-1.137-.844-2.2-.844-4.249.078-4.762 3.209-3.83 6.795-.166.1-.438.421-.37.99.128 1.062.562 1.33.837 1.353.106.99.758 2.163 1.11 2.347 0 .707.026 1.247-.044 2.02-.605 1.628-3.714 1.755-5.507 3.324 1.875 1.888 4.913 3.238 8.12 3.238 3.206 0 6.975-2.531 7.602-3.222-1.782-1.584-4.897-1.707-5.504-3.34z"
+                                stroke="currentColor" stroke-linecap="round" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-wishlist-bar" viewBox="0 0 28 25">
                         <path
-                            d="M1.529 6.341a9.749 9.749 0 0 0 8.192 4.429c3.325 0 6.365-1.65 8.193-4.429C16.086 3.56 13.046 1.91 9.721 1.91c-3.325 0-6.365 1.65-8.192 4.431zm8.192 5.429C5.943 11.77 2.5 9.841.51 6.6a.492.492 0 0 1 0-.52C2.5 2.84 5.943.911 9.721.911c3.779 0 7.222 1.929 9.211 5.169a.492.492 0 0 1 0 .52c-1.989 3.241-5.432 5.17-9.211 5.17z" />
+                            d="M3.205 13.395A7.52 7.52 0 1 1 13.837 2.757 7.52 7.52 0 0 1 24.47 13.395L13.837 24 3.205 13.395z"
+                            stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </symbol>
+                    <symbol id="mixtas-bag-bar" viewBox="0 0 18 22">
+                        <g stroke="currentColor" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <path
+                                d="M16.106 21H1.45A.457.457 0 0 1 1 20.552V6.448C1 6.207 1.207 6 1.45 6h14.656c.242 0 .45.207.45.448v14.104a.457.457 0 0 1-.45.448z"
+                                stroke-linecap="square" />
+                            <path d="M4.333 6c0-5 4.445-5 4.445-5s4.444 0 4.444 5" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-grid" viewBox="0 0 20 20">
+                        <g stroke="currentColor" fill="none" fill-rule="evenodd">
+                            <path d="M.5.5h8v8h-8zM11.5.5h8v8h-8zM11.5 11.5h8v8h-8zM.5 11.5h8v8h-8z" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-list" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 2H2v7h7V2zM9 15H2v7h7v-7zM14 3h8M14 8h8M14 16h8M14 21h8" stroke="currentColor"
+                            stroke-width="1" stroke-miterlimit="10" stroke-linecap="square" />
+                    </symbol>
+                    <symbol id="mixtas-product-wishlist-btn" viewBox="0 0 21 19">
                         <path
-                            d="M9.721 4.14a2.204 2.204 0 0 0-2.197 2.201c0 1.209.986 2.199 2.197 2.199 1.212 0 2.197-.99 2.197-2.199 0-1.21-.985-2.201-2.197-2.201zm0 5.4a3.205 3.205 0 0 1-3.197-3.199A3.205 3.205 0 0 1 9.721 3.14a3.205 3.205 0 0 1 3.197 3.201A3.205 3.205 0 0 1 9.721 9.54zM13.564 11.03a.499.499 0 0 1-.368-.169.493.493 0 0 1 .03-.701 5.2 5.2 0 0 0 1.676-3.819 5.194 5.194 0 0 0-1.68-3.821.503.503 0 0 1-.03-.709c.186-.2.503-.21.706-.03a6.206 6.206 0 0 1 2.004 4.56 6.17 6.17 0 0 1-2 4.549.498.498 0 0 1-.338.14M5.882 11.03a.487.487 0 0 1-.338-.13 6.204 6.204 0 0 1-2.003-4.559c0-1.73.729-3.391 2.001-4.551a.494.494 0 0 1 .707.03c.187.2.173.521-.031.7a5.199 5.199 0 0 0-1.677 3.821c0 1.449.612 2.839 1.679 3.819.204.19.218.501.031.711a.53.53 0 0 1-.369.159" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-product-bag-btn" viewBox="0 0 18 19">
-                    <g fill="currentColor" fill-rule="evenodd">
+                            d="M2.74 8.648l7.833 8.665 7.81-8.665c.01-.015.021-.033.035-.048a4.515 4.515 0 0 0 1.142-2.995 4.52 4.52 0 0 0-4.518-4.517 4.536 4.536 0 0 0-4.11 2.644c-.132.293-.61.293-.744 0A4.535 4.535 0 0 0 6.08 1.088 4.52 4.52 0 0 0 1.56 5.605c0 1.105.406 2.16 1.143 2.995a.472.472 0 0 1 .037.048zm7.834 9.68a.418.418 0 0 1-.304-.132L2.087 9.148c-.017-.025-.032-.042-.045-.058a5.34 5.34 0 0 1-1.3-3.485A5.34 5.34 0 0 1 6.08.27c1.822 0 3.508.933 4.481 2.439A5.345 5.345 0 0 1 15.042.27a5.34 5.34 0 0 1 5.337 5.335 5.33 5.33 0 0 1-1.304 3.485c-.012.016-.025.033-.04.058l-8.158 9.048a.416.416 0 0 1-.303.131z"
+                            fill="currentColor" fill-rule="evenodd" />
+                    </symbol>
+                    <symbol id="mixtas-product-quickview-btn" viewBox="0 0 19 12">
+                        <g fill="currentColor" fill-rule="evenodd">
+                            <path
+                                d="M1.529 6.341a9.749 9.749 0 0 0 8.192 4.429c3.325 0 6.365-1.65 8.193-4.429C16.086 3.56 13.046 1.91 9.721 1.91c-3.325 0-6.365 1.65-8.192 4.431zm8.192 5.429C5.943 11.77 2.5 9.841.51 6.6a.492.492 0 0 1 0-.52C2.5 2.84 5.943.911 9.721.911c3.779 0 7.222 1.929 9.211 5.169a.492.492 0 0 1 0 .52c-1.989 3.241-5.432 5.17-9.211 5.17z" />
+                            <path
+                                d="M9.721 4.14a2.204 2.204 0 0 0-2.197 2.201c0 1.209.986 2.199 2.197 2.199 1.212 0 2.197-.99 2.197-2.199 0-1.21-.985-2.201-2.197-2.201zm0 5.4a3.205 3.205 0 0 1-3.197-3.199A3.205 3.205 0 0 1 9.721 3.14a3.205 3.205 0 0 1 3.197 3.201A3.205 3.205 0 0 1 9.721 9.54zM13.564 11.03a.499.499 0 0 1-.368-.169.493.493 0 0 1 .03-.701 5.2 5.2 0 0 0 1.676-3.819 5.194 5.194 0 0 0-1.68-3.821.503.503 0 0 1-.03-.709c.186-.2.503-.21.706-.03a6.206 6.206 0 0 1 2.004 4.56 6.17 6.17 0 0 1-2 4.549.498.498 0 0 1-.338.14M5.882 11.03a.487.487 0 0 1-.338-.13 6.204 6.204 0 0 1-2.003-4.559c0-1.73.729-3.391 2.001-4.551a.494.494 0 0 1 .707.03c.187.2.173.521-.031.7a5.199 5.199 0 0 0-1.677 3.821c0 1.449.612 2.839 1.679 3.819.204.19.218.501.031.711a.53.53 0 0 1-.369.159" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-product-bag-btn" viewBox="0 0 18 19">
+                        <g fill="currentColor" fill-rule="evenodd">
+                            <path
+                                d="M13.375 8.88A.373.373 0 0 1 13 8.506V3.255c0-1.477-1.426-2.25-2.834-2.25h-.75C7.903 1.005 7 1.845 7 3.255v5.25c0 .21-.168.375-.375.375a.373.373 0 0 1-.375-.374V3.255c0-1.822 1.242-3 3.166-3h.75c1.737 0 3.584 1.05 3.584 3v5.25c0 .21-.168.375-.375.375" />
+                            <path
+                                d="M11.5 18.256H1.166a.375.375 0 0 1-.356-.495L4.56 6.51a.378.378 0 0 1 .356-.255h9.75c.16 0 .303.104.354.255l1.672 4.889a.372.372 0 0 1-.233.473.373.373 0 0 1-.476-.233l-1.586-4.634H5.186l-3.5 10.5H11.5c.207 0 .375.164.375.374s-.168.376-.375.376" />
+                            <path
+                                d="M15.75 17.13c-.276 0-.5-.165-.5-.375v-3.75c0-.21.224-.374.5-.374s.5.165.5.375v3.749c0 .21-.224.376-.5.376" />
+                            <path
+                                d="M17.5 15.505h-3.75c-.207 0-.375-.22-.375-.5s.168-.5.375-.5h3.75c.207 0 .375.22.375.5s-.168.5-.375.5" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-zoom" viewBox="0 0 26 26">
+                        <g fill="currentColor" fill-rule="evenodd">
+                            <path d="M24 0h2v8.308h-2z" />
+                            <path d="M24.083.76l1.372 1.405-9.858 8.153-1.372-1.405z" />
+                            <path d="M17 0h9v2h-9zM0 0h13v2H0z" />
+                            <path d="M0 0h2v24H0z" />
+                            <path d="M0 23.077h26v2H0z" />
+                            <path d="M24 12h2v12h-2z" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-play-video" viewBox="0 0 22 28">
+                        <path d="M0 0v28l22-14z" fill="currentColor" fill-rule="evenodd" />
+                    </symbol>
+                    <symbol id="mixtas-arrow-right" viewBox="0 0 40 36">
+                        <path d="M37.098 18.756L20.864 34.9 21.9 36 40 18 21.9 0l-1.036 1.1 16.234 16.144H0v1.512z"
+                            fill="currentColor" fill-rule="evenodd" />
+                    </symbol>
+                    <symbol id="mixtas-filter-icon" viewBox="0 0 20 17">
+                        <g fill="currentColor" fill-rule="evenodd">
+                            <path d="M0 0h20v1H0zM0 8h15v1H0zM0 16h10v1H0z" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-button-arrow" viewBox="0 0 24 24">
+                        <g class="nc-icon-wrapper" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"
+                            fill="currentColor" stroke="currentColor">
+                            <line data-cap="butt" data-color="color-2" fill="none" stroke-miterlimit="10" x1="2" y1="12"
+                                x2="22" y2="12" stroke-linecap="butt" />
+                            <polyline fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                points="15,5 22,12 15,19 " />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-video-play" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" fill-rule="evenodd" transform="translate(1.913 1.26)">
+                            <path fill="currentColor" fill-rule="nonzero"
+                                d="M45.13 34.348c0-.287-.19-.574-.382-.765L27.53 21.148c-.287-.191-.67-.287-1.052-.096-.287.191-.478.478-.478.861v24.87c0 .382.191.67.478.86.192.096.287.096.479.096.19 0 .382-.096.573-.191l17.218-12.435c.191-.191.382-.478.382-.765z" />
+                            <circle cx="33.087" cy="33.739" r="33" stroke="currentColor" stroke-width="4" />
+                        </g>
+                    </symbol>
+                    <symbol id="mixtas-plus" fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                         <path
-                            d="M13.375 8.88A.373.373 0 0 1 13 8.506V3.255c0-1.477-1.426-2.25-2.834-2.25h-.75C7.903 1.005 7 1.845 7 3.255v5.25c0 .21-.168.375-.375.375a.373.373 0 0 1-.375-.374V3.255c0-1.822 1.242-3 3.166-3h.75c1.737 0 3.584 1.05 3.584 3v5.25c0 .21-.168.375-.375.375" />
+                            d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z"
+                            fill="currentColor" />
+                    </symbol>
+                    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 15" id="mixtas-calendar">
                         <path
-                            d="M11.5 18.256H1.166a.375.375 0 0 1-.356-.495L4.56 6.51a.378.378 0 0 1 .356-.255h9.75c.16 0 .303.104.354.255l1.672 4.889a.372.372 0 0 1-.233.473.373.373 0 0 1-.476-.233l-1.586-4.634H5.186l-3.5 10.5H11.5c.207 0 .375.164.375.374s-.168.376-.375.376" />
-                        <path
-                            d="M15.75 17.13c-.276 0-.5-.165-.5-.375v-3.75c0-.21.224-.374.5-.374s.5.165.5.375v3.749c0 .21-.224.376-.5.376" />
-                        <path
-                            d="M17.5 15.505h-3.75c-.207 0-.375-.22-.375-.5s.168-.5.375-.5h3.75c.207 0 .375.22.375.5s-.168.5-.375.5" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-zoom" viewBox="0 0 26 26">
-                    <g fill="currentColor" fill-rule="evenodd">
-                        <path d="M24 0h2v8.308h-2z" />
-                        <path d="M24.083.76l1.372 1.405-9.858 8.153-1.372-1.405z" />
-                        <path d="M17 0h9v2h-9zM0 0h13v2H0z" />
-                        <path d="M0 0h2v24H0z" />
-                        <path d="M0 23.077h26v2H0z" />
-                        <path d="M24 12h2v12h-2z" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-play-video" viewBox="0 0 22 28">
-                    <path d="M0 0v28l22-14z" fill="currentColor" fill-rule="evenodd" />
-                </symbol>
-                <symbol id="mixtas-arrow-right" viewBox="0 0 40 36">
-                    <path d="M37.098 18.756L20.864 34.9 21.9 36 40 18 21.9 0l-1.036 1.1 16.234 16.144H0v1.512z"
-                        fill="currentColor" fill-rule="evenodd" />
-                </symbol>
-                <symbol id="mixtas-filter-icon" viewBox="0 0 20 17">
-                    <g fill="currentColor" fill-rule="evenodd">
-                        <path d="M0 0h20v1H0zM0 8h15v1H0zM0 16h10v1H0z" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-button-arrow" viewBox="0 0 24 24">
-                    <g class="nc-icon-wrapper" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2"
-                        fill="currentColor" stroke="currentColor">
-                        <line data-cap="butt" data-color="color-2" fill="none" stroke-miterlimit="10" x1="2" y1="12"
-                            x2="22" y2="12" stroke-linecap="butt" />
-                        <polyline fill="none" stroke="currentColor" stroke-miterlimit="10" points="15,5 22,12 15,19 " />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-video-play" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
-                    <g fill="none" fill-rule="evenodd" transform="translate(1.913 1.26)">
-                        <path fill="currentColor" fill-rule="nonzero"
-                            d="M45.13 34.348c0-.287-.19-.574-.382-.765L27.53 21.148c-.287-.191-.67-.287-1.052-.096-.287.191-.478.478-.478.861v24.87c0 .382.191.67.478.86.192.096.287.096.479.096.19 0 .382-.096.573-.191l17.218-12.435c.191-.191.382-.478.382-.765z" />
-                        <circle cx="33.087" cy="33.739" r="33" stroke="currentColor" stroke-width="4" />
-                    </g>
-                </symbol>
-                <symbol id="mixtas-plus" fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z"
-                        fill="currentColor" />
-                </symbol>
-                <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 15" id="mixtas-calendar">
-                    <path
-                        d="M3.4375 0.75C3.65625 0.75 3.875 0.96875 3.875 1.1875V2.5H9.125V1.1875C9.125 0.96875 9.31641 0.75 9.5625 0.75C9.78125 0.75 10 0.96875 10 1.1875V2.5H10.875C11.832 2.5 12.625 3.29297 12.625 4.25V13C12.625 13.9844 11.832 14.75 10.875 14.75H2.125C1.14062 14.75 0.375 13.9844 0.375 13V4.25C0.375 3.29297 1.14062 2.5 2.125 2.5H3V1.1875C3 0.96875 3.19141 0.75 3.4375 0.75ZM11.75 6H8.90625V7.96875H11.75V6ZM11.75 8.84375H8.90625V11.0312H11.75V8.84375ZM11.75 11.9062H8.90625V13.875H10.875C11.3398 13.875 11.75 13.4922 11.75 13V11.9062ZM8.03125 11.0312V8.84375H4.96875V11.0312H8.03125ZM4.96875 13.875H8.03125V11.9062H4.96875V13.875ZM4.09375 11.0312V8.84375H1.25V11.0312H4.09375ZM1.25 11.9062V13C1.25 13.4922 1.63281 13.875 2.125 13.875H4.09375V11.9062H1.25ZM1.25 7.96875H4.09375V6H1.25V7.96875ZM4.96875 7.96875H8.03125V6H4.96875V7.96875ZM10.875 3.375H2.125C1.63281 3.375 1.25 3.78516 1.25 4.25V5.125H11.75V4.25C11.75 3.78516 11.3398 3.375 10.875 3.375Z"
-                        fill="currentColor"></path>
-                </symbol>
-                <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="mini-cart-add">
-                    <path d="M12 7V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                        stroke-linejoin="round"></path>
-                    <path d="M17 12H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                        stroke-linejoin="round"></path>
-                </symbol>
-                <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="mini-cart-delete">
-                    <path d="M17 12H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                        stroke-linejoin="round"></path>
-                </symbol>
-            </defs>
-        </svg>
+                            d="M3.4375 0.75C3.65625 0.75 3.875 0.96875 3.875 1.1875V2.5H9.125V1.1875C9.125 0.96875 9.31641 0.75 9.5625 0.75C9.78125 0.75 10 0.96875 10 1.1875V2.5H10.875C11.832 2.5 12.625 3.29297 12.625 4.25V13C12.625 13.9844 11.832 14.75 10.875 14.75H2.125C1.14062 14.75 0.375 13.9844 0.375 13V4.25C0.375 3.29297 1.14062 2.5 2.125 2.5H3V1.1875C3 0.96875 3.19141 0.75 3.4375 0.75ZM11.75 6H8.90625V7.96875H11.75V6ZM11.75 8.84375H8.90625V11.0312H11.75V8.84375ZM11.75 11.9062H8.90625V13.875H10.875C11.3398 13.875 11.75 13.4922 11.75 13V11.9062ZM8.03125 11.0312V8.84375H4.96875V11.0312H8.03125ZM4.96875 13.875H8.03125V11.9062H4.96875V13.875ZM4.09375 11.0312V8.84375H1.25V11.0312H4.09375ZM1.25 11.9062V13C1.25 13.4922 1.63281 13.875 2.125 13.875H4.09375V11.9062H1.25ZM1.25 7.96875H4.09375V6H1.25V7.96875ZM4.96875 7.96875H8.03125V6H4.96875V7.96875ZM10.875 3.375H2.125C1.63281 3.375 1.25 3.78516 1.25 4.25V5.125H11.75V4.25C11.75 3.78516 11.3398 3.375 10.875 3.375Z"
+                            fill="currentColor"></path>
+                    </symbol>
+                    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="mini-cart-add">
+                        <path d="M12 7V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                        <path d="M17 12H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                    </symbol>
+                    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="mini-cart-delete">
+                        <path d="M17 12H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                    </symbol>
+                </defs>
+            </svg>
+        </div>
+        <div class="nova-overlay-global"></div>
     </div>
-    <div class="nova-overlay-global"></div>
-</div>
+
+    @endsection
