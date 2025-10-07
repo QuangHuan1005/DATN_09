@@ -37,6 +37,7 @@
 
                                                             <form class="woocommerce-form woocommerce-form-login login"
                                                                 method="post">
+                                                                @csrf
                                                                 <p
                                                                     class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
                                                                     <input type="text"

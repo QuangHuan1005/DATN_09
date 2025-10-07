@@ -86,12 +86,17 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 */
 
 Route::prefix('admin')
-    ->middleware(['auth', 'is_admin'])
+    ->middleware(['auth'])
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
         // Sản phẩm
         Route::resource('products', AdminProductController::class, ['as' => 'admin']);
+        
+        // Biến thể sản phẩm
+        Route::get('product-variants', [AdminProductController::class, 'variants'])->name('admin.products.variants');
+        Route::post('product-variants', [AdminProductController::class, 'storeVariant'])->name('admin.products.variants.store');
+        Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('admin.products.variants.destroy');
 
         // Danh mục
         Route::resource('categories', AdminCategoryController::class, ['as' => 'admin']);

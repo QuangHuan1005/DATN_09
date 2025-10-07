@@ -41,6 +41,7 @@
 
                                                             <form method="post"
                                                                 class="woocommerce-form woocommerce-form-register register">
+                                                                @csrf
 
 
 
