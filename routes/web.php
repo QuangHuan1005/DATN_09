@@ -35,22 +35,22 @@ Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categ
 
 // Giỏ hàng
 Route::prefix('cart')->group(function () {
-    Route::get('/', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/add/{id}', [CartController::class, 'add'])->name('cart.add');
-    Route::post('/update/{id}', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    // Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    // Route::post('/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    // Route::post('/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    // Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
 // Thanh toán
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+// Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+// Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 
 // Đơn hàng người dùng
 Route::prefix('orders')
     // ->middleware('auth')
     ->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('orders.index');
-        Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
+        // Route::get('/', [OrderController::class, 'index'])->name('orders.index');
+        // Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
     });
 
 // Tài khoản cá nhân
@@ -86,19 +86,19 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 */
 
 Route::prefix('admin')
-    ->middleware(['auth', 'is_admin'])
+    // ->middleware(['auth', 'is_admin'])
     ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        // Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
         // Sản phẩm
         Route::resource('products', AdminProductController::class, ['as' => 'admin']);
-
+        Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('admin.products.restore');
         // Danh mục
-        Route::resource('categories', AdminCategoryController::class, ['as' => 'admin']);
+        // Route::resource('categories', AdminCategoryController::class, ['as' => 'admin']);
 
         // Đơn hàng
-        Route::resource('orders', AdminOrderController::class, ['as' => 'admin'])->only(['index', 'show', 'update']);
+        // Route::resource('orders', AdminOrderController::class, ['as' => 'admin'])->only(['index', 'show', 'update']);
 
         // Người dùng
-        Route::resource('users', AdminUserController::class, ['as' => 'admin']);
+        // Route::resource('users', AdminUserController::class, ['as' => 'admin']);
     });
