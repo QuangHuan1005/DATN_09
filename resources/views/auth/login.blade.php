@@ -67,14 +67,24 @@
                                                                         value="{{ old('email') }}" required />
                                                                 </p>
 
-                                                                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                                                                {{-- Ô nhập mật khẩu có icon --}}
+                                                                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide"
+                                                                   style="position: relative;">
                                                                     <input type="password"
                                                                         class="woocommerce-Input woocommerce-Input--text input-text"
                                                                         name="password" id="password"
-                                                                        placeholder="Mật khẩu" required />
+                                                                        placeholder="Mật khẩu" required
+                                                                        style="padding-right: 40px;" />
+                                                                    <span id="togglePassword"
+                                                                          style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888;">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </span>
                                                                 </p>
 
-                                                                <p class="form-row form-group">
+                                                                {{-- Xóa nút đen cũ --}}
+                                                                {{-- (nút cũ bị loại bỏ hoàn toàn) --}}
+
+                                                                <p class="form-row form-group" style="margin-top: 10px;">
                                                                     <label class="woocommerce-form__label woocommerce-form__label-for-checkbox woocommerce-form-login__rememberme inline">
                                                                         <input class="woocommerce-form__input woocommerce-form__input-checkbox"
                                                                             name="remember" type="checkbox"
@@ -119,9 +129,31 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Footer --}}
-            @include('layouts.footer')
         </div>
     </div>
+
+    {{-- Script toggle mật khẩu --}}
+    <script>
+        const togglePassword = document.querySelector("#togglePassword");
+        const passwordField = document.querySelector("#password");
+        togglePassword.addEventListener("click", function () {
+            const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+            passwordField.setAttribute("type", type);
+            this.innerHTML = type === "password"
+                ? '<i class="fa fa-eye"></i>'
+                : '<i class="fa fa-eye-slash"></i>';
+        });
+    </script>
+
+    {{-- Font Awesome (nếu chưa có) --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+    /* Ẩn hoàn toàn nút show password mặc định của WooCommerce */
+    button.show-password-input {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+    </style>
+
 @endsection

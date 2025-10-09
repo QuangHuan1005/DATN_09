@@ -75,19 +75,31 @@
                                                                         value="{{ old('email') }}" required />
                                                                 </p>
 
-                                                                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                                                                {{-- Ô nhập mật khẩu có icon ẩn/hiện --}}
+                                                                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide" style="position: relative;">
                                                                     <input type="password"
                                                                         class="woocommerce-Input woocommerce-Input--text input-text"
                                                                         name="password" id="reg_password"
-                                                                        placeholder="Mật khẩu" required />
+                                                                        placeholder="Mật khẩu" required
+                                                                        style="padding-right: 40px;" />
+                                                                    <span id="togglePassword"
+                                                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888;">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </span>
                                                                 </p>
 
-                                                                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                                                                {{-- Ô nhập lại mật khẩu có icon ẩn/hiện --}}
+                                                                <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide" style="position: relative;">
                                                                     <input type="password"
                                                                         class="woocommerce-Input woocommerce-Input--text input-text"
                                                                         name="password_confirmation"
                                                                         id="reg_password_confirmation"
-                                                                        placeholder="Nhập lại mật khẩu" required />
+                                                                        placeholder="Nhập lại mật khẩu" required
+                                                                        style="padding-right: 40px;" />
+                                                                    <span id="togglePasswordConfirm"
+                                                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888;">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </span>
                                                                 </p>
 
                                                                 <div class="woocommerce-privacy-policy-text">
@@ -131,9 +143,41 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Footer --}}
-            @include('layouts.footer')
         </div>
     </div>
+
+    {{-- Script ẩn/hiện mật khẩu --}}
+    <script>
+        const togglePassword = document.querySelector("#togglePassword");
+        const passwordField = document.querySelector("#reg_password");
+        togglePassword.addEventListener("click", function () {
+            const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+            passwordField.setAttribute("type", type);
+            this.innerHTML = type === "password"
+                ? '<i class="fa fa-eye"></i>'
+                : '<i class="fa fa-eye-slash"></i>';
+        });
+
+        const togglePasswordConfirm = document.querySelector("#togglePasswordConfirm");
+        const passwordConfirmField = document.querySelector("#reg_password_confirmation");
+        togglePasswordConfirm.addEventListener("click", function () {
+            const type = passwordConfirmField.getAttribute("type") === "password" ? "text" : "password";
+            passwordConfirmField.setAttribute("type", type);
+            this.innerHTML = type === "password"
+                ? '<i class="fa fa-eye"></i>'
+                : '<i class="fa fa-eye-slash"></i>';
+        });
+    </script>
+
+    {{-- Ẩn nút mặc định của WooCommerce --}}
+    <style>
+        button.show-password-input {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+    </style>
+
+    {{-- Font Awesome nếu chưa có --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 @endsection
