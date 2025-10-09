@@ -35,11 +35,16 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
-    {
-        return view('products.show', compact('product'));
-        //
-    }
+    public function show($id)
+{
+    $product = Product::with('category')->findOrFail($id);
+    $variants = $product->variants()->with(['color', 'size'])->get();
+    $albums = $product->photoAlbums;
+    $reviews = $product->reviews()->latest()->get();
+
+    return view('products.show', compact('product', 'variants', 'albums', 'reviews'));
+}
+
 
     /**
      * Show the form for editing the specified resource.
