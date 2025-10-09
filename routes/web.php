@@ -95,7 +95,10 @@ Route::prefix('admin')
         
         // Biến thể sản phẩm
         Route::get('product-variants', [AdminProductController::class, 'variants'])->name('admin.products.variants');
+        Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('admin.products.variants.type');
         Route::post('product-variants', [AdminProductController::class, 'storeVariant'])->name('admin.products.variants.store');
+        Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('admin.products.variants.edit');
+        Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('admin.products.variants.update');
         Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('admin.products.variants.destroy');
 
         // Danh mục

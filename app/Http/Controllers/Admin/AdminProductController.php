@@ -90,21 +90,47 @@ class AdminProductController extends Controller
     }
 
     /**
-     * Show product variants management page
+     * Show product variants type selection page
      */
     public function variants()
     {
+        return view('admin.products.variants-index');
+    }
+
+    /**
+     * Show specific variant type management page
+     */
+    public function variantsByType(Request $request, $type)
+    {
+        if (!in_array($type, ['size', 'color'])) {
+            abort(404);
+        }
+
         try {
-            $variants = ProductVariant::orderBy('type')->orderBy('name')->get();
-            $sizeVariants = $variants->where('type', 'size');
-            $colorVariants = $variants->where('type', 'color');
+            $query = ProductVariant::where('type', $type);
             
-            return view('admin.products.variants', compact('sizeVariants', 'colorVariants'));
+            // Tìm kiếm nếu có từ khóa
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('value', 'like', "%{$search}%")
+                      ->orWhere('description', 'like', "%{$search}%");
+                });
+            }
+            
+            // Sắp xếp: mới nhất trước, sau đó theo name
+            $variants = $query->orderBy('created_at', 'desc')
+                             ->orderBy('name')
+                             ->get();
+            
+            $typeName = $type === 'size' ? 'Kích thước' : 'Màu sắc';
+            
+            return view('admin.products.variants-list', compact('variants', 'type', 'typeName'));
         } catch (\Exception $e) {
-            // Nếu có lỗi, trả về view với dữ liệu rỗng
-            $sizeVariants = collect();
-            $colorVariants = collect();
-            return view('admin.products.variants', compact('sizeVariants', 'colorVariants'));
+            $variants = collect();
+            $typeName = $type === 'size' ? 'Kích thước' : 'Màu sắc';
+            return view('admin.products.variants-list', compact('variants', 'type', 'typeName'));
         }
     }
 
@@ -121,10 +147,37 @@ class AdminProductController extends Controller
             'status' => 'required|in:active,inactive'
         ]);
 
-        ProductVariant::create($request->all());
+        $variant = ProductVariant::create($request->all());
 
-        return redirect()->route('admin.products.variants')
+        return redirect()->route('admin.products.variants.type', $variant->type)
             ->with('success', 'Biến thể sản phẩm đã được thêm thành công!');
+    }
+
+    /**
+     * Show the form for editing a product variant
+     */
+    public function editVariant(ProductVariant $variant)
+    {
+        return view('admin.products.edit-variant', compact('variant'));
+    }
+
+    /**
+     * Update a product variant
+     */
+    public function updateVariant(Request $request, ProductVariant $variant)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:size,color',
+            'value' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive'
+        ]);
+
+        $variant->update($request->all());
+
+        return redirect()->route('admin.products.variants.type', $variant->type)
+            ->with('success', 'Biến thể sản phẩm đã được cập nhật thành công!');
     }
 
     /**
@@ -132,9 +185,10 @@ class AdminProductController extends Controller
      */
     public function destroyVariant(ProductVariant $variant)
     {
+        $type = $variant->type;
         $variant->delete();
 
-        return redirect()->route('admin.products.variants')
+        return redirect()->route('admin.products.variants.type', $type)
             ->with('success', 'Biến thể sản phẩm đã được xóa thành công!');
     }
 }
