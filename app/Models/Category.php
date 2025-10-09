@@ -4,9 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes; // ✅ thêm dòng này
 
 class Category extends Model
 {
-    /** @use HasFactory<\Database\Factories\CategoryFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes; // ✅ thêm SoftDeletes vào đây
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'parent_id',
+    ];
 }
