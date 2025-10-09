@@ -85,20 +85,20 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('admin')
-    ->middleware(['auth', 'is_admin'])
-    ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+// Route::prefix('admin')
+//     ->middleware(['auth', 'is_admin'])
+//     ->group(function () {
+//         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-        // Sản phẩm
-        Route::resource('products', AdminProductController::class, ['as' => 'admin']);
+//         // Sản phẩm
+//         Route::resource('products', AdminProductController::class, ['as' => 'admin']);
 
-        // Danh mục
-        Route::resource('categories', AdminCategoryController::class, ['as' => 'admin']);
+//         // Danh mục
+//         Route::resource('categories', AdminCategoryController::class, ['as' => 'admin']);
 
-        // Đơn hàng
-        Route::resource('orders', AdminOrderController::class, ['as' => 'admin'])->only(['index', 'show', 'update']);
+//         // Đơn hàng
+//         Route::resource('orders', AdminOrderController::class, ['as' => 'admin'])->only(['index', 'show', 'update']);
 
-        // Người dùng
-        Route::resource('users', AdminUserController::class, ['as' => 'admin']);
-    });
+//         // Người dùng
+//         Route::resource('users', AdminUserController::class, ['as' => 'admin']);
+//     });
