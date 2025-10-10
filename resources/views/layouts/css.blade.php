@@ -1096,6 +1096,24 @@
 <link rel='stylesheet' id='widget-heading-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/elementor/assets/css/widget-heading.min87cc.css?ver=3.28.3'
     type='text/css' media='all' />
+<link rel='stylesheet' id='kitify-woocommerce-css'
+    href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/kitify-woocommercef54b.css?ver=1759215505'
+    type='text/css' media='all' />
+<link rel='stylesheet' id='fancybox-css'
+    href='../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/fancybox/jquery.fancybox.minf8ee.css?ver=3.5.7'
+    type='text/css' media='all' />
+<link rel='stylesheet' id='widget-image-css'
+    href='../../mixtas.b-cdn.net/wp-content/plugins/elementor/assets/css/widget-image.min87cc.css?ver=3.28.3'
+    type='text/css' media='all' />
+<link rel='stylesheet' id='widget-icon-box-css'
+    href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/custom-widget-icon-box.minbea4.css?ver=1743737085'
+    type='text/css' media='all' />
+<link rel='stylesheet' id='elementor-post-917-css'
+    href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-917f9cc.css?ver=1745074389' type='text/css'
+    media='all' />
+<link rel='stylesheet' id='elementor-post-1043-css'
+    href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-1043f9cc.css?ver=1745074389' type='text/css'
+    media='all' />
 <link rel='stylesheet' id='elementor-post-1052-css'
     href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-1052ca92.css?ver=1743737312' type='text/css'
     media='all' />
@@ -1113,6 +1131,9 @@
     type='text/css' media='all' />
 <link rel='stylesheet' id='elementor-icons-novaicon-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/inc/extensions/elementor/assets/css/novaicon8a54.css?ver=1.0.0'
+    type='text/css' media='all' />
+<link rel='stylesheet' id='elementor-icons-dlicon-css'
+    href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/inc/extensions/elementor/assets/css/nucleo8a54.css?ver=1.0.0'
     type='text/css' media='all' />
 {{-- <script type="text/template" id="tmpl-variation-template">
     <div class="woocommerce-variation-description">{{{ data.variation.variation_description }}}</div>
@@ -1465,4 +1486,8 @@
     .form-actions-extra a:hover {
         text-decoration: underline;
     }
+    .products_ajax_button:not(:first-of-type) {
+    display: none;
+}
+
 </style>
