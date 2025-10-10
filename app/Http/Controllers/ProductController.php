@@ -3,65 +3,103 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Color;
+use App\Models\Size;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+  public function index(Request $request)
     {
-        $products = Product::all(); // Lấy tất cả sản phẩm từ cơ sở dữ liệu
-        return view('products.index', compact('products')); // Truyền dữ liệu vào view
-    }
+        // Bắt đầu query chính
+        $query = Product::query()->with(['category', 'variants']);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // ----- Lọc theo DANH MỤC -----
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // ----- Lọc theo MÀU -----
+        if ($request->filled('color')) {
+            $query->whereHas('variants', function ($q) use ($request) {
+                $q->where('color_id', $request->color);
+            });
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
+        // ----- Lọc theo KÍCH CỠ -----
+        if ($request->filled('size')) {
+            $query->whereHas('variants', function ($q) use ($request) {
+                $q->where('size_id', $request->size);
+            });
+        }
+
+        // ----- Lọc theo GIÁ -----
+        if ($request->filled('min_price')) {
+            $query->whereHas('variants', fn($q) => $q->where('price', '>=', $request->min_price));
+        }
+        if ($request->filled('max_price')) {
+            $query->whereHas('variants', fn($q) => $q->where('price', '<=', $request->max_price));
+        }
+
+        // ----- SẮP XẾP -----
+        if ($request->filled('sort')) {
+            switch ($request->sort) {
+                case 'price_asc':
+                    $query->orderBy(
+                        DB::raw('(SELECT MIN(price) FROM product_variants WHERE product_id = products.id)'),
+                        'asc'
+                    );
+                    break;
+                case 'price_desc':
+                    $query->orderBy(
+                        DB::raw('(SELECT MAX(price) FROM product_variants WHERE product_id = products.id)'),
+                        'desc'
+                    );
+                    break;
+                case 'bestseller':
+                    $query->leftJoin('product_variants', 'products.id', '=', 'product_variants.product_id')
+                        ->leftJoin('order_details', 'product_variants.id', '=', 'order_details.product_variant_id')
+                        ->select('products.*', DB::raw('SUM(order_details.quantity) as total_sold'))
+                        ->groupBy('products.id')
+                        ->orderByDesc('total_sold');
+                    break;
+                default:
+                    $query->latest('created_at');
+            }
+        } else {
+            $query->latest('created_at');
+        }
+
+        // Kết quả chính
+        $products = $query->paginate(12)->appends($request->query());
+
+        // --- Đếm số lượng cho sidebar ---
+        $categories = Category::withCount('products')->get();
+
+        $colors = Color::select('colors.*', DB::raw('COUNT(DISTINCT product_variants.product_id) as products_count'))
+            ->leftJoin('product_variants', 'colors.id', '=', 'product_variants.color_id')
+            ->groupBy('colors.id')
+            ->get();
+
+        $sizes = Size::select('sizes.*', DB::raw('COUNT(DISTINCT product_variants.product_id) as products_count'))
+            ->leftJoin('product_variants', 'sizes.id', '=', 'product_variants.size_id')
+            ->groupBy('sizes.id')
+            ->get();
+
+        return view('products.index', compact('products', 'categories', 'colors', 'sizes'));
+    }
+    public function show($id)
     {
+        $product = Product::with(['variants', 'category'])->findOrFail($id);
         return view('products.show', compact('product'));
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
+    public function showByCategory($slug)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Product $product)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product)
-    {
-        //
+        $category = Category::where('slug', $slug)->firstOrFail();
+        $products = Product::where('category_id', $category->id)->paginate(12);
+        return view('products.index', compact('category', 'products'));
     }
 }

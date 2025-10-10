@@ -28,6 +28,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
     Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('/category/{slug}', [ProductController::class, 'showByCategory'])->name('products.category');
+    Route::get('/color/{slug}', [ProductController::class, 'showByColor'])->name('products.color');
+    Route::get('/size/{slug}', [ProductController::class, 'showBySize'])->name('products.size');
+    
 });
 
 // Danh mục

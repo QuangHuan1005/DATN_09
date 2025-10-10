@@ -8,7 +8,7 @@
                     data-id="dc6b9df" data-element_type="widget" data-widget_type="heading.default">
                     <div class="elementor-widget-container">
                         <span class="elementor-heading-title elementor-size-default">Miễn phí vận chuyển cho đơn
-                            hàng từ 200k trở lên & Đổi hàng miễn phí</span>
+                            hàng từ 300.000đ trở lên & Đổi hàng miễn phí</span>
                     </div>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children kitify-nav__item-1114 kitify-nav__item">
                                         <a href="#"
                                             class="menu-item-link menu-item-link-depth-0 menu-item-link-top"><span
-                                                class="kitify-nav-link-text">English</span><i
+                                                class="kitify-nav-link-text">Vietnamese</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <div class="kitify-nav__sub kitify-nav-depth-0">
                                             <div
@@ -62,7 +62,7 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children kitify-nav__item-1118 kitify-nav__item">
                                         <a href="#"
                                             class="menu-item-link menu-item-link-depth-0 menu-item-link-top"><span
-                                                class="kitify-nav-link-text">USD</span><i
+                                                class="kitify-nav-link-text">VND</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <div class="kitify-nav__sub kitify-nav-depth-0">
                                             <div
@@ -127,14 +127,31 @@
                                     </li>
                                     <li
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
-                                        <a href="{{ route('products.index') }}"><span>Shop</span><i
+                                        <a href="{{ route('products.index') }}"><span>Sản phẩm</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <ul class="sub-menu mega-menu">
 
                                             <li class="mega-menu-container container-custom" style="width: 1440px">
 
                                                 <ul class='mega-menu-main'>
-                                                    <li
+                                                    @foreach($categories as $cat)<li
+                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_5">
+                                                        {{-- <a href="#"><span>Shop
+                                                                Pages</span><i
+                                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
+                                                        --}}
+                                                        <ul class="sub-menu">
+
+                                                            <li
+                                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
+                                                                <a
+                                                                    href="{{ route('products.index', ['category' => $cat->id]) }}"><span>{{
+                                                                        $cat->name }}</span></a>
+                                                            </li>
+                                                        </ul>
+
+                                                    </li> @endforeach
+                                                    {{-- <li
                                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_4">
                                                         <a href="#"><span>Shop Pages</span><i
                                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
@@ -165,113 +182,8 @@
                                                                         — 2 Columns</span></a>
                                                             </li>
                                                         </ul>
-                                                    </li>
-                                                    <li
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-408 mega-sub-menu col-1_4">
-                                                        <a href="#"><span>Product Layouts</span><i
-                                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                        <ul class="sub-menu">
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-409">
-                                                                <a
-                                                                    href="../product/carhartt-american-script-sweat-tobacco/index.html"><span>Product
-                                                                        — Layout v1</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-414">
-                                                                <a
-                                                                    href="../product/carhartt-american-script-sweat-tobacco/indexfab5.html?theme_template_id=410"><span>Product
-                                                                        — Layout v2</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-421">
-                                                                <a
-                                                                    href="../product/carhartt-american-script-sweat-tobacco/index01cf.html?theme_template_id=417"><span>Product
-                                                                        — Layout v3</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-426">
-                                                                <a
-                                                                    href="../product/carhartt-american-script-sweat-tobacco/index27db.html?theme_template_id=422"><span>Product
-                                                                        — Layout v4</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-435">
-                                                                <a
-                                                                    href="../product/carhartt-american-script-sweat-tobacco/index978a.html?theme_template_id=430"><span>Product
-                                                                        — Layout v5</span></a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-436 mega-sub-menu col-1_4">
-                                                        <a href="#"><span>Product Pages</span><i
-                                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                        <ul class="sub-menu">
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-437">
-                                                                <a
-                                                                    href="../product/carhartt-detroit-jacket-summer-zeus-rigid/index.html"><span>Product
-                                                                        — Simple</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-438">
-                                                                <a
-                                                                    href="../product/the-north-face-denali-jacket-summit-gold/index.html"><span>Product
-                                                                        — Variable</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-439">
-                                                                <a
-                                                                    href="../product/carhartt-hooded-coach-jacket-cypress/index.html"><span>Product
-                                                                        — Grouped</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-440">
-                                                                <a
-                                                                    href="../product/carhartt-windbreaker-pullover-winter-black/index.html"><span>Product
-                                                                        — External / Affiliate</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-441">
-                                                                <a
-                                                                    href="../product/polar-welcome-to-the-new-age-ls-tee-black/index.html"><span>Product
-                                                                        — Out of Stock</span></a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-442 mega-sub-menu col-1_4">
-                                                        <a href="#"><span>Core Pages</span><i
-                                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                        <ul class="sub-menu">
-                                                            <li
-                                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-445">
-                                                                <a href="{{ route('account.dashboard') }}"><span>My
-                                                                        account</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-447">
-                                                                <a href="../cart/index.html"><span>Shopping
-                                                                        Cart</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-446">
-                                                                <a
-                                                                    href="../checkout/index.html"><span>Checkout</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-443">
-                                                                <a href="../order-tracking/index.html"><span>Order
-                                                                        Tracking</span></a>
-                                                            </li>
-                                                            <li
-                                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-444">
-                                                                <a
-                                                                    href="../wishlist/index.html"><span>Wishlist</span></a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
+                                                    </li> --}}
+
                                                 </ul>
                                             </li>
                                         </ul>
@@ -366,19 +278,23 @@
                         <div class="kitify-menu-account">
                             <div class="kitify-menu-account__box">
                                 <a data-toggle="AcccountCanvas_Popup" href="{{ route('login')}}">
-                                    <span class="kitify-menu-account__icon kitify-blocks-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                            height="21" viewBox="0 0 20 21" fill="none">
+                                    <span class="kitify-menu-account__icon kitify-blocks-icon"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="20" height="21"
+                                            viewBox="0 0 20 21" fill="none">
                                             <g clip-path="url(#clip0_188_1479)">
                                                 <path
                                                     d="M0.833313 19.6666C0.833313 15.0641 4.56415 11.3333 9.16665 11.3333H10.8333C15.4358 11.3333 19.1666 15.0641 19.1666 19.6666"
-                                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                                    stroke-linejoin="round"></path>
                                                 <path
                                                     d="M10 11.3333C12.7614 11.3333 15 9.09468 15 6.33325C15 3.57183 12.7614 1.33325 10 1.33325C7.23858 1.33325 5 3.57183 5 6.33325C5 9.09468 7.23858 11.3333 10 11.3333Z"
-                                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                                    stroke-linejoin="round"></path>
                                             </g>
                                             <defs>
                                                 <clipPath id="clip0_188_1479">
-                                                    <rect width="20" height="20" fill="white" transform="translate(0 0.5)"></rect>
+                                                    <rect width="20" height="20" fill="white"
+                                                        transform="translate(0 0.5)"></rect>
                                                 </clipPath>
                                             </defs>
                                         </svg></span> </a>
