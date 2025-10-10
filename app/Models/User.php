@@ -13,36 +13,61 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
+    /**
+     * Các cột cho phép gán hàng loạt (mass assignment)
+     */
     protected $fillable = [
+        'role_id',
+        'ranking_id',
+        'image',
         'name',
         'email',
+        'phone',
         'password',
+        'address',
+        'is_verified',
+        'verification_token',
         'is_admin',
-        'role_id',
     ];
 
+    /**
+     * Ẩn các cột khi trả về dữ liệu
+     */
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_token',
     ];
 
+    /**
+     * Kiểu dữ liệu cho các trường đặc biệt
+     */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
         'is_admin' => 'boolean',
     ];
 
-    public $timestamps = true;
-
-    // Hàm kiểm tra quyền admin
+    /**
+     * Kiểm tra xem user có phải admin không
+     */
     public function isAdmin()
     {
         return $this->is_admin === true;
     }
 
-    // Quan hệ tới bảng roles (nếu có)
+    /**
+     * Quan hệ với bảng roles
+     */
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    /**
+     * Quan hệ với bảng rankings
+     */
+    public function ranking()
+    {
+        return $this->belongsTo(Ranking::class, 'ranking_id');
     }
 }

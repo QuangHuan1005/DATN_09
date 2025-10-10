@@ -94,7 +94,7 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 */
 
 Route::prefix('admin')
-    ->middleware(['auth']) // Nếu có middleware kiểm tra admin, thêm 'is_admin' vào đây
+    ->middleware(['auth', 'is_admin']) // thêm middleware kiểm tra admin
     ->name('admin.')
     ->group(function () {
 
