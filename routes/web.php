@@ -68,17 +68,22 @@ Route::prefix('account')->group(function () {
 |--------------------------------------------------------------------------
 */
 
+// Đăng nhập / Đăng ký
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+
+// Quên mật khẩu
 Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot-password.email');
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('forgot-password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('forgot-password.update');
+
+// Đăng xuất
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// GOOGLE LOGIN ROUTES
+// GOOGLE LOGIN
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
@@ -89,9 +94,10 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 */
 
 Route::prefix('admin')
-    // ->middleware(['auth', 'is_admin'])
+    ->middleware(['auth']) // Nếu có middleware kiểm tra admin, thêm 'is_admin' vào đây
     ->name('admin.')
     ->group(function () {
+
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -103,6 +109,14 @@ Route::prefix('admin')
         // Sản phẩm
         Route::resource('products', AdminProductController::class);
         Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('products.restore');
+
+        // Biến thể sản phẩm
+        Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
+        Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('products.variants.type');
+        Route::post('product-variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
+        Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
+        Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
+        Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
 
         // Đơn hàng
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);

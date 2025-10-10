@@ -63,17 +63,31 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
+        // Cho phép đăng nhập bằng email hoặc username đều được
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required|min:6',
         ]);
+
+        $login_type = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+
+        $credentials = [
+            $login_type => $request->username,
+            'password' => $request->password,
+        ];
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect('/')->with('success', 'Đăng nhập thành công!');
+
+            // Nếu là admin thì vào trang quản trị
+            if (Auth::user()->is_admin ?? false) {
+                return redirect()->intended(route('admin.dashboard'))->with('success', 'Chào mừng quản trị viên!');
+            }
+
+            return redirect()->intended('/')->with('success', 'Đăng nhập thành công!');
         }
 
-        return back()->with('error', 'Email hoặc mật khẩu không chính xác.');
+        return back()->with('error', 'Tài khoản hoặc mật khẩu không chính xác.');
     }
 
     public function logout(Request $request)
