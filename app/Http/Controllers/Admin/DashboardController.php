@@ -9,6 +9,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard');
+        return view('admin.dashboard'); // trỏ tới resources/views/admin/dashboard.blade.php
     }
 }

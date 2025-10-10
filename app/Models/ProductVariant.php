@@ -9,39 +9,42 @@ class ProductVariant extends Model
 {
     use HasFactory;
 
+    protected $table = 'product_variants';
+
     protected $fillable = [
-        'name',
-        'type',
-        'value',
-        'description',
-        'status'
+        'product_id',
+        'color_id',
+        'size_id',
+        'price',
+        'sale',
+        'image',
+        'status',
     ];
 
-    protected $casts = [
-        'status' => 'string'
-    ];
-
-    // Scope để lấy biến thể theo loại
-    public function scopeByType($query, $type)
+    public function product()
     {
-        return $query->where('type', $type);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
-    // Scope để lấy biến thể đang hoạt động
+    public function color()
+    {
+        return $this->belongsTo(Color::class, 'color_id');
+    }
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class, 'size_id');
+    }
+
+    // Scope: lấy biến thể đang hoạt động
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
     }
 
-    // Accessor để hiển thị trạng thái
+    // Accessor: hiển thị trạng thái
     public function getStatusTextAttribute()
     {
-        return $this->status === 'active' ? 'Hoạt động' : 'Không hoạt động';
-    }
-
-    // Accessor để hiển thị loại biến thể
-    public function getTypeTextAttribute()
-    {
-        return $this->type === 'size' ? 'Kích thước' : 'Màu sắc';
+        return $this->status === 'active' ? 'Hoạt động' : 'Ngừng bán';
     }
 }
