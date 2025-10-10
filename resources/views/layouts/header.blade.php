@@ -8,7 +8,7 @@
                     data-id="dc6b9df" data-element_type="widget" data-widget_type="heading.default">
                     <div class="elementor-widget-container">
                         <span class="elementor-heading-title elementor-size-default">Miễn phí vận chuyển cho đơn
-                            hàng từ 200k trở lên & Đổi hàng miễn phí</span>
+                            hàng từ 300.000đ trở lên & Đổi hàng miễn phí</span>
                     </div>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children kitify-nav__item-1114 kitify-nav__item">
                                         <a href="#"
                                             class="menu-item-link menu-item-link-depth-0 menu-item-link-top"><span
-                                                class="kitify-nav-link-text">English</span><i
+                                                class="kitify-nav-link-text">Vietnamese</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <div class="kitify-nav__sub kitify-nav-depth-0">
                                             <div
@@ -62,7 +62,7 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children kitify-nav__item-1118 kitify-nav__item">
                                         <a href="#"
                                             class="menu-item-link menu-item-link-depth-0 menu-item-link-top"><span
-                                                class="kitify-nav-link-text">USD</span><i
+                                                class="kitify-nav-link-text">VND</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <div class="kitify-nav__sub kitify-nav-depth-0">
                                             <div
@@ -108,7 +108,142 @@
             </div>
             <div class="elementor-element elementor-element-3f8ec217 e-con-full kitify-disable-relative-yes e-flex kitify-col-width-auto-no ignore-docs-style-no e-con e-child"
                 data-id="3f8ec217" data-element_type="container">
-                <!-- menu giữ nguyên -->
+                <div class="elementor-element elementor-element-3726810d elementor-widget kitify elementor-kitify-nova-menu"
+                    data-id="3726810d" data-element_type="widget" data-widget_type="kitify-nova-menu.default">
+                    <div class="elementor-widget-container">
+                        <div class="kitify-nova-menu kitify-nova-mobile-menu kitify-nova-menu--style-default"
+                            data-mobile-breakpoint="1024">
+                            <div class="kitify-nova-menu__mobile-trigger">
+                                <a data-toggle="MenuOffCanvas_3726810d">
+                                    <span class="kitify-nova-menu__mobile-trigger-icon kitify-blocks-icon"><i
+                                            aria-hidden="true" class="novaicon novaicon-menu-8-1"></i></span>
+                                </a>
+                            </div>
+                            <nav class="main-navigation header-primary-nav">
+                                <ul id="menu-main-menu" class="menu nav-menu">
+                                    <li id="menu-item-766"
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
+                                        <a href="/"><span>Home</span></a>
+                                    </li>
+                                    <li
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
+                                        <a href="{{ route('products.index') }}"><span>Sản phẩm</span><i
+                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
+                                        <ul class="sub-menu mega-menu">
+
+                                            <li class="mega-menu-container container-custom" style="width: 1440px">
+
+                                                <ul class='mega-menu-main'>
+                                                    @foreach($categories as $cat)<li
+                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_5">
+                                                        {{-- <a href="#"><span>Shop
+                                                                Pages</span><i
+                                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
+                                                        --}}
+                                                        <ul class="sub-menu">
+
+                                                            <li
+                                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
+                                                                <a
+                                                                    href="{{ route('products.index', ['category' => $cat->id]) }}"><span>{{
+                                                                        $cat->name }}</span></a>
+                                                            </li>
+                                                        </ul>
+
+                                                    </li> @endforeach
+                                                    {{-- <li
+                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_4">
+                                                        <a href="#"><span>Shop Pages</span><i
+                                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
+                                                        <ul class="sub-menu">
+                                                            <li
+                                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
+                                                                <a href="../shop/index.html"><span>Shop —
+                                                                        Left Sidebar</span></a>
+                                                            </li>
+                                                            <li
+                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-359">
+                                                                <a href="../shop/indexac59.html?theme_template_id=353"><span>Shop
+                                                                        — Right Sidebar</span></a>
+                                                            </li>
+                                                            <li
+                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-368">
+                                                                <a href="../shop/indexc1c5.html?theme_template_id=363"><span>Shop
+                                                                        — Fullwidth</span></a>
+                                                            </li>
+                                                            <li
+                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-375">
+                                                                <a href="../shop/index9a6d.html?theme_template_id=371"><span>Shop
+                                                                        — No Sidebar</span></a>
+                                                            </li>
+                                                            <li
+                                                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-382">
+                                                                <a href="../shop/index2568.html?theme_template_id=376"><span>Shop
+                                                                        — 2 Columns</span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </li> --}}
+
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li id="menu-item-80"
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
+                                        <a href="#"><span>Pages</span><i
+                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
+                                        <ul class="sub-menu">
+                                            <li id="menu-item-83"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page">
+                                                <a href="../about-us/index.html"><span>About Us</span></a>
+                                            </li>
+                                            <li id="menu-item-81"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page">
+                                                <a href="../faqs/index.html"><span>FAQs</span></a>
+                                            </li>
+                                            <li id="menu-item-82"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page">
+                                                <a href="../order-tracking/index.html"><span>Order
+                                                        Tracking</span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li id="menu-item-77"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
+                                        <a href="../blog/index.html"><span>Blog</span><i
+                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
+                                        <ul class="sub-menu">
+                                            <li id="menu-item-644"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page">
+                                                <a href="../blog/index.html"><span>Blog — Style
+                                                        01</span></a>
+                                            </li>
+                                            <li id="menu-item-643"
+                                                class="menu-item menu-item-type-custom menu-item-object-custom">
+                                                <a href="../blog/indexc144.html?theme_template_id=637"><span>Blog
+                                                        — Style 02</span></a>
+                                            </li>
+                                            <li id="menu-item-652"
+                                                class="menu-item menu-item-type-custom menu-item-object-custom">
+                                                <a href="../blog/index0f67.html?theme_template_id=646"><span>Blog
+                                                        — Style 03</span></a>
+                                            </li>
+                                            <li id="menu-item-645"
+                                                class="menu-item menu-item-type-post_type menu-item-object-post">
+                                                <a
+                                                    href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html"><span>Blog
+                                                        — Single</span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li id="menu-item-84"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page"><a
+                                            href="../contact-us/index.html"><span>Contact Us</span></a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="elementor-element elementor-element-40341a82 e-con-full kitify-col-width-auto-mobile kitify-col-align-right e-flex ignore-docs-style-no kitify-disable-relative-no e-con e-child"
                 data-id="40341a82" data-element_type="container">
@@ -139,8 +274,7 @@
                 </div>
 
                 {{-- ✅ ICON NGƯỜI DÙNG CÓ XỬ LÝ LOGIN / LOGOUT --}}
-                <div class="elementor-element elementor-element-18b9cccf elementor-widget kitify elementor-kitify-menu-account"
-    data-id="18b9cccf" data-element_type="widget" data-widget_type="kitify-menu-account.default">
+                <div class="elementor-element elementor-element-18b9cccf elementor-widget kitify elementor-kitify-menu-account" data-id="18b9cccf" data-element_type="widget" data-widget_type="kitify-menu-account.default">
     <div class="elementor-widget-container">
         <div class="kitify-menu-account">
             <div class="kitify-menu-account__box" style="position: relative;">

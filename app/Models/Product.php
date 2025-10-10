@@ -2,39 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
-
-    // Tên bảng trong CSDL
     protected $table = 'products';
 
-    // Các cột có thể gán dữ liệu hàng loạt
     protected $fillable = [
-        'category_id',
-        'role_id',
-        'product_code',
-        'name',
-        'image',
-        'description',
-        'material',
-        'onpage'
+        'category_id','role_id','product_code','name','image','description','view','material','onpage'
     ];
 
-    /**
-     * Liên kết 1-nhiều: Product có nhiều biến thể (ProductVariant)
-     */
-    public function variants()
+    // Quan hệ: mỗi sản phẩm thuộc về 1 danh mục
+    public function category()
     {
-        return $this->hasMany(\App\Models\ProductVariant::class, 'product_id');
+        return $this->belongsTo(Category::class, 'category_id', 'id')->withDefault();
     }
 
-    /**
-     * Liên kết 1-nhiều: Product có nhiều ảnh chi tiết (ProductPhotoAlbum)
-     */
+    // Quan hệ khác dùng ở HomeController
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class, 'product_id', 'id');
+    use HasFactory;
+
+
     public function photoAlbums()
     {
         return $this->hasMany(\App\Models\ProductPhotoAlbum::class, 'product_id');
@@ -47,12 +37,5 @@ class Product extends Model
     {
         return $this->hasMany(\App\Models\Review::class, 'product_id');
     }
-
-    /**
-     * Liên kết n-1: Product thuộc về một Category
-     */
-    public function category()
-    {
-        return $this->belongsTo(\App\Models\Category::class, 'category_id');
-    }
+  
 }

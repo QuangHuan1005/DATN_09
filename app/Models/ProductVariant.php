@@ -12,13 +12,19 @@ class ProductVariant extends Model
     protected $table = 'product_variants';
 
     protected $fillable = [
-        'product_id', 'color_id', 'size_id', 'price', 'sale', 'image', 'status'
+        'product_id',
+        'color_id',
+        'size_id',
+        'price',
+        'sale',
+        'image',
+        'status',
     ];
 
+    // Mỗi biến thể thuộc về một sản phẩm
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id');
-    }
+        return $this->belongsTo(Product::class, 'product_id', 'id');
 
     public function color()
     {
