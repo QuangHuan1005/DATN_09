@@ -35,6 +35,7 @@ class ProductController extends Controller
             });
         }
 
+
         // ----- Lọc theo GIÁ -----
         if ($request->filled('min_price')) {
             $query->whereHas('variants', fn($q) => $q->where('price', '>=', $request->min_price));
@@ -90,11 +91,16 @@ class ProductController extends Controller
 
         return view('products.index', compact('products', 'categories', 'colors', 'sizes'));
     }
-    public function show($id)
-    {
-        $product = Product::with(['variants', 'category'])->findOrFail($id);
-        return view('products.show', compact('product'));
-    }
+
+  public function show($id)
+{
+    $product = Product::with('category')->findOrFail($id);
+    $variants = $product->variants()->with(['color', 'size'])->get();
+    $albums = $product->photoAlbums;
+    $reviews = $product->reviews()->latest()->get();
+
+    return view('products.show', compact('product', 'variants', 'albums', 'reviews'));
+}
 
     public function showByCategory($slug)
     {

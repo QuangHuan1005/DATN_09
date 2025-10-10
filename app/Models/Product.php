@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    // Nếu bảng là "products" thì không cần $table. Giữ cho rõ ràng:
     protected $table = 'products';
 
     protected $fillable = [
@@ -23,5 +22,20 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(ProductVariant::class, 'product_id', 'id');
+    use HasFactory;
+
+
+    public function photoAlbums()
+    {
+        return $this->hasMany(\App\Models\ProductPhotoAlbum::class, 'product_id');
     }
+
+    /**
+     * Liên kết 1-nhiều: Product có nhiều đánh giá (Review)
+     */
+    public function reviews()
+    {
+        return $this->hasMany(\App\Models\Review::class, 'product_id');
+    }
+  
 }
