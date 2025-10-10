@@ -1459,60 +1459,72 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div class="kitify-site-wrapper elementor-459kitify">
             @include('layouts.header')
             <div class="container py-5">
-    <div class="row">
-        <!-- Hình ảnh sản phẩm -->
-        <div class="col-md-6">
-            <img src="{{ asset('storage/products/' . $product->image) }}"
-            alt="{{ $product->name }}"
-            class="img-fluid mb-3 rounded shadow">
 
-            @if(isset($albums) && $albums->count() > 0)
-                <div class="d-flex gap-2 flex-wrap">
-                    @foreach($albums as $img)
-                        <img src="{{ asset('storage/' . $img->image) }}"
-                             alt="Ảnh phụ"
-                             class="img-thumbnail"
-                             width="100">
-                    @endforeach
-                </div>
-            @endif
+
+
+    <div class="row align-items-start">
+    <!-- Hình ảnh sản phẩm -->
+    <div class="col-md-6 text-center pe-md-5"> {{-- thêm pe-md-5 để tạo khoảng cách bên phải --}}
+        {{-- Ảnh chính --}}
+        <div class="main-image mb-4">
+            <img
+                src="{{ Storage::disk('public')->url('products/'.$product->image) }}"
+                alt="{{ $product->name }}"
+                class="img-fluid rounded shadow"
+                style="max-height: 500px; object-fit: cover;">
         </div>
 
-        <!-- Thông tin sản phẩm -->
-        <div class="col-md-6">
-            <h2>{{ $product->name }}</h2>
-            <p class="text-muted">{{ $product->material }}</p>
-            <p>{{ $product->description }}</p>
-
-            @if(isset($variants) && $variants->count() > 0)
-                <h4 class="mt-4">Giá:</h4>
-                @foreach($variants as $v)
-                    <div class="border p-2 mb-2 rounded">
-                        <strong>
-                            {{ $v->color->name ?? 'Mặc định' }} -
-                            {{ $v->size->name ?? '' }}
-                        </strong><br>
-                        @if($v->sale)
-                            <span class="text-danger fw-bold">{{ number_format($v->sale) }}₫</span>
-                            <span class="text-muted text-decoration-line-through ms-2">{{ number_format($v->price) }}₫</span>
-                        @else
-                            <span class="text-dark fw-bold">{{ number_format($v->price) }}₫</span>
-                        @endif
-                    </div>
-                @endforeach
-            @endif
-
-            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-4">
-                @csrf
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
-                </button>
-                <a href="{{ route('products.index') }}" class="btn btn-secondary ms-2">
-                    <i class="bi bi-arrow-left"></i> Quay lại
-                </a>
-            </form>
+        {{-- Album ảnh nhỏ phía dưới --}}
+        @if(isset($albums) && $albums->count())
+        <div class="album-images d-flex justify-content-center gap-3 flex-wrap mt-3">
+            @foreach($albums as $img)
+            <img
+                src="{{ Storage::disk('public')->url('product_images/'.$img->image) }}"
+                alt=""
+                width="100" height="100"
+                class="img-thumbnail border border-secondary"
+                style="object-fit: cover; border-radius: 6px;">
+            @endforeach
         </div>
+        @endif
     </div>
+
+    <!-- Thông tin sản phẩm -->
+    <div class="col-md-6 ps-md-5"> {{-- thêm ps-md-5 để tạo khoảng cách bên trái --}}
+        <h2 class="mb-3">{{ $product->name }}</h2>
+        <p class="text-muted">{{ $product->material }}</p>
+        <p>{{ $product->description }}</p>
+
+        @if(isset($variants) && $variants->count() > 0)
+            <h4 class="mt-4">Giá:</h4>
+            @foreach($variants as $v)
+                <div class="border p-2 mb-2 rounded">
+                    <strong>
+                        {{ $v->color->name ?? 'Mặc định' }} -
+                        {{ $v->size->name ?? '' }}
+                    </strong><br>
+                    @if($v->sale)
+                        <span class="text-danger fw-bold">{{ number_format($v->sale) }}₫</span>
+                        <span class="text-muted text-decoration-line-through ms-2">{{ number_format($v->price) }}₫</span>
+                    @else
+                        <span class="text-dark fw-bold">{{ number_format($v->price) }}₫</span>
+                    @endif
+                </div>
+            @endforeach
+        @endif
+
+        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-4">
+            @csrf
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
+            </button>
+            <a href="{{ route('products.index') }}" class="btn btn-secondary ms-2">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+        </form>
+    </div>
+</div>
+
 
     <!-- Đánh giá sản phẩm -->
     <div class="row mt-5">
@@ -2710,6 +2722,73 @@ var KitifySettings = {"templateApiUrl":"https:\/\/mixtas.novaworks.net\/wp-json\
     <script type="text/javascript"
         src="../../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/subscribe-form4e4e.js?ver=1759216409"
         id="kitify-w__subscribe-form-js"></script>
+
+        <style>
+        .main-image img {
+            max-width: 100%;
+            height: 500px;           /* Tăng kích thước ảnh chính */
+            object-fit: cover;       /* Giữ tỉ lệ hợp lý, cắt viền nếu cần */
+            border-radius: 10px;
+        }
+
+        .album-images {
+            margin-top: 20px;        /* Cách ảnh chính 1 khoảng */
+            gap: 15px !important;    /* Khoảng cách giữa các ảnh nhỏ */
+        }
+
+        .album-images img {
+            width: 100px;            /* Ảnh nhỏ to hơn một chút */
+            height: 100px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, border-color 0.2s;
+        }
+
+        .album-images img:hover {
+            transform: scale(1.05);   /* Hiệu ứng phóng nhẹ khi hover */
+            border-color: #000;
+        }
+        </style>
+
+        <style>
+        /* Giãn khoảng giữa 2 cột (ảnh và thông tin) */
+        .row > .col-md-6:first-child {
+            padding-right: 60px !important; /* ép khoảng cách bên phải ảnh */
+        }
+
+        .row > .col-md-6:last-child {
+            padding-left: 60px !important;  /* ép khoảng cách bên trái nội dung */
+        }
+
+        /* Cho ảnh chính to hơn, rõ hơn */
+        .main-image img {
+            width: 100%;
+            max-width: 500px;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        /* Cách ảnh chính và album ra xa */
+        .album-images {
+            margin-top: 20px;
+            gap: 15px !important;
+        }
+
+        /* Ảnh nhỏ trong album */
+        .album-images img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .album-images img:hover {
+            transform: scale(1.05);
+        }
+        </style>
+
 </body>
 
 <!-- Mirrored from mixtas.novaworks.net/product/carhartt-american-script-sweat-tobacco/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Sep 2025 13:03:27 GMT -->
