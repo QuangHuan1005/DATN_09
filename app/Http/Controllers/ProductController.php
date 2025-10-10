@@ -15,12 +15,10 @@ class ProductController extends Controller
     {
         // Bắt đầu query chính
         $query = Product::query()->with(['category', 'variants']);
-
         // ----- Lọc theo DANH MỤC -----
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
-
         // ----- Lọc theo MÀU -----
         if ($request->filled('color')) {
             $query->whereHas('variants', function ($q) use ($request) {
@@ -94,18 +92,20 @@ class ProductController extends Controller
 
   public function show($id)
 {
+    $categories = Category::withCount('products')->get();
     $product = Product::with('category')->findOrFail($id);
     $variants = $product->variants()->with(['color', 'size'])->get();
     $albums = $product->photoAlbums;
     $reviews = $product->reviews()->latest()->get();
 
-    return view('products.show', compact('product', 'variants', 'albums', 'reviews'));
+    return view('products.show', compact('product', 'variants', 'albums', 'reviews', 'categories'));
 }
 
     public function showByCategory($slug)
     {
+        $categories = Category::withCount('products')->get();
         $category = Category::where('slug', $slug)->firstOrFail();
         $products = Product::where('category_id', $category->id)->paginate(12);
-        return view('products.index', compact('category', 'products'));
+        return view('products.index', compact('category', 'products', 'categories'));
     }
 }

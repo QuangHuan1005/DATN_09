@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class Product extends Model
-{
+{    use HasFactory;
     protected $table = 'products';
 
     protected $fillable = [
@@ -22,8 +22,8 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(ProductVariant::class, 'product_id', 'id');
-    use HasFactory;
 
+    }
 
     public function photoAlbums()
     {
@@ -37,5 +37,5 @@ class Product extends Model
     {
         return $this->hasMany(\App\Models\Review::class, 'product_id');
     }
-  
+
 }
