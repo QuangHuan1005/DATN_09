@@ -4,12 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasFactory;
-    // use SoftDeletes;
+    // use HasFactory, SoftDeletes;
 
     protected $table = 'categories';
 
@@ -18,26 +16,8 @@ class Category extends Model
         'name',
         'slug',
         'description',
-        'status',
     ];
-
-    public function parent()
-    {
-        return $this->belongsTo(Category::class, 'parent_id');
-    }
-
-    public function children()
-    {
-        return $this->hasMany(Category::class, 'parent_id');
-    }
-
     public function products()
     {
-        return $this->hasMany(Product::class, 'category_id', 'id');
+        return $this->hasMany(Product::class, 'category_id');
     }
-
-    public function variants()
-    {
-        return $this->hasMany(ProductVariant::class);
-    }
-}
