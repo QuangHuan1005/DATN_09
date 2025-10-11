@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -10,27 +11,37 @@ use Illuminate\Support\Str;
 class AdminCategoryController extends Controller
 {
     /**
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+class CategoryController extends Controller
+{
+    /**
      * Hiển thị danh sách danh mục cha
      */
     public function index(Request $request)
-{
-    $query = Category::withTrashed()
-        ->whereNull('parent_id')
-        ->orderBy('id', 'asc'); // Sắp xếp ID từ bé đến lớn
+    {
+        $query = Category::withTrashed()
+            ->whereNull('parent_id')
+            ->orderBy('id', 'asc');
 
-    // Tìm kiếm theo tên
-    if ($request->has('keyword') && $request->keyword != '') {
-        $keyword = $request->keyword;
-        $query->where('name', 'like', '%' . $keyword . '%');
+        // Tìm kiếm theo tên
+        if ($request->has('keyword') && $request->keyword != '') {
+            $keyword = $request->keyword;
+            $query->where('name', 'like', '%' . $keyword . '%');
+        }
+
+        // Phân trang (3 danh mục mỗi trang)
+        $categories = $query->paginate(3);
+
+        // Trả về view và giữ giá trị ô tìm kiếm
+        return view('admin.categories.index', compact('categories'))->with('keyword', $request->keyword);
     }
-
-    // Phân trang (10 danh mục mỗi trang, bạn có thể thay đổi số lượng)
-    $categories = $query->paginate(3);
-
-    // Gửi lại từ khóa tìm kiếm để giữ giá trị trên ô input
-    return view('admin.categories.index', compact('categories'))->with('keyword', $request->keyword);
-}
-
 
     /**
      * Hiển thị form thêm mới danh mục
@@ -138,5 +149,8 @@ class AdminCategoryController extends Controller
 
         $category->forceDelete();
         return redirect()->route('admin.categories.index')->with('success', 'Xóa vĩnh viễn danh mục thành công');
+    }
+}
+
     }
 }

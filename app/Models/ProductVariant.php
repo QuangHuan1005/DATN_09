@@ -21,11 +21,11 @@ class ProductVariant extends Model
         'status',
     ];
 
-    // Mỗi biến thể thuộc về một sản phẩm
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
+
     public function color()
     {
         return $this->belongsTo(Color::class, 'color_id');
@@ -34,5 +34,17 @@ class ProductVariant extends Model
     public function size()
     {
         return $this->belongsTo(Size::class, 'size_id');
+    }
+
+    // Scope: lấy biến thể đang hoạt động
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    // Accessor: hiển thị trạng thái
+    public function getStatusTextAttribute()
+    {
+        return $this->status === 'active' ? 'Hoạt động' : 'Ngừng bán';
     }
 }
