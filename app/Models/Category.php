@@ -17,26 +17,10 @@ class Category extends Model
         'name',
         'slug',
         'description',
-        'status',
     ];
-
-    public function parent()
-    {
-        return $this->belongsTo(Category::class, 'parent_id');
-    }
-
-    public function children()
-    {
-        return $this->hasMany(Category::class, 'parent_id');
-    }
 
     public function products()
     {
-        return $this->hasMany(Product::class, 'category_id', 'id');
-    }
-
-    public function variants()
-    {
-        return $this->hasMany(ProductVariant::class);
+        return $this->hasMany(Product::class, 'category_id');
     }
 }
