@@ -9,13 +9,15 @@ class Category extends Model
 {
     // use HasFactory, SoftDeletes;
 
-
     protected $table = 'categories';
 
-    protected $fillable = ['parent_id', 'name', 'slug', 'description'];
-
+    protected $fillable = [
+        'parent_id',
+        'name',
+        'slug',
+        'description',
+    ];
     public function products()
     {
         return $this->hasMany(Product::class, 'category_id');
     }
-}
