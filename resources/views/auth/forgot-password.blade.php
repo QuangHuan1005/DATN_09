@@ -46,7 +46,7 @@
                                                 @endif
 
                                                 {{-- Form gửi link đặt lại mật khẩu --}}
-                                                <form method="POST" action="{{ route('forgot-password.email') }}"
+                                                <form method="POST" action="{{ route('password.email') }}"
                                                     class="woocommerce-ResetPassword lost_reset_password">
                                                     @csrf
 
@@ -77,6 +77,7 @@
                                                         </a>
                                                     </p>
                                                 </form>
+
                                             </div>
                                         </div>
                                     </div><!-- .entry-content -->

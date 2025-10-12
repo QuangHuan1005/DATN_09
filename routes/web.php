@@ -70,11 +70,25 @@ Route::prefix('account')->group(function () {
 |--------------------------------------------------------------------------
 */
 
+<<<<<<< HEAD
+// AUTH ROUTES (đổi tên về chuẩn Laravel)
+=======
 // Đăng nhập & đăng ký
+>>>>>>> fe25a215e68ddaace521ce0f82dac6811cf67921
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+<<<<<<< HEAD
+
+// Forgot / Reset password (CHỈ đổi name)
+Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
+
+=======
+>>>>>>> fe25a215e68ddaace521ce0f82dac6811cf67921
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Quên mật khẩu
@@ -83,7 +97,15 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name(
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('forgot-password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('forgot-password.update');
 
+<<<<<<< HEAD
+
+
+// ==========================
+// GOOGLE LOGIN ROUTES
+// ==========================
+=======
 // Google login
+>>>>>>> fe25a215e68ddaace521ce0f82dac6811cf67921
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
