@@ -99,7 +99,7 @@
                                                                         name="login">Đăng nhập</button>
 
                                                                     <span class="woocommerce-LostPassword lost_password">
-                                                                        <a href="{{ route('forgot-password') }}">
+                                                                        <a href="{{ route('password.request') }}">
                                                                             Quên mật khẩu?
                                                                         </a>
                                                                     </span>
