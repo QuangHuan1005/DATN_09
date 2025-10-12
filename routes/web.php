@@ -33,7 +33,7 @@ Route::prefix('products')->group(function () {
     Route::get('/size/{slug}', [ProductController::class, 'showBySize'])->name('products.size');
 });
 
-// Danh mục (nếu muốn tách riêng)
+// Danh mục sản phẩm
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 // Giỏ hàng
@@ -44,9 +44,10 @@ Route::prefix('cart')->group(function () {
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
-// Thanh toán
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+
+// // Thanh toán
+// Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+// Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 
 // Đơn hàng người dùng
 Route::prefix('orders')->group(function () {
@@ -123,3 +124,4 @@ Route::prefix('admin')
         // Người dùng
         Route::resource('users', AdminUserController::class);
     });
+

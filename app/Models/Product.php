@@ -24,11 +24,7 @@ class Product extends Model
         'view',
         'material',
         'onpage',
-    ];
 
-    /**
-     * Mối quan hệ 1-nhiều: Product có nhiều biến thể (ProductVariant)
-     */
     public function variants()
     {
         return $this->hasMany(\App\Models\ProductVariant::class, 'product_id');
