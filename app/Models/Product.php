@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    // Tên bảng trong CSDL
+    // Tên bảng trong cơ sở dữ liệu
     protected $table = 'products';
 
-    // Các cột có thể gán dữ liệu hàng loạt
+    // Các cột có thể gán giá trị hàng loạt
     protected $fillable = [
         'category_id',
         'role_id',
@@ -23,37 +24,37 @@ class Product extends Model
         'view',
         'material',
         'onpage',
+    ];
 
-      /**
-     * Liên kết 1-nhiều: Product có nhiều biến thể (ProductVariant)
+    /**
+     * Mối quan hệ 1-nhiều: Product có nhiều biến thể (ProductVariant)
      */
     public function variants()
     {
         return $this->hasMany(\App\Models\ProductVariant::class, 'product_id');
     }
-      
-      /**
-     * Liên kết 1-nhiều: Product có nhiều ảnh chi tiết (ProductPhotoAlbum)
+
+    /**
+     * Mối quan hệ 1-nhiều: Product có nhiều ảnh chi tiết (ProductPhotoAlbum)
      */
-     public function photoAlbums()
+    public function photoAlbums()
     {
-        return $this->hasMany(ProductPhotoAlbum::class, 'product_id');
+        return $this->hasMany(\App\Models\ProductPhotoAlbum::class, 'product_id');
     }
-      
-      /**
-     * Liên kết 1-nhiều: Product có nhiều đánh giá (Review)
+
+    /**
+     * Mối quan hệ 1-nhiều: Product có nhiều đánh giá (Review)
      */
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'product_id');
+        return $this->hasMany(\App\Models\Review::class, 'product_id');
     }
 
-      /**
-     * Liên kết n-1: Product thuộc về một Category
+    /**
+     * Mối quan hệ n-1: Product thuộc về một Category
      */
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id')->withDefault();
+        return $this->belongsTo(\App\Models\Category::class, 'category_id')->withDefault();
     }
-
-  
+}
