@@ -34,7 +34,7 @@ Route::prefix('products')->group(function () {
     Route::get('/category/{slug}', [ProductController::class, 'showByCategory'])->name('products.category');
     Route::get('/color/{slug}', [ProductController::class, 'showByColor'])->name('products.color');
     Route::get('/size/{slug}', [ProductController::class, 'showBySize'])->name('products.size');
-
+});
 // Danh mục sản phẩm
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
