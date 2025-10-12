@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
-| FRONTEND ROUTES (CLIENT)
+| FRONTEND ROUTES
 |--------------------------------------------------------------------------
 */
 
@@ -31,7 +31,6 @@ Route::prefix('products')->group(function () {
     Route::get('/category/{slug}', [ProductController::class, 'showByCategory'])->name('products.category');
     Route::get('/color/{slug}', [ProductController::class, 'showByColor'])->name('products.color');
     Route::get('/size/{slug}', [ProductController::class, 'showBySize'])->name('products.size');
-    
 });
 
 // Danh mục sản phẩm
@@ -45,17 +44,18 @@ Route::prefix('cart')->group(function () {
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
-// Thanh toán
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 
-// Đơn hàng người dùng (có thể thêm middleware 'auth')
+// // Thanh toán
+// Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+// Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+
+// Đơn hàng người dùng
 Route::prefix('orders')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
 });
 
-// Tài khoản cá nhân (có thể thêm middleware 'auth')
+// Tài khoản cá nhân
 Route::prefix('account')->group(function () {
     Route::get('/dashboard', [AccountController::class, 'dashboard'])->name('account.dashboard');
     Route::get('/orders', [AccountController::class, 'orders'])->name('account.orders');
@@ -70,11 +70,16 @@ Route::prefix('account')->group(function () {
 |--------------------------------------------------------------------------
 */
 
+<<<<<<< HEAD
 // AUTH ROUTES (đổi tên về chuẩn Laravel)
+=======
+// Đăng nhập & đăng ký
+>>>>>>> fe25a215e68ddaace521ce0f82dac6811cf67921
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+<<<<<<< HEAD
 
 // Forgot / Reset password (CHỈ đổi name)
 Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
@@ -82,40 +87,58 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name(
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
 
+=======
+>>>>>>> fe25a215e68ddaace521ce0f82dac6811cf67921
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Quên mật khẩu
+Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('forgot-password');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot-password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('forgot-password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('forgot-password.update');
 
+<<<<<<< HEAD
 
 
 // ==========================
 // GOOGLE LOGIN ROUTES
 // ==========================
+=======
+// Google login
+>>>>>>> fe25a215e68ddaace521ce0f82dac6811cf67921
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN ROUTES (tách biệt theo prefix và namespace)
+| ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
 
 Route::prefix('admin')
-    // Nếu bạn đã tạo middleware auth + is_admin thì bật lại
-    // ->middleware(['auth', 'is_admin']) 
+    // ->middleware(['auth', 'is_admin']) // Kích hoạt nếu có middleware phân quyền
     ->name('admin.')
     ->group(function () {
-
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Danh mục (CRUD + restore + force delete)
+        // Danh mục
         Route::resource('categories', AdminCategoryController::class);
         Route::post('categories/{id}/restore', [AdminCategoryController::class, 'restore'])->name('categories.restore');
         Route::delete('categories/{id}/force-delete', [AdminCategoryController::class, 'forceDelete'])->name('categories.forceDelete');
 
         // Sản phẩm
         Route::resource('products', AdminProductController::class);
+        Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('products.restore');
+
+        // Biến thể sản phẩm
+        Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
+        Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('products.variants.type');
+        Route::post('product-variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
+        Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
+        Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
+        Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
 
         // Đơn hàng
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
@@ -123,3 +146,4 @@ Route::prefix('admin')
         // Người dùng
         Route::resource('users', AdminUserController::class);
     });
+

@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    // ===========================
-    // ĐĂNG KÝ
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | ĐĂNG KÝ
+    |--------------------------------------------------------------------------
+    */
     public function showRegisterForm()
     {
         return view('auth.register');
@@ -53,9 +55,11 @@ class AuthController extends Controller
         }
     }
 
-    // ===========================
-    // ĐĂNG NHẬP / ĐĂNG XUẤT
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | ĐĂNG NHẬP / ĐĂNG XUẤT
+    |--------------------------------------------------------------------------
+    */
     public function showLoginForm()
     {
         return view('auth.login');
@@ -63,17 +67,35 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required|min:6',
+        ], [
+            'username.required' => 'Vui lòng nhập email hoặc tên đăng nhập.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
+            'password.min' => 'Mật khẩu tối thiểu 6 ký tự.',
         ]);
+
+        // Cho phép đăng nhập bằng email hoặc tên người dùng
+        $login_type = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+
+        $credentials = [
+            $login_type => $request->username,
+            'password' => $request->password,
+        ];
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect('/')->with('success', 'Đăng nhập thành công!');
+
+            // Nếu là admin thì chuyển đến trang admin
+            if (Auth::user()->is_admin ?? false) {
+                return redirect()->intended(route('admin.dashboard'))->with('success', 'Chào mừng quản trị viên!');
+            }
+
+            return redirect()->intended('/')->with('success', 'Đăng nhập thành công!');
         }
 
-        return back()->with('error', 'Email hoặc mật khẩu không chính xác.');
+        return back()->with('error', 'Tài khoản hoặc mật khẩu không chính xác.');
     }
 
     public function logout(Request $request)
@@ -85,9 +107,11 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Đã đăng xuất.');
     }
 
-    // ===========================
-    // GOOGLE LOGIN
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | GOOGLE LOGIN
+    |--------------------------------------------------------------------------
+    */
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
@@ -107,7 +131,7 @@ class AuthController extends Controller
             $user = User::create([
                 'name' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
-                'password' => Hash::make('google_login_' . now()), // mật khẩu ẩn
+                'password' => Hash::make('google_login_' . now()), // tạo password ẩn
             ]);
         }
 
@@ -116,9 +140,11 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Đăng nhập thành công bằng Google.');
     }
 
-    // ===========================
-    // QUÊN / ĐẶT LẠI MẬT KHẨU
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | QUÊN / ĐẶT LẠI MẬT KHẨU
+    |--------------------------------------------------------------------------
+    */
     public function showForgotForm()
     {
         return view('auth.forgot-password');
