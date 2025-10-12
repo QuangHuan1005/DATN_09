@@ -23,7 +23,7 @@ class Product extends Model
         'view',
         'material',
         'onpage',
-
+};
       /**
      * Liên kết 1-nhiều: Product có nhiều biến thể (ProductVariant)
      */
@@ -55,5 +55,6 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id', 'id')->withDefault();
     }
+}
 
   
