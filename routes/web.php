@@ -49,7 +49,7 @@ Route::prefix('cart')->group(function () {
 // // Thanh toán
 // Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 // Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-  
+
 // Đơn hàng người dùng
 Route::prefix('orders')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
@@ -133,3 +133,4 @@ Route::prefix('admin')
         // // Người dùng
         // Route::resource('users', AdminUserController::class);
     });
+
