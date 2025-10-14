@@ -45,8 +45,8 @@
                                                     </div>
                                                 @endif
 
-                                                {{-- Form đặt lại mật khẩu --}}
-                                                <form method="POST" action="{{ route('forgot-password.update') }}"
+                                               {{-- Form đặt lại mật khẩu --}}
+                                                <form method="POST" action="{{ route('password.store') }}"
                                                     class="woocommerce-ResetPassword lost_reset_password">
                                                     @csrf
                                                     <input type="hidden" name="token" value="{{ $token }}">
@@ -92,6 +92,7 @@
                                                         </a>
                                                     </p>
                                                 </form>
+
                                             </div>
                                         </div>
                                     </div><!-- .entry-content -->

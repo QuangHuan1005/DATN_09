@@ -6,18 +6,20 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Auth\Events\PasswordReset;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    // ===========================
-    // ĐĂNG KÝ
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | ĐĂNG KÝ
+    |--------------------------------------------------------------------------
+    */
     public function showRegisterForm()
     {
         return view('auth.register');
@@ -48,14 +50,16 @@ class AuthController extends Controller
 
             return redirect()->route('login')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập.');
         } catch (Exception $e) {
-            Log::error('Đăng ký lỗi: ' . $e->getMessage());
+            Log::error('Lỗi đăng ký: ' . $e->getMessage());
             return back()->with('error', 'Đăng ký thất bại, vui lòng thử lại.');
         }
     }
 
-    // ===========================
-    // ĐĂNG NHẬP / ĐĂNG XUẤT
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | ĐĂNG NHẬP / ĐĂNG XUẤT
+    |--------------------------------------------------------------------------
+    */
     public function showLoginForm()
     {
         return view('auth.login');
@@ -64,16 +68,23 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'email' => 'required|email|string|max:255',
+            'password' => 'required|string',
+        ], [
+            'email.required' => 'Vui lòng nhập địa chỉ email.',
+            'email.email' => 'Email không đúng định dạng.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
-            return redirect('/')->with('success', 'Đăng nhập thành công!');
+
+            return redirect()->intended('/')->with('success', 'Đăng nhập thành công.');
         }
 
-        return back()->with('error', 'Email hoặc mật khẩu không chính xác.');
+        return back()->withErrors([
+            'email' => 'Email hoặc mật khẩu không đúng.',
+        ])->onlyInput('email');
     }
 
     public function logout(Request $request)
@@ -85,9 +96,11 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Đã đăng xuất.');
     }
 
-    // ===========================
-    // GOOGLE LOGIN
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | GOOGLE LOGIN
+    |--------------------------------------------------------------------------
+    */
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
@@ -101,24 +114,24 @@ class AuthController extends Controller
             return redirect()->route('login')->with('error', 'Không thể kết nối đến Google.');
         }
 
-        $user = User::where('email', $googleUser->getEmail())->first();
-
-        if (!$user) {
-            $user = User::create([
+        $user = User::firstOrCreate(
+            ['email' => $googleUser->getEmail()],
+            [
                 'name' => $googleUser->getName(),
-                'email' => $googleUser->getEmail(),
-                'password' => Hash::make('google_login_' . now()), // mật khẩu ẩn
-            ]);
-        }
+                'password' => Hash::make('google_' . now()),
+            ]
+        );
 
         Auth::login($user, true);
 
         return redirect('/')->with('success', 'Đăng nhập thành công bằng Google.');
     }
 
-    // ===========================
-    // QUÊN / ĐẶT LẠI MẬT KHẨU
-    // ===========================
+    /*
+    |--------------------------------------------------------------------------
+    | QUÊN / ĐẶT LẠI MẬT KHẨU
+    |--------------------------------------------------------------------------
+    */
     public function showForgotForm()
     {
         return view('auth.forgot-password');
@@ -131,7 +144,7 @@ class AuthController extends Controller
         $status = Password::sendResetLink($request->only('email'));
 
         return $status === Password::RESET_LINK_SENT
-            ? back()->with('success', 'Liên kết đặt lại mật khẩu đã được gửi tới email của bạn.')
+            ? back()->with('success', 'Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.')
             : back()->withErrors(['email' => 'Không thể gửi liên kết, vui lòng thử lại.']);
     }
 

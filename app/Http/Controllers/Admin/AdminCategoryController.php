@@ -9,41 +9,28 @@ use Illuminate\Support\Str;
 
 class AdminCategoryController extends Controller
 {
-    /**
-     * Hiển thị danh sách danh mục cha
-     */
     public function index(Request $request)
-{
-    $query = Category::withTrashed()
-        ->whereNull('parent_id')
-        ->orderBy('id', 'asc'); // Sắp xếp ID từ bé đến lớn
+    {
+        $query = Category::withTrashed()
+            ->whereNull('parent_id')
+            ->orderBy('id', 'asc');
 
-    // Tìm kiếm theo tên
-    if ($request->has('keyword') && $request->keyword != '') {
-        $keyword = $request->keyword;
-        $query->where('name', 'like', '%' . $keyword . '%');
+        if ($request->has('keyword') && $request->keyword != '') {
+            $keyword = $request->keyword;
+            $query->where('name', 'like', '%' . $keyword . '%');
+        }
+
+        $categories = $query->paginate(3);
+
+        return view('admin.categories.index', compact('categories'))->with('keyword', $request->keyword);
     }
 
-    // Phân trang (10 danh mục mỗi trang, bạn có thể thay đổi số lượng)
-    $categories = $query->paginate(3);
-
-    // Gửi lại từ khóa tìm kiếm để giữ giá trị trên ô input
-    return view('admin.categories.index', compact('categories'))->with('keyword', $request->keyword);
-}
-
-
-    /**
-     * Hiển thị form thêm mới danh mục
-     */
     public function create()
     {
         $categories = Category::whereNull('parent_id')->get();
         return view('admin.categories.create', compact('categories'));
     }
 
-    /**
-     * Lưu danh mục mới
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -60,9 +47,6 @@ class AdminCategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Thêm danh mục thành công');
     }
 
-    /**
-     * Hiển thị form chỉnh sửa danh mục
-     */
     public function edit(Category $category)
     {
         $categories = Category::whereNull('parent_id')
@@ -72,9 +56,6 @@ class AdminCategoryController extends Controller
         return view('admin.categories.edit', compact('category', 'categories'));
     }
 
-    /**
-     * Cập nhật danh mục
-     */
     public function update(Request $request, Category $category)
     {
         $request->validate([
@@ -92,18 +73,12 @@ class AdminCategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Cập nhật danh mục thành công');
     }
 
-    /**
-     * Xem chi tiết danh mục và các danh mục con
-     */
     public function show(Category $category)
     {
         $children = Category::where('parent_id', $category->id)->get();
         return view('admin.categories.show', compact('category', 'children'));
     }
 
-    /**
-     * Xóa mềm danh mục
-     */
     public function destroy(Category $category)
     {
         if (method_exists($category, 'products') && $category->products()->count() > 0) {
@@ -114,9 +89,6 @@ class AdminCategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Đã xóa mềm danh mục');
     }
 
-    /**
-     * Khôi phục danh mục đã xóa mềm
-     */
     public function restore($id)
     {
         $category = Category::withTrashed()->findOrFail($id);
@@ -125,9 +97,6 @@ class AdminCategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Khôi phục danh mục thành công');
     }
 
-    /**
-     * Xóa vĩnh viễn danh mục
-     */
     public function forceDelete($id)
     {
         $category = Category::withTrashed()->findOrFail($id);

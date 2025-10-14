@@ -10,7 +10,7 @@
   </div>
 
   <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-    <i class="fas fa-tachometer-alt"></i> Dashboard
+    <i class="fas fa-tachometer-alt"></i> Quản lý biến thể
   </a>
   <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
     <i class="fas fa-users"></i> Quản lý danh mục
