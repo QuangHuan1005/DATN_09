@@ -65,37 +65,27 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'username' => 'required',
-            'password' => 'required|min:6',
-        ], [
-            'username.required' => 'Vui lòng nhập email hoặc tên đăng nhập.',
-            'password.required' => 'Vui lòng nhập mật khẩu.',
-            'password.min' => 'Mật khẩu tối thiểu 6 ký tự.',
-        ]);
+public function login(Request $request)
+{
+    $rules = [
+        'email' => 'required|email|string|max:255',
+        'password' => 'required|string',
+    ];
 
-        // Cho phép đăng nhập bằng email hoặc tên người dùng
-        $login_type = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+    $messages = [
+        'email.required' => 'Vui lòng nhập địa chỉ email.',
+        'email.email' => 'Địa chỉ email không đúng định dạng.',
+        'password.required' => 'Vui lòng nhập mật khẩu.',
+    ];
+    $credentials = $request->validate($rules, $messages); 
+    $user = User::where('email', $credentials['email'])->first();
 
-        $credentials = [
-            $login_type => $request->username,
-            'password' => $request->password,
-        ];
-
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-
-            // Nếu là admin thì chuyển đến trang admin
-            if (Auth::user()->is_admin ?? false) {
-                return redirect()->intended(route('admin.dashboard'))->with('success', 'Chào mừng quản trị viên!');
-            }
-
-            return redirect()->intended('/')->with('success', 'Đăng nhập thành công!');
-        }
-
-        return back()->with('error', 'Tài khoản hoặc mật khẩu không chính xác.');
+    if ($user && $user->password === $credentials['password']) {
+        
+        Auth::login($user); 
+        $request->session()->regenerate(); 
+             return redirect()->intended('/')
+                    ->with('success', 'Đăng nhập thành công'); 
     }
 
     public function logout(Request $request)

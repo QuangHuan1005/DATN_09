@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Role; 
 
 class User extends Authenticatable
 {
@@ -46,28 +47,56 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'is_admin' => 'boolean',
     ];
+    
+    // ------------------------------------------------------------------
+    // Tùy chọn: Định nghĩa quan hệ (Relationship)
+    // ------------------------------------------------------------------
+    
+
+public function role()
+{
+    return $this->belongsTo(Role::class, 'role_id');
+}
+
+
+    // public function isAdmin(): bool
+    // {
+    //     return $this->role && $this->role->name === 'admin';
+    // }
+
+    // public function isStaff(): bool
+    // {
+    //     return $this->role && $this->role->name === 'staff';
+    // }
+
+
+    // public function ranking()
+    // {
+    //     return $this->belongsTo(Ranking::class, 'ranking_id');
+    // }
+}
 
     /**
      * Kiểm tra xem user có phải admin không
      */
-    public function isAdmin()
-    {
-        return $this->is_admin === true;
-    }
+//     public function isAdmin()
+//     {
+//         return $this->is_admin === true;
+//     }
 
-    /**
-     * Quan hệ với bảng roles
-     */
-    public function role()
-    {
-        return $this->belongsTo(Role::class, 'role_id');
-    }
+//     /**
+//      * Quan hệ với bảng roles
+//      */
+//     public function role()
+//     {
+//         return $this->belongsTo(Role::class, 'role_id');
+//     }
 
-    /**
-     * Quan hệ với bảng rankings
-     */
-    public function ranking()
-    {
-        return $this->belongsTo(Ranking::class, 'ranking_id');
-    }
+//     /**
+//      * Quan hệ với bảng rankings
+//      */
+//     public function ranking()
+//     {
+//         return $this->belongsTo(Ranking::class, 'ranking_id');
+//     }
 }

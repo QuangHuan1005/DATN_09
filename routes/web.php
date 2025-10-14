@@ -9,11 +9,13 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminUserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -111,16 +113,31 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 
 /*
 |--------------------------------------------------------------------------
+| ADMIN AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
+
+Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login.form');
+Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login');
+Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+
+/*
+|--------------------------------------------------------------------------
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
 
+
+
+
 Route::prefix('admin')
-    // ->middleware(['auth', 'is_admin']) // Kích hoạt nếu có middleware phân quyền
+    ->middleware(['auth', 'is_admin'])
     ->name('admin.')
     ->group(function () {
+
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         // Dashboard
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // Danh mục
         Route::resource('categories', AdminCategoryController::class);
