@@ -1468,7 +1468,7 @@
 			//});
 		};
 </script>
-<style>
+{{-- <style>
     .form-actions-extra {
         text-align: center;
         margin-top: 20px;
@@ -1486,8 +1486,8 @@
     .form-actions-extra a:hover {
         text-decoration: underline;
     }
-    .products_ajax_button:not(:first-of-type) {
-    display: none;
-}
 
-</style>
+    .products_ajax_button:not(:first-of-type) {
+        display: none;
+    }
+</style> --}}

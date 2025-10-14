@@ -8,6 +8,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -28,6 +30,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Sản phẩm
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/search/suggestions', [ProductController::class, 'suggest'])->name('products.suggest');
     Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
     Route::get('/category/{slug}', [ProductController::class, 'showByCategory'])->name('products.category');
     Route::get('/color/{slug}', [ProductController::class, 'showByColor'])->name('products.color');
@@ -36,6 +39,28 @@ Route::prefix('products')->group(function () {
 
 // Danh mục sản phẩm
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
+
+// Blog - Tin tức
+Route::prefix('blog')->group(function () {
+    Route::get('/', [NewsController::class, 'index'])->name('blog.index');       // danh sách bài viết
+    Route::get('/{slug}', [NewsController::class, 'show'])->name('blog.show');   // chi tiết bài viết
+});
+
+// Liên hệ
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');  // trang form liên hệ
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store'); // submit form
+
+/*
+|---------------------------
+| ADMIN (đặt trong nhóm /admin sẵn có của bạn)
+|---------------------------
+*/
+Route::prefix('admin')->middleware(['auth','is_admin'])->group(function () {
+    // Quản lý Tin tức
+    Route::resource('news', AdminNewsController::class, ['as' => 'admin']);
+    // Quản lý liên hệ (xem danh sách & chi tiết, xoá)
+    Route::resource('contacts', AdminContactController::class, ['as' => 'admin'])->only(['index','show','destroy']);
+});
 
 // Giỏ hàng
 Route::prefix('cart')->group(function () {
