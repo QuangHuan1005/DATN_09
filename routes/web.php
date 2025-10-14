@@ -30,9 +30,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
     Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('/category/{slug}', [ProductController::class, 'showByCategory'])->name('products.category');
+    Route::get('/color/{slug}', [ProductController::class, 'showByColor'])->name('products.color');
+    Route::get('/size/{slug}', [ProductController::class, 'showBySize'])->name('products.size');
 });
 
-// Danh mục
+// Danh mục sản phẩm
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 // Giỏ hàng
@@ -43,27 +46,25 @@ Route::prefix('cart')->group(function () {
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
-// Thanh toán
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+
+// // Thanh toán
+// Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+// Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 
 // Đơn hàng người dùng
-Route::prefix('orders')
-    // ->middleware('auth')
-    ->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('orders.index');
-        Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
-    });
+Route::prefix('orders')->group(function () {
+    Route::get('/', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
+});
 
 // Tài khoản cá nhân
-Route::prefix('account')
-    // ->middleware('auth')
-    ->group(function () {
-        Route::get('/dashboard', [AccountController::class, 'dashboard'])->name('account.dashboard');
-        Route::get('/orders', [AccountController::class, 'orders'])->name('account.orders');
-        Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
-        Route::get('/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
-    });
+Route::prefix('account')->group(function () {
+    Route::get('/dashboard', [AccountController::class, 'dashboard'])->name('account.dashboard');
+    Route::get('/orders', [AccountController::class, 'orders'])->name('account.orders');
+    Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
+    Route::get('/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
+});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -71,15 +72,44 @@ Route::prefix('account')
 |--------------------------------------------------------------------------
 */
 
+// AUTH ROUTES (đổi tên về chuẩn Laravel)
+
+// Đăng nhập & đăng ký
+
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+
+
+// Forgot / Reset password (CHỈ đổi name)
+Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
+
+
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Quên mật khẩu
 Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot-password.email');
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('forgot-password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('forgot-password.update');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+
+
+// ==========================
+// GOOGLE LOGIN ROUTES
+// ==========================
+
+// Google login
+
+Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -132,3 +162,4 @@ Route::prefix('admin')
         // Người dùng
         Route::resource('users', AdminUserController::class);
     });
+

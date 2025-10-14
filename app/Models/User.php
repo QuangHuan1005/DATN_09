@@ -12,11 +12,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $table = 'users';
+
     /**
-     * The attributes that are mass assignable.
-     * Cần bao gồm tất cả các cột bạn muốn cho phép gán giá trị (trừ ID và timestamps)
-     *
-     * @var array<int, string>
+     * Các cột cho phép gán hàng loạt (mass assignment)
      */
     protected $fillable = [
         'role_id',
@@ -24,29 +23,29 @@ class User extends Authenticatable
         'image',
         'name',
         'email',
-        'phone', 
+        'phone',
         'password',
         'address',
         'is_verified',
         'verification_token',
+        'is_admin',
     ];
 
     /**
-     * @var array<int, string>
+     * Ẩn các cột khi trả về dữ liệu
      */
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_token',
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * Kiểu dữ liệu cho các trường đặc biệt
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        // 'password' => 'hashed',
+        'is_admin' => 'boolean',
     ];
     
     // ------------------------------------------------------------------
@@ -75,4 +74,29 @@ public function role()
     // {
     //     return $this->belongsTo(Ranking::class, 'ranking_id');
     // }
+}
+
+    /**
+     * Kiểm tra xem user có phải admin không
+     */
+//     public function isAdmin()
+//     {
+//         return $this->is_admin === true;
+//     }
+
+//     /**
+//      * Quan hệ với bảng roles
+//      */
+//     public function role()
+//     {
+//         return $this->belongsTo(Role::class, 'role_id');
+//     }
+
+//     /**
+//      * Quan hệ với bảng rankings
+//      */
+//     public function ranking()
+//     {
+//         return $this->belongsTo(Ranking::class, 'ranking_id');
+//     }
 }

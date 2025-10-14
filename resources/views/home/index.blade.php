@@ -1559,6 +1559,7 @@
             <div class="nova-overlay-global"></div>
         </div>
 
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const flashMessage = document.getElementById('flash-message');
