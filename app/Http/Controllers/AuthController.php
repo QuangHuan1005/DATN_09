@@ -32,7 +32,8 @@ public function login(Request $request)
         
         Auth::login($user); 
         $request->session()->regenerate(); 
-             return redirect()->intended('/'); 
+             return redirect()->intended('/')
+                    ->with('success', 'Đăng nhập thành công'); 
     }
     
     return back()->withErrors([

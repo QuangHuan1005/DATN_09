@@ -9,11 +9,13 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminUserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -81,24 +83,52 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
+| ADMIN AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
+
+Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login.form');
+Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login');
+Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+
+/*
+|--------------------------------------------------------------------------
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
 
-// Route::prefix('admin')
-//     ->middleware(['auth', 'is_admin'])
-//     ->group(function () {
-//         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-//         // Sản phẩm
-//         Route::resource('products', AdminProductController::class, ['as' => 'admin']);
 
-//         // Danh mục
-//         Route::resource('categories', AdminCategoryController::class, ['as' => 'admin']);
 
-//         // Đơn hàng
-//         Route::resource('orders', AdminOrderController::class, ['as' => 'admin'])->only(['index', 'show', 'update']);
+Route::prefix('admin')
+    ->middleware(['auth', 'is_admin'])
+    ->name('admin.')
+    ->group(function () {
 
-//         // Người dùng
-//         Route::resource('users', AdminUserController::class, ['as' => 'admin']);
-//     });
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        // Dashboard
+
+        // Danh mục
+        Route::resource('categories', AdminCategoryController::class);
+        Route::post('categories/{id}/restore', [AdminCategoryController::class, 'restore'])->name('categories.restore');
+        Route::delete('categories/{id}/force-delete', [AdminCategoryController::class, 'forceDelete'])->name('categories.forceDelete');
+
+        // Sản phẩm
+        Route::resource('products', AdminProductController::class);
+        Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('products.restore');
+
+        // Biến thể sản phẩm
+        Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
+        Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('products.variants.type');
+        Route::post('product-variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
+        Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
+        Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
+        Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
+
+        // Đơn hàng
+        Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
+
+        // Người dùng
+        Route::resource('users', AdminUserController::class);
+    });
