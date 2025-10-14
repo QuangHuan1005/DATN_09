@@ -15,6 +15,16 @@ class ProductController extends Controller
     {
         // Bắt đầu query chính
         $query = Product::query()->with(['category', 'variants']);
+        // ----- TÌM KIẾM THEO TÊN / MÔ TẢ -----
+    if ($request->filled('keyword')) {
+        $keyword = trim($request->keyword);
+        $query->where(function ($q) use ($keyword) {
+            $q->where('name', 'LIKE', "%{$keyword}%")
+              ->orWhere('description', 'LIKE', "%{$keyword}%");
+        });
+        
+    }
+    
         // ----- Lọc theo DANH MỤC -----
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
@@ -89,10 +99,24 @@ class ProductController extends Controller
 
         return view('products.index', compact('products', 'categories', 'colors', 'sizes'));
     }
+    public function suggest(Request $request)
+{
+    $keyword = $request->get('q', '');
+    if (strlen($keyword) < 2) {
+        return response()->json([]);
+    }
+
+    $results = Product::select('id', 'name', 'image')
+        ->where('name', 'LIKE', "%{$keyword}%")
+        ->limit(5)
+        ->get();
+
+    return response()->json($results);
+}
+
 
   public function show($id)
 {
-    $categories = Category::withCount('products')->get();
     $product = Product::with('category')->findOrFail($id);
     $variants = $product->variants()->with(['color', 'size'])->get();
     $albums = $product->photoAlbums;
@@ -103,7 +127,7 @@ class ProductController extends Controller
 
     public function showByCategory($slug)
     {
-        $categories = Category::withCount('products')->get();
+        $categories = Category::all();
         $category = Category::where('slug', $slug)->firstOrFail();
         $products = Product::where('category_id', $category->id)->paginate(12);
         return view('products.index', compact('category', 'products', 'categories'));
