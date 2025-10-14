@@ -1501,7 +1501,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <h4 class="mt-4 mb-2">Chọn thuộc tính</h4>
 
 {{-- Form thêm giỏ --}}
-<form method="POST" action="{{ route('cart.add') }}" id="addToCartForm" class="border p-3 rounded">
+<form method="POST" action="{{ route('cart.add', ['id' => $product->id]) }}" id="addToCartForm" class="border p-3 rounded">
     @csrf
     <input type="hidden" name="product_id" value="{{ $product->id }}">
     {{-- sẽ set động theo lựa chọn --}}
