@@ -24,6 +24,7 @@ class Product extends Model
         'view',
         'material',
         'onpage',
+        ];
 
     public function variants()
     {
