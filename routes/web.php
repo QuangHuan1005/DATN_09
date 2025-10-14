@@ -16,7 +16,6 @@ use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminUserController;
 
-
 /*
 |--------------------------------------------------------------------------
 | FRONTEND ROUTES
@@ -46,11 +45,6 @@ Route::prefix('cart')->group(function () {
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
-
-// // Thanh toán
-// Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-// Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-
 // Đơn hàng người dùng
 Route::prefix('orders')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
@@ -65,51 +59,28 @@ Route::prefix('account')->group(function () {
     Route::get('/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
 });
 
-
 /*
 |--------------------------------------------------------------------------
-| AUTH ROUTES
+| AUTH ROUTES (Người dùng)
 |--------------------------------------------------------------------------
 */
 
-// AUTH ROUTES (đổi tên về chuẩn Laravel)
-
-// Đăng nhập & đăng ký
-
+// Đăng nhập / đăng ký
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
-// Forgot / Reset password (CHỈ đổi name)
+// Quên / Đặt lại mật khẩu (chuẩn Laravel)
 Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
 
-
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Quên mật khẩu
-Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('forgot-password');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot-password.email');
-Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('forgot-password.reset');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('forgot-password.update');
-
-
-
-
-// ==========================
-// GOOGLE LOGIN ROUTES
-// ==========================
-
-// Google login
-
+// GOOGLE LOGIN
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -121,23 +92,17 @@ Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('
 Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login');
 Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
-
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
 
-
-
-
 Route::prefix('admin')
     ->middleware(['auth', 'is_admin'])
     ->name('admin.')
     ->group(function () {
-
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        // Dashboard
 
         // Danh mục
         Route::resource('categories', AdminCategoryController::class);

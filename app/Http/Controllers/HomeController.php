@@ -35,8 +35,9 @@ class HomeController extends Controller
         //     ->orderByDesc('total_sold')
         //     ->take(8)
         //     ->get();
+$products = Product::all(); // Hoặc áp dụng logic khác nếu cần lọc
 
-        return view('home.index', compact('newProducts', 'featuredProducts', 'categories'));
+        return view('home.index', compact('products','newProducts', 'featuredProducts', 'categories'));
     }
 
 
