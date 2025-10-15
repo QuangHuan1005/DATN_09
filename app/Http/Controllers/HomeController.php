@@ -10,10 +10,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categories = Category::withCount('products')->get();
-        // Sản phẩm nổi bật (view nhiều nhất)
-        // $featuredProducts = Product::orderBy('view', 'desc')->take(4)->get();
-        // return view('home.index', compact('featuredProducts'));
+        $categories = Category::all();
         // 1. Sản phẩm mới nhất
         $newProducts = Product::with('category')
             ->orderBy('created_at', 'desc')
@@ -35,8 +32,9 @@ class HomeController extends Controller
         //     ->orderByDesc('total_sold')
         //     ->take(8)
         //     ->get();
+$products = Product::all(); // Hoặc áp dụng logic khác nếu cần lọc
 
-        return view('home.index', compact('newProducts', 'featuredProducts', 'categories'));
+        return view('home.index', compact('products','newProducts', 'featuredProducts', 'categories'));
     }
 
 

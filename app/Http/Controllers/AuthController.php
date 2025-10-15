@@ -6,12 +6,12 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Auth\Events\PasswordReset;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -52,8 +52,10 @@ class AuthController extends Controller
             ]);
 
             return redirect()->route('login')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập.');
-        } catch (\Throwable $e) {
-            Log::error('Đăng ký lỗi: '.$e->getMessage());
+
+        } catch (Exception $e) {
+            Log::error('Lỗi đăng ký: ' . $e->getMessage());
+
             return back()->with('error', 'Đăng ký thất bại, vui lòng thử lại.');
         }
     }
@@ -71,25 +73,18 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'username' => 'required',
-            'password' => 'required|min:6',
+        $credentials = $request->validate([
+            'email' => 'required|email|string|max:255',
+            'password' => 'required|string',
         ], [
-            'username.required' => 'Vui lòng nhập email hoặc tên đăng nhập.',
+            'email.required' => 'Vui lòng nhập địa chỉ email.',
+            'email.email' => 'Email không đúng định dạng.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
-            'password.min' => 'Mật khẩu tối thiểu 6 ký tự.',
         ]);
 
-        // Cho phép đăng nhập bằng email hoặc tên người dùng
-        $login_type = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
-
-        $credentials = [
-            $login_type => $request->username,
-            'password' => $request->password,
-        ];
-
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
+
 
             // Nếu là admin thì chuyển đến trang admin
             if (Auth::user()->role_id == 1) {
@@ -97,9 +92,12 @@ class AuthController extends Controller
             }
 
             return redirect()->intended('/')->with('success', 'Đăng nhập thành công!');
+
         }
 
-        return back()->with('error', 'Tài khoản hoặc mật khẩu không chính xác.');
+        return back()->withErrors([
+            'email' => 'Email hoặc mật khẩu không đúng.',
+        ])->onlyInput('email');
     }
 
     public function logout(Request $request)
@@ -142,6 +140,7 @@ class AuthController extends Controller
             ]);
         }
 
+
         Auth::login($user, true);
 
         return redirect('/')->with('success', 'Đăng nhập thành công bằng Google.');
@@ -163,7 +162,7 @@ class AuthController extends Controller
         $status = Password::sendResetLink($request->only('email'));
 
         return $status === Password::RESET_LINK_SENT
-            ? back()->with('success', 'Liên kết đặt lại mật khẩu đã được gửi tới email của bạn.')
+            ? back()->with('success', 'Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.')
             : back()->withErrors(['email' => 'Không thể gửi liên kết, vui lòng thử lại.']);
     }
 
