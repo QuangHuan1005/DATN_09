@@ -20,7 +20,7 @@
             <div style="color:#0a0; margin-bottom:10px;">{{ session('success') }}</div>
           @endif
 
-          {{-- Lỗi validate --}}
+          {{-- Lỗi validate chung --}}
           @if ($errors->any())
             <div style="color:#d00; margin-bottom:10px;">
               @foreach ($errors->all() as $error)
@@ -34,19 +34,23 @@
                 action="{{ route('login') }}">
             @csrf
 
-            {{-- Controller yêu cầu "username" (email hoặc tên đăng nhập) --}}
+            {{-- Email (khớp với controller) --}}
             <p class="woocommerce-form-row form-row form-row-wide">
               <input
-                type="text"
-                name="username"
-                id="username"
+                type="email"
+                name="email"
+                id="email"
                 class="woocommerce-Input woocommerce-Input--text input-text"
-                placeholder="Email hoặc tên đăng nhập"
-                value="{{ old('username') }}"
+                placeholder="Địa chỉ email"
+                value="{{ old('email') }}"
                 required
                 autocomplete="username">
+              @error('email')
+                <small style="color:#d00">{{ $message }}</small>
+              @enderror
             </p>
 
+            {{-- Mật khẩu --}}
             <p class="woocommerce-form-row form-row form-row-wide" style="position:relative;">
               <input
                 type="password"
@@ -61,6 +65,9 @@
                     style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#888;">
                 <i class="fa fa-eye"></i>
               </span>
+              @error('password')
+                <small style="color:#d00; display:block; margin-top:6px;">{{ $message }}</small>
+              @enderror
             </p>
 
             <p class="form-row form-group" style="display:flex; justify-content:space-between; align-items:center;">
@@ -70,6 +77,7 @@
                 <span>Nhớ mật khẩu</span>
               </label>
 
+              {{-- route này tồn tại nếu dùng Password::routes() hoặc tự định nghĩa --}}
               <a href="{{ route('password.request') }}">Quên mật khẩu?</a>
             </p>
 
@@ -108,6 +116,6 @@
   }
 </script>
 
-{{-- Font Awesome (nếu chưa có trong layout) --}}
+{{-- Font Awesome (nếu layout chưa có) --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 @endsection

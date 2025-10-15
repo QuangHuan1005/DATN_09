@@ -73,28 +73,39 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        // ✅ Validate dữ liệu đầu vào
+        $request->validate([
             'email' => 'required|email|string|max:255',
-            'password' => 'required|string',
+            'password' => 'required|string|min:6',
         ], [
             'email.required' => 'Vui lòng nhập địa chỉ email.',
-            'email.email' => 'Email không đúng định dạng.',
+            'email.email' => 'Địa chỉ email không đúng định dạng.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
+            'password.min' => 'Mật khẩu tối thiểu 6 ký tự.',
         ]);
 
-        if (Auth::attempt($credentials, $request->remember)) {
+        // ✅ Lấy thông tin đăng nhập
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
+
+        // ✅ Thử đăng nhập
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-
-            // Nếu là admin thì chuyển đến trang admin
+            // ✅ Kiểm tra quyền admin (role_id = 1)
             if (Auth::user()->role_id == 1) {
-                return redirect()->intended(route('admin.dashboard'))->with('success', 'Chào mừng quản trị viên!');
+                return redirect()->intended(route('admin.dashboard'))
+                    ->with('success', 'Chào mừng quản trị viên!');
             }
 
-            return redirect()->intended('/')->with('success', 'Đăng nhập thành công!');
-
+            // ✅ Người dùng thường
+            return redirect()->intended('/')
+                ->with('success', 'Đăng nhập thành công!');
         }
 
+        // ❌ Nếu thất bại
         return back()->withErrors([
             'email' => 'Email hoặc mật khẩu không đúng.',
         ])->onlyInput('email');
