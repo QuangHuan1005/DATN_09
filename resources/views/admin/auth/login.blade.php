@@ -86,7 +86,7 @@
                             Nhớ đăng nhập
                         </span>
                     </label>
-                    <a href="{{ route('forgot-password') }}" class="forgot-password">Quên mật khẩu?</a>
+                    <a href="{{ route('password.request') }}" class="forgot-password">Quên mật khẩu?</a>
                 </div>
 
                 <button type="submit" class="login-btn">
