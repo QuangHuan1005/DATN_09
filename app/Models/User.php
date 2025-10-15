@@ -31,7 +31,7 @@ class User extends Authenticatable
         'address',
         'is_verified',
         'verification_token',
-        'is_admin',
+        'remember_token',
     ];
 
     /**

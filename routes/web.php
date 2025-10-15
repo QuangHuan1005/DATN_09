@@ -90,20 +90,32 @@ Route::prefix('account')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-// Đăng nhập / đăng ký
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Quên / Đặt lại mật khẩu (chuẩn Laravel)
-Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
-Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
+// AUTH ROUTES — chuẩn Laravel
 
-// GOOGLE LOGIN
+// Guest-only
+Route::middleware('guest')->group(function () {
+    // Login
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+
+    // Register
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+
+    // Forgot / Reset password (CHUẨN tên route)
+    Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
+});
+
+// Auth-only
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+// Google login
+
+
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
