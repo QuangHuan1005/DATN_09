@@ -70,41 +70,29 @@ Route::prefix('account')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-// AUTH ROUTES (đổi tên về chuẩn Laravel)
+// AUTH ROUTES — chuẩn Laravel
 
-// Đăng nhập & đăng ký
+// Guest-only
+Route::middleware('guest')->group(function () {
+    // Login
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+    // Register
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
 
+    // Forgot / Reset password (CHUẨN tên route)
+    Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
+});
 
-// Forgot / Reset password (CHỈ đổi name)
-Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
-Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
-
-
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Quên mật khẩu
-Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('forgot-password');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot-password.email');
-Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('forgot-password.reset');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('forgot-password.update');
-
-
-
-
-// ==========================
-// GOOGLE LOGIN ROUTES
-// ==========================
+// Auth-only
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Google login
-
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 

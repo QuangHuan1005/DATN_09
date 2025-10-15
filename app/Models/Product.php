@@ -24,7 +24,7 @@ class Product extends Model
         'view',
         'material',
         'onpage',
-
+    ];  
     public function variants()
     {
         return $this->hasMany(\App\Models\ProductVariant::class, 'product_id');

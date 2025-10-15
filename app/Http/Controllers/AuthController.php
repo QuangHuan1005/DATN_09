@@ -42,18 +42,22 @@ class AuthController extends Controller
         ]);
 
         try {
-            User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
+            $user = User::create([
+                'role_id'     => 2,              // member
+                'ranking_id'  => 1,              // Bronze (nếu có)
+                'name'        => $request->name,
+                'email'       => $request->email,
+                'password'    => Hash::make($request->password),
+                'is_verified' => 1,              // tùy bạn: auto verify
             ]);
 
             return redirect()->route('login')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập.');
-        } catch (Exception $e) {
-            Log::error('Đăng ký lỗi: ' . $e->getMessage());
+        } catch (\Throwable $e) {
+            Log::error('Đăng ký lỗi: '.$e->getMessage());
             return back()->with('error', 'Đăng ký thất bại, vui lòng thử lại.');
         }
     }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -88,7 +92,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // Nếu là admin thì chuyển đến trang admin
-            if (Auth::user()->is_admin ?? false) {
+            if (Auth::user()->role_id == 1) {
                 return redirect()->intended(route('admin.dashboard'))->with('success', 'Chào mừng quản trị viên!');
             }
 
@@ -121,7 +125,7 @@ class AuthController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('login')->with('error', 'Không thể kết nối đến Google.');
         }
 
@@ -129,9 +133,12 @@ class AuthController extends Controller
 
         if (!$user) {
             $user = User::create([
-                'name' => $googleUser->getName(),
-                'email' => $googleUser->getEmail(),
-                'password' => Hash::make('google_login_' . now()), // tạo password ẩn
+                'role_id'     => 2, // member
+                'ranking_id'  => 1, // Bronze
+                'name'        => $googleUser->getName(),
+                'email'       => $googleUser->getEmail(),
+                'password'    => Hash::make('google_login_'.now()),
+                'is_verified' => 1,
             ]);
         }
 
@@ -139,7 +146,6 @@ class AuthController extends Controller
 
         return redirect('/')->with('success', 'Đăng nhập thành công bằng Google.');
     }
-
     /*
     |--------------------------------------------------------------------------
     | QUÊN / ĐẶT LẠI MẬT KHẨU
