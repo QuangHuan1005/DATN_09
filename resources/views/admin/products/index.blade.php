@@ -11,6 +11,14 @@
         @if (session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
+        {{-- Tìm kiếm --}}
+    <form method="GET" action="{{ route('admin.products.index') }}" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control" placeholder="Tìm theo tên sản phẩm..." value="{{ request('keyword') }}">
+            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+        </div>
+    </form>
+
 
         <div class="mb-3">
             <a href="{{ route('admin.products.create') }}" class="btn btn-success">+ Thêm sản phẩm</a>
