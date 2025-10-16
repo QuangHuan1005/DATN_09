@@ -71,45 +71,34 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
-    {
-        // ✅ Validate dữ liệu đầu vào
-        $request->validate([
-            'email' => 'required|email|string|max:255',
-            'password' => 'required|string|min:6',
-        ], [
-            'email.required' => 'Vui lòng nhập địa chỉ email.',
-            'email.email' => 'Địa chỉ email không đúng định dạng.',
-            'password.required' => 'Vui lòng nhập mật khẩu.',
-            'password.min' => 'Mật khẩu tối thiểu 6 ký tự.',
-        ]);
+   public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email|string|max:255',
+        'password' => 'required|string|min:6',
+    ]);
 
-        // ✅ Lấy thông tin đăng nhập
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
+    $user = User::where('email', $request->email)->first();
 
-        // ✅ Thử đăng nhập
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-
-            // ✅ Kiểm tra quyền admin (role_id = 1)
-            if (Auth::user()->role_id == 1) {
-                return redirect()->intended(route('admin.dashboard'))
-                    ->with('success', 'Chào mừng quản trị viên!');
-            }
-
-            // ✅ Người dùng thường
-            return redirect()->intended('/')
-                ->with('success', 'Đăng nhập thành công!');
-        }
-
-        // ❌ Nếu thất bại
-        return back()->withErrors([
-            'email' => 'Email hoặc mật khẩu không đúng.',
-        ])->onlyInput('email');
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.']);
     }
+
+    if ($user->is_locked) {
+      return back()->with('error', 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.');
+    }
+
+    Auth::login($user, $request->boolean('remember'));
+    $request->session()->regenerate();
+
+    if ($user->role_id == 1) {
+        return redirect()->intended(route('admin.dashboard'))
+            ->with('success', 'Chào mừng quản trị viên!');
+    }
+
+    return redirect()->intended('/')->with('success', 'Đăng nhập thành công!');
+}
+
 
     public function logout(Request $request)
     {
