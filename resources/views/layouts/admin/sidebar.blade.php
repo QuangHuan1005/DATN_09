@@ -9,6 +9,10 @@
     <p style="color: #ecf0f1; margin-top: 10px;">{{ auth()->user()->name ?? 'Admin' }}</p>
   </div>
 
+    <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+    <i class="fas fa-tachometer-alt"></i> Quản lý tài khoản
+  </a>
+
   <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
     <i class="fas fa-tachometer-alt"></i> Quản lý biến thể
   </a>

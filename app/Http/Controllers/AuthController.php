@@ -59,7 +59,6 @@ class AuthController extends Controller
         }
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | ĐĂNG NHẬP / ĐĂNG XUẤT
@@ -72,30 +71,39 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $rules = [
+        $request->validate([
             'email' => 'required|email|string|max:255',
             'password' => 'required|string|min:6',
-        ];
-        $messages = [
+        ], [
             'email.required' => 'Vui lòng nhập địa chỉ email',
             'email.email' => 'Địa chỉ email không đúng định dạng',
             'password.required' => 'Vui lòng nhập mật khẩu',
             'password.min' => 'Mật khẩu tối thiểu 6 ký tự',
-        ];
+        ]);
 
-        $credentials = $request->validate($rules, $messages);
-        $user = User::where('email', $credentials['email'])->first();
-        if ($user && $user->password === $credentials['password']) {
+        $user = User::where('email', $request->email)->first();
 
-            Auth::login($user);
-            $request->session()->regenerate();
-            return redirect()->intended('/')
-                ->with('success', 'Đăng nhập thành công');
+        // Kiểm tra user tồn tại và mật khẩu đúng
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])->withInput();
         }
 
-        return back()->withErrors([
-            'email' => 'Thông tin đăng nhập không chính xác.',
-        ])->onlyInput('email');
+        // Kiểm tra tài khoản có bị khóa không
+        if ($user->is_locked) {
+            return back()->with('error', 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.');
+        }
+
+        // Đăng nhập thành công
+        Auth::login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
+
+        // Nếu là admin thì chuyển đến trang admin
+        if ($user->role_id == 1) {
+            return redirect()->intended(route('admin.dashboard'))
+                ->with('success', 'Chào mừng quản trị viên!');
+        }
+
+        return redirect()->intended('/')->with('success', 'Đăng nhập thành công!');
     }
 
     public function logout(Request $request)
@@ -121,7 +129,7 @@ class AuthController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->route('login')->with('error', 'Không thể kết nối đến Google.');
         }
 
@@ -138,11 +146,11 @@ class AuthController extends Controller
             ]);
         }
 
-
         Auth::login($user, true);
 
         return redirect('/')->with('success', 'Đăng nhập thành công bằng Google.');
     }
+
     /*
     |--------------------------------------------------------------------------
     | QUÊN / ĐẶT LẠI MẬT KHẨU
