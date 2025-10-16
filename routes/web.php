@@ -55,11 +55,11 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 | ADMIN (đặt trong nhóm /admin sẵn có của bạn)
 |---------------------------
 */
-Route::prefix('admin')->middleware(['auth','is_admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
     // Quản lý Tin tức
     Route::resource('news', AdminNewsController::class, ['as' => 'admin']);
     // Quản lý liên hệ (xem danh sách & chi tiết, xoá)
-    Route::resource('contacts', AdminContactController::class, ['as' => 'admin'])->only(['index','show','destroy']);
+    Route::resource('contacts', AdminContactController::class, ['as' => 'admin'])->only(['index', 'show', 'destroy']);
 });
 
 // Giỏ hàng
@@ -77,10 +77,14 @@ Route::prefix('orders')->group(function () {
 });
 
 // Tài khoản cá nhân
-Route::prefix('account')->group(function () {
-    Route::get('/dashboard', [AccountController::class, 'dashboard'])->name('account.dashboard');
-    Route::get('/orders', [AccountController::class, 'orders'])->name('account.orders');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/account', [AccountController::class, 'dashboard'])->name('account.dashboard');
+    Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders');
     Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
+    Route::get('/account/edit', [AccountController::class, 'edit'])->name('account.edit');
+    Route::post('/account/update', [AccountController::class, 'update'])->name('account.update');
+    Route::get('/account/change-password', [AccountController::class, 'changePassword'])->name('account.password');
+    Route::post('/account/change-password', [AccountController::class, 'updatePassword'])->name('account.password.update');
     Route::get('/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
 });
 
@@ -164,4 +168,3 @@ Route::prefix('admin')
         // Người dùng
         Route::resource('users', AdminUserController::class);
     });
-

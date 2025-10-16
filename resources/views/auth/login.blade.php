@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="site-wrapper">
+        @include('layouts.header')
         <div id="site-content" class="site-content-wrapper">
             <div class="nova-container">
                 <nav class="woocommerce-breadcrumb" style="margin:16px 0;">
