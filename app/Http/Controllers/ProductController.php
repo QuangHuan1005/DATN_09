@@ -115,21 +115,38 @@ class ProductController extends Controller
 }
 
 
-  public function show($id)
+public function show($id)
 {
     $product = Product::with('category')->findOrFail($id);
     $variants = $product->variants()->with(['color', 'size'])->get();
     $albums = $product->photoAlbums;
     $reviews = $product->reviews()->latest()->get();
+    $categories = Category::all();
+    $colors = Color::all();
 
-    return view('products.show', compact('product', 'variants', 'albums', 'reviews', 'categories'));
+    // Tạo variantMap
+    $variantMap = [];
+
+    foreach ($variants as $variant) {
+        $key = $variant->color_id . '-' . $variant->size_id;
+        $variantMap[$key] = [
+            'id' => $variant->id,
+            'price' => $variant->price,
+            'stock' => $variant->stock ?? 0, 
+        ];
+    }
+
+    return view('products.show', compact('product', 'variants', 'albums', 'reviews', 'categories', 'colors', 'variantMap'));
 }
+
+
+
 
     public function showByCategory($slug)
     {
         $categories = Category::all();
         $category = Category::where('slug', $slug)->firstOrFail();
         $products = Product::where('category_id', $category->id)->paginate(12);
-        return view('products.index', compact('category', 'products', 'categories'));
+        return view('products.index', compact('category', 'products', 'categories','colors'));
     }
 }
