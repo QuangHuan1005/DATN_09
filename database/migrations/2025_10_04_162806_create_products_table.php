@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('products', function (Blueprint $table) {
+            // thêm cột deleted_at nếu chưa có
+            if (!Schema::hasColumn('products', 'deleted_at')) {
+                $table->softDeletes(); // datetime nullable
+            }
         });
     }
 
@@ -22,6 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+         Schema::table('products', function (Blueprint $table) {
+            if (Schema::hasColumn('products', 'deleted_at')) {
+                $table->dropSoftDeletes();
+            }
+        });
     }
 };
