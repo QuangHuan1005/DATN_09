@@ -11,20 +11,20 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-  public function index(Request $request)
+    public function index(Request $request)
     {
+        
         // Bắt đầu query chính
         $query = Product::query()->with(['category', 'variants']);
         // ----- TÌM KIẾM THEO TÊN / MÔ TẢ -----
-    if ($request->filled('keyword')) {
-        $keyword = trim($request->keyword);
-        $query->where(function ($q) use ($keyword) {
-            $q->where('name', 'LIKE', "%{$keyword}%")
-              ->orWhere('description', 'LIKE', "%{$keyword}%");
-        });
-        
-    }
-    
+        if ($request->filled('keyword')) {
+            $keyword = trim($request->keyword);
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'LIKE', "%{$keyword}%")
+                    ->orWhere('description', 'LIKE', "%{$keyword}%");
+            });
+        }
+
         // ----- Lọc theo DANH MỤC -----
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
@@ -82,7 +82,7 @@ class ProductController extends Controller
         }
 
         // Kết quả chính
-        $products = $query->paginate(12)->appends($request->query());
+        $products = Product::orderBy('created_at', 'desc')->paginate(8);
 
         // --- Đếm số lượng cho sidebar ---
         $categories = Category::withCount('products')->get();
@@ -100,30 +100,33 @@ class ProductController extends Controller
         return view('products.index', compact('products', 'categories', 'colors', 'sizes'));
     }
     public function suggest(Request $request)
-{
-    $keyword = $request->get('q', '');
-    if (strlen($keyword) < 2) {
-        return response()->json([]);
+    {
+        $keyword = $request->get('q', '');
+        if (strlen($keyword) < 2) {
+            return response()->json([]);
+        }
+
+        $results = Product::select('id', 'name', 'image')
+            ->where('name', 'LIKE', "%{$keyword}%")
+            ->limit(5)
+            ->get();
+
+        return response()->json($results);
     }
 
-    $results = Product::select('id', 'name', 'image')
-        ->where('name', 'LIKE', "%{$keyword}%")
-        ->limit(5)
-        ->get();
 
-    return response()->json($results);
-}
+    public function show($id)
+    {
+        $product = Product::with(['category', 'photoAlbums', 'variants.color', 'variants.size'])
+            ->findOrFail($id);
+        $reviews = $product->reviews()->latest()->get();
 
-
-  public function show($id)
-{
-    $product = Product::with('category')->findOrFail($id);
-    $variants = $product->variants()->with(['color', 'size'])->get();
-    $albums = $product->photoAlbums;
-    $reviews = $product->reviews()->latest()->get();
-
-    return view('products.show', compact('product', 'variants', 'albums', 'reviews', 'categories'));
-}
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->with('variants')
+            ->take(8)->get();
+        return view('products.show', compact('product', 'relatedProducts'));
+    }
 
     public function showByCategory($slug)
     {
