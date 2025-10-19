@@ -10,11 +10,8 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
-
-    // Tên bảng trong cơ sở dữ liệu
     protected $table = 'products';
 
-    // Các cột có thể gán giá trị hàng loạt
     protected $fillable = [
         'category_id',
         'role_id',
@@ -26,8 +23,8 @@ class Product extends Model
         'material',
         'onpage',
 
+    ];  
 
-    ];
     protected $dates = ['deleted_at'];  
 
 
@@ -36,25 +33,21 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class, 'product_id');
     }
 
-    /**
-     * Mối quan hệ 1-nhiều: Product có nhiều ảnh chi tiết (ProductPhotoAlbum)
-     */
     public function photoAlbums()
     {
         return $this->hasMany(ProductPhotoAlbum::class, 'product_id');
     }
 
-    /**
-     * Mối quan hệ 1-nhiều: Product có nhiều đánh giá (Review)
-     */
+    public function firstPhoto()
+    {
+        return $this->hasOne(ProductPhotoAlbum::class, 'product_id')->oldest();
+    }
+
     public function reviews()
     {
         return $this->hasMany(Review::class, 'product_id');
     }
 
-    /**
-     * Mối quan hệ n-1: Product thuộc về một Category
-     */
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id')->withDefault();

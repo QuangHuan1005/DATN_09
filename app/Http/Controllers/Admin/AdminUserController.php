@@ -17,7 +17,7 @@ class AdminUserController extends Controller
      */
    public function index(Request $request)
 {
-    $query = User::withTrashed()->where('role_id', '!=', 1);
+    $query = User::withTrashed();
 
     // 🔍 Tìm kiếm theo tên, email hoặc số điện thoại
     if ($search = $request->input('search')) {
