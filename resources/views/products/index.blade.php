@@ -249,9 +249,9 @@
 														</ul>
 													</div>
 												</div>
-												<nav class="woocommerce-pagination kitify-pagination clearfix kitify-ajax-pagination"
+												<nav class=" kitify-pagination clearfix "
 													aria-label="Product Pagination">
-													<ul class='page-numbers'>
+													{{-- <ul class='page-numbers'>
 														<li><span aria-label="Page 1" aria-current="page"
 																class="page-numbers current">1</span></li>
 														<li><a aria-label="Page 2" class="page-numbers"
@@ -262,7 +262,9 @@
 																href="page/4/index.html">4</a></li>
 														<li><a class="next page-numbers"
 																href="page/2/index.html">Next</a></li>
-													</ul>
+													</ul> --}}
+    {{ $products->links('pagination::bootstrap-5') }}
+
 												</nav>
 											</div>
 										</div>

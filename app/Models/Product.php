@@ -10,6 +10,7 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
+
     // Tên bảng trong cơ sở dữ liệu
     protected $table = 'products';
 
@@ -25,10 +26,16 @@ class Product extends Model
         'material',
         'onpage',
 
+
     ];
+
+    ];  
+    protected $dates = ['deleted_at'];  
+
+
     public function variants()
     {
-        return $this->hasMany(\App\Models\ProductVariant::class, 'product_id');
+        return $this->hasMany(ProductVariant::class, 'product_id');
     }
 
     /**
@@ -36,7 +43,7 @@ class Product extends Model
      */
     public function photoAlbums()
     {
-        return $this->hasMany(\App\Models\ProductPhotoAlbum::class, 'product_id');
+        return $this->hasMany(ProductPhotoAlbum::class, 'product_id');
     }
 
     /**
@@ -44,7 +51,7 @@ class Product extends Model
      */
     public function reviews()
     {
-        return $this->hasMany(\App\Models\Review::class, 'product_id');
+        return $this->hasMany(Review::class, 'product_id');
     }
 
     /**
@@ -52,6 +59,6 @@ class Product extends Model
      */
     public function category()
     {
-        return $this->belongsTo(\App\Models\Category::class, 'category_id')->withDefault();
+        return $this->belongsTo(Category::class, 'category_id')->withDefault();
     }
 }

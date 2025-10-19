@@ -21,7 +21,9 @@
                 <div class="elementor-element elementor-element-7276cec9 elementor-widget elementor-widget-heading"
                     data-id="7276cec9" data-element_type="widget" data-widget_type="heading.default">
                     <div class="elementor-widget-container">
-                        <p class="elementor-heading-title elementor-size-default">Dù bạn là người dẫn đầu xu hướng, người theo chủ nghĩa tối giản hay một người ưa phiêu lưu, Friday đều có sản phẩm dành cho tất cả mọi người. Phong cách đa dạng của chúng tôi đáp ứng mọi sở thích của bạn. </p>
+                        <p class="elementor-heading-title elementor-size-default">Dù bạn là người dẫn đầu xu hướng,
+                            người theo chủ nghĩa tối giản hay một người ưa phiêu lưu, Friday đều có sản phẩm dành cho
+                            tất cả mọi người. Phong cách đa dạng của chúng tôi đáp ứng mọi sở thích của bạn. </p>
                     </div>
                 </div>
                 <div class="elementor-element elementor-element-4b1084e8 elementor-shape-circle e-grid-align-left elementor-grid-0 elementor-widget elementor-widget-social-icons"
@@ -247,7 +249,8 @@
                 <div class="elementor-element elementor-element-3a84aaf4 elementor-widget elementor-widget-heading"
                     data-id="3a84aaf4" data-element_type="widget" data-widget_type="heading.default">
                     <div class="elementor-widget-container">
-                        <span class="elementor-heading-title elementor-size-default">Đăng ký nhận bản tin của chúng tôi và nhận giảm giá 10%</span>
+                        <span class="elementor-heading-title elementor-size-default">Đăng ký nhận bản tin của chúng tôi
+                            và nhận giảm giá 10%</span>
                     </div>
                 </div>
                 <div class="elementor-element elementor-element-6e184175 elementor-widget kitify elementor-kitify-subscribe-form"
@@ -286,7 +289,8 @@
                 <div class="elementor-element elementor-element-55712cf9 elementor-widget elementor-widget-heading"
                     data-id="55712cf9" data-element_type="widget" data-widget_type="heading.default">
                     <div class="elementor-widget-container">
-                        <span class="elementor-heading-title elementor-size-default">© 2025. Bản quyền thuộc về Friday</span>
+                        <span class="elementor-heading-title elementor-size-default">© 2025. Bản quyền thuộc về
+                            Friday</span>
                     </div>
                 </div>
             </div>
@@ -513,13 +517,12 @@
         </button>
         <div class="site-search full-screen">
             <div class="header-search">
-
-
-                <form class="header_search_form" role="search" method="get" action="https://mixtas.novaworks.net/">
+                <form class="header_search_form" role="search" method="get" action="{{route('products.index')}}">
                     <div class="header_search_form_inner">
                         <div class="header_search_input_wrapper">
-                            <input name="s" id="search_548" class="header_search_input" type="search" autocomplete="off"
-                                value="" data-min-chars="3" placeholder="Product Search" />
+                            <input name="keyword" id="search_548" class="header_search_input" type="search"
+                                autocomplete="off" value="{{ request('keyword') }}" data-min-chars="3"
+                                placeholder="Tìm kiếm sản phẩm..." />
 
                             <input type="hidden" name="post_type" value="product" />
                         </div>
@@ -530,19 +533,7 @@
                                 </svg>
                             </button>
                         </div>
-                    </div>
-                    <div class="header_search_ajax_loading">
-                        <span></span>
-                    </div>
-                    <div class="header_search_ajax_results_wrapper">
-                        <div class="header_search_ajax_results">
-                            <div class="header_search_icon">
-                                <svg class="mixtas-search-product-icon">
-                                    <use xlink:href="#mixtas-search-product-icon"></use>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
+                    </div>  
                 </form>
             </div>
         </div>

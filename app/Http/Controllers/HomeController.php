@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\OrderDetail;
@@ -10,36 +11,59 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categories = Category::withCount('products')->get();
-        // Sản phẩm nổi bật (view nhiều nhất)
-        // $featuredProducts = Product::orderBy('view', 'desc')->take(4)->get();
-        // return view('home.index', compact('featuredProducts'));
-        // 1. Sản phẩm mới nhất
-        $newProducts = Product::with('category')
-            ->orderBy('created_at', 'desc')
+
+        // Danh mục nổi bật
+        $categories = Category::query()
+            ->withCount('products')
+            ->latest('id')
             ->take(8)
             ->get();
 
-        // 2. Sản phẩm nổi bật (có thể là onpage = 1 )
-        $featuredProducts = Product::with('category')
-            ->where('onpage', 1)
-            ->orderBy('updated_at', 'desc')
+        // Hàng mới
+        $newProducts = Product::query()
+            ->with(['photoAlbums', 'variants.color', 'variants.size'])
+            ->latest('id')
             ->take(8)
             ->get();
 
-        // 3. Sản phẩm bán chạy nhất (tính theo tổng số lượng trong order_details)
-        // $bestSellingProducts = Product::select('products.*', DB::raw('SUM(order_details.quantity) as total_sold'))
-        //     ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-        //     ->join('order_details', 'product_variants.id', '=', 'order_details.product_variant_id')
+        // Đang giảm giá: có variant sale < price
+        $saleProducts = Product::query()
+            ->whereHas('variants', function ($q) {
+                $q->whereNotNull('sale')->whereColumn('sale', '<', 'price');
+            })
+            ->with(['photoAlbums', 'variants' => function ($q) {
+                $q->orderByRaw('IFNULL(sale, price) asc');
+            }])
+            ->take(4)
+            ->get();
+
+
+        // Bán chạy: tính theo order_details.quantity, lọc đơn "Hoàn thành" 
+        // $bestSellers = Product::query()
+        //     ->select('products.*', DB::raw('SUM(order_details.quantity) as total_sold'))
+        //     ->join('product_variants', 'product_variants.product_id', '=', 'products.id')
+        //     ->join('order_details', 'order_details.product_variant_id', '=', 'product_variants.id')
+        //     ->join('orders', 'orders.id', '=', 'order_details.order_id')
+        //     ->join('order_statuses', 'order_statuses.id', '=', 'orders.order_status_id')
+        //     ->where('order_statuses.name', 'Hoàn thành')
         //     ->groupBy('products.id')
         //     ->orderByDesc('total_sold')
-        //     ->take(8)
+        //     ->with(['photoAlbums', 'variants'])
+        //     ->take(12)
         //     ->get();
 
-        return view('home.index', compact('newProducts', 'featuredProducts', 'categories'));
+        // Thịnh hành: theo lượt xem
+        $trending = Product::query()
+            ->with(['photoAlbums', 'variants'])
+            ->orderByDesc('view')
+            ->take(8)
+            ->get();
+
+        return view('home.index', compact(
+            'categories',
+            'newProducts',
+            'saleProducts',
+            'trending'
+        ));
     }
-
-
-
-
 }
