@@ -1,8 +1,14 @@
 @extends('master')
 @section('content')
 
+
+        <link rel="stylesheet" id="elementor-post-625-css"
+            href="https://mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-625.css?ver=1745082661" type="text/css"
+            media="all">
+        
     <body
-        class="blog wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-625 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  blog-pagination-default kitify--enabled">
+        class="blog wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-625 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active blog-pagination-default kitify--enabled kitify--js-ready body-loaded e--ua-blink e--ua-chrome e--ua-webkit"
+        data-elementor-device-mode="laptop">
         <div class="site-wrapper">
 
             <div class="kitify-site-wrapper elementor-459kitify">
@@ -10,9 +16,9 @@
                 <div id="site-content" class="site-content-wrapper">
                     <div data-elementor-type="archive" data-elementor-id="625"
                         class="elementor elementor-625 elementor-location-archive">
-                        <div class="elementor-element elementor-element-d282e6b e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        <div class="elementor-element elementor-element-d282e6b e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent e-lazyloaded"
                             data-id="d282e6b" data-element_type="container">
-                            <div class="e-con-inner">
+                            <div class="e-con-inner" style="--kitify-section-width: 1225px;">
                                 <div class="elementor-element elementor-element-650f302 kitify-breadcrumbs-page-title-yes kitify-breadcrumbs-align-center elementor-widget kitify elementor-kitify-breadcrumbs"
                                     data-id="650f302" data-element_type="widget"
                                     data-widget_type="kitify-breadcrumbs.default">
@@ -22,7 +28,8 @@
                                             <h3 class="kitify-breadcrumbs__title">Blog</h3>
                                             <div class="kitify-breadcrumbs__content">
                                                 <div class="kitify-breadcrumbs__wrap">
-                                                    <div class="kitify-breadcrumbs__item"><a href="../index.html"
+                                                    <div class="kitify-breadcrumbs__item"><a
+                                                            href="https://mixtas.novaworks.net/"
                                                             class="kitify-breadcrumbs__item-link is-home" rel="home"
                                                             title="Home">Home</a></div>
                                                     <div class="kitify-breadcrumbs__item">
@@ -37,12 +44,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="elementor-element elementor-element-577be7f0 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        <div class="elementor-element elementor-element-577be7f0 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent e-lazyloaded"
                             data-id="577be7f0" data-element_type="container">
-                            <div class="e-con-inner">
+                            <div class="e-con-inner" style="--kitify-section-width: 1225px;">
                                 <div class="elementor-element elementor-element-4ff1bacc e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
                                     data-id="4ff1bacc" data-element_type="container">
-                                    <div class="elementor-element elementor-element-36b3f36f e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                    <div class="elementor-element elementor-element-36b3f36f e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child elementor-sticky"
                                         data-id="36b3f36f" data-element_type="container"
                                         data-settings="{&quot;sticky&quot;:&quot;top&quot;,&quot;sticky_on&quot;:[&quot;desktop&quot;,&quot;laptop&quot;],&quot;sticky_offset&quot;:100,&quot;sticky_parent&quot;:&quot;yes&quot;,&quot;sticky_effects_offset&quot;:0}">
                                         <div class="elementor-element elementor-element-296e00fd elementor-widget kitify elementor-kitify-sidebar"
@@ -58,33 +65,34 @@
                                                         <div class="toggle-column-btn__wrap"><a
                                                                 class="toggle-column-btn js-column-toggle"
                                                                 href="javascript:void(0)"></a></div>
-                                                        <div class="kitify-toggle-sidebar__inner nova_box_ps">
+                                                        <div class="kitify-toggle-sidebar__inner nova_box_ps ps ps--theme_default"
+                                                            data-ps-id="973b9cfb-cb5d-cf35-d8fb-b236d38773a1">
                                                             <aside class="widget widget_search">
                                                                 <form role="search" method="get" class="search-form"
                                                                     action="https://mixtas.novaworks.net/">
                                                                     <label>
                                                                         <span class="screen-reader-text">Search for:</span>
                                                                         <input type="search" class="search-field"
-                                                                            placeholder="Search &hellip;" value=""
-                                                                            name="s" />
+                                                                            placeholder="Search …" value=""
+                                                                            name="s">
                                                                     </label>
                                                                     <input type="submit" class="search-submit"
-                                                                        value="Search" />
+                                                                        value="Search">
                                                                 </form>
                                                             </aside>
                                                             <aside class="widget widget_categories">
                                                                 <h4 class="widget-title">Categories</h4>
                                                                 <ul>
                                                                     <li class="cat-item cat-item-54"><a
-                                                                            href="../category/men-clothing/index.html">Men
+                                                                            href="https://mixtas.novaworks.net/category/men-clothing/">Men
                                                                             Clothing</a> <span class="count">3</span>
                                                                     </li>
                                                                     <li class="cat-item cat-item-53"><a
-                                                                            href="../category/news/index.html">News</a>
+                                                                            href="https://mixtas.novaworks.net/category/news/">News</a>
                                                                         <span class="count">6</span>
                                                                     </li>
                                                                     <li class="cat-item cat-item-62"><a
-                                                                            href="../category/women-clothing/index.html">Women
+                                                                            href="https://mixtas.novaworks.net/category/women-clothing/">Women
                                                                             Clothing</a> <span class="count">3</span>
                                                                     </li>
                                                                 </ul>
@@ -93,7 +101,7 @@
                                                             <aside class="widget widget_calendar">
                                                                 <div id="calendar_wrap" class="calendar_wrap">
                                                                     <table id="wp-calendar" class="wp-calendar-table">
-                                                                        <caption>September 2025</caption>
+                                                                        <caption>October 2025</caption>
                                                                         <thead>
                                                                             <tr>
                                                                                 <th scope="col" aria-label="Monday">M
@@ -101,8 +109,7 @@
                                                                                 <th scope="col" aria-label="Tuesday">T
                                                                                 </th>
                                                                                 <th scope="col" aria-label="Wednesday">
-                                                                                    W
-                                                                                </th>
+                                                                                    W</th>
                                                                                 <th scope="col" aria-label="Thursday">T
                                                                                 </th>
                                                                                 <th scope="col" aria-label="Friday">F
@@ -115,45 +122,48 @@
                                                                         </thead>
                                                                         <tbody>
                                                                             <tr>
+                                                                                <td colspan="2" class="pad">&nbsp;
+                                                                                </td>
                                                                                 <td>1</td>
                                                                                 <td>2</td>
                                                                                 <td>3</td>
                                                                                 <td>4</td>
                                                                                 <td>5</td>
-                                                                                <td>6</td>
-                                                                                <td>7</td>
                                                                             </tr>
                                                                             <tr>
+                                                                                <td>6</td>
+                                                                                <td>7</td>
                                                                                 <td>8</td>
                                                                                 <td>9</td>
                                                                                 <td>10</td>
                                                                                 <td>11</td>
                                                                                 <td>12</td>
-                                                                                <td>13</td>
-                                                                                <td>14</td>
                                                                             </tr>
                                                                             <tr>
+                                                                                <td>13</td>
+                                                                                <td>14</td>
                                                                                 <td>15</td>
                                                                                 <td>16</td>
                                                                                 <td>17</td>
                                                                                 <td>18</td>
-                                                                                <td>19</td>
-                                                                                <td>20</td>
-                                                                                <td>21</td>
+                                                                                <td id="today">19</td>
                                                                             </tr>
                                                                             <tr>
+                                                                                <td>20</td>
+                                                                                <td>21</td>
                                                                                 <td>22</td>
                                                                                 <td>23</td>
                                                                                 <td>24</td>
                                                                                 <td>25</td>
                                                                                 <td>26</td>
-                                                                                <td>27</td>
-                                                                                <td>28</td>
                                                                             </tr>
                                                                             <tr>
+                                                                                <td>27</td>
+                                                                                <td>28</td>
                                                                                 <td>29</td>
-                                                                                <td id="today">30</td>
-                                                                                <td class="pad" colspan="5">&nbsp;
+                                                                                <td>30</td>
+                                                                                <td>31</td>
+                                                                                <td class="pad" colspan="2">&nbsp;
                                                                                 </td>
                                                                             </tr>
                                                                         </tbody>
@@ -161,7 +171,7 @@
                                                                     <nav aria-label="Previous and next months"
                                                                         class="wp-calendar-nav">
                                                                         <span class="wp-calendar-nav-prev"><a
-                                                                                href="../2023/12/index.html">&laquo;
+                                                                                href="https://mixtas.novaworks.net/2023/12/">«
                                                                                 Dec</a></span>
                                                                         <span class="pad">&nbsp;</span>
                                                                         <span class="wp-calendar-nav-next">&nbsp;</span>
@@ -175,8 +185,8 @@
                                                                 <select id="archives-dropdown-2" name="archive-dropdown">
 
                                                                     <option value="">Select Month</option>
-                                                                    <option value='../2023/12/index.html'> December 2023
-                                                                    </option>
+                                                                    <option value="https://mixtas.novaworks.net/2023/12/">
+                                                                        December 2023 </option>
 
                                                                 </select>
 
@@ -204,7 +214,7 @@
                                                                         <div class="pr-item">
 
                                                                             <div class="pr-item--left">
-                                                                                <a href="../2023/12/fashion-forward-emerging-trends-you-need-to-know/index.html"
+                                                                                <a href="https://mixtas.novaworks.net/2023/12/fashion-forward-emerging-trends-you-need-to-know/"
                                                                                     class="nova-lazyload-image"
                                                                                     data-background-image="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-150x150.jpg"><span
                                                                                         class="hidden">Fashion Forward:
@@ -216,7 +226,7 @@
                                                                                 <span class="post-date">December 19,
                                                                                     2023</span>
                                                                                 <a
-                                                                                    href="../2023/12/fashion-forward-emerging-trends-you-need-to-know/index.html">Fashion
+                                                                                    href="https://mixtas.novaworks.net/2023/12/fashion-forward-emerging-trends-you-need-to-know/">Fashion
                                                                                     Forward: Emerging Trends You Need to
                                                                                     Know</a>
                                                                             </div>
@@ -226,7 +236,7 @@
                                                                         <div class="pr-item">
 
                                                                             <div class="pr-item--left">
-                                                                                <a href="../2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/index.html"
+                                                                                <a href="https://mixtas.novaworks.net/2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/"
                                                                                     class="nova-lazyload-image"
                                                                                     data-background-image="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-150x150.jpg"><span
                                                                                         class="hidden">Dress to Impress: A
@@ -238,7 +248,7 @@
                                                                                 <span class="post-date">December 19,
                                                                                     2023</span>
                                                                                 <a
-                                                                                    href="../2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/index.html">Dress
+                                                                                    href="https://mixtas.novaworks.net/2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/">Dress
                                                                                     to Impress: A Guide to Power Dressing
                                                                                     for Success</a>
                                                                             </div>
@@ -248,7 +258,7 @@
                                                                         <div class="pr-item">
 
                                                                             <div class="pr-item--left">
-                                                                                <a href="../2023/12/unveiling-elegance-timeless-fashion-trends-for-women/index.html"
+                                                                                <a href="https://mixtas.novaworks.net/2023/12/unveiling-elegance-timeless-fashion-trends-for-women/"
                                                                                     class="nova-lazyload-image"
                                                                                     data-background-image="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-150x150.jpg"><span
                                                                                         class="hidden">Unveiling Elegance:
@@ -260,7 +270,7 @@
                                                                                 <span class="post-date">December 19,
                                                                                     2023</span>
                                                                                 <a
-                                                                                    href="../2023/12/unveiling-elegance-timeless-fashion-trends-for-women/index.html">Unveiling
+                                                                                    href="https://mixtas.novaworks.net/2023/12/unveiling-elegance-timeless-fashion-trends-for-women/">Unveiling
                                                                                     Elegance: Timeless Fashion Trends for
                                                                                     Women</a>
                                                                             </div>
@@ -270,20 +280,20 @@
                                                                         <div class="pr-item">
 
                                                                             <div class="pr-item--left">
-                                                                                <a href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html"
+                                                                                <a href="https://mixtas.novaworks.net/2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/"
                                                                                     class="nova-lazyload-image"
                                                                                     data-background-image="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03-150x150.jpg"><span
-                                                                                        class="hidden">Gentleman&#8217;s
-                                                                                        Gazette: A Guide to Timeless
-                                                                                        Men&#8217;s Fashion</span></a>
+                                                                                        class="hidden">Gentleman’s Gazette:
+                                                                                        A Guide to Timeless Men’s
+                                                                                        Fashion</span></a>
                                                                             </div>
 
                                                                             <div class="pr-item--right">
                                                                                 <span class="post-date">December 14,
                                                                                     2023</span>
                                                                                 <a
-                                                                                    href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html">Gentleman&#8217;s
-                                                                                    Gazette: A Guide to Timeless Men&#8217;s
+                                                                                    href="https://mixtas.novaworks.net/2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/">Gentleman’s
+                                                                                    Gazette: A Guide to Timeless Men’s
                                                                                     Fashion</a>
                                                                             </div>
                                                                         </div>
@@ -292,21 +302,21 @@
                                                                         <div class="pr-item">
 
                                                                             <div class="pr-item--left">
-                                                                                <a href="../2023/12/tailored-tales-unveiling-the-latest-trends-in-mens-fashion/index.html"
+                                                                                <a href="https://mixtas.novaworks.net/2023/12/tailored-tales-unveiling-the-latest-trends-in-mens-fashion/"
                                                                                     class="nova-lazyload-image"
                                                                                     data-background-image="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02-150x150.jpg"><span
                                                                                         class="hidden">Tailored Tales:
-                                                                                        Unveiling the Latest Trends in
-                                                                                        Men&#8217;s Fashion</span></a>
+                                                                                        Unveiling the Latest Trends in Men’s
+                                                                                        Fashion</span></a>
                                                                             </div>
 
                                                                             <div class="pr-item--right">
                                                                                 <span class="post-date">December 14,
                                                                                     2023</span>
                                                                                 <a
-                                                                                    href="../2023/12/tailored-tales-unveiling-the-latest-trends-in-mens-fashion/index.html">Tailored
+                                                                                    href="https://mixtas.novaworks.net/2023/12/tailored-tales-unveiling-the-latest-trends-in-mens-fashion/">Tailored
                                                                                     Tales: Unveiling the Latest Trends in
-                                                                                    Men&#8217;s Fashion</a>
+                                                                                    Men’s Fashion</a>
                                                                             </div>
                                                                         </div>
                                                                     </li>
@@ -314,28 +324,39 @@
                                                             </aside>
                                                             <aside class="widget widget_tag_cloud">
                                                                 <h4 class="widget-title">Tags</h4>
-                                                                <div class="tagcloud"><a href="../tag/clothing/index.html"
+                                                                <div class="tagcloud"><a
+                                                                        href="https://mixtas.novaworks.net/tag/clothing/"
                                                                         class="tag-cloud-link tag-link-50 tag-link-position-1"
                                                                         style="font-size: 22pt;"
                                                                         aria-label="clothing (6 items)">clothing</a>
-                                                                    <a href="../tag/men/index.html"
+                                                                    <a href="https://mixtas.novaworks.net/tag/men/"
                                                                         class="tag-cloud-link tag-link-55 tag-link-position-2"
                                                                         style="font-size: 8pt;"
                                                                         aria-label="men (3 items)">men</a>
-                                                                    <a href="../tag/posts/index.html"
+                                                                    <a href="https://mixtas.novaworks.net/tag/posts/"
                                                                         class="tag-cloud-link tag-link-52 tag-link-position-3"
                                                                         style="font-size: 22pt;"
                                                                         aria-label="posts (6 items)">posts</a>
-                                                                    <a href="../tag/shopping/index.html"
+                                                                    <a href="https://mixtas.novaworks.net/tag/shopping/"
                                                                         class="tag-cloud-link tag-link-48 tag-link-position-4"
                                                                         style="font-size: 22pt;"
                                                                         aria-label="shopping (6 items)">shopping</a>
-                                                                    <a href="../tag/women/index.html"
+                                                                    <a href="https://mixtas.novaworks.net/tag/women/"
                                                                         class="tag-cloud-link tag-link-63 tag-link-position-5"
                                                                         style="font-size: 8pt;"
                                                                         aria-label="women (3 items)">women</a>
                                                                 </div>
                                                             </aside>
+                                                            <div class="ps__scrollbar-x-rail"
+                                                                style="left: 0px; bottom: 0px;">
+                                                                <div class="ps__scrollbar-x" tabindex="0"
+                                                                    style="left: 0px; width: 0px;"></div>
+                                                            </div>
+                                                            <div class="ps__scrollbar-y-rail"
+                                                                style="top: 0px; right: 0px;">
+                                                                <div class="ps__scrollbar-y" tabindex="0"
+                                                                    style="top: 0px; height: 0px;"></div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -355,408 +376,398 @@
                                                 data-item_selector=".kitify-posts__item">
                                                 <div class="kitify-posts__list_wrapper">
                                                     <div class="kitify-posts__list col-row">
-                                                        @foreach ($news as $new)
-                                                            <div
-                                                                class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-53 term-62 term-50 term-52 term-48 term-63">
-                                                                <div class="kitify-posts__outer-box">
-                                                                    <div class="kitify-posts__inner-box">
-                                                                        <div
-                                                                            class="post-thumbnail kitify-posts__thumbnail">
-                                                                            <a href="{{ route('blog.show', $new->id) }}"
-                                                                                class="kitify-posts__thumbnail-link"><img
-                                                                                    width="1500" height="1000"
-                                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06.jpg"
-                                                                                    class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
-                                                                                    alt="" decoding="async"
-                                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-1000x667.jpg 1000w"
-                                                                                    sizes="(max-width: 1500px) 100vw, 1500px" /></a>
+                                                        <div
+                                                            class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-53 term-62 term-50 term-52 term-48 term-63">
+                                                            <div class="kitify-posts__outer-box">
+                                                                <div class="kitify-posts__inner-box">
+                                                                    <div class="post-thumbnail kitify-posts__thumbnail">
+                                                                        <a href="https://mixtas.novaworks.net/2023/12/fashion-forward-emerging-trends-you-need-to-know/"
+                                                                            class="kitify-posts__thumbnail-link"><img
+                                                                                width="1500" height="1000"
+                                                                                src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06.jpg"
+                                                                                class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
+                                                                                alt="" decoding="async"
+                                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-06-1000x667.jpg 1000w"
+                                                                                sizes="(max-width: 1500px) 100vw, 1500px"></a>
 
-                                                                        </div>
-                                                                        <div class="kitify-posts__inner-content">
-                                                                            <div class="kitify-posts__inner-content-inner">
+                                                                    </div>
+                                                                    <div class="kitify-posts__inner-content">
+                                                                        <div class="kitify-posts__inner-content-inner">
+                                                                            <div
+                                                                                class="kitify-posts__meta kitify-posts__meta1">
                                                                                 <div
-                                                                                    class="kitify-posts__meta kitify-posts__meta1">
-                                                                                    <div
-                                                                                        class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                                                                        <span
-                                                                                            class="meta--label">By</span><span
-                                                                                            class="meta--value"><a
-                                                                                                href="../author/admin/index.html"
-                                                                                                class="posted-by__author"
-                                                                                                rel="author">admin</a></span>
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                                                                        <span class="meta--value">December
-                                                                                            19,
-                                                                                            2023</span>
-                                                                                    </div>
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                                                    <span
+                                                                                        class="meta--label">By</span><span
+                                                                                        class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/author/admin/"
+                                                                                            class="posted-by__author"
+                                                                                            rel="author">admin</a></span>
                                                                                 </div>
-                                                                                <h4 class="kitify-posts__title"><a
-                                                                                        href="../2023/12/fashion-forward-emerging-trends-you-need-to-know/index.html"
-                                                                                        title="Fashion Forward: Emerging Trends You Need to Know"
-                                                                                        rel="bookmark">Fashion Forward:
-                                                                                        Emerging
-                                                                                        Trends You Need to Know</a></h4>
                                                                                 <div
-                                                                                    class="kitify-posts__excerpt entry-excerpt">
-                                                                                    What makes a purchase “worth it”? The
-                                                                                    answer
-                                                                                    is different for everybody,
-                                                                                    so&nbsp;we’re
-                                                                                    asking&nbsp;some of the coolest, most
-                                                                                    shopping-savvy people we know—from
-                                                                                    small-business owners to designers,
-                                                                                    artists,
-                                                                                    and actors—to tell&hellip;</div>
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                                                    <span class="meta--value">December 19,
+                                                                                        2023</span></div>
+                                                                            </div>
+                                                                            <h4 class="kitify-posts__title"><a
+                                                                                    href="https://mixtas.novaworks.net/2023/12/fashion-forward-emerging-trends-you-need-to-know/"
+                                                                                    title="Fashion Forward: Emerging Trends You Need to Know"
+                                                                                    rel="bookmark">Fashion Forward:
+                                                                                    Emerging Trends You Need to Know</a>
+                                                                            </h4>
+                                                                            <div
+                                                                                class="kitify-posts__excerpt entry-excerpt">
+                                                                                What makes a purchase “worth it”? The answer
+                                                                                is different for everybody, so&nbsp;we’re
+                                                                                asking&nbsp;some of the coolest, most
+                                                                                shopping-savvy people we know—from
+                                                                                small-business owners to designers, artists,
+                                                                                and actors—to tell…</div>
+                                                                            <div
+                                                                                class="kitify-posts__meta kitify-posts__meta2">
                                                                                 <div
-                                                                                    class="kitify-posts__meta kitify-posts__meta2">
-                                                                                    <div
-                                                                                        class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
-                                                                                        <span class="meta--value"><a
-                                                                                                href="../category/news/index.html"
-                                                                                                rel="category tag">News</a><span
-                                                                                                class="cspr">, </span><a
-                                                                                                href="../category/women-clothing/index.html"
-                                                                                                rel="category tag">Women
-                                                                                                Clothing</a></span>
-                                                                                    </div>
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
+                                                                                    <span class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/category/news/"
+                                                                                            rel="category tag">News</a><span
+                                                                                            class="cspr">, </span><a
+                                                                                            href="https://mixtas.novaworks.net/category/women-clothing/"
+                                                                                            rel="category tag">Women
+                                                                                            Clothing</a></span></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-53 term-62 term-50 term-52 term-48 term-63">
+                                                            <div class="kitify-posts__outer-box">
+                                                                <div class="kitify-posts__inner-box">
+                                                                    <div class="post-thumbnail kitify-posts__thumbnail">
+                                                                        <a href="https://mixtas.novaworks.net/2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/"
+                                                                            class="kitify-posts__thumbnail-link"><img
+                                                                                width="1500" height="1000"
+                                                                                src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05.jpg"
+                                                                                class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
+                                                                                alt="" decoding="async"
+                                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-1000x667.jpg 1000w"
+                                                                                sizes="(max-width: 1500px) 100vw, 1500px"></a>
+
+                                                                    </div>
+                                                                    <div class="kitify-posts__inner-content">
+                                                                        <div class="kitify-posts__inner-content-inner">
+                                                                            <div
+                                                                                class="kitify-posts__meta kitify-posts__meta1">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                                                    <span
+                                                                                        class="meta--label">By</span><span
+                                                                                        class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/author/admin/"
+                                                                                            class="posted-by__author"
+                                                                                            rel="author">admin</a></span>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                                                    <span class="meta--value">December 19,
+                                                                                        2023</span></div>
+                                                                            </div>
+                                                                            <h4 class="kitify-posts__title"><a
+                                                                                    href="https://mixtas.novaworks.net/2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/"
+                                                                                    title="Dress to Impress: A Guide to Power Dressing for Success"
+                                                                                    rel="bookmark">Dress to Impress: A
+                                                                                    Guide to Power Dressing for Success</a>
+                                                                            </h4>
+                                                                            <div
+                                                                                class="kitify-posts__excerpt entry-excerpt">
+                                                                                What makes a purchase “worth it”? The answer
+                                                                                is different for everybody, so&nbsp;we’re
+                                                                                asking&nbsp;some of the coolest, most
+                                                                                shopping-savvy people we know—from
+                                                                                small-business owners to designers, artists,
+                                                                                and actors—to tell…</div>
+                                                                            <div
+                                                                                class="kitify-posts__meta kitify-posts__meta2">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
+                                                                                    <span class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/category/news/"
+                                                                                            rel="category tag">News</a><span
+                                                                                            class="cspr">, </span><a
+                                                                                            href="https://mixtas.novaworks.net/category/women-clothing/"
+                                                                                            rel="category tag">Women
+                                                                                            Clothing</a></span></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-53 term-62 term-50 term-52 term-48 term-63">
+                                                            <div class="kitify-posts__outer-box">
+                                                                <div class="kitify-posts__inner-box">
+                                                                    <div class="post-thumbnail kitify-posts__thumbnail">
+                                                                        <a href="https://mixtas.novaworks.net/2023/12/unveiling-elegance-timeless-fashion-trends-for-women/"
+                                                                            class="kitify-posts__thumbnail-link"><img
+                                                                                width="1500" height="1000"
+                                                                                src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04.jpg"
+                                                                                class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
+                                                                                alt="" decoding="async"
+                                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-1000x667.jpg 1000w"
+                                                                                sizes="(max-width: 1500px) 100vw, 1500px"></a>
+
+                                                                    </div>
+                                                                    <div class="kitify-posts__inner-content">
+                                                                        <div class="kitify-posts__inner-content-inner">
+                                                                            <div
+                                                                                class="kitify-posts__meta kitify-posts__meta1">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                                                    <span
+                                                                                        class="meta--label">By</span><span
+                                                                                        class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/author/admin/"
+                                                                                            class="posted-by__author"
+                                                                                            rel="author">admin</a></span>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                                                    <span class="meta--value">December 19,
+                                                                                        2023</span></div>
+                                                                            </div>
+                                                                            <h4 class="kitify-posts__title"><a
+                                                                                    href="https://mixtas.novaworks.net/2023/12/unveiling-elegance-timeless-fashion-trends-for-women/"
+                                                                                    title="Unveiling Elegance: Timeless Fashion Trends for Women"
+                                                                                    rel="bookmark">Unveiling Elegance:
+                                                                                    Timeless Fashion Trends for Women</a>
+                                                                            </h4>
+                                                                            <div
+                                                                                class="kitify-posts__excerpt entry-excerpt">
+                                                                                What makes a purchase “worth it”? The answer
+                                                                                is different for everybody, so&nbsp;we’re
+                                                                                asking&nbsp;some of the coolest, most
+                                                                                shopping-savvy people we know—from
+                                                                                small-business owners to designers, artists,
+                                                                                and actors—to tell…</div>
+                                                                            <div
+                                                                                class="kitify-posts__meta kitify-posts__meta2">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
+                                                                                    <span class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/category/news/"
+                                                                                            rel="category tag">News</a><span
+                                                                                            class="cspr">, </span><a
+                                                                                            href="https://mixtas.novaworks.net/category/women-clothing/"
+                                                                                            rel="category tag">Women
+                                                                                            Clothing</a></span></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-54 term-53 term-50 term-55 term-52 term-48">
+                                                            <div class="kitify-posts__outer-box">
+                                                                <div class="kitify-posts__inner-box">
+                                                                    <div class="post-thumbnail kitify-posts__thumbnail">
+                                                                        <a href="https://mixtas.novaworks.net/2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/"
+                                                                            class="kitify-posts__thumbnail-link"><img
+                                                                                width="1500" height="1000"
+                                                                                src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03.jpg"
+                                                                                class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
+                                                                                alt="" decoding="async"
+                                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03-1000x667.jpg 1000w"
+                                                                                sizes="(max-width: 1500px) 100vw, 1500px"></a>
+
+                                                                    </div>
+                                                                    <div class="kitify-posts__inner-content">
+                                                                        <div class="kitify-posts__inner-content-inner">
+                                                                            <div
+                                                                                class="kitify-posts__meta kitify-posts__meta1">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                                                    <span
+                                                                                        class="meta--label">By</span><span
+                                                                                        class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/author/admin/"
+                                                                                            class="posted-by__author"
+                                                                                            rel="author">admin</a></span>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                                                    <span class="meta--value">December 14,
+                                                                                        2023</span></div>
+                                                                            </div>
+                                                                            <h4 class="kitify-posts__title"><a
+                                                                                    href="https://mixtas.novaworks.net/2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/"
+                                                                                    title="Gentleman’s Gazette: A Guide to Timeless Men’s Fashion"
+                                                                                    rel="bookmark">Gentleman’s Gazette: A
+                                                                                    Guide to Timeless Men’s Fashion</a></h4>
+                                                                            <div
+                                                                                class="kitify-posts__excerpt entry-excerpt">
+                                                                                What makes a purchase “worth it”? The answer
+                                                                                is different for everybody, so&nbsp;we’re
+                                                                                asking&nbsp;some of the coolest, most
+                                                                                shopping-savvy people we know—from
+                                                                                small-business owners to designers, artists,
+                                                                                and actors—to tell…</div>
+                                                                            <div
+                                                                                class="kitify-posts__meta kitify-posts__meta2">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
+                                                                                    <span class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/category/men-clothing/"
+                                                                                            rel="category tag">Men
+                                                                                            Clothing</a><span
+                                                                                            class="cspr">, </span><a
+                                                                                            href="https://mixtas.novaworks.net/category/news/"
+                                                                                            rel="category tag">News</a></span>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        @endforeach
-                                                        {{-- <div
-                                                        class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-53 term-62 term-50 term-52 term-48 term-63">
-                                                        <div class="kitify-posts__outer-box">
-                                                            <div class="kitify-posts__inner-box">
-                                                                <div class="post-thumbnail kitify-posts__thumbnail">
-                                                                    <a href="../2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/index.html"
-                                                                        class="kitify-posts__thumbnail-link"><img
-                                                                            width="1500" height="1000"
-                                                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05.jpg"
-                                                                            class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
-                                                                            alt="" decoding="async"
-                                                                            srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-05-1000x667.jpg 1000w"
-                                                                            sizes="(max-width: 1500px) 100vw, 1500px" /></a>
+                                                        </div>
+                                                        <div
+                                                            class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-54 term-53 term-50 term-55 term-52 term-48">
+                                                            <div class="kitify-posts__outer-box">
+                                                                <div class="kitify-posts__inner-box">
+                                                                    <div class="post-thumbnail kitify-posts__thumbnail">
+                                                                        <a href="https://mixtas.novaworks.net/2023/12/tailored-tales-unveiling-the-latest-trends-in-mens-fashion/"
+                                                                            class="kitify-posts__thumbnail-link"><img
+                                                                                width="1500" height="1000"
+                                                                                src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02.jpg"
+                                                                                class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
+                                                                                alt="" decoding="async"
+                                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02-1000x667.jpg 1000w"
+                                                                                sizes="(max-width: 1500px) 100vw, 1500px"></a>
 
-                                                                </div>
-                                                                <div class="kitify-posts__inner-content">
-                                                                    <div class="kitify-posts__inner-content-inner">
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta1">
+                                                                    </div>
+                                                                    <div class="kitify-posts__inner-content">
+                                                                        <div class="kitify-posts__inner-content-inner">
                                                                             <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                                                                <span class="meta--label">By</span><span
-                                                                                    class="meta--value"><a
-                                                                                        href="../author/admin/index.html"
-                                                                                        class="posted-by__author"
-                                                                                        rel="author">admin</a></span>
+                                                                                class="kitify-posts__meta kitify-posts__meta1">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                                                    <span
+                                                                                        class="meta--label">By</span><span
+                                                                                        class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/author/admin/"
+                                                                                            class="posted-by__author"
+                                                                                            rel="author">admin</a></span>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                                                    <span class="meta--value">December 14,
+                                                                                        2023</span></div>
                                                                             </div>
+                                                                            <h4 class="kitify-posts__title"><a
+                                                                                    href="https://mixtas.novaworks.net/2023/12/tailored-tales-unveiling-the-latest-trends-in-mens-fashion/"
+                                                                                    title="Tailored Tales: Unveiling the Latest Trends in Men’s Fashion"
+                                                                                    rel="bookmark">Tailored Tales:
+                                                                                    Unveiling the Latest Trends in Men’s
+                                                                                    Fashion</a></h4>
                                                                             <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                                                                <span class="meta--value">December 19,
-                                                                                    2023</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <h4 class="kitify-posts__title"><a
-                                                                                href="../2023/12/dress-to-impress-a-guide-to-power-dressing-for-success/index.html"
-                                                                                title="Dress to Impress: A Guide to Power Dressing for Success"
-                                                                                rel="bookmark">Dress to Impress: A Guide
-                                                                                to Power Dressing for Success</a></h4>
-                                                                        <div
-                                                                            class="kitify-posts__excerpt entry-excerpt">
-                                                                            What makes a purchase “worth it”? The answer
-                                                                            is different for everybody, so&nbsp;we’re
-                                                                            asking&nbsp;some of the coolest, most
-                                                                            shopping-savvy people we know—from
-                                                                            small-business owners to designers, artists,
-                                                                            and actors—to tell&hellip;</div>
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta2">
+                                                                                class="kitify-posts__excerpt entry-excerpt">
+                                                                                What makes a purchase “worth it”? The answer
+                                                                                is different for everybody, so&nbsp;we’re
+                                                                                asking&nbsp;some of the coolest, most
+                                                                                shopping-savvy people we know—from
+                                                                                small-business owners to designers, artists,
+                                                                                and actors—to tell…</div>
                                                                             <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
-                                                                                <span class="meta--value"><a
-                                                                                        href="../category/news/index.html"
-                                                                                        rel="category tag">News</a><span
-                                                                                        class="cspr">, </span><a
-                                                                                        href="../category/women-clothing/index.html"
-                                                                                        rel="category tag">Women
-                                                                                        Clothing</a></span>
+                                                                                class="kitify-posts__meta kitify-posts__meta2">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
+                                                                                    <span class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/category/men-clothing/"
+                                                                                            rel="category tag">Men
+                                                                                            Clothing</a><span
+                                                                                            class="cspr">, </span><a
+                                                                                            href="https://mixtas.novaworks.net/category/news/"
+                                                                                            rel="category tag">News</a></span>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div
-                                                        class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-53 term-62 term-50 term-52 term-48 term-63">
-                                                        <div class="kitify-posts__outer-box">
-                                                            <div class="kitify-posts__inner-box">
-                                                                <div class="post-thumbnail kitify-posts__thumbnail">
-                                                                    <a href="../2023/12/unveiling-elegance-timeless-fashion-trends-for-women/index.html"
-                                                                        class="kitify-posts__thumbnail-link"><img
-                                                                            width="1500" height="1000"
-                                                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04.jpg"
-                                                                            class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
-                                                                            alt="" decoding="async"
-                                                                            srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-04-1000x667.jpg 1000w"
-                                                                            sizes="(max-width: 1500px) 100vw, 1500px" /></a>
+                                                        <div
+                                                            class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-54 term-53 term-50 term-55 term-52 term-48">
+                                                            <div class="kitify-posts__outer-box">
+                                                                <div class="kitify-posts__inner-box">
+                                                                    <div class="post-thumbnail kitify-posts__thumbnail">
+                                                                        <a href="https://mixtas.novaworks.net/2023/12/menswear-maven-fashion-finds-for-every-occasion/"
+                                                                            class="kitify-posts__thumbnail-link"><img
+                                                                                width="1500" height="1000"
+                                                                                src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01.jpg"
+                                                                                class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
+                                                                                alt="" decoding="async"
+                                                                                srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01-1000x667.jpg 1000w"
+                                                                                sizes="(max-width: 1500px) 100vw, 1500px"></a>
 
-                                                                </div>
-                                                                <div class="kitify-posts__inner-content">
-                                                                    <div class="kitify-posts__inner-content-inner">
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta1">
+                                                                    </div>
+                                                                    <div class="kitify-posts__inner-content">
+                                                                        <div class="kitify-posts__inner-content-inner">
                                                                             <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                                                                <span class="meta--label">By</span><span
-                                                                                    class="meta--value"><a
-                                                                                        href="../author/admin/index.html"
-                                                                                        class="posted-by__author"
-                                                                                        rel="author">admin</a></span>
+                                                                                class="kitify-posts__meta kitify-posts__meta1">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                                                    <span
+                                                                                        class="meta--label">By</span><span
+                                                                                        class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/author/admin/"
+                                                                                            class="posted-by__author"
+                                                                                            rel="author">admin</a></span>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                                                    <span class="meta--value">December 6,
+                                                                                        2023</span></div>
                                                                             </div>
+                                                                            <h4 class="kitify-posts__title"><a
+                                                                                    href="https://mixtas.novaworks.net/2023/12/menswear-maven-fashion-finds-for-every-occasion/"
+                                                                                    title="Menswear Maven: Fashion Finds for Every Occasion"
+                                                                                    rel="bookmark">Menswear Maven: Fashion
+                                                                                    Finds for Every Occasion</a></h4>
                                                                             <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                                                                <span class="meta--value">December 19,
-                                                                                    2023</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <h4 class="kitify-posts__title"><a
-                                                                                href="../2023/12/unveiling-elegance-timeless-fashion-trends-for-women/index.html"
-                                                                                title="Unveiling Elegance: Timeless Fashion Trends for Women"
-                                                                                rel="bookmark">Unveiling Elegance:
-                                                                                Timeless Fashion Trends for Women</a>
-                                                                        </h4>
-                                                                        <div
-                                                                            class="kitify-posts__excerpt entry-excerpt">
-                                                                            What makes a purchase “worth it”? The answer
-                                                                            is different for everybody, so&nbsp;we’re
-                                                                            asking&nbsp;some of the coolest, most
-                                                                            shopping-savvy people we know—from
-                                                                            small-business owners to designers, artists,
-                                                                            and actors—to tell&hellip;</div>
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta2">
+                                                                                class="kitify-posts__excerpt entry-excerpt">
+                                                                                What makes a purchase “worth it”? The answer
+                                                                                is different for everybody, so&nbsp;we’re
+                                                                                asking&nbsp;some of the coolest, most
+                                                                                shopping-savvy people we know—from
+                                                                                small-business owners to designers, artists,
+                                                                                and actors—to tell…</div>
                                                                             <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
-                                                                                <span class="meta--value"><a
-                                                                                        href="../category/news/index.html"
-                                                                                        rel="category tag">News</a><span
-                                                                                        class="cspr">, </span><a
-                                                                                        href="../category/women-clothing/index.html"
-                                                                                        rel="category tag">Women
-                                                                                        Clothing</a></span>
+                                                                                class="kitify-posts__meta kitify-posts__meta2">
+                                                                                <div
+                                                                                    class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
+                                                                                    <span class="meta--value"><a
+                                                                                            href="https://mixtas.novaworks.net/category/men-clothing/"
+                                                                                            rel="category tag">Men
+                                                                                            Clothing</a><span
+                                                                                            class="cspr">, </span><a
+                                                                                            href="https://mixtas.novaworks.net/category/news/"
+                                                                                            rel="category tag">News</a></span>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div
-                                                        class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-54 term-53 term-50 term-55 term-52 term-48">
-                                                        <div class="kitify-posts__outer-box">
-                                                            <div class="kitify-posts__inner-box">
-                                                                <div class="post-thumbnail kitify-posts__thumbnail">
-                                                                    <a href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html"
-                                                                        class="kitify-posts__thumbnail-link"><img
-                                                                            width="1500" height="1000"
-                                                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03.jpg"
-                                                                            class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
-                                                                            alt="" decoding="async"
-                                                                            srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-03-1000x667.jpg 1000w"
-                                                                            sizes="(max-width: 1500px) 100vw, 1500px" /></a>
-
-                                                                </div>
-                                                                <div class="kitify-posts__inner-content">
-                                                                    <div class="kitify-posts__inner-content-inner">
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta1">
-                                                                            <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                                                                <span class="meta--label">By</span><span
-                                                                                    class="meta--value"><a
-                                                                                        href="../author/admin/index.html"
-                                                                                        class="posted-by__author"
-                                                                                        rel="author">admin</a></span>
-                                                                            </div>
-                                                                            <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                                                                <span class="meta--value">December 14,
-                                                                                    2023</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <h4 class="kitify-posts__title"><a
-                                                                                href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html"
-                                                                                title="Gentleman&#8217;s Gazette: A Guide to Timeless Men&#8217;s Fashion"
-                                                                                rel="bookmark">Gentleman&#8217;s
-                                                                                Gazette: A Guide to Timeless Men&#8217;s
-                                                                                Fashion</a></h4>
-                                                                        <div
-                                                                            class="kitify-posts__excerpt entry-excerpt">
-                                                                            What makes a purchase “worth it”? The answer
-                                                                            is different for everybody, so&nbsp;we’re
-                                                                            asking&nbsp;some of the coolest, most
-                                                                            shopping-savvy people we know—from
-                                                                            small-business owners to designers, artists,
-                                                                            and actors—to tell&hellip;</div>
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta2">
-                                                                            <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
-                                                                                <span class="meta--value"><a
-                                                                                        href="../category/men-clothing/index.html"
-                                                                                        rel="category tag">Men
-                                                                                        Clothing</a><span class="cspr">,
-                                                                                    </span><a
-                                                                                        href="../category/news/index.html"
-                                                                                        rel="category tag">News</a></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-54 term-53 term-50 term-55 term-52 term-48">
-                                                        <div class="kitify-posts__outer-box">
-                                                            <div class="kitify-posts__inner-box">
-                                                                <div class="post-thumbnail kitify-posts__thumbnail">
-                                                                    <a href="../2023/12/tailored-tales-unveiling-the-latest-trends-in-mens-fashion/index.html"
-                                                                        class="kitify-posts__thumbnail-link"><img
-                                                                            width="1500" height="1000"
-                                                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02.jpg"
-                                                                            class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
-                                                                            alt="" decoding="async"
-                                                                            srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-02-1000x667.jpg 1000w"
-                                                                            sizes="(max-width: 1500px) 100vw, 1500px" /></a>
-
-                                                                </div>
-                                                                <div class="kitify-posts__inner-content">
-                                                                    <div class="kitify-posts__inner-content-inner">
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta1">
-                                                                            <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                                                                <span class="meta--label">By</span><span
-                                                                                    class="meta--value"><a
-                                                                                        href="../author/admin/index.html"
-                                                                                        class="posted-by__author"
-                                                                                        rel="author">admin</a></span>
-                                                                            </div>
-                                                                            <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                                                                <span class="meta--value">December 14,
-                                                                                    2023</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <h4 class="kitify-posts__title"><a
-                                                                                href="../2023/12/tailored-tales-unveiling-the-latest-trends-in-mens-fashion/index.html"
-                                                                                title="Tailored Tales: Unveiling the Latest Trends in Men&#8217;s Fashion"
-                                                                                rel="bookmark">Tailored Tales: Unveiling
-                                                                                the Latest Trends in Men&#8217;s
-                                                                                Fashion</a></h4>
-                                                                        <div
-                                                                            class="kitify-posts__excerpt entry-excerpt">
-                                                                            What makes a purchase “worth it”? The answer
-                                                                            is different for everybody, so&nbsp;we’re
-                                                                            asking&nbsp;some of the coolest, most
-                                                                            shopping-savvy people we know—from
-                                                                            small-business owners to designers, artists,
-                                                                            and actors—to tell&hellip;</div>
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta2">
-                                                                            <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
-                                                                                <span class="meta--value"><a
-                                                                                        href="../category/men-clothing/index.html"
-                                                                                        rel="category tag">Men
-                                                                                        Clothing</a><span class="cspr">,
-                                                                                    </span><a
-                                                                                        href="../category/news/index.html"
-                                                                                        rel="category tag">News</a></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        class="kitify-posts__item has-post-thumbnail col-desk-1 col-tabp-1 col-tab-1 col-lap-1 term-54 term-53 term-50 term-55 term-52 term-48">
-                                                        <div class="kitify-posts__outer-box">
-                                                            <div class="kitify-posts__inner-box">
-                                                                <div class="post-thumbnail kitify-posts__thumbnail">
-                                                                    <a href="../2023/12/menswear-maven-fashion-finds-for-every-occasion/index.html"
-                                                                        class="kitify-posts__thumbnail-link"><img
-                                                                            width="1500" height="1000"
-                                                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01.jpg"
-                                                                            class="kitify-posts__thumbnail-img wp-post-image nova-lazyload-image wp-post-image"
-                                                                            alt="" decoding="async"
-                                                                            srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01.jpg 1500w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01-300x200.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01-1024x683.jpg 1024w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01-768x512.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/blog-01-1000x667.jpg 1000w"
-                                                                            sizes="(max-width: 1500px) 100vw, 1500px" /></a>
-
-                                                                </div>
-                                                                <div class="kitify-posts__inner-content">
-                                                                    <div class="kitify-posts__inner-content-inner">
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta1">
-                                                                            <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                                                                <span class="meta--label">By</span><span
-                                                                                    class="meta--value"><a
-                                                                                        href="../author/admin/index.html"
-                                                                                        class="posted-by__author"
-                                                                                        rel="author">admin</a></span>
-                                                                            </div>
-                                                                            <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                                                                <span class="meta--value">December 6,
-                                                                                    2023</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <h4 class="kitify-posts__title"><a
-                                                                                href="../2023/12/menswear-maven-fashion-finds-for-every-occasion/index.html"
-                                                                                title="Menswear Maven: Fashion Finds for Every Occasion"
-                                                                                rel="bookmark">Menswear Maven: Fashion
-                                                                                Finds for Every Occasion</a></h4>
-                                                                        <div
-                                                                            class="kitify-posts__excerpt entry-excerpt">
-                                                                            What makes a purchase “worth it”? The answer
-                                                                            is different for everybody, so&nbsp;we’re
-                                                                            asking&nbsp;some of the coolest, most
-                                                                            shopping-savvy people we know—from
-                                                                            small-business owners to designers, artists,
-                                                                            and actors—to tell&hellip;</div>
-                                                                        <div
-                                                                            class="kitify-posts__meta kitify-posts__meta2">
-                                                                            <div
-                                                                                class="kitify-posts__meta__item kitify-posts__meta__item--category post__cat">
-                                                                                <span class="meta--value"><a
-                                                                                        href="../category/men-clothing/index.html"
-                                                                                        rel="category tag">Men
-                                                                                        Clothing</a><span class="cspr">,
-                                                                                    </span><a
-                                                                                        href="../category/news/index.html"
-                                                                                        rel="category tag">News</a></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div> --}}
                                                     </div>
                                                 </div>
                                                 <nav class="post-pagination kitify-pagination clearfix kitify-ajax-pagination nothingtoshow"
                                                     data-parent-container="#novapost_19036ac8"
                                                     data-container="#novapost_19036ac8 .kitify-posts__list"
-                                                    data-item-selector=".kitify-posts__item" data-ajax_request_id="paged">
+                                                    data-item-selector=".kitify-posts__item"
+                                                    data-ajax_request_id="paged">
                                                     <div class="kitify-ajax-loading-outer"><span
                                                             class="kitify-css-loader"></span></div>
                                                     <div
@@ -774,8 +785,1678 @@
                     </div>
 
                 </div><!-- .site-content-wrapper -->
-                @include('layouts.footer')
-                <div class="nova-overlay-global"></div>
-            </div><!-- .kitify-site-wrapper -->
-            @include('layouts.js')
-        @endsection
+                <div data-elementor-type="footer" data-elementor-id="478"
+                    class="elementor elementor-478 elementor-location-footer">
+                    <div class="elementor-element elementor-element-22c97ffc e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        data-id="22c97ffc" data-element_type="container"
+                        data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+                        <div class="e-con-inner" style="--kitify-section-width: 1225px;">
+                            <div class="elementor-element elementor-element-861c9ce e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                data-id="861c9ce" data-element_type="container">
+                                <div class="elementor-element elementor-element-afefbe8 kitify-widget-align-none elementor-widget kitify elementor-kitify-logo"
+                                    data-id="afefbe8" data-element_type="widget"
+                                    data-widget_type="kitify-logo.default">
+                                    <div class="elementor-widget-container">
+                                        <div class="kitify-logo kitify-logo-type-image kitify-logo-display-block">
+                                            <a href="https://mixtas.novaworks.net/" class="kitify-logo__link"><img
+                                                    src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/footer-logo.svg"
+                                                    class="kitify-logo__img kitify-logo-default" alt="Mixtas"
+                                                    width="150" height="36"><img
+                                                    src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo_light.svg"
+                                                    class="kitify-logo__img kitify-logo-light" alt="Mixtas"
+                                                    width="150" height="36"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-7276cec9 elementor-widget elementor-widget-heading"
+                                    data-id="7276cec9" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <p class="elementor-heading-title elementor-size-default">Whether you're a
+                                            trendsetter, a minimalist, or an adventurer at heart, Mixtas has something for
+                                            everyone. Our diverse range of styles caters to various personas. </p>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-4b1084e8 elementor-shape-circle e-grid-align-left elementor-grid-0 elementor-widget elementor-widget-social-icons"
+                                    data-id="4b1084e8" data-element_type="widget"
+                                    data-widget_type="social-icons.default">
+                                    <div class="elementor-widget-container">
+                                        <div class="elementor-social-icons-wrapper elementor-grid">
+                                            <span class="elementor-grid-item">
+                                                <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-974b910"
+                                                    href="#" target="_blank">
+                                                    <span class="elementor-screen-only"></span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="11"
+                                                        height="19" viewBox="0 0 11 19" fill="none">
+                                                        <path
+                                                            d="M9.70117 10.7671H7.06445V18.6421H3.54883V10.7671H0.666016V7.53271H3.54883V5.03662C3.54883 2.22412 5.23633 0.64209 7.80273 0.64209C9.0332 0.64209 10.334 0.888184 10.334 0.888184V3.66553H8.89258C7.48633 3.66553 7.06445 4.50928 7.06445 5.42334V7.53271H10.1934L9.70117 10.7671Z">
+                                                        </path>
+                                                    </svg> </a>
+                                            </span>
+                                            <span class="elementor-grid-item">
+                                                <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-0171b7d"
+                                                    href="#" target="_blank">
+                                                    <span class="elementor-screen-only"></span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="19"
+                                                        height="19" viewBox="0 0 19 19" fill="none">
+                                                        <path
+                                                            d="M14.1828 2.32959H16.6649L11.2438 8.52412L17.6211 16.9546H12.6289L8.71603 11.8429L4.24415 16.9546H1.75861L7.55587 10.3276L1.4422 2.32959H6.56095L10.0942 7.00186L14.1828 2.32959ZM13.3109 15.471H14.6856L5.81212 3.73584H4.33556L13.3109 15.471Z">
+                                                        </path>
+                                                    </svg> </a>
+                                            </span>
+                                            <span class="elementor-grid-item">
+                                                <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-ce3448b"
+                                                    href="#" target="_blank">
+                                                    <span class="elementor-screen-only"></span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="17"
+                                                        height="19" viewBox="0 0 17 19" fill="none">
+                                                        <g clip-path="url(#clip0_89_2537)">
+                                                            <path
+                                                                d="M8.50353 5.59893C6.26759 5.59893 4.46407 7.40244 4.46407 9.63838C4.46407 11.8743 6.26759 13.6778 8.50353 13.6778C10.7395 13.6778 12.543 11.8743 12.543 9.63838C12.543 7.40244 10.7395 5.59893 8.50353 5.59893ZM8.50353 12.2646C7.05861 12.2646 5.87736 11.0868 5.87736 9.63838C5.87736 8.18994 7.05509 7.01221 8.50353 7.01221C9.95197 7.01221 11.1297 8.18994 11.1297 9.63838C11.1297 11.0868 9.94845 12.2646 8.50353 12.2646ZM13.6504 5.43369C13.6504 5.95752 13.2285 6.37588 12.7082 6.37588C12.1844 6.37588 11.766 5.954 11.766 5.43369C11.766 4.91338 12.1879 4.4915 12.7082 4.4915C13.2285 4.4915 13.6504 4.91338 13.6504 5.43369ZM16.3258 6.38994C16.266 5.12783 15.9777 4.00986 15.0531 3.08877C14.132 2.16768 13.0141 1.87939 11.752 1.81611C10.4512 1.74229 6.55236 1.74229 5.25157 1.81611C3.99298 1.87588 2.87501 2.16416 1.9504 3.08525C1.02579 4.00635 0.741028 5.12432 0.677747 6.38643C0.603918 7.68721 0.603918 11.586 0.677747 12.8868C0.737512 14.1489 1.02579 15.2669 1.9504 16.188C2.87501 17.1091 3.98947 17.3974 5.25157 17.4606C6.55236 17.5345 10.4512 17.5345 11.752 17.4606C13.0141 17.4009 14.132 17.1126 15.0531 16.188C15.9742 15.2669 16.2625 14.1489 16.3258 12.8868C16.3996 11.586 16.3996 7.69072 16.3258 6.38994ZM14.6453 14.2825C14.3711 14.9716 13.8402 15.5024 13.1477 15.7802C12.1106 16.1915 9.64962 16.0966 8.50353 16.0966C7.35743 16.0966 4.89298 16.188 3.85939 15.7802C3.17032 15.506 2.63947 14.9751 2.36173 14.2825C1.9504 13.2454 2.04532 10.7845 2.04532 9.63838C2.04532 8.49229 1.95392 6.02783 2.36173 4.99424C2.63595 4.30518 3.16681 3.77432 3.85939 3.49658C4.8965 3.08525 7.35743 3.18018 8.50353 3.18018C9.64962 3.18018 12.1141 3.08877 13.1477 3.49658C13.8367 3.7708 14.3676 4.30166 14.6453 4.99424C15.0567 6.03135 14.9617 8.49229 14.9617 9.63838C14.9617 10.7845 15.0567 13.2489 14.6453 14.2825Z">
+                                                            </path>
+                                                        </g>
+                                                    </svg> </a>
+                                            </span>
+                                            <span class="elementor-grid-item">
+                                                <a class="elementor-icon elementor-social-icon elementor-social-icon- elementor-repeater-item-aa47dc0"
+                                                    href="#" target="_blank">
+                                                    <span class="elementor-screen-only"></span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="15"
+                                                        height="19" viewBox="0 0 15 19" fill="none">
+                                                        <g clip-path="url(#clip0_89_2540)">
+                                                            <path
+                                                                d="M7.92188 0.870605C4.31484 0.870605 0.75 3.27529 0.75 7.16709C0.75 9.64209 2.14219 11.0483 2.98594 11.0483C3.33398 11.0483 3.53437 10.078 3.53437 9.80381C3.53437 9.47686 2.70117 8.78076 2.70117 7.42021C2.70117 4.59365 4.85273 2.58975 7.63711 2.58975C10.0312 2.58975 11.8031 3.95029 11.8031 6.4499C11.8031 8.3167 11.0543 11.8183 8.62852 11.8183C7.75313 11.8183 7.0043 11.1854 7.0043 10.2784C7.0043 8.94951 7.93242 7.66279 7.93242 6.2917C7.93242 3.96436 4.63125 4.38623 4.63125 7.19873C4.63125 7.78936 4.70508 8.44326 4.96875 8.98115C4.48359 11.0694 3.49219 14.1808 3.49219 16.3323C3.49219 16.9968 3.58711 17.6507 3.65039 18.3151C3.76992 18.4487 3.71016 18.4347 3.89297 18.3679C5.66484 15.9421 5.60156 15.4675 6.40313 12.2929C6.83555 13.1155 7.95352 13.5585 8.83945 13.5585C12.573 13.5585 14.25 9.91982 14.25 6.63975C14.25 3.14873 11.2336 0.870605 7.92188 0.870605Z">
+                                                            </path>
+                                                        </g>
+                                                    </svg> </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-78bc8008 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                data-id="78bc8008" data-element_type="container">
+                                <div class="elementor-element elementor-element-675d55a4 elementor-widget elementor-widget-heading"
+                                    data-id="675d55a4" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <h3 class="elementor-heading-title elementor-size-default">About Us</h3>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-2675c66c elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
+                                    data-id="2675c66c" data-element_type="widget"
+                                    data-widget_type="icon-list.default">
+                                    <div class="elementor-widget-container">
+                                        <ul class="elementor-icon-list-items">
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/order-tracking">
+
+                                                    <span class="elementor-icon-list-text">Our Story</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/cart">
+
+                                                    <span class="elementor-icon-list-text">Mission &amp; Values</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">Meet the Team</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">Sustainability Efforts</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/faqs">
+
+                                                    <span class="elementor-icon-list-text">Brand Partnerships</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/faqs">
+
+                                                    <span class="elementor-icon-list-text">Influencer
+                                                        Collaborations</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-16032d9e e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                data-id="16032d9e" data-element_type="container">
+                                <div class="elementor-element elementor-element-4d7c4cfe elementor-widget elementor-widget-heading"
+                                    data-id="4d7c4cfe" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <h3 class="elementor-heading-title elementor-size-default">Accessibility</h3>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-40eb361b elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
+                                    data-id="40eb361b" data-element_type="widget"
+                                    data-widget_type="icon-list.default">
+                                    <div class="elementor-widget-container">
+                                        <ul class="elementor-icon-list-items">
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/my-account">
+
+                                                    <span class="elementor-icon-list-text">Accessibility Statement</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/cart">
+
+                                                    <span class="elementor-icon-list-text">Site Map</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">Web Accessibility
+                                                        Options</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">ADA Compliance</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">Privacy Policy</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">Terms of Service</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-31de1b1 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                data-id="31de1b1" data-element_type="container">
+                                <div class="elementor-element elementor-element-7362d692 elementor-widget elementor-widget-heading"
+                                    data-id="7362d692" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <h3 class="elementor-heading-title elementor-size-default">Join Our Community</h3>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-1ee74dbf elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
+                                    data-id="1ee74dbf" data-element_type="widget"
+                                    data-widget_type="icon-list.default">
+                                    <div class="elementor-widget-container">
+                                        <ul class="elementor-icon-list-items">
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/about-us">
+
+                                                    <span class="elementor-icon-list-text">VIP Membership</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/cart">
+
+                                                    <span class="elementor-icon-list-text">Loyalty Program</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">Customer Reviews</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">Style Forums</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">Job Openings</span>
+                                                </a>
+                                            </li>
+                                            <li class="elementor-icon-list-item">
+                                                <a href="/wishlist">
+
+                                                    <span class="elementor-icon-list-text">Culture and Values</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-76773236 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                data-id="76773236" data-element_type="container">
+                                <div class="elementor-element elementor-element-dd4dd2b elementor-widget elementor-widget-heading"
+                                    data-id="dd4dd2b" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <h2 class="elementor-heading-title elementor-size-default">Let’s get in touch</h2>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-3a84aaf4 elementor-widget elementor-widget-heading"
+                                    data-id="3a84aaf4" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <span class="elementor-heading-title elementor-size-default">Sign up for our
+                                            newsletter and receive 10% off your</span>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-6e184175 elementor-widget kitify elementor-kitify-subscribe-form"
+                                    data-id="6e184175" data-element_type="widget"
+                                    data-widget_type="kitify-subscribe-form.default">
+                                    <div class="elementor-widget-container">
+                                        <div class="kitify-subscribe-form kitify-subscribe-form--inline-layout"
+                                            data-settings="{&quot;redirect&quot;:false,&quot;redirect_url&quot;:&quot;#&quot;,&quot;use_target_list_id&quot;:false,&quot;target_list_id&quot;:&quot;&quot;}">
+                                            <form method="POST" action="#" class="kitify-subscribe-form__form">
+                                                <div class="kitify-subscribe-form__input-group">
+                                                    <div class="kitify-subscribe-form__fields">
+                                                        <input
+                                                            class="kitify-subscribe-form__input kitify-subscribe-form__mail-field"
+                                                            type="email" name="email"
+                                                            placeholder="Enter your email address..."
+                                                            data-instance-data="[]">
+                                                    </div>
+                                                    <a class="kitify-subscribe-form__submit elementor-button elementor-size-md"
+                                                        href="#"><span class="elementor-icon"><i
+                                                                aria-hidden="true"
+                                                                class="kitify-subscribe-form__submit-icon novaicon novaicon-arrow-right"></i></span><span
+                                                            class="kitify-subscribe-form__submit-text"></span></a>
+                                                </div>
+                                                <div class="kitify-subscribe-form__message">
+                                                    <div class="kitify-subscribe-form__message-inner"><span></span></div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="elementor-element elementor-element-54567fd e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        data-id="54567fd" data-element_type="container"
+                        data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+                        <div class="e-con-inner" style="--kitify-section-width: 1225px;">
+                            <div class="elementor-element elementor-element-32ef9720 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                data-id="32ef9720" data-element_type="container">
+                                <div class="elementor-element elementor-element-55712cf9 elementor-widget elementor-widget-heading"
+                                    data-id="55712cf9" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <span class="elementor-heading-title elementor-size-default">© 2024 Mixtas All
+                                            rights reserved. Designed by Novaworks</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="elementor-element elementor-element-ba77c84 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                data-id="ba77c84" data-element_type="container">
+                                <div class="elementor-element elementor-element-3f8296cb elementor-widget elementor-widget-image"
+                                    data-id="3f8296cb" data-element_type="widget" data-widget_type="image.default">
+                                    <div class="elementor-widget-container">
+                                        <img width="192" height="14"
+                                            src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/payment_icon.svg"
+                                            class="attachment-large size-large wp-image-477" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="site-content styling__quickview" id="nova_wc_quickview">
+                    <div class="nova_wc_quickview__content site-content"></div>
+                </div>
+            </div><!-- .site-wrapper -->
+            <!-- .site-search -->
+            <div class="off-canvas-wrapper">
+                <div class="site-canvas-menu off-canvas position-left is-transition-overlap is-closed"
+                    id="MenuOffCanvas_3726810d" data-off-canvas="" data-transition="overlap" aria-hidden="true"
+                    data-i="x922px-i">
+                    <div class="row has-scrollbar">
+                        <div class="header-mobiles-primary-menu">
+                            <div class="is-drilldown animate-height" style="height: 228.984px; max-width: 285px;">
+                                <ul id="menu-main-menu-1" class="vertical menu drilldown mobile-menu"
+                                    data-drilldown=""
+                                    data-back-button="&lt;li class='js-drilldown-back'&gt;&lt;a class='js_mobile_menu_back'&gt;&lt;/a&gt;&lt;/li&gt;"
+                                    data-auto-height="true" data-animate-height="true" role="tree"
+                                    aria-multiselectable="false" data-mutate="d5ko6k-drilldown" data-n="1hf8pl-n">
+                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-has-children menu-item-766 is-drilldown-submenu-parent"
+                                        role="treeitem" aria-haspopup="true" aria-label="Home"
+                                        aria-expanded="false"><a tabindex="0"><span>Home</span></a>
+                                        <ul class="menu vertical nested submenu is-drilldown-submenu invisible"
+                                            data-submenu="" role="group" aria-hidden="true">
+                                            <li class="js-drilldown-back"><a class="js_mobile_menu_back">Home</a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-1645 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a href="https://mixtas.novaworks.net/"><span>Home v1 —
+                                                        ChicCanvas</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-941 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/home-v2/"><span>Home v2 —
+                                                        VogueVibes</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1112 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/home-v3/"><span>Home v3 —
+                                                        ModaMatrix</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1176 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/home-v4/"><span>Home v4 —
+                                                        StyleSymphony</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1316 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/home-v5/"><span>Home v5 —
+                                                        TrendTapestry</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1368 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/home-v6/"><span>Home v6 —
+                                                        HauteHarmony</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1551 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/home-v7/"><span>Home v7 —
+                                                        EleganceEnclave</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1604 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/home-v8/"><span>Home v8 —
+                                                        CoutureCanvas</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1641 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/home-v9/"><span>Home v9 —
+                                                        UrbanUtopia</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1644 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/home-v10/"><span>Home v10 —
+                                                        SilkSculpt</span></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 is-drilldown-submenu-parent"
+                                        role="treeitem" aria-haspopup="true" aria-label="Shop"
+                                        aria-expanded="false"><a tabindex="0"><span>Shop</span></a>
+                                        <ul class="menu vertical nested submenu is-drilldown-submenu invisible"
+                                            data-submenu="" role="group" aria-hidden="true">
+                                            <li class="js-drilldown-back"><a class="js_mobile_menu_back">Shop</a></li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 is-drilldown-submenu-parent is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem" aria-haspopup="true" aria-label="Shop Pages"
+                                                aria-expanded="false"><a tabindex="0"><span>Shop Pages</span></a>
+                                                <ul class="menu vertical nested submenu is-drilldown-submenu invisible"
+                                                    data-submenu="" role="group" aria-hidden="true">
+                                                    <li class="js-drilldown-back"><a class="js_mobile_menu_back">Shop
+                                                            Pages</a></li>
+                                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/shop/"><span>Shop — Left
+                                                                Sidebar</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-359 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/shop/?theme_template_id=353"><span>Shop
+                                                                — Right Sidebar</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-368 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/shop/?theme_template_id=363"><span>Shop
+                                                                — Fullwidth</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-375 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/shop/?theme_template_id=371"><span>Shop
+                                                                — No Sidebar</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-382 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/shop/?theme_template_id=376"><span>Shop
+                                                                — 2 Columns</span></a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-408 is-drilldown-submenu-parent is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem" aria-haspopup="true" aria-label="Product Layouts"
+                                                aria-expanded="false"><a tabindex="0"><span>Product Layouts</span></a>
+                                                <ul class="menu vertical nested submenu is-drilldown-submenu invisible"
+                                                    data-submenu="" role="group" aria-hidden="true">
+                                                    <li class="js-drilldown-back"><a class="js_mobile_menu_back">Product
+                                                            Layouts</a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-409 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/carhartt-american-script-sweat-tobacco/"><span>Product
+                                                                — Layout v1</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-414 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/carhartt-american-script-sweat-tobacco/?theme_template_id=410"><span>Product
+                                                                — Layout v2</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-421 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/carhartt-american-script-sweat-tobacco/?theme_template_id=417"><span>Product
+                                                                — Layout v3</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-426 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/carhartt-american-script-sweat-tobacco/?theme_template_id=422"><span>Product
+                                                                — Layout v4</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-435 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/carhartt-american-script-sweat-tobacco/?theme_template_id=430"><span>Product
+                                                                — Layout v5</span></a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-436 is-drilldown-submenu-parent is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem" aria-haspopup="true" aria-label="Product Pages"
+                                                aria-expanded="false"><a tabindex="0"><span>Product Pages</span></a>
+                                                <ul class="menu vertical nested submenu is-drilldown-submenu invisible"
+                                                    data-submenu="" role="group" aria-hidden="true">
+                                                    <li class="js-drilldown-back"><a class="js_mobile_menu_back">Product
+                                                            Pages</a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-437 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/carhartt-detroit-jacket-summer-zeus-rigid/"><span>Product
+                                                                — Simple</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-438 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/the-north-face-denali-jacket-summit-gold/"><span>Product
+                                                                — Variable</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-439 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/carhartt-hooded-coach-jacket-cypress/"><span>Product
+                                                                — Grouped</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-440 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/carhartt-windbreaker-pullover-winter-black/"><span>Product
+                                                                — External / Affiliate</span></a></li>
+                                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-441 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/product/polar-welcome-to-the-new-age-ls-tee-black/"><span>Product
+                                                                — Out of Stock</span></a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-442 is-drilldown-submenu-parent is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem" aria-haspopup="true" aria-label="Core Pages"
+                                                aria-expanded="false"><a tabindex="0"><span>Core Pages</span></a>
+                                                <ul class="menu vertical nested submenu is-drilldown-submenu invisible"
+                                                    data-submenu="" role="group" aria-hidden="true">
+                                                    <li class="js-drilldown-back"><a class="js_mobile_menu_back">Core
+                                                            Pages</a></li>
+                                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-445 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/my-account/"><span>My
+                                                                account</span></a></li>
+                                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-447 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/cart/"><span>Shopping
+                                                                Cart</span></a></li>
+                                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-446 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/checkout/"><span>Checkout</span></a>
+                                                    </li>
+                                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-443 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/order-tracking/"><span>Order
+                                                                Tracking</span></a></li>
+                                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-444 is-submenu-item is-drilldown-submenu-item"
+                                                        role="treeitem"><a
+                                                            href="https://mixtas.novaworks.net/wishlist/"><span>Wishlist</span></a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-80 is-drilldown-submenu-parent"
+                                        role="treeitem" aria-haspopup="true" aria-label="Pages"
+                                        aria-expanded="false"><a tabindex="0"><span>Pages</span></a>
+                                        <ul class="menu vertical nested submenu is-drilldown-submenu invisible"
+                                            data-submenu="" role="group" aria-hidden="true">
+                                            <li class="js-drilldown-back"><a class="js_mobile_menu_back">Pages</a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-83 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/about-us/"><span>About
+                                                        Us</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/faqs/"><span>FAQs</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-82 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/order-tracking/"><span>Order
+                                                        Tracking</span></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-65 current_page_item current_page_parent current-menu-ancestor current-menu-parent current_page_ancestor menu-item-has-children menu-item-77 is-drilldown-submenu-parent"
+                                        role="treeitem" aria-haspopup="true" aria-label="Blog"
+                                        aria-expanded="false"><a aria-current="page"
+                                            tabindex="0"><span>Blog</span></a>
+                                        <ul class="menu vertical nested submenu is-drilldown-submenu invisible"
+                                            data-submenu="" role="group" aria-hidden="true">
+                                            <li class="js-drilldown-back"><a class="js_mobile_menu_back">Blog</a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-65 current_page_item current_page_parent menu-item-644 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a href="https://mixtas.novaworks.net/blog/"
+                                                    aria-current="page"><span>Blog — Style 01</span></a></li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-643 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/blog/?theme_template_id=637"><span>Blog
+                                                        — Style 02</span></a></li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-652 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/blog/?theme_template_id=646"><span>Blog
+                                                        — Style 03</span></a></li>
+                                            <li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-645 is-submenu-item is-drilldown-submenu-item"
+                                                role="treeitem"><a
+                                                    href="https://mixtas.novaworks.net/2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/"><span>Blog
+                                                        — Single</span></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-84"
+                                        role="treeitem"><a href="https://mixtas.novaworks.net/contact-us/"><span>Contact
+                                                Us</span></a></li>
+                                </ul>
+                            </div> <button class="close-button" aria-label="Close menu" type="button"
+                                data-close="">
+                                <svg class="nova-close-canvas">
+                                    <use xlink:href="#nova-close-canvas"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="js-off-canvas-overlay is-overlay-fixed"></div>
+                <div id="headerSearchModal" class="full-search-reveal animated headerSearchModal-off"
+                    style="position: fixed; width: 100%; height: 100%; top: 0px; left: 0px; overflow-y: auto; z-index: -99999; opacity: 0; visibility: hidden; animation-duration: 0.6s;">
+                    <button id="btn-close-search-modal" class="close-button close-headerSearchModal"
+                        aria-label="Close menu" type="button" data-close="">
+                        <svg class="nova-close-canvas">
+                            <use xlink:href="#nova-close-canvas"></use>
+                        </svg>
+                    </button>
+                    <div class="site-search full-screen">
+                        <div class="header-search">
+
+
+                            <form class="header_search_form" role="search" method="get"
+                                action="https://mixtas.novaworks.net/">
+                                <div class="header_search_form_inner">
+                                    <div class="header_search_input_wrapper">
+                                        <input name="s" id="search_292" class="header_search_input"
+                                            type="search" autocomplete="off" value="" data-min-chars="3"
+                                            placeholder="Product Search">
+
+                                        <input type="hidden" name="post_type" value="product">
+                                    </div>
+                                    <div class="header_search_button_wrapper">
+                                        <button class="header_search_button" type="submit">
+                                            <svg class="mixtas-btn-search">
+                                                <use xlink:href="#mixtas-btn-search"></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="header_search_ajax_loading">
+                                    <span></span>
+                                </div>
+                                <div class="header_search_ajax_results_wrapper">
+                                    <div class="header_search_ajax_results">
+                                        <div class="header_search_icon">
+                                            <svg class="mixtas-search-product-icon">
+                                                <use xlink:href="#mixtas-search-product-icon"></use>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="kitify-offcanvas minicart-canvas site-canvas-menu off-canvas position-right is-transition-overlap is-closed"
+                    id="MiniCartCanvas_4cfba4d5" data-off-canvas="" data-transition="overlap" aria-hidden="true"
+                    data-i="fotvja-i">
+                    <h2 class="title">Shopping Cart
+                        <span class="nova_js_count_bag_item_canvas count-item-canvas">0</span>
+
+                    </h2>
+                    <div class="add_ajax_loading">
+                        <span></span>
+                    </div>
+                    <div class="widget woocommerce widget_shopping_cart">
+                        <h2 class="widgettitle">Cart</h2>
+                        <div class="widget_shopping_cart_content">
+
+                            <p class="woocommerce-mini-cart__empty-message">No products in the cart.</p>
+
+
+                        </div>
+                    </div> <button class="close-button" aria-label="Close menu" type="button" data-close="">
+                        <svg class="nova-close-canvas">
+                            <use xlink:href="#nova-close-canvas"></use>
+                        </svg>
+                    </button>
+                </div>
+                <div class="js-off-canvas-overlay is-overlay-fixed"></div>
+                <div class="nova-offcanvas login-canvas site-canvas-menu off-canvas position-right is-transition-overlap is-closed"
+                    id="AcccountCanvas_Popup" data-off-canvas="" data-transition="overlap" aria-hidden="true"
+                    data-i="byj0vt-i">
+                    <div class="nova-offcanvas__content nova_box_ps ps ps--theme_default"
+                        data-ps-id="f9964425-c4ce-03db-f0a6-996c441f545c">
+
+
+                        <div class="container">
+
+                            <div class="woocommerce-notices-wrapper"></div>
+                            <div class="nova-login-wrapper is_popup">
+
+                                <div class="nova-form-container">
+
+                                    <div id="nova-login-form" class="">
+
+                                        <h2 class="page-title">Login</h2>
+
+
+                                        <form action="https://mixtas.novaworks.net/my-account/"
+                                            class="woocommerce-form woocommerce-form-login login" method="post">
+
+                                            <input type="hidden" name="redirect"
+                                                value="https://mixtas.novaworks.net/my-account/">
+
+
+
+                                            <p
+                                                class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                                                <input type="text"
+                                                    class="woocommerce-Input woocommerce-Input--text input-text"
+                                                    name="username" id="username"
+                                                    placeholder="Username or email address" autocomplete="username"
+                                                    value="">
+                                            </p>
+                                            <p
+                                                class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                                                <input class="woocommerce-Input woocommerce-Input--text input-text"
+                                                    type="password" name="password" id="password"
+                                                    placeholder="Password" autocomplete="current-password">
+                                            </p>
+
+
+                                            <p class="form-row form-group">
+                                                <label
+                                                    class="woocommerce-form__label woocommerce-form__label-for-checkbox woocommerce-form-login__rememberme inline">
+                                                    <input
+                                                        class="woocommerce-form__input woocommerce-form__input-checkbox"
+                                                        name="rememberme" type="checkbox" id="rememberme"
+                                                        value="forever"> <span>Remember me</span>
+                                                </label>
+                                            </p>
+
+                                            <p class="form-actions">
+                                                <input type="hidden" id="woocommerce-login-nonce"
+                                                    name="woocommerce-login-nonce" value="e43d964ea3"><input
+                                                    type="hidden" name="_wp_http_referer" value="/blog/"> <button
+                                                    type="submit"
+                                                    class="woocommerce-button button woocommerce-form-login__submit"
+                                                    name="login" value="Log in">Log in</button>
+                                                <span class="woocommerce-LostPassword lost_password">
+                                                    <a href="https://mixtas.novaworks.net/my-account/lost-password/">Lost
+                                                        your password?</a>
+                                                </span>
+                                            </p>
+
+
+
+                                            <p class="form-actions extra">Not a member?<a href="#nova-register-wrap"
+                                                    class="register-link">Register</a></p>
+
+
+
+
+                                        </form>
+
+                                    </div>
+
+
+
+                                    <div id="nova-register-form" class="">
+
+                                        <h2 class="page-title">Register</h2>
+
+
+                                        <form action="https://mixtas.novaworks.net/my-account/"
+                                            class="woocommerce-form woocommerce-form-register register" method="post">
+
+                                            <input type="hidden" name="redirect"
+                                                class="et-login-popup-redirect-input"
+                                                value="https://mixtas.novaworks.net/my-account/">
+
+
+
+
+                                            <p
+                                                class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+                                                <input type="email"
+                                                    class="woocommerce-Input woocommerce-Input--text input-text"
+                                                    name="email" id="reg_email" placeholder="Email address"
+                                                    autocomplete="email" value="">
+                                            </p>
+
+
+                                            <p>A password will be sent to your email address.</p>
+
+
+                                            <wc-order-attribution-inputs><input type="hidden"
+                                                    name="wc_order_attribution_source_type" value="organic"><input
+                                                    type="hidden" name="wc_order_attribution_referrer"
+                                                    value="https://www.google.com/"><input type="hidden"
+                                                    name="wc_order_attribution_utm_campaign" value="(none)"><input
+                                                    type="hidden" name="wc_order_attribution_utm_source"
+                                                    value="google"><input type="hidden"
+                                                    name="wc_order_attribution_utm_medium" value="organic"><input
+                                                    type="hidden" name="wc_order_attribution_utm_content"
+                                                    value="(none)"><input type="hidden"
+                                                    name="wc_order_attribution_utm_id" value="(none)"><input
+                                                    type="hidden" name="wc_order_attribution_utm_term"
+                                                    value="(none)"><input type="hidden"
+                                                    name="wc_order_attribution_utm_source_platform"
+                                                    value="(none)"><input type="hidden"
+                                                    name="wc_order_attribution_utm_creative_format"
+                                                    value="(none)"><input type="hidden"
+                                                    name="wc_order_attribution_utm_marketing_tactic"
+                                                    value="(none)"><input type="hidden"
+                                                    name="wc_order_attribution_session_entry"
+                                                    value="https://mixtas.novaworks.net/"><input type="hidden"
+                                                    name="wc_order_attribution_session_start_time"
+                                                    value="2025-10-19 06:03:16"><input type="hidden"
+                                                    name="wc_order_attribution_session_pages" value="1"><input
+                                                    type="hidden" name="wc_order_attribution_session_count"
+                                                    value="2"><input type="hidden"
+                                                    name="wc_order_attribution_user_agent"
+                                                    value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"></wc-order-attribution-inputs>
+                                            <div class="woocommerce-privacy-policy-text">
+                                                <p>Your personal data will be used to support your experience throughout
+                                                    this website, to manage access to your account, and for other purposes
+                                                    described in our <a href="https://mixtas.novaworks.net/?page_id=3"
+                                                        class="woocommerce-privacy-policy-link" target="_blank">privacy
+                                                        policy</a>.</p>
+                                            </div>
+                                            <p class="woocommerce-form-row form-row">
+                                                <input type="hidden" id="woocommerce-register-nonce"
+                                                    name="woocommerce-register-nonce" value="25329d721b"><input
+                                                    type="hidden" name="_wp_http_referer" value="/blog/"> <button
+                                                    type="submit"
+                                                    class="woocommerce-Button woocommerce-button button woocommerce-form-register__submit"
+                                                    name="register" value="Register">Register</button>
+                                            </p>
+
+
+                                            <p class="form-actions extra">Already a member?<a href="#nova-login-wrap"
+                                                    class="login-link">Login</a></p>
+
+
+
+                                        </form>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                            <div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                        </div>
+                        <div class="ps__scrollbar-y-rail" style="top: 0px; right: 0px;">
+                            <div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                        </div>
+                    </div>
+                    <button class="close-button" aria-label="Close menu" type="button" data-close="">
+                        <svg class="nova-close-canvas">
+                            <use xlink:href="#nova-close-canvas"></use>
+                        </svg>
+                    </button>
+                </div>
+                <div class="js-off-canvas-overlay is-overlay-fixed"></div>
+
+
+            </div>
+            <div id="svg-defs" class="svg-defs hide">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <defs>
+                        <symbol id="mixtas-burger-menu" fill="none" viewBox="0 0 22 16"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill="currentColor" d="M0 0h22v2H0zM0 7h10v2H0zM0 14h16v2H0z"></path>
+                        </symbol>
+                        <symbol id="mixtas-search" fill="none" viewBox="0 0 19 20">
+                            <path d="M18.0211 18.4375L12.8824 13.2988" stroke="currentColor" stroke-width="1.2"
+                                stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path
+                                d="M8.02112 15.3125C11.8181 15.3125 14.8961 12.2345 14.8961 8.4375C14.8961 4.64054 11.8181 1.5625 8.02112 1.5625C4.22416 1.5625 1.14612 4.64054 1.14612 8.4375C1.14612 12.2345 4.22416 15.3125 8.02112 15.3125Z"
+                                stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </symbol>
+                        <symbol id="mixtas-bag" fill="none" viewBox="0 0 18 21"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M3.50856 19.6429H13.6343C15.4114 19.6429 16.8571 18.1972 16.8571 16.42V6.78573C16.8571 6.47144 16.6 6.2143 16.2857 6.2143H12.8571V5.35716C12.8571 2.9943 10.9343 1.07144 8.57142 1.07144C6.20856 1.07144 4.2857 2.9943 4.2857 5.35716V6.2143H0.857134C0.542848 6.2143 0.285706 6.47144 0.285706 6.78573V16.42C0.285706 18.1972 1.73142 19.6429 3.50856 19.6429ZM5.42856 5.35716C5.42856 3.62287 6.83713 2.2143 8.57142 2.2143C10.3057 2.2143 11.7143 3.62287 11.7143 5.35716V6.2143H5.42856V5.35716ZM1.42856 7.35716H4.2857V8.78573C4.2857 9.10001 4.54285 9.35716 4.85713 9.35716C5.17142 9.35716 5.42856 9.10001 5.42856 8.78573V7.35716H11.7143V8.78573C11.7143 9.10001 11.9714 9.35716 12.2857 9.35716C12.6 9.35716 12.8571 9.10001 12.8571 8.78573V7.35716H15.7143V16.42C15.7143 17.5657 14.78 18.5 13.6343 18.5H3.50856C2.36285 18.5 1.42856 17.5657 1.42856 16.42V7.35716Z"
+                                fill="currentColor"></path>
+                        </symbol>
+                        <symbol fill="none" id="mixtas-wishlist" viewBox="0 0 20 18"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M4.10276 0.535722C1.83186 1.44929 -0.014983 3.82623 0.26654 7.33722C0.477821 9.97215 1.93049 12.1153 3.64664 13.7278C5.36367 15.3411 7.39577 16.4739 8.89721 17.0966C9.41075 17.3094 9.98779 17.3218 10.512 17.1222C12.0881 16.5221 14.1129 15.3949 15.8125 13.7748C17.5105 12.1562 18.9254 10.004 19.1783 7.35969C19.6544 3.79445 17.7508 1.42311 15.4153 0.528745C13.4653 -0.218011 11.0862 0.0495936 9.7063 1.64133C8.31911 0.037531 6.02213 -0.236441 4.10276 0.535722ZM4.59785 1.76639C6.37434 1.05172 8.28816 1.53022 9.1221 3.13029C9.23724 3.35128 9.46656 3.48906 9.71577 3.48697C9.96498 3.4849 10.192 3.3433 10.3035 3.12042C11.0791 1.56961 13.0744 1.05272 14.941 1.76755C16.7373 2.45542 18.2576 4.26655 17.8619 7.19546C17.8607 7.20431 17.8596 7.21324 17.8588 7.22208C17.6487 9.45569 16.4499 11.3346 14.8972 12.8146C13.3432 14.2958 11.4761 15.3357 10.0401 15.8825C9.8371 15.9597 9.61062 15.9563 9.40536 15.8712C8.01666 15.2953 6.13049 14.2415 4.55499 12.761C2.9786 11.2799 1.76454 9.42244 1.58883 7.23119C1.35374 4.29929 2.86493 2.46355 4.59785 1.76639Z"
+                                fill="currentColor"></path>
+                        </symbol>
+                        <symbol id="mixtas-menu-user" fill="none" viewBox="0 0 20 21"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_15_749)">
+                                <path
+                                    d="M0.833313 19.6667C0.833313 15.0642 4.56415 11.3333 9.16665 11.3333H10.8333C15.4358 11.3333 19.1666 15.0642 19.1666 19.6667"
+                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                                <path
+                                    d="M10 11.3333C12.7614 11.3333 15 9.09477 15 6.33334C15 3.57192 12.7614 1.33334 10 1.33334C7.23858 1.33334 5 3.57192 5 6.33334C5 9.09477 7.23858 11.3333 10 11.3333Z"
+                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-shopbycat" viewBox="0 0 27 14">
+                            <g fill="currentColor" fill-rule="evenodd">
+                                <path
+                                    d="M26.085 1.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M26.085 4.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M26.085 7.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M26.085 10.342H1.135c-.314 0-.568-.225-.568-.5 0-.278.254-.501.567-.501h24.951c.313 0 .567.223.567.501 0 .275-.254.5-.567.5M14.744 13.342H1.134c-.313 0-.567-.225-.567-.5 0-.278.254-.501.567-.501h13.61c.313 0 .567.223.567.501 0 .275-.254.5-.567.5">
+                                </path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-addtocart" viewBox="0 0 14 16" fill="none">
+                            <path d="M7.6 14.6H1V4.40002H11.8V8.60002" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                            <path
+                                d="M4 6.20002V3.80002C4 2.47462 5.0746 1.40002 6.4 1.40002C7.7254 1.40002 8.8 2.47462 8.8 3.80002V6.20002"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M11.2 11V14.6" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                            <path d="M9.39996 12.8H13" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </symbol>
+                        <symbol id="mixtas-mc-fb" viewBox="0 0 26 26">
+                            <g fill="none" fill-rule="evenodd">
+                                <path d="M-2-2h30v30H-2z"></path>
+                                <path
+                                    d="M15.1 11.75h-1.7a.4.4 0 0 1-.4-.4v-.85a3.75 3.75 0 0 1 3.75-3.75h2.1c.22 0 .4.18.4.4v1.7a.4.4 0 0 1-.4.4h-2.1c-.69 0-1.25.56-1.25 1.25v.85a.4.4 0 0 1-.4.4z"
+                                    fill="var(--site-accent-color)"></path>
+                                <path
+                                    d="M13 23v-7.5h-2a.5.5 0 0 1-.5-.5v-1.5a.5.5 0 0 1 .5-.5h7.75a.5.5 0 0 1 .5.5V15a.5.5 0 0 1-.5.5H15.5V23H18a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5H8a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h5zM8 .5h10A7.5 7.5 0 0 1 25.5 8v10a7.5 7.5 0 0 1-7.5 7.5H8A7.5 7.5 0 0 1 .5 18V8A7.5 7.5 0 0 1 8 .5z"
+                                    fill="currentColor"></path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-btn-search" viewBox="0 0 22 22">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M14.962 14.12l4.86 4.86a.6.6 0 0 1-.42 1.02.603.603 0 0 1-.422-.177l-4.86-4.86a8.493 8.493 0 0 1-5.592 2.092C3.827 17.055 0 13.228 0 8.528 0 3.827 3.823 0 8.528 0c4.7 0 8.527 3.823 8.527 8.528 0 2.137-.789 4.093-2.093 5.592zM8.523 1.197c-4.04 0-7.33 3.286-7.33 7.33 0 4.045 3.29 7.336 7.33 7.336 4.045 0 7.33-3.295 7.33-7.335s-3.285-7.33-7.33-7.33z"
+                                fill="currentColor"></path>
+                        </symbol>
+                        <symbol id="mixtas-search-product-icon" viewBox="0 0 48 48">
+                            <g transform="translate(.5 .5)" fill="none" stroke="currentColor"
+                                stroke-miterlimit="10">
+                                <path data-cap="butt" data-color="color-2" d="M46 43l-5.757-5.757"></path>
+                                <circle data-color="color-2" stroke-linecap="square" cx="36" cy="33"
+                                    r="6"></circle>
+                                <path stroke-linecap="square"
+                                    d="M24 31H2v0a6 6 0 0 0 6 6h16M6 26V10a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v11M23 12h2">
+                                </path>
+                            </g>
+                        </symbol>
+                        <symbol id="nova-close-canvas" viewBox="0 0 22 22">
+                            <path
+                                d="M12.592 11.015l8.988-8.939c.43-.426.43-1.117 0-1.542a1.108 1.108 0 0 0-1.558 0l-8.98 8.931L1.977.401A1.1 1.1 0 0 0 .42.4a1.107 1.107 0 0 0 0 1.562l9.057 9.058-9.09 9.039a1.084 1.084 0 0 0 0 1.543c.43.426 1.129.426 1.558 0l9.082-9.032 9.028 9.028a1.1 1.1 0 0 0 1.557 0c.43-.432.43-1.131 0-1.562l-9.02-9.022z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                        </symbol>
+                        <symbol id="mixtas-settings-bar" viewBox="0 0 26 26">
+                            <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M3.694 5.381c.031-.037.069-.081.106-.119.456-.468.919-.924 1.388-1.387.612-.6 1.35-.656 2.05-.156.374.268.75.531 1.112.806.119.087.213.106.356.038.419-.194.838-.37 1.263-.538.137-.05.194-.125.219-.262.074-.475.13-.957.25-1.425a2.87 2.87 0 0 1 .38-.832c.188-.281.52-.381.826-.487h2.618a.554.554 0 0 0 .107.05c.625.175.987.594 1.106 1.225.088.475.169.95.238 1.425.018.137.075.212.212.262.456.175.906.375 1.363.55a.356.356 0 0 0 .287-.025c.394-.262.775-.544 1.163-.819.718-.506 1.443-.45 2.068.17l.306.305M22.07 5.076c.02.02-.03-.03 0 0M22.637 6.175c.063.381-.05.713-.33 1.119-.27.381-.55.756-.807 1.144a.355.355 0 0 0-.031.287c.168.444.362.875.531 1.319.05.131.125.181.25.2.475.075.956.131 1.425.25.281.069.556.2.794.362.287.194.4.525.5.844v2.619a.746.746 0 0 0-.05.1c-.181.631-.607.993-1.25 1.112-.475.088-.95.163-1.425.231-.144.02-.213.088-.263.22-.169.424-.337.85-.525 1.268-.062.144-.05.238.038.356.281.375.544.756.812 1.138.488.694.438 1.425-.156 2.031-.456.469-.919.931-1.387 1.388-.607.593-1.338.65-2.032.156-.394-.275-.781-.563-1.181-.838a.35.35 0 0 0-.262-.031c-.45.175-.894.356-1.332.55a.372.372 0 0 0-.187.244c-.094.475-.163.95-.244 1.425-.094.556-.394.956-.912 1.181-.1.044-.2.075-.3.112h-2.62c-.018-.012-.037-.03-.056-.037-.687-.175-1.062-.631-1.168-1.325-.069-.456-.156-.906-.225-1.356-.019-.138-.075-.213-.213-.269-.094-.038-.181-.069-.275-.106M8.575 21.469a.22.22 0 0 0-.088.037c-.406.275-.8.563-1.2.844-.693.487-1.418.431-2.025-.169-.462-.45-.918-.906-1.368-1.369-.6-.612-.657-1.343-.163-2.05.263-.375.531-.75.806-1.118.094-.119.1-.219.038-.356a18.06 18.06 0 0 1-.525-1.244c-.056-.157-.144-.213-.294-.238-.475-.075-.956-.143-1.425-.243a2.544 2.544 0 0 1-.7-.288c-.337-.206-.469-.563-.594-.919v-.931M1.031 12.113v-.375a.746.746 0 0 0 .05-.1c.182-.638.613-.994 1.25-1.107.475-.087.95-.15 1.425-.244a.363.363 0 0 0 .225-.18c.194-.438.375-.888.544-1.338a.32.32 0 0 0-.025-.263c-.281-.412-.575-.812-.856-1.218a1.862 1.862 0 0 1-.207-.375">
+                                </path>
+                                <path
+                                    d="M11.044 16.325c.07.04.03-.04.1 0m1.319.444c.175.025.35.037.525.037 2.087.019 3.83-1.719 3.825-3.812 0-2.094-1.7-3.8-3.807-3.813C10.92 9.162 9.181 10.9 9.181 13c0 .906.319 1.737.85 2.394">
+                                </path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-menu-bar" fill="none" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 12h22M1 5h22M1 19h22" stroke="currentColor" stroke-width="1"
+                                stroke-miterlimit="10" stroke-linecap="square"></path>
+                        </symbol>
+                        <symbol id="mixtas-user-bar" viewBox="0 0 24 25">
+                            <g fill="none" fill-rule="evenodd">
+                                <circle stroke="currentColor" stroke-linecap="round" cx="12" cy="12"
+                                    r="11.52"></circle>
+                                <path d="M0 0h24v24H0z"></path>
+                                <path
+                                    d="M14.368 17.053c-.07-.773-.043-1.313-.043-2.02.35-.184.978-1.356 1.084-2.347.275-.022.71-.291.837-1.352.069-.57-.204-.89-.37-.991.448-1.349 1.38-5.52-1.722-5.951-.32-.56-1.137-.844-2.2-.844-4.249.078-4.762 3.209-3.83 6.795-.166.1-.438.421-.37.99.128 1.062.562 1.33.837 1.353.106.99.758 2.163 1.11 2.347 0 .707.026 1.247-.044 2.02-.605 1.628-3.714 1.755-5.507 3.324 1.875 1.888 4.913 3.238 8.12 3.238 3.206 0 6.975-2.531 7.602-3.222-1.782-1.584-4.897-1.707-5.504-3.34z"
+                                    stroke="currentColor" stroke-linecap="round"></path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-wishlist-bar" viewBox="0 0 28 25">
+                            <path
+                                d="M3.205 13.395A7.52 7.52 0 1 1 13.837 2.757 7.52 7.52 0 0 1 24.47 13.395L13.837 24 3.205 13.395z"
+                                stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </symbol>
+                        <symbol id="mixtas-bag-bar" viewBox="0 0 18 22">
+                            <g stroke="currentColor" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <path
+                                    d="M16.106 21H1.45A.457.457 0 0 1 1 20.552V6.448C1 6.207 1.207 6 1.45 6h14.656c.242 0 .45.207.45.448v14.104a.457.457 0 0 1-.45.448z"
+                                    stroke-linecap="square"></path>
+                                <path d="M4.333 6c0-5 4.445-5 4.445-5s4.444 0 4.444 5"></path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-grid" viewBox="0 0 20 20">
+                            <g stroke="currentColor" fill="none" fill-rule="evenodd">
+                                <path d="M.5.5h8v8h-8zM11.5.5h8v8h-8zM11.5 11.5h8v8h-8zM.5 11.5h8v8h-8z"></path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-list" fill="none" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 2H2v7h7V2zM9 15H2v7h7v-7zM14 3h8M14 8h8M14 16h8M14 21h8" stroke="currentColor"
+                                stroke-width="1" stroke-miterlimit="10" stroke-linecap="square"></path>
+                        </symbol>
+                        <symbol id="mixtas-product-wishlist-btn" viewBox="0 0 21 19">
+                            <path
+                                d="M2.74 8.648l7.833 8.665 7.81-8.665c.01-.015.021-.033.035-.048a4.515 4.515 0 0 0 1.142-2.995 4.52 4.52 0 0 0-4.518-4.517 4.536 4.536 0 0 0-4.11 2.644c-.132.293-.61.293-.744 0A4.535 4.535 0 0 0 6.08 1.088 4.52 4.52 0 0 0 1.56 5.605c0 1.105.406 2.16 1.143 2.995a.472.472 0 0 1 .037.048zm7.834 9.68a.418.418 0 0 1-.304-.132L2.087 9.148c-.017-.025-.032-.042-.045-.058a5.34 5.34 0 0 1-1.3-3.485A5.34 5.34 0 0 1 6.08.27c1.822 0 3.508.933 4.481 2.439A5.345 5.345 0 0 1 15.042.27a5.34 5.34 0 0 1 5.337 5.335 5.33 5.33 0 0 1-1.304 3.485c-.012.016-.025.033-.04.058l-8.158 9.048a.416.416 0 0 1-.303.131z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                        </symbol>
+                        <symbol id="mixtas-product-quickview-btn" viewBox="0 0 19 12">
+                            <g fill="currentColor" fill-rule="evenodd">
+                                <path
+                                    d="M1.529 6.341a9.749 9.749 0 0 0 8.192 4.429c3.325 0 6.365-1.65 8.193-4.429C16.086 3.56 13.046 1.91 9.721 1.91c-3.325 0-6.365 1.65-8.192 4.431zm8.192 5.429C5.943 11.77 2.5 9.841.51 6.6a.492.492 0 0 1 0-.52C2.5 2.84 5.943.911 9.721.911c3.779 0 7.222 1.929 9.211 5.169a.492.492 0 0 1 0 .52c-1.989 3.241-5.432 5.17-9.211 5.17z">
+                                </path>
+                                <path
+                                    d="M9.721 4.14a2.204 2.204 0 0 0-2.197 2.201c0 1.209.986 2.199 2.197 2.199 1.212 0 2.197-.99 2.197-2.199 0-1.21-.985-2.201-2.197-2.201zm0 5.4a3.205 3.205 0 0 1-3.197-3.199A3.205 3.205 0 0 1 9.721 3.14a3.205 3.205 0 0 1 3.197 3.201A3.205 3.205 0 0 1 9.721 9.54zM13.564 11.03a.499.499 0 0 1-.368-.169.493.493 0 0 1 .03-.701 5.2 5.2 0 0 0 1.676-3.819 5.194 5.194 0 0 0-1.68-3.821.503.503 0 0 1-.03-.709c.186-.2.503-.21.706-.03a6.206 6.206 0 0 1 2.004 4.56 6.17 6.17 0 0 1-2 4.549.498.498 0 0 1-.338.14M5.882 11.03a.487.487 0 0 1-.338-.13 6.204 6.204 0 0 1-2.003-4.559c0-1.73.729-3.391 2.001-4.551a.494.494 0 0 1 .707.03c.187.2.173.521-.031.7a5.199 5.199 0 0 0-1.677 3.821c0 1.449.612 2.839 1.679 3.819.204.19.218.501.031.711a.53.53 0 0 1-.369.159">
+                                </path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-product-bag-btn" viewBox="0 0 18 19">
+                            <g fill="currentColor" fill-rule="evenodd">
+                                <path
+                                    d="M13.375 8.88A.373.373 0 0 1 13 8.506V3.255c0-1.477-1.426-2.25-2.834-2.25h-.75C7.903 1.005 7 1.845 7 3.255v5.25c0 .21-.168.375-.375.375a.373.373 0 0 1-.375-.374V3.255c0-1.822 1.242-3 3.166-3h.75c1.737 0 3.584 1.05 3.584 3v5.25c0 .21-.168.375-.375.375">
+                                </path>
+                                <path
+                                    d="M11.5 18.256H1.166a.375.375 0 0 1-.356-.495L4.56 6.51a.378.378 0 0 1 .356-.255h9.75c.16 0 .303.104.354.255l1.672 4.889a.372.372 0 0 1-.233.473.373.373 0 0 1-.476-.233l-1.586-4.634H5.186l-3.5 10.5H11.5c.207 0 .375.164.375.374s-.168.376-.375.376">
+                                </path>
+                                <path
+                                    d="M15.75 17.13c-.276 0-.5-.165-.5-.375v-3.75c0-.21.224-.374.5-.374s.5.165.5.375v3.749c0 .21-.224.376-.5.376">
+                                </path>
+                                <path
+                                    d="M17.5 15.505h-3.75c-.207 0-.375-.22-.375-.5s.168-.5.375-.5h3.75c.207 0 .375.22.375.5s-.168.5-.375.5">
+                                </path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-zoom" viewBox="0 0 26 26">
+                            <g fill="currentColor" fill-rule="evenodd">
+                                <path d="M24 0h2v8.308h-2z"></path>
+                                <path d="M24.083.76l1.372 1.405-9.858 8.153-1.372-1.405z"></path>
+                                <path d="M17 0h9v2h-9zM0 0h13v2H0z"></path>
+                                <path d="M0 0h2v24H0z"></path>
+                                <path d="M0 23.077h26v2H0z"></path>
+                                <path d="M24 12h2v12h-2z"></path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-play-video" viewBox="0 0 22 28">
+                            <path d="M0 0v28l22-14z" fill="currentColor" fill-rule="evenodd"></path>
+                        </symbol>
+                        <symbol id="mixtas-arrow-right" viewBox="0 0 40 36">
+                            <path d="M37.098 18.756L20.864 34.9 21.9 36 40 18 21.9 0l-1.036 1.1 16.234 16.144H0v1.512z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                        </symbol>
+                        <symbol id="mixtas-filter-icon" viewBox="0 0 20 17">
+                            <g fill="currentColor" fill-rule="evenodd">
+                                <path d="M0 0h20v1H0zM0 8h15v1H0zM0 16h10v1H0z"></path>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-button-arrow" viewBox="0 0 24 24">
+                            <g class="nc-icon-wrapper" stroke-linecap="square" stroke-linejoin="miter"
+                                stroke-width="2" fill="currentColor" stroke="currentColor">
+                                <line data-cap="butt" data-color="color-2" fill="none" stroke-miterlimit="10"
+                                    x1="2" y1="12" x2="22" y2="12"
+                                    stroke-linecap="butt"></line>
+                                <polyline fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                    points="15,5 22,12 15,19 "></polyline>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-video-play" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+                            <g fill="none" fill-rule="evenodd" transform="translate(1.913 1.26)">
+                                <path fill="currentColor" fill-rule="nonzero"
+                                    d="M45.13 34.348c0-.287-.19-.574-.382-.765L27.53 21.148c-.287-.191-.67-.287-1.052-.096-.287.191-.478.478-.478.861v24.87c0 .382.191.67.478.86.192.096.287.096.479.096.19 0 .382-.096.573-.191l17.218-12.435c.191-.191.382-.478.382-.765z">
+                                </path>
+                                <circle cx="33.087" cy="33.739" r="33" stroke="currentColor" stroke-width="4">
+                                </circle>
+                            </g>
+                        </symbol>
+                        <symbol id="mixtas-plus" fill="none" viewBox="0 0 16 16"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z"
+                                fill="currentColor"></path>
+                        </symbol>
+                        <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 15"
+                            id="mixtas-calendar">
+                            <path
+                                d="M3.4375 0.75C3.65625 0.75 3.875 0.96875 3.875 1.1875V2.5H9.125V1.1875C9.125 0.96875 9.31641 0.75 9.5625 0.75C9.78125 0.75 10 0.96875 10 1.1875V2.5H10.875C11.832 2.5 12.625 3.29297 12.625 4.25V13C12.625 13.9844 11.832 14.75 10.875 14.75H2.125C1.14062 14.75 0.375 13.9844 0.375 13V4.25C0.375 3.29297 1.14062 2.5 2.125 2.5H3V1.1875C3 0.96875 3.19141 0.75 3.4375 0.75ZM11.75 6H8.90625V7.96875H11.75V6ZM11.75 8.84375H8.90625V11.0312H11.75V8.84375ZM11.75 11.9062H8.90625V13.875H10.875C11.3398 13.875 11.75 13.4922 11.75 13V11.9062ZM8.03125 11.0312V8.84375H4.96875V11.0312H8.03125ZM4.96875 13.875H8.03125V11.9062H4.96875V13.875ZM4.09375 11.0312V8.84375H1.25V11.0312H4.09375ZM1.25 11.9062V13C1.25 13.4922 1.63281 13.875 2.125 13.875H4.09375V11.9062H1.25ZM1.25 7.96875H4.09375V6H1.25V7.96875ZM4.96875 7.96875H8.03125V6H4.96875V7.96875ZM10.875 3.375H2.125C1.63281 3.375 1.25 3.78516 1.25 4.25V5.125H11.75V4.25C11.75 3.78516 11.3398 3.375 10.875 3.375Z"
+                                fill="currentColor"></path>
+                        </symbol>
+                        <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            id="mini-cart-add">
+                            <path d="M12 7V17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                            <path d="M17 12H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </symbol>
+                        <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            id="mini-cart-delete">
+                            <path d="M17 12H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </symbol>
+                    </defs>
+                </svg>
+            </div>
+            <div class="nova-overlay-global"></div>
+        </div><!-- .kitify-site-wrapper -->
+        <script>
+            window.RS_MODULES = window.RS_MODULES || {};
+            window.RS_MODULES.modules = window.RS_MODULES.modules || {};
+            window.RS_MODULES.waiting = window.RS_MODULES.waiting || [];
+            window.RS_MODULES.defered = true;
+            window.RS_MODULES.moduleWaiting = window.RS_MODULES.moduleWaiting || {};
+            window.RS_MODULES.type = 'compiled';
+        </script>
+        <script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"\/*"},{"not":{"href_matches":["\/wp-*.php","\/wp-admin\/*","\/wp-content\/uploads\/*","\/wp-content\/*","\/wp-content\/plugins\/*","\/wp-content\/themes\/mixtas\/*","\/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+
+        <!-- GTM Container placement set to footer -->
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TH4WGRG" height="0" width="0"
+                style="display:none;visibility:hidden" aria-hidden="true"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+        <script>
+            const lazyloadRunObserver = () => {
+                const lazyloadBackgrounds = document.querySelectorAll(`.e-con.e-parent:not(.e-lazyloaded)`);
+                const lazyloadBackgroundObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            let lazyloadBackground = entry.target;
+                            if (lazyloadBackground) {
+                                lazyloadBackground.classList.add('e-lazyloaded');
+                            }
+                            lazyloadBackgroundObserver.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    rootMargin: '200px 0px 200px 0px'
+                });
+                lazyloadBackgrounds.forEach((lazyloadBackground) => {
+                    lazyloadBackgroundObserver.observe(lazyloadBackground);
+                });
+            };
+            const events = [
+                'DOMContentLoaded',
+                'elementor/lazyload/observe',
+            ];
+            events.forEach((event) => {
+                document.addEventListener(event, lazyloadRunObserver);
+            });
+        </script>
+        <script type="text/javascript">
+            (function() {
+                var c = document.body.className;
+                c = c.replace(/woocommerce-no-js/, 'woocommerce-js');
+                document.body.className = c;
+            })();
+        </script>
+        <link rel="stylesheet" id="wc-blocks-style-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks.css?ver=wc-9.7.1"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="widget-heading-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/elementor/assets/css/widget-heading.min.css?ver=3.28.3"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="kitify-nav-menu-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/nav-menu.css?ver=1760833100"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="kitify-search-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/search.css?ver=1760833100"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="kitify-canvas-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/kitify-canvas.css?ver=1760833100"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="kitify-breadcrumbs-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/breadcrumbs.css?ver=1760833100"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="kitify-posts-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/posts.css?ver=1760833100"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="widget-social-icons-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/elementor/assets/css/widget-social-icons.min.css?ver=3.28.3"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="e-apple-webkit-css"
+            href="https://mixtas.b-cdn.net/wp-content/uploads/elementor/css/custom-apple-webkit.min.css?ver=1743737085"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="widget-icon-list-css"
+            href="https://mixtas.b-cdn.net/wp-content/uploads/elementor/css/custom-widget-icon-list.min.css?ver=1743737085"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="kitify-subscribe-form-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/subscribe-form.css?ver=1760833100"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="widget-image-css"
+            href="https://mixtas.b-cdn.net/wp-content/plugins/elementor/assets/css/widget-image.min.css?ver=3.28.3"
+            type="text/css" media="all">
+        <link rel="stylesheet" id="rs-plugin-settings-css"
+            href="//mixtas.novaworks.net/wp-content/plugins/revslider/sr6/assets/css/rs6.css?ver=6.7.31" type="text/css"
+            media="all">
+        <style id="rs-plugin-settings-inline-css" type="text/css">
+            #rs-demo-id {}
+        </style>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/yith-woocommerce-wishlist/assets/js/jquery.selectBox.min.js?ver=1.2.0"
+            id="jquery-selectBox-js"></script>
+        <script type="text/javascript"
+            src="//mixtas.novaworks.net/wp-content/plugins/woocommerce/assets/js/prettyPhoto/jquery.prettyPhoto.min.js?ver=3.1.6"
+            id="prettyPhoto-js" data-wp-strategy="defer"></script>
+        <script type="text/javascript" id="jquery-yith-wcwl-js-extra">
+            /* <![CDATA[ */
+            var yith_wcwl_l10n = {
+                "ajax_url": "\/wp-admin\/admin-ajax.php",
+                "redirect_to_cart": "no",
+                "yith_wcwl_button_position": "after_add_to_cart",
+                "multi_wishlist": "",
+                "hide_add_button": "1",
+                "enable_ajax_loading": "",
+                "ajax_loader_url": "https:\/\/mixtas.b-cdn.net\/wp-content\/plugins\/yith-woocommerce-wishlist\/assets\/images\/ajax-loader-alt.svg",
+                "remove_from_wishlist_after_add_to_cart": "1",
+                "is_wishlist_responsive": "",
+                "time_to_close_prettyphoto": "3000",
+                "fragments_index_glue": ".",
+                "reload_on_found_variation": "1",
+                "mobile_media_query": "768",
+                "labels": {
+                    "cookie_disabled": "We are sorry, but this feature is available only if cookies on your browser are enabled.",
+                    "added_to_cart_message": "<div class=\"woocommerce-notices-wrapper\"><div class=\"woocommerce-message\" role=\"alert\">Product added to cart successfully<\/div><\/div>"
+                },
+                "actions": {
+                    "add_to_wishlist_action": "add_to_wishlist",
+                    "remove_from_wishlist_action": "remove_from_wishlist",
+                    "reload_wishlist_and_adding_elem_action": "reload_wishlist_and_adding_elem",
+                    "load_mobile_action": "load_mobile",
+                    "delete_item_action": "delete_item",
+                    "save_title_action": "save_title",
+                    "save_privacy_action": "save_privacy",
+                    "load_fragments": "load_fragments"
+                },
+                "nonce": {
+                    "add_to_wishlist_nonce": "2650057b0a",
+                    "remove_from_wishlist_nonce": "b6e55f8237",
+                    "reload_wishlist_and_adding_elem_nonce": "b44f99ce60",
+                    "load_mobile_nonce": "c0df1f3560",
+                    "delete_item_nonce": "cf551604c5",
+                    "save_title_nonce": "6ba96c554f",
+                    "save_privacy_nonce": "7cbcd084eb",
+                    "load_fragments_nonce": "1c46015fdd"
+                },
+                "redirect_after_ask_estimate": "",
+                "ask_estimate_redirect_url": "https:\/\/mixtas.novaworks.net"
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/yith-woocommerce-wishlist/assets/js/jquery.yith-wcwl.min.js?ver=4.4.0"
+            id="jquery-yith-wcwl-js"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/dist/hooks.min.js?ver=4d63a3d491d11ffd8ac6"
+            id="wp-hooks-js"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/dist/i18n.min.js?ver=5e580eb46a90c2b997e6"
+            id="wp-i18n-js"></script>
+        <script type="text/javascript" id="wp-i18n-js-after">
+            /* <![CDATA[ */
+            wp.i18n.setLocaleData({
+                'text direction\u0004ltr': ['ltr']
+            });
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/contact-form-7/includes/swv/js/index.js?ver=6.0.5" id="swv-js">
+        </script>
+        <script type="text/javascript" id="contact-form-7-js-before">
+            /* <![CDATA[ */
+            var wpcf7 = {
+                "api": {
+                    "root": "https:\/\/mixtas.novaworks.net\/wp-json\/",
+                    "namespace": "contact-form-7\/v1"
+                },
+                "cached": 1
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/contact-form-7/includes/js/index.js?ver=6.0.5"
+            id="contact-form-7-js"></script>
+        <script type="text/javascript"
+            src="//mixtas.novaworks.net/wp-content/plugins/revslider/sr6/assets/js/rbtools.min.js?ver=6.7.29" defer="" async=""
+            id="tp-tools-js"></script>
+        <script type="text/javascript"
+            src="//mixtas.novaworks.net/wp-content/plugins/revslider/sr6/assets/js/rs6.min.js?ver=6.7.31" defer="" async=""
+            id="revmin-js"></script>
+        <script type="text/javascript" id="crisp-js-before">
+            /* <![CDATA[ */
+            window.$crisp = [];
+            if (!window.CRISP_RUNTIME_CONFIG) {
+                window.CRISP_RUNTIME_CONFIG = {}
+            }
+
+            if (!window.CRISP_RUNTIME_CONFIG.locale) {
+                window.CRISP_RUNTIME_CONFIG.locale = 'en-us'
+            }
+
+            CRISP_WEBSITE_ID = '114c3be4-da0f-4663-b5f7-3febfccc9984';
+            /* ]]> */
+        </script>
+        <script type="text/javascript" async="" src="https://client.crisp.chat/l.js?ver=20251019" id="crisp-js"></script>
+        <script type="text/javascript" id="wp-api-request-js-extra">
+            /* <![CDATA[ */
+            var wpApiSettings = {
+                "root": "https:\/\/mixtas.novaworks.net\/wp-json\/",
+                "nonce": "9cd2e48e74",
+                "versionString": "wp\/v2\/"
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/api-request.min.js?ver=6.8.3"
+            id="wp-api-request-js"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/dist/vendor/wp-polyfill.min.js?ver=3.15.0"
+            id="wp-polyfill-js"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/dist/url.min.js?ver=c2964167dfe2477c14ea"
+            id="wp-url-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-includes/js/dist/api-fetch.min.js?ver=3623a576c78df404ff20" id="wp-api-fetch-js">
+        </script>
+        <script type="text/javascript" id="wp-api-fetch-js-after">
+            /* <![CDATA[ */
+            wp.apiFetch.use(wp.apiFetch.createRootURLMiddleware("https://mixtas.novaworks.net/wp-json/"));
+            wp.apiFetch.nonceMiddleware = wp.apiFetch.createNonceMiddleware("9cd2e48e74");
+            wp.apiFetch.use(wp.apiFetch.nonceMiddleware);
+            wp.apiFetch.use(wp.apiFetch.mediaUploadMiddleware);
+            wp.apiFetch.nonceEndpoint = "https://mixtas.novaworks.net/wp-admin/admin-ajax.php?action=rest-nonce";
+            /* ]]> */
+        </script>
+        <script type="text/javascript" id="woo-variation-swatches-js-extra">
+            /* <![CDATA[ */
+            var woo_variation_swatches_options = {
+                "show_variation_label": "1",
+                "clear_on_reselect": "",
+                "variation_label_separator": ":",
+                "is_mobile": "",
+                "show_variation_stock": "",
+                "stock_label_threshold": "5",
+                "cart_redirect_after_add": "no",
+                "enable_ajax_add_to_cart": "yes",
+                "cart_url": "https:\/\/mixtas.novaworks.net\/cart\/",
+                "is_cart": ""
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woo-variation-swatches/assets/js/frontend.min.js?ver=1743737055"
+            id="woo-variation-swatches-js"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/imagesloaded.min.js?ver=5.0.0"
+            id="imagesloaded-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/foundation/dist/js/foundation.min.js?ver=1760833100"
+            id="foundation-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/cookies/js.cookie.js?ver=1760833100"
+            id="cookies-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/jquery-visible/jquery.visible.js?ver=1760833100"
+            id="jquery-visible-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/scrollTo/jquery.scrollTo.min.js?ver=1760833100"
+            id="scrollTo-js"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/hoverIntent.min.js?ver=1.10.2"
+            id="hoverIntent-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/jquery.perfect-scrollbar.min.js?ver=0.7.1"
+            id="perfect-scrollbar-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/mojs/mo.min.js?ver=1760833100" id="mojs-js">
+        </script>
+        <div></div>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/anime/anime.min.js?ver=1760833100"
+            id="anime-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/elementor/assets/lib/swiper/v8/swiper.min.js?ver=8.4.5"
+            id="swiper-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/headroom.js/headroom.min.js?ver=1760833100"
+            id="headroom-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/slick/slick.min.js?ver=1760833100"
+            id="slick-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/sticky-kit/jquery.sticky-kit.min.js?ver=1760833100"
+            id="sticky-kit-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/jquery-loading-overlay/loadingoverlay.min.js?ver=1760833100"
+            id="jquery-loading-overlay-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/readmore/readmore.js?ver=1.1.1"
+            id="readmore-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/isotope/isotope.pkgd.min.js?ver=1.1.1"
+            id="isotope-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/video.popup.js?ver=1.1.1" id="video-popup-js">
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/animatedModal.js/animatedModal.js?ver=1.1.1"
+            id="animatedModal-js"></script>
+        <script type="text/javascript" id="nova-app-js-extra">
+            /* <![CDATA[ */
+            var nova_js_var = {
+                "js_path": "https:\/\/mixtas.b-cdn.net\/wp-content\/themes\/mixtas\/assets\/js\/vendor\/",
+                "js_min": "1",
+                "site_preloader": "",
+                "topbar_progress": "",
+                "select_placeholder": "Choose an option",
+                "blog_pagination_type": "default",
+                "load_more_btn": "Load more",
+                "read_more_btn": "Read more",
+                "read_less_btn": "Read less",
+                "enable_header_sticky": "0",
+                "shop_pagination_type": "infinite_scroll",
+                "accent_color": "#000000",
+                "shop_display": "grid",
+                "popup_show_after": "2000",
+                "product_image_zoom": "1",
+                "is_customize_preview": ""
+            };
+            /* ]]> */
+        </script>
+        <iframe height="0" width="0" style="display: none; visibility: hidden;"></iframe>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/js/app.js?ver=1760833100"
+            id="nova-app-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/sourcebuster/sourcebuster.min.js?ver=9.7.1"
+            id="sourcebuster-js-js"></script>
+        <script type="text/javascript" id="wc-order-attribution-js-extra">
+            /* <![CDATA[ */
+            var wc_order_attribution = {
+                "params": {
+                    "lifetime": 1.0e-5,
+                    "session": 30,
+                    "base64": false,
+                    "ajaxurl": "https:\/\/mixtas.novaworks.net\/wp-admin\/admin-ajax.php",
+                    "prefix": "wc_order_attribution_",
+                    "allowTracking": true
+                },
+                "fields": {
+                    "source_type": "current.typ",
+                    "referrer": "current_add.rf",
+                    "utm_campaign": "current.cmp",
+                    "utm_source": "current.src",
+                    "utm_medium": "current.mdm",
+                    "utm_content": "current.cnt",
+                    "utm_id": "current.id",
+                    "utm_term": "current.trm",
+                    "utm_source_platform": "current.plt",
+                    "utm_creative_format": "current.fmt",
+                    "utm_marketing_tactic": "current.tct",
+                    "session_entry": "current_add.ep",
+                    "session_start_time": "current_add.fd",
+                    "session_pages": "session.pgs",
+                    "session_count": "udata.vst",
+                    "user_agent": "udata.uag"
+                }
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/order-attribution.min.js?ver=9.7.1"
+            id="wc-order-attribution-js"></script>
+        <script type="text/javascript" id="wc-cart-fragments-js-extra">
+            /* <![CDATA[ */
+            var wc_cart_fragments_params = {
+                "ajax_url": "\/wp-admin\/admin-ajax.php",
+                "wc_ajax_url": "\/?wc-ajax=%%endpoint%%",
+                "cart_hash_key": "wc_cart_hash_5d3227775be22d377568ebad71c4a81b",
+                "fragment_name": "wc_fragments_5d3227775be22d377568ebad71c4a81b",
+                "request_timeout": "5000"
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/cart-fragments.min.js?ver=9.7.1"
+            id="wc-cart-fragments-js" defer="defer" data-wp-strategy="defer"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js?ver=3.28.3"
+            id="elementor-webpack-runtime-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/elementor/assets/js/frontend-modules.min.js?ver=3.28.3"
+            id="elementor-frontend-modules-js"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/jquery/ui/core.min.js?ver=1.13.3"
+            id="jquery-ui-core-js"></script>
+        <script type="text/javascript" id="elementor-frontend-js-extra">
+            /* <![CDATA[ */
+            var kitifySubscribeConfig = {
+                "action": "kitify_ajax",
+                "nonce": "48e1c80042",
+                "type": "POST",
+                "data_type": "json",
+                "is_public": "true",
+                "ajax_url": "https:\/\/mixtas.novaworks.net\/wp-admin\/admin-ajax.php",
+                "sys_messages": {
+                    "invalid_mail": "Please, provide valid mail",
+                    "mailchimp": "Please, set up MailChimp API key and List ID",
+                    "internal": "Internal error. Please, try again later",
+                    "server_error": "Server error. Please, try again later",
+                    "invalid_nonce": "Invalid nonce. Please, try again later",
+                    "subscribe_success": "Success"
+                }
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript" id="elementor-frontend-js-before">
+            /* <![CDATA[ */
+            var elementorFrontendConfig = {
+                "environmentMode": {
+                    "edit": false,
+                    "wpPreview": false,
+                    "isScriptDebug": false
+                },
+                "i18n": {
+                    "shareOnFacebook": "Share on Facebook",
+                    "shareOnTwitter": "Share on Twitter",
+                    "pinIt": "Pin it",
+                    "download": "Download",
+                    "downloadImage": "Download image",
+                    "fullscreen": "Fullscreen",
+                    "zoom": "Zoom",
+                    "share": "Share",
+                    "playVideo": "Play Video",
+                    "previous": "Previous",
+                    "next": "Next",
+                    "close": "Close",
+                    "a11yCarouselPrevSlideMessage": "Previous slide",
+                    "a11yCarouselNextSlideMessage": "Next slide",
+                    "a11yCarouselFirstSlideMessage": "This is the first slide",
+                    "a11yCarouselLastSlideMessage": "This is the last slide",
+                    "a11yCarouselPaginationBulletMessage": "Go to slide"
+                },
+                "is_rtl": false,
+                "breakpoints": {
+                    "xs": 0,
+                    "sm": 480,
+                    "md": 768,
+                    "lg": 1025,
+                    "xl": 1440,
+                    "xxl": 1600
+                },
+                "responsive": {
+                    "breakpoints": {
+                        "mobile": {
+                            "label": "Mobile Portrait",
+                            "value": 767,
+                            "default_value": 767,
+                            "direction": "max",
+                            "is_enabled": true
+                        },
+                        "mobile_extra": {
+                            "label": "Mobile Landscape",
+                            "value": 991,
+                            "default_value": 880,
+                            "direction": "max",
+                            "is_enabled": true
+                        },
+                        "tablet": {
+                            "label": "Tablet Portrait",
+                            "value": 1024,
+                            "default_value": 1024,
+                            "direction": "max",
+                            "is_enabled": true
+                        },
+                        "tablet_extra": {
+                            "label": "Tablet Landscape",
+                            "value": 1279,
+                            "default_value": 1200,
+                            "direction": "max",
+                            "is_enabled": true
+                        },
+                        "laptop": {
+                            "label": "Laptop",
+                            "value": 1599,
+                            "default_value": 1366,
+                            "direction": "max",
+                            "is_enabled": true
+                        },
+                        "widescreen": {
+                            "label": "Widescreen",
+                            "value": 2400,
+                            "default_value": 2400,
+                            "direction": "min",
+                            "is_enabled": false
+                        }
+                    },
+                    "hasCustomBreakpoints": true
+                },
+                "version": "3.28.3",
+                "is_static": false,
+                "experimentalFeatures": {
+                    "e_font_icon_svg": true,
+                    "additional_custom_breakpoints": true,
+                    "container": true,
+                    "e_local_google_fonts": true,
+                    "theme_builder_v2": true,
+                    "nested-elements": true,
+                    "editor_v2": true,
+                    "home_screen": true
+                },
+                "urls": {
+                    "assets": "https:\/\/mixtas.b-cdn.net\/wp-content\/plugins\/elementor\/assets\/",
+                    "ajaxurl": "https:\/\/mixtas.novaworks.net\/wp-admin\/admin-ajax.php",
+                    "uploadUrl": "https:\/\/mixtas.b-cdn.net\/wp-content\/uploads"
+                },
+                "nonces": {
+                    "floatingButtonsClickTracking": "3309d5891e"
+                },
+                "swiperClass": "swiper",
+                "settings": {
+                    "editorPreferences": []
+                },
+                "kit": {
+                    "active_breakpoints": ["viewport_mobile", "viewport_mobile_extra", "viewport_tablet",
+                        "viewport_tablet_extra", "viewport_laptop"
+                    ],
+                    "viewport_mobile": 767,
+                    "viewport_mobile_extra": 991,
+                    "viewport_tablet": 1024,
+                    "viewport_tablet_extra": 1279,
+                    "viewport_laptop": 1599,
+                    "global_image_lightbox": "yes",
+                    "lightbox_enable_counter": "yes",
+                    "lightbox_enable_fullscreen": "yes",
+                    "lightbox_enable_zoom": "yes",
+                    "lightbox_enable_share": "yes",
+                    "lightbox_title_src": "title",
+                    "lightbox_description_src": "description"
+                },
+                "post": {
+                    "id": 0,
+                    "title": "Blog &#8211; Mixtas",
+                    "excerpt": ""
+                }
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/elementor/assets/js/frontend.min.js?ver=3.28.3"
+            id="elementor-frontend-js"></script><span id="elementor-device-mode" class="elementor-screen-only"></span>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/lib/isotope.pkgd.min.js?ver=1760833101"
+            id="jquery-isotope-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/lib/jquery.sticky.min.js?ver=1760833101"
+            id="kitify-sticky-js-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/motion-fx.js?ver=1760833101"
+            id="kitify-motion-fx-js"></script>
+        <script type="text/javascript" id="kitify-base-js-extra">
+            /* <![CDATA[ */
+            var KitifySettings = {
+                "templateApiUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/kitify-api\/v1\/elementor-template",
+                "widgetApiUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/kitify-api\/v1\/elementor-widget",
+                "homeURL": "https:\/\/mixtas.novaworks.net\/",
+                "ajaxurl": "https:\/\/mixtas.novaworks.net\/wp-admin\/admin-ajax.php",
+                "isMobile": "false",
+                "devMode": "false",
+                "cache_ttl": "300",
+                "local_ttl": "86400",
+                "themeName": "mixtas",
+                "i18n": [],
+                "ajaxNonce": "48e1c80042",
+                "useFrontAjax": "true",
+                "isElementorAdmin": ""
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/kitify-base.js?ver=1760833101"
+            id="kitify-base-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/nav-menu.js?ver=1760833101"
+            id="kitify-w__nav-menu-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/nova-menu.js?ver=1760833101"
+            id="kitify-w__nova-menu-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/toggle-sidebar.js?ver=1760833101"
+            id="kitify-w__toggle-sidebar-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/kitify/assets/js/addons/subscribe-form.js?ver=1760833101"
+            id="kitify-w__subscribe-form-js"></script>
+
+
+
+
+        <div class="widget_shopping_cart_live_region screen-reader-text" role="status"></div>
+        <div class="crisp-client" aria-live="polite" translate="no" tabindex="-1" lang="en" dir="ltr"
+            style="--crisp-color-theme-10: 240, 242, 245; --crisp-color-theme-20: 239, 245, 254; --crisp-color-theme-100: 226, 238, 255; --crisp-color-theme-200: 102, 120, 138; --crisp-color-theme-500: 25, 114, 245; --crisp-color-theme-600: 5, 94, 225; --crisp-color-theme-700: 0, 87, 215; --crisp-color-theme-800: 0, 81, 200; --crisp-color-theme-900: 0, 74, 181; --crisp-color-theme-reverse: 255, 255, 255;">
+            <div class="cc-1lkve"></div>
+            <div class="cc-yv368" id="crisp-chatbox" data-hidden="false" data-force-show="false"
+                data-color-mode="light" data-availability="away" data-lock-maximized="false"
+                data-website-logo="false" data-last-operator-face="false" data-ongoing-operator-face="false"
+                data-availability-tooltip="false" data-hide-vacation="false" data-blocked="false"
+                data-mobile-view="false" data-full-view="true" data-small-view="true" data-large-view="false"
+                data-has-local-messages="false" data-was-availability-online="false" data-is-activity-ongoing="false"
+                data-hide-on-away="false" data-hide-on-mobile="false" data-position-reverse="false">
+                <div class="cc-1kr6o cc-cxjxh cc-jx6a3">
+                    <div class="cc-18ov6" data-maximized="false" data-is-failure="false" role="button"
+                        tabindex="0" aria-label="Open chat" data-pane-animate-entrance="false"
+                        data-pop="minimized:open"><span class="cc-1442g"><!--v-if--></span><span
+                            class="cc-1qbp0 cc-1o31k"><span class="cc-otlyh" data-id="chat_closed"
+                                data-is-ongoing="false"><span class="cc-11f3x cc-16kzz"
+                                    data-partial-pending="false"><!--v-if--></span></span></span></div>
+                </div>
+            </div>
+            <div class="cc-yv368 cc-vx6i0"></div>
+            <div class="cc-yv368 cc-1tx1r"></div>
+            <div class="cc-yv368 cc-jcxto" data-color-mode="light"></div>
+        </div>
+    </body>
+
+    </html>

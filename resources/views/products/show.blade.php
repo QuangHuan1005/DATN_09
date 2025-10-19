@@ -16,12 +16,25 @@
     <div class="col-md-6 text-center pe-md-5"> {{-- thêm pe-md-5 để tạo khoảng cách bên phải --}}
         {{-- Ảnh chính --}}
         <div class="main-image mb-4">
+        @php
+            $raw = ltrim($product->image ?? '', '/');
+            if (preg_match('/^https?:\/\//i', $raw)) {
+                $mainImageUrl = $raw;
+            } elseif (\Illuminate\Support\Str::startsWith($raw, 'storage/')) {
+                $mainImageUrl = asset($raw);
+            } else {
+                $mainImageUrl = asset('storage/'.$raw);
+            }
+        @endphp
+
         <img
-            src="{{ Storage::disk('public')->url('products/'.$product->image) }}"
-            data-default="{{ Storage::disk('public')->url('products/'.$product->image) }}"
-            alt="{{ $product->name }}"
-            class="img-fluid rounded shadow"
-            style="max-height: 500px; object-fit: cover;">
+        id="productMainImg"
+        src="{{ $mainImageUrl }}"
+        data-default="{{ $mainImageUrl }}"
+        alt="{{ $product->name }}"
+        class="img-fluid rounded shadow"
+        style="max-height: 500px; object-fit: cover;"
+        >
     </div>
 
 
@@ -100,7 +113,7 @@
         <button type="submit"
                 class="btn btn-dark d-inline-block"
                 style="margin-top:8px; display:block"
-                id="btnAddToCart" disabled>
+                id="btnAddToCart" >
         Thêm Vào Giỏ Hàng
         </button>
 </form>
@@ -160,6 +173,11 @@
             return list;
         }
 
+        if (trimmed.startsWith('/storage') || trimmed.startsWith('storage/')) {
+        list.push(trimmed.startsWith('/') ? trimmed : `/${trimmed}`);
+        return list;
+}
+
         // đã có thư mục (ví dụ "products/xxx.jpg" hoặc "product_images/xxx.jpg")
         if (trimmed.includes('/')) {
             // ghép với /storage (Laravel public disk)
@@ -181,7 +199,7 @@
         btnAdd.disabled = true;
         priceBox.innerHTML = '<span class="text-muted">Chọn size để xem giá</span>';
 
-        if (mainImg && DEFAULT_SRC) mainImg.src = DEFAULT_SRC;
+        // if (mainImg && DEFAULT_SRC) mainImg.src = DEFAULT_SRC;
 
         if (!colorId) {
             selectSize.disabled = true;
@@ -206,6 +224,7 @@
         }
     });
 
+    const BASE_STORAGE_URL = "{{ asset('storage') }}";
     // khi chọn size -> tìm biến thể, hiện giá, ĐỔI ẢNH CÓ KIỂM TRA TẢI
     selectSize.addEventListener('change', async () => {
         const colorId = selectColor.value || '0';
@@ -249,12 +268,33 @@
             }
 
             if (loadedUrl) {
+                // Bổ sung tiền tố /storage/products nếu là tên file tương đối
+                if (!loadedUrl.startsWith('http') && !loadedUrl.startsWith('/storage')) {
+                    loadedUrl = `${BASE_STORAGE_URL}/${loadedUrl.replace(/^\/?/, '')}`;
+                }
                 mainImg.src = loadedUrl;
+
+            } else if (v.image) {
+                // Có tên file nhưng không load được theo candidates -> tự build URL tuyệt đối
+                mainImg.src = v.image.startsWith('http')
+                ? v.image
+                : (v.image.startsWith('/storage') || v.image.startsWith('storage/'))
+                ? (v.image.startsWith('/') ? v.image : `/${v.image}`)
+                : `${BASE_STORAGE_URL}/${(v.image+'').replace(/^\/?/, '')}`;
+
+
+            } else if (mainImg.src && mainImg.src.trim() !== '' && !mainImg.src.includes('undefined') && !mainImg.src.includes('null')) {
+                // ✅ GIỮ NGUYÊN ẢNH HIỆN TẠI nếu variant không có ảnh riêng
+                mainImg.src = mainImg.src;
+
             } else if (DEFAULT_SRC) {
-                // Không url nào hợp lệ -> quay về ảnh gốc (không vỡ ảnh)
+                // fallback cuối cùng
                 mainImg.src = DEFAULT_SRC;
             }
         }
+
+
+
     });
 
     // chặn submit nếu chưa có variant
@@ -458,7 +498,139 @@
             #priceBox .price--normal{ font-size:18px; font-weight:600; }
             </style>
 
+            <script>
+                (function () {
+                // —— Cấu hình tối thiểu ——
+                const BASE_STORAGE_URL = "{{ asset('storage') }}"; // /storage
+                const imgEl      = document.getElementById('productMainImg');
+                const sizeSel    = document.getElementById('selectSize');
+                const colorSel   = document.getElementById('selectColor'); // nếu không có thì vẫn OK
+                if (!imgEl || !sizeSel) return; // không có element -> thoát, không phá gì khác
 
+                const DEFAULT_SRC = imgEl.dataset.default || imgEl.src || '';
+
+                // Chuẩn hoá URL ảnh để KHÔNG lặp /storage/ và hỗ trợ http(s)
+                function normalizeUrl(u) {
+                    if (!u) return '';
+                    let x = String(u).trim();
+
+                    // Nếu là URL tuyệt đối
+                    if (/^https?:\/\//i.test(x)) return x;
+
+                    // Nếu đã là /storage/... hoặc storage/...
+                    if (x.startsWith('/storage/')) return x;
+                    if (x.startsWith('storage/'))  return '/' + x;
+
+                    // Còn lại: ghép với /storage
+                    x = x.replace(/^\/+/, ''); // bỏ / đầu nếu có
+                    return BASE_STORAGE_URL.replace(/\/+$/, '') + '/' + x;
+                }
+
+                // Tải thử trước khi set src; lỗi thì rơi về default
+                function loadWithFallback(url) {
+                    const finalUrl = normalizeUrl(url);
+                    if (!finalUrl) {
+                    imgEl.src = DEFAULT_SRC;
+                    return;
+                    }
+                    const probe = new Image();
+                    probe.onload  = () => { imgEl.src = finalUrl; };
+                    probe.onerror = () => { imgEl.src = DEFAULT_SRC; };
+                    probe.src = finalUrl;
+                }
+
+                // Lấy ảnh cho biến thể hiện tại từ nhiều nguồn khả dĩ
+                function getVariantImage() {
+                    // 1) Ưu tiên data-image trên option size
+                    const opt = sizeSel.options[sizeSel.selectedIndex];
+                    if (opt && opt.dataset && opt.dataset.image) {
+                    return opt.dataset.image;
+                    }
+
+                    // 2) Nếu có map toàn cục VARIANTS hoặc variantMap
+                    //    Kỳ vọng key dạng "colorId-sizeId" hoặc chỉ "sizeId" tuỳ bạn đang lưu
+                    const sizeId  = sizeSel.value;
+                    const colorId = colorSel ? colorSel.value : null;
+
+                    const maps = [window.VARIANTS, window.variantMap, window.variant_map];
+                    for (const M of maps) {
+                    if (!M) continue;
+
+                    if (colorId && M[`${colorId}-${sizeId}`]?.image) {
+                        return M[`${colorId}-${sizeId}`].image;
+                    }
+                    if (M[sizeId]?.image) {
+                        return M[sizeId].image;
+                    }
+                    }
+
+                    // 3) Không tìm thấy -> để trống (sẽ fallback)
+                    return '';
+                }
+
+                function onSizeOrColorChange() {
+                    const img = getVariantImage();
+                    if (img) {
+                    loadWithFallback(img);
+                    } else {
+                    // Không có ảnh riêng cho biến thể -> dùng ảnh mặc định
+                    imgEl.src = DEFAULT_SRC;
+                    }
+                }
+
+                sizeSel.addEventListener('change', onSizeOrColorChange);
+                if (colorSel) colorSel.addEventListener('change', onSizeOrColorChange);
+
+                // Khởi tạo (khi trang load xong)
+                document.addEventListener('DOMContentLoaded', onSizeOrColorChange);
+                })();
+                </script>
+
+                <script>
+                    (function () {
+                    const mainImg = document.getElementById('productMainImg');
+                    if (!mainImg) return;
+
+                    const defaultSrc = mainImg.getAttribute('data-default');
+
+                    // Hàm luôn ép ảnh về ảnh chính
+                    function keepMainImage() {
+                        if (mainImg.src !== defaultSrc) {
+                        mainImg.src = defaultSrc;
+                        }
+                    }
+
+                    // Nếu có nơi khác set ảnh sai → tự hồi về ảnh chính
+                    mainImg.addEventListener('error', keepMainImage);
+
+                    // Gắn vào các select màu/size (đặt nhiều selector để “bắt” được dù bạn đặt id/name khác)
+                    const selectors = [
+                        '#colorSelect', '#sizeSelect',
+                        'select[name="color_id"]', 'select[name="size_id"]',
+                        'select[name="color"]', 'select[name="size"]'
+                    ];
+
+                    document.querySelectorAll(selectors.join(',')).forEach(el => {
+                        el.addEventListener('change', keepMainImage);
+                    });
+
+                    // Nếu code cũ có hàm đổi ảnh theo biến thể, ta vô hiệu hoá nhẹ nhàng:
+                    window.updateVariantImage = function () {
+                        // No-op: luôn giữ ảnh chính
+                        keepMainImage();
+                    };
+
+                    // Một số dự án đổi ảnh trong updateBySelection/updatePrice..., ta “bọc” lại:
+                    const origUpdateBySelection = window.updateBySelection;
+                    if (typeof origUpdateBySelection === 'function') {
+                        window.updateBySelection = function () {
+                        const ret = origUpdateBySelection.apply(this, arguments);
+                        keepMainImage();
+                        return ret;
+                        };
+                    }
+                    })();
+                    </script>
 
 
 
