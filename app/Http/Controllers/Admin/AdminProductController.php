@@ -14,11 +14,29 @@ class AdminProductController extends Controller
     /**
      * Hiển thị danh sách sản phẩm, bao gồm cả soft deleted
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['category', 'variants'])
-            ->withTrashed()
-            ->paginate(10);
+       
+    $query = Product::with(['category', 'variants'])
+        ->withTrashed()
+        ->orderBy('id', 'asc');
+
+    if ($request->has('keyword') && $request->keyword != '') {
+        $keyword = $request->keyword;
+        $query->where(function ($q) use ($keyword) {
+            $q->where('name', 'like', '%' . $keyword . '%')
+              ->orWhere('product_code', 'like', '%' . $keyword . '%');
+        });
+    }
+
+    $products = Product::with(['category', 'variants'])
+        ->withTrashed()
+        ->paginate(10);
+
+    if ($request->filled('keyword')) {
+        $products = $query->paginate(10);
+        $products->appends(['keyword' => $request->keyword]);
+    }
 
         return view('admin.products.index', compact('products'));
     }
@@ -42,8 +60,6 @@ class AdminProductController extends Controller
             'product_code' => 'required|unique:products,product_code',
             'name'         => 'required|string|max:255',
             'description'  => 'nullable|string',
-          //  'price'        => 'required|numeric|min:0',
-            //'status'       => 'required|in:active,inactive',
             'image'        => 'nullable|image|max:2048',
         ]);
 
@@ -154,14 +170,14 @@ class AdminProductController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('value', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('value', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
         $variants = $query->orderBy('created_at', 'desc')
-                          ->orderBy('name')
-                          ->get();
+            ->orderBy('name')
+            ->get();
 
         $typeName = $type === 'size' ? 'Kích thước' : 'Màu sắc';
 
@@ -184,7 +200,7 @@ class AdminProductController extends Controller
         $variant = ProductVariant::create($validated);
 
         return redirect()->route('admin.products.variants.type', $variant->type)
-                         ->with('success', 'Biến thể sản phẩm đã được thêm thành công!');
+            ->with('success', 'Biến thể sản phẩm đã được thêm thành công!');
     }
 
     /**
@@ -211,7 +227,7 @@ class AdminProductController extends Controller
         $variant->update($validated);
 
         return redirect()->route('admin.products.variants.type', $variant->type)
-                         ->with('success', 'Biến thể sản phẩm đã được cập nhật thành công!');
+            ->with('success', 'Biến thể sản phẩm đã được cập nhật thành công!');
     }
 
     /**
@@ -223,6 +239,6 @@ class AdminProductController extends Controller
         $variant->delete();
 
         return redirect()->route('admin.products.variants.type', $type)
-                         ->with('success', 'Biến thể sản phẩm đã được xóa thành công!');
+            ->with('success', 'Biến thể sản phẩm đã được xóa thành công!');
     }
 }
