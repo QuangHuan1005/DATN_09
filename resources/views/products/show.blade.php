@@ -15,14 +15,15 @@
     <!-- Hình ảnh sản phẩm -->
     <div class="col-md-6 text-center pe-md-5"> {{-- thêm pe-md-5 để tạo khoảng cách bên phải --}}
         {{-- Ảnh chính --}}
-        <div class="main-image mb-4">
-        <img
-            src="{{ Storage::disk('public')->url('products/'.$product->image) }}"
-            data-default="{{ Storage::disk('public')->url('products/'.$product->image) }}"
-            alt="{{ $product->name }}"
-            class="img-fluid rounded shadow"
-            style="max-height: 500px; object-fit: cover;">
-    </div>
+     <div class="main-image mb-4">
+    <img
+        src="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"
+        data-default="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"
+        alt="{{ $product->name }}"
+        class="img-fluid rounded shadow"
+        style="max-height: 500px; object-fit: cover;">
+</div>
+
 
 
         {{-- Album ảnh nhỏ phía dưới --}}
@@ -166,8 +167,10 @@
             list.push(`${storageBase}/${trimmed}`);
         } else {
             // chỉ là tên file -> thử 2 thư mục quen dùng
-            list.push(`${urlProductImages}/${trimmed}`);
-            list.push(`${urlProducts}/${trimmed}`);
+           // chỉ là tên file -> thử 2 thư mục (ưu tiên 'products')
+list.push(`${urlProducts}/${trimmed}`);
+list.push(`${urlProductImages}/${trimmed}`);
+
         }
 
         return list;
