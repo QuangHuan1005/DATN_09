@@ -31,10 +31,10 @@ class AdminProductController extends Controller
 
     $products = Product::with(['category', 'variants'])
         ->withTrashed()
-        ->paginate(10);
+        ->paginate(5);
 
     if ($request->filled('keyword')) {
-        $products = $query->paginate(10);
+        $products = $query->paginate(5);
         $products->appends(['keyword' => $request->keyword]);
     }
 
