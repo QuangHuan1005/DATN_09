@@ -525,7 +525,7 @@ a.btn-checkout:hover{ opacity:.92; }
 
 @endsection
 
-    <body
+    {{-- <body
 	class="wp-singular page-template page-template-templates page-template-fullwidth page-template-templatesfullwidth-php page page-id-9 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-cart woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-kit-6 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active ">
 	<div class="site-wrapper">
 
@@ -1207,12 +1207,11 @@ a.btn-checkout:hover{ opacity:.92; }
 
 
 			</div><!-- .site-content-wrapper -->
-			@include('layouts.footer')
-			<div class="nova-overlay-global"></div>
-		</div><!-- .kitify-site-wrapper -->
-		@include('layouts.js')
+			 @include('layouts.footer')
+                <div class="nova-overlay-global"></div>
+            </div><!-- .kitify-site-wrapper -->
+            @include('layouts.js')
 
-		<!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 06:58:27 -->
-		@endsection
-@endsection
-
+            <!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 06:58:27 -->
+        @endsection
+ --}}

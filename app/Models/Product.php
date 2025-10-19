@@ -28,8 +28,6 @@ class Product extends Model
 
 
     ];
-
-    ];  
     protected $dates = ['deleted_at'];  
 
 
