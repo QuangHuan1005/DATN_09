@@ -28,6 +28,9 @@
                                                             <div class="kitify-banner__overlay"></div><img decoding="async"
                                                                 src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_01.jpg"
                                                                 alt="m5_banner_01" class="kitify-banner__img">
+                                                            {{-- <img decoding="async"
+                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_01.jpg"
+                                                                alt="m5_banner_01" class="kitify-banner__img"> --}}
                                                             <figcaption class="kitify-banner__content">
                                                                 <div class="kitify-banner__content-wrap">
                                                                     <div class="kitify-banner__sub-title">Urban Muse</div>
