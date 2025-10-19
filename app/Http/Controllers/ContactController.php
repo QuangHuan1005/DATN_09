@@ -12,8 +12,8 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::all();
-        return view('contact.index', compact('contacts'));
+        // $contacts = Contact::all();
+        return view('contact.index');
         //
     }
 

@@ -1,43 +1,57 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
-        // 1. Sản phẩm mới nhất
-        $newProducts = Product::with('category')
-            ->orderBy('created_at', 'desc')
+        // ✅ Danh mục nổi bật
+        $categories = Category::query()
+            ->withCount('products')
+            ->latest('id')
             ->take(8)
             ->get();
 
-        // 2. Sản phẩm nổi bật (có thể là onpage = 1 )
-        $featuredProducts = Product::with('category')
-            ->where('onpage', 1)
-            ->orderBy('updated_at', 'desc')
+        // ✅ Hàng mới (có ảnh và biến thể)
+        $newProducts = Product::query()
+            ->with(['photoAlbums', 'variants.color', 'variants.size'])
+            ->latest('id')
             ->take(8)
             ->get();
 
-        // 3. Sản phẩm bán chạy nhất (tính theo tổng số lượng trong order_details)
-        // $bestSellingProducts = Product::select('products.*', DB::raw('SUM(order_details.quantity) as total_sold'))
-        //     ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-        //     ->join('order_details', 'product_variants.id', '=', 'order_details.product_variant_id')
-        //     ->groupBy('products.id')
-        //     ->orderByDesc('total_sold')
-        //     ->take(8)
-        //     ->get();
-$products = Product::all(); // Hoặc áp dụng logic khác nếu cần lọc
+        // ✅ Sản phẩm đang giảm giá (có sale < price, lấy variant rẻ nhất, kèm ảnh đầu tiên)
+        $saleProducts = Product::query()
+            ->whereHas('variants', function ($q) {
+                $q->whereNotNull('sale')
+                  ->whereColumn('sale', '<', 'price');
+            })
+            ->with([
+                'firstPhoto', // ✅ lấy ảnh đầu tiên trong bảng product_photo_albums
+                'variants' => function ($q) {
+                    $q->orderByRaw('IFNULL(sale, price) ASC'); // variant rẻ nhất lên đầu
+                }
+            ])
+            ->take(4)
+            ->get();
 
-        return view('home.index', compact('products','newProducts', 'featuredProducts', 'categories'));
+        // ✅ Sản phẩm thịnh hành theo lượt xem
+        $trending = Product::query()
+            ->with(['photoAlbums', 'variants'])
+            ->orderByDesc('view')
+            ->take(8)
+            ->get();
+
+        // 👉 Gửi dữ liệu về view
+        return view('home.index', compact(
+            'categories',
+            'newProducts',
+            'saleProducts',
+            'trending'
+        ));
     }
-
-
-
-
 }

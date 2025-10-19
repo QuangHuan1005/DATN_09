@@ -46,15 +46,19 @@
                         <td>{{ $product->product_code }}</td>
 
                         <td>{{ $product->name }}</td>
-                        <td>
-                            @if ($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                                    width="60" height="60" style="object-fit: cover; border-radius: 8px;">
-                            @else
-                                <img src="{{ asset('images/no-image.png') }}" alt="No image" width="60" height="60"
-                                    style="object-fit: cover; border-radius: 8px;">
-                            @endif
-                        </td>
+                       <td>
+    @if ($product->photoAlbums->isNotEmpty())
+        <img src="{{ asset('storage/' . $product->photoAlbums->first()->image) }}" 
+             alt="{{ $product->name }}"
+             width="60" height="60"
+             style="object-fit: cover; border-radius: 8px;">
+    @else
+        <img src="{{ asset('images/no-image.png') }}" 
+             alt="No image" width="60" height="60"
+             style="object-fit: cover; border-radius: 8px;">
+    @endif
+</td>
+
                         <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             {{ $product->description ?? 'Không có mô tả' }}
                         </td>

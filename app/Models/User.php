@@ -2,23 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Role;
 use App\Models\Ranking;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'users';
 
     /**
-     * Các cột cho phép gán hàng loạt (mass assignment)
-     *
-     * @var array<int, string>
+     * Các cột cho phép gán hàng loạt
      */
     protected $fillable = [
         'role_id',
@@ -32,12 +30,11 @@ class User extends Authenticatable
         'is_verified',
         'verification_token',
         'remember_token',
+        'is_locked',
     ];
 
     /**
-     * Các cột được ẩn khi trả về dữ liệu (ví dụ JSON)
-     *
-     * @var array<int, string>
+     * Các cột bị ẩn khi trả về JSON (API, response, ...)
      */
     protected $hidden = [
         'password',
@@ -46,13 +43,12 @@ class User extends Authenticatable
     ];
 
     /**
-     * Kiểu dữ liệu chuyển đổi cho các trường đặc biệt
-     *
-     * @var array<string, string>
+     * Kiểu dữ liệu tự động chuyển đổi
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'is_admin' => 'boolean',
+        'is_verified' => 'boolean',
+        'is_locked' => 'boolean',
     ];
 
     /**
@@ -66,28 +62,32 @@ class User extends Authenticatable
     /**
      * Quan hệ với bảng rankings
      */
-   // public function ranking()
-    //{
-      //  return $this->belongsTo(Ranking::class, 'ranking_id');
-    //}
-
-    /**
-     * Kiểm tra xem user có phải admin không
-     *
-     * @return bool
-     */
-    public function isAdmin(): bool
+    public function ranking()
     {
-        return $this->is_admin === true;
+     //   return $this->belongsTo(Ranking::class, 'ranking_id');
     }
 
     /**
-     * Kiểm tra xem user có phải staff không (dựa vào role)
-     *
-     * @return bool
+     * Kiểm tra người dùng có phải admin không (role_id == 1)
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role_id === 1;
+    }
+
+    /**
+     * Kiểm tra người dùng có phải nhân viên không (role.name == 'staff')
      */
     public function isStaff(): bool
     {
-        return $this->role && $this->role->name === 'staff';
+        return optional($this->role)->name === 'staff';
+    }
+
+    /**
+     * Kiểm tra tài khoản có bị khóa không
+     */
+    public function isLocked(): bool
+    {
+        return $this->is_locked === true;
     }
 }
