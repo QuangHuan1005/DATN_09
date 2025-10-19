@@ -125,8 +125,7 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
                                         <a href="/"><span>Home</span></a>
                                     </li>
-                                    <li
-                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
                                         <a href="{{ route('products.index') }}"><span>Sản phẩm</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <ul class="sub-menu mega-menu">
@@ -193,7 +192,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    <li id="menu-item-80"
+                                    {{-- <li id="menu-item-80"
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
                                         <a href="#"><span>Pages</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
@@ -212,38 +211,15 @@
                                                         Tracking</span></a>
                                             </li>
                                         </ul>
-                                    </li>
+                                    </li> --}}
                                     <li id="menu-item-77"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
-                                        <a href="../blog/index.html"><span>Blog</span><i
+                                        <a href="{{ route('blog.index') }}"><span>Tin tức</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                        <ul class="sub-menu">
-                                            <li id="menu-item-644"
-                                                class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                <a href="../blog/index.html"><span>Blog — Style
-                                                        01</span></a>
-                                            </li>
-                                            <li id="menu-item-643"
-                                                class="menu-item menu-item-type-custom menu-item-object-custom">
-                                                <a href="../blog/indexc144.html?theme_template_id=637"><span>Blog
-                                                        — Style 02</span></a>
-                                            </li>
-                                            <li id="menu-item-652"
-                                                class="menu-item menu-item-type-custom menu-item-object-custom">
-                                                <a href="../blog/index0f67.html?theme_template_id=646"><span>Blog
-                                                        — Style 03</span></a>
-                                            </li>
-                                            <li id="menu-item-645"
-                                                class="menu-item menu-item-type-post_type menu-item-object-post">
-                                                <a
-                                                    href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html"><span>Blog
-                                                        — Single</span></a>
-                                            </li>
-                                        </ul>
                                     </li>
                                     <li id="menu-item-84"
                                         class="menu-item menu-item-type-post_type menu-item-object-page"><a
-                                            href="../contact-us/index.html"><span>Contact Us</span></a></li>
+                                            href="{{ route('contact.index') }}"><span>Liên hệ</span></a></li>
                                 </ul>
                             </nav>
                         </div>
