@@ -311,7 +311,8 @@
                                                                                 alt="" loading="lazy"
                                                                                 class="kitify-bannerlist__image-instance"
                                                                                 width="446" height="446"
-                                                                                style="--img-height:446px"> </div>
+                                                                                style="--img-height:446px">
+                                                                        </div>
                                                                         <div class="kitify-bannerlist__content">
                                                                             <div class="kitify-bannerlist__content-inner">
                                                                                 <div class="kitify-bannerlist__title">
