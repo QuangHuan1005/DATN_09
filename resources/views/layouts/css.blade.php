@@ -63,7 +63,7 @@
                         n(e, "\ud83c\udde8\ud83c\uddf6", "\ud83c\udde8\u200b\ud83c\uddf6") && !n(e,
                             "\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f",
                             "\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f"
-                            );
+                        );
                 case "emoji":
                     return !a(e, "\ud83e\udedf")
             }
@@ -1963,3 +1963,4 @@
         color: #7f1d1d
     }
 </style>
+ 
