@@ -16,20 +16,28 @@ class AdminProductController extends Controller
 {
     // Hiển thị danh sách sản phẩm
     public function index(Request $request)
-    {
-        $query = Product::with(['category', 'variants', 'photoAlbums'])
-            ->withTrashed()
-            ->orderBy('id', 'asc');
+    {  
+    $query = Product::with(['category', 'variants'])
+        ->withTrashed()
+        ->orderBy('id', 'asc');
 
-        if ($request->filled('keyword')) {
-            $keyword = $request->keyword;
-            $query->where(function ($q) use ($keyword) {
-                $q->where('name', 'like', '%' . $keyword . '%')
-                  ->orWhere('product_code', 'like', '%' . $keyword . '%');
-            });
-        }
+    if ($request->has('keyword') && $request->keyword != '') {
+        $keyword = $request->keyword;
+        $query->where(function ($q) use ($keyword) {
+            $q->where('name', 'like', '%' . $keyword . '%')
+              ->orWhere('product_code', 'like', '%' . $keyword . '%');
+        });
+    }
 
-        $products = $query->paginate(10)->appends($request->only('keyword'));
+    $products = Product::with(['category', 'variants'])
+        ->withTrashed()
+        ->paginate(5);
+
+    if ($request->filled('keyword')) {
+        $products = $query->paginate(5);
+        $products->appends(['keyword' => $request->keyword]);
+    }
+
 
         return view('admin.products.index', compact('products'));
     }

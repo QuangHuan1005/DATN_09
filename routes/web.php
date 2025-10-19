@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminVoucherController;
 use App\Http\Controllers\Admin\AdminNewsController;
 use App\Http\Controllers\Admin\AdminContactController;
 
@@ -137,7 +138,7 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 */
 
 Route::prefix('admin')
-    ->middleware(['auth', 'is_admin'])
+    // ->middleware(['auth', 'is_admin'])
     ->name('admin.')
     ->group(function () {
 
@@ -160,6 +161,9 @@ Route::prefix('admin')
         Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
         Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
         Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
+
+        //Vouchers
+         Route::resource('vouchers', AdminVoucherController::class);
 
         // Đơn hàng
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
