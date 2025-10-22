@@ -24,153 +24,107 @@
                                     <article id="post-11" class="post-11 page type-page status-publish hentry">
                                         <div class="entry-content">
                                             <div class="woocommerce">
-                                                <nav class="woocommerce-MyAccount-navigation" aria-label="Account pages">
-                                                    <ul>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--dashboard">
-                                                            <a href="https://mixtas.novaworks.net/my-account/">
-                                                                Dashboard </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--orders">
-                                                            <a href="https://mixtas.novaworks.net/my-account/orders/">
-                                                                Orders </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--downloads">
-                                                            <a href="https://mixtas.novaworks.net/my-account/downloads/">
-                                                                Downloads </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-address">
-                                                            <a href="https://mixtas.novaworks.net/my-account/edit-address/">
-                                                                Addresses </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-account is-active">
-                                                            <a href="https://mixtas.novaworks.net/my-account/edit-account/"
-                                                                aria-current="page">
-                                                                Account details </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--customer-logout">
-                                                            <a
-                                                                href="https://mixtas.novaworks.net/my-account/customer-logout/?_wpnonce=f339348c3e">
-                                                                Log out </a>
-                                                        </li>
-                                                    </ul>
-                                                </nav>
+                                                @include('account.partials.navigation')
                                                 <div class="woocommerce-MyAccount-content">
-                                                    <div id="flash-success" class="alert alert-success"
-                                                        style="display:none">Cập nhật thành công.</div>
-                                                    <div id="flash-error" class="alert alert-error" style="display:none">Đã
-                                                        có lỗi xảy ra.</div>
-                                                    <form class="woocommerce-EditAccountForm edit-account"
-                                                        action="{{ route('account.profile') }}"
-                                                        enctype="multipart/form-data" method="post">
-                                                        @csrf
-                                                        @method('PUT')
+                                                    <div class="woocommerce-notices-wrapper">
+                                                        {{-- Thông báo lỗi validate --}}
+                                                        @if ($errors->any())
+                                                            <ul class="alert woocommerce-error" role="alert"
+                                                                tabindex="-1">
+                                                                <li>
+                                                                    @foreach ($errors->all() as $error)
+                                                                        <strong>Lỗi:</strong>
+                                                                        {{ $error }} <br>
+                                                                    @endforeach
+                                                                </li>
 
-                                                        <p
-                                                            class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                                                            <label for="account_display_name">Tên đăng nhập&nbsp;<span
-                                                                    class="required" aria-hidden="true">*</span></label>
+                                                            </ul>
+                                                        @endif
+                                                        {{-- Thông báo thành công --}}
+                                                        @if (session('success'))
+                                                            <ul class="woocommerce-message" role="status" tabindex="-1">
+                                                                <li>
+                                                                    <strong>Thành công:</strong>
+                                                                    {{ session('success') }}
+                                                                </li>
+                                                            </ul>
+                                                        @endif
+                                                    </div>
+                                                    <form class="woocommerce-EditAccountForm edit-account"
+                                                        action="{{ route('account.update') }}" method="POST"
+                                                        enctype="multipart/form-data">
+                                                        @csrf
+
+                                                        {{-- Tên tài khoản --}}
+                                                        <p class="woocommerce-form-row form-row-wide">
+                                                            <label for="image">Ảnh đại diện</label>
+                                                        <div style="text-align:center;">
+                                                            <img id="avatar-preview"
+                                                                src="{{ asset('storage/' . $user->image) }}" alt="Avatar"
+                                                                style="width:100px;height:100px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 12px;">
+                                                            <label for="image" class="button"
+                                                                style="display:inline-block;padding:8px 16px;border:1px solid #ccc;border-radius:6px;cursor:pointer;">
+                                                                Chọn ảnh
+                                                            </label>
+                                                            <input type="file" name="image" id="image"
+                                                                accept="image/*" style="display:none;">
+
+                                                            <p class="description" style="color:#666;font-size:12px;">
+                                                                PNG/JPG ≤ 2MB. Tỷ lệ 1:1 hiển thị đẹp.
+                                                            </p>
+                                                        </div>
+                                                        </p>
+
+                                                        <p class="woocommerce-form-row form-row-wide">
+                                                            <label for="username">Tên tài khoản <span
+                                                                    class="required">*</span></label>
                                                             <input type="text"
                                                                 class="woocommerce-Input woocommerce-Input--text input-text"
-                                                                name="account_display_name" id="account_display_name"
-                                                                aria-describedby="account_display_name_description"
-                                                                value="{{ auth()->user()->username ?? '' }}"
-                                                                aria-required="true"> <span
-                                                                id="account_display_name_description"><em>Đây sẽ là tên của
-                                                                    bạn được hiển thị trong phần tài khoản và trong
-                                                                    phần đánh giá</em></span>
+                                                                name="username" id="username"
+                                                                value="{{ old('username', $user->username) }}">
+                                                            <small class="text-muted d-block">
+                                                                Đây là tên hiển thị trong tài khoản và phần đánh giá.
+                                                            </small>
                                                         </p>
+
                                                         <div class="clear"></div>
-                                                        <p
-                                                            class="woocommerce-form-row woocommerce-form-row--first form-row form-row-first">
-                                                            <label for="name">Tên&nbsp;<span class="required"
-                                                                    aria-hidden="true">*</span></label>
+
+                                                        <p class="woocommerce-form-row form-row-first">
+                                                            <label for="name">Họ tên <span
+                                                                    class="required">*</span></label>
                                                             <input type="text"
                                                                 class="woocommerce-Input woocommerce-Input--text input-text"
-                                                                name="name" id="name" autocomplete="given-name"
-                                                                value="{{ old('name', auth()->user()->name ?? '') }}"
-                                                                aria-required="true">
-                                                            @error('name')
-                                                            <div class="error">{{ $message }}</div>
-                                                        @enderror
+                                                                name="name" id="name"
+                                                                value="{{ old('name', $user->name) }}">
                                                         </p>
-                                                        <p
-                                                            class="woocommerce-form-row woocommerce-form-row--last form-row form-row-last">
-                                                            <label for="phone">Số điện thoại&nbsp;<span class="required"
-                                                                    aria-hidden="true">*</span></label>
+
+                                                        <p class="woocommerce-form-row form-row-last">
+                                                            <label for="phone">Số điện thoại</label>
                                                             <input type="tel"
                                                                 class="woocommerce-Input woocommerce-Input--text input-text"
-                                                                name="phone" id="phone" autocomplete="family-name"
-                                                                value="{{ old('phone', auth()->user()->phone ?? '') }}"
-                                                                aria-required="true">
-                                                            @error('phone')
-                                                            <div class="error">{{ $message }}</div>
-                                                        @enderror
+                                                                name="phone" id="phone"
+                                                                value="{{ old('phone', $user->phone) }}">
                                                         </p>
                                                         <div class="clear"></div>
-
-                                                        <p
-                                                            class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-                                                            <label for="email">Địa chỉ email&nbsp;<span class="required"
-                                                                    aria-hidden="true">*</span></label>
+                                                        <p class="woocommerce-form-row form-row-wide">
+                                                            <label for="email">Địa chỉ email <span
+                                                                    class="required">*</span></label>
                                                             <input type="email"
                                                                 class="woocommerce-Input woocommerce-Input--email input-text"
-                                                                name="email" id="email" autocomplete="email"
-                                                                value="{{ old('email', auth()->user()->email ?? '') }}"
-                                                                aria-required="true">
-                                                            @error('email')
-                                                            <div class="error">{{ $message }}</div>
-                                                        @enderror
+                                                                name="email" id="email"
+                                                                value="{{ old('email', $user->email) }}">
                                                         </p>
 
-
-
-                                                        <div class="clear"></div>
-
-
-                                                        <p>
-                                                            <input type="hidden" id="save-account-details-nonce"
-                                                                name="save-account-details-nonce"
-                                                                value="0ea55554c6"><input type="hidden"
-                                                                name="_wp_http_referer" value="/my-account/edit-account/">
-                                                            <button type="submit" class="woocommerce-Button button"
-                                                                name="save_account_details" value="Save changes">Lưu</button>
-                                                            <input type="hidden" name="action"
-                                                                value="save_account_details">
+                                                        <p class="mt-2">
+                                                            <button type="submit"
+                                                                class="woocommerce-Button button">Lưu</button>
                                                         </p>
-
                                                     </form>
 
+
                                                 </div>
+
                                             </div>
-
-                                            <script>
-                                                // Xem trước avatar
-                                                const input = document.getElementById('avatar');
-                                                const preview = document.getElementById('avatarPreview');
-                                                if (input) {
-                                                    input.addEventListener('change', e => {
-                                                        const file = e.target.files?.[0];
-                                                        if (!file) return;
-                                                        if (file.size > 2048 * 2048) {
-                                                            alert('Ảnh vượt quá 2MB. Hãy chọn ảnh nhỏ hơn.');
-                                                            input.value = '';
-                                                            return;
-                                                        }
-                                                        const reader = new FileReader();
-                                                        reader.onload = ev => {
-                                                            preview.src = ev.target.result;
-                                                        };
-                                                        reader.readAsDataURL(file);
-                                                    });
-                                                }
-                                            </script>
-
 
                                         </div>
                                 </div><!-- .entry-content -->
