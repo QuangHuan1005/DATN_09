@@ -17,264 +17,100 @@
                                         <nav class="woocommerce-breadcrumb"><a
                                                 href="https://mixtas.novaworks.net">Home</a><span
                                                 class="delimiter">/</span><a
-                                                href="https://mixtas.novaworks.net/my-account/">My account</a><span
-                                                class="delimiter">/</span>Account details</nav>
-                                        <h1 class="page-title">My account</h1>
+                                                href="https://mixtas.novaworks.net/my-account/">Tài khoản của tôi</a><span
+                                                class="delimiter">/</span>Đổi mật khẩu</nav>
+                                        <h1 class="page-title">Đổi mật khẩu</h1>
                                     </div>
                                     <article id="post-11" class="post-11 page type-page status-publish hentry">
                                         <div class="entry-content">
                                             <div class="woocommerce">
-                                                <nav class="woocommerce-MyAccount-navigation" aria-label="Account pages">
-                                                    <ul>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--dashboard">
-                                                            <a href="https://mixtas.novaworks.net/my-account/">
-                                                                Dashboard </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--orders">
-                                                            <a href="https://mixtas.novaworks.net/my-account/orders/">
-                                                                Orders </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--downloads">
-                                                            <a href="https://mixtas.novaworks.net/my-account/downloads/">
-                                                                Downloads </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-address">
-                                                            <a href="https://mixtas.novaworks.net/my-account/edit-address/">
-                                                                Addresses </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-account is-active">
-                                                            <a href="https://mixtas.novaworks.net/my-account/edit-account/"
-                                                                aria-current="page">
-                                                                Account details </a>
-                                                        </li>
-                                                        <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--customer-logout">
-                                                            <a
-                                                                href="https://mixtas.novaworks.net/my-account/customer-logout/?_wpnonce=f339348c3e">
-                                                                Log out </a>
-                                                        </li>
-                                                    </ul>
-                                                </nav>
+                                                @include('account.partials.navigation')
+                                                <div class="woocommerce-MyAccount-content">
+                                                    <div class="woocommerce-notices-wrapper">
+                                                        {{-- Thông báo lỗi validate --}}
+                                                        @if ($errors->any())
+                                                            <ul class="alert woocommerce-error" role="alert"
+                                                                tabindex="-1">
+                                                                <li>
+                                                                    @foreach ($errors->all() as $error)
+                                                                        <strong>Lỗi:</strong>
+                                                                        {{ $error }} <br>
+                                                                    @endforeach
+                                                                </li>
 
-                                                <div class="my-account">
-                                                    @if (session('status'))
-                                                        <div class="woocommerce-notices-wrapper">
-                                                            <div class="woocommerce-info">{{ session('status') }}</div>
-                                                        </div>
-                                                    @endif
-
-                                                    <form action="{{ route('account.update') }}" method="POST"
-                                                        enctype="multipart/form-data" class="shopee-profile-form">
+                                                            </ul>
+                                                        @endif
+                                                        {{-- Thông báo thành công --}}
+                                                        @if (session('success'))
+                                                            <ul class="woocommerce-message" role="status" tabindex="-1">
+                                                                <li>
+                                                                    <strong>Thành công:</strong>
+                                                                    {{ session('success') }}
+                                                                </li>
+                                                            </ul>
+                                                        @endif
+                                                    </div>
+                                                    <form class="woocommerce-EditAccountForm edit-account"
+                                                        action="{{ route('account.password.update') }}" method="POST"
+                                                        novalidate>
                                                         @csrf
-                                                        @method('PUT')
+                                                        {{-- Nếu route là PUT/PATCH thì bật 1 trong 2 dòng dưới --}}
+                                                        {{-- @method('PUT') --}}
+                                                        {{-- @method('PATCH') --}}
 
-                                                        <div style="display:flex; gap:32px; align-items:flex-start;">
+                                                        {{-- Mật khẩu hiện tại --}}
+                                                        <label for="current_password">Mật khẩu hiện tại</label>
+                                                        <p class="woocommerce-form-row form-row form-row-wide"
+                                                            style="position:relative;">
+                                                            <input type="password" name="current_password"
+                                                                id="current_password"
+                                                                class="woocommerce-Input woocommerce-Input--text input-text @error('current_password') is-invalid @enderror"
+                                                                autocomplete="current-password" style="padding-right:40px;">
+                                                            <span id="toggleCurrentPassword"
+                                                                style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#888;">
+                                                                <i class="fa fa-eye"></i>
+                                                            </span>
+                                                        </p>
 
-                                                            {{-- Cột trái: Avatar --}}
-                                                            <div style="flex:0 0 280px;">
-                                                                <div
-                                                                    style="border:1px solid #eee; padding:24px; text-align:center; border-radius:8px;">
-                                                                    <img id="avatar-preview"
-                                                                        src="{{ Auth::user()->avatar_url ?? asset('images/avatar-default.png') }}"
-                                                                        alt="Avatar"
-                                                                        style="width:160px; height:160px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 12px;">
-                                                                    <label for="avatar" class="button"
-                                                                        style="display:inline-block; padding:8px 16px; border:1px solid #ccc; border-radius:6px; cursor:pointer;">
-                                                                        Chọn ảnh
-                                                                    </label>
-                                                                    <input type="file" name="avatar" id="avatar"
-                                                                        accept="image/*" style="display:none;">
-                                                                    <p class="description"
-                                                                        style="margin-top:8px; color:#666; font-size:12px;">
-                                                                        PNG/JPG ≤ 2MB. Tỷ lệ 1:1 hiển thị đẹp.
-                                                                    </p>
-                                                                    @error('avatar')
-                                                                        <div class="woocommerce-error" style="margin-top:6px;">
-                                                                            {{ $message }}</div>
-                                                                    @enderror
-                                                                </div>
-                                                            </div>
+                                                        {{-- Mật khẩu mới --}}
+                                                        <label for="new_password">Mật khẩu mới</label>
+                                                        <p class="woocommerce-form-row form-row form-row-wide"
+                                                            style="position:relative;">
+                                                            <input type="password" name="new_password" id="new_password"
+                                                                class="woocommerce-Input woocommerce-Input--text input-text @error('new_password') is-invalid @enderror"
+                                                                placeholder="Mật khẩu" autocomplete="new-password"
+                                                                minlength="8" style="padding-right:40px;">
+                                                            <span id="toggleNewPassword"
+                                                                style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#888;">
+                                                                <i class="fa fa-eye"></i>
+                                                            </span>
+                                                        </p>
 
-                                                            {{-- Cột phải: Thông tin --}}
-                                                            <div
-                                                                style="flex:1; border:1px solid #eee; border-radius:8px; padding:24px;">
+                                                        {{-- Xác nhận mật khẩu mới --}}
+                                                        <label for="new_password_confirmation">Xác nhận mật khẩu mới</label>
+                                                        <p class="woocommerce-form-row form-row form-row-wide"
+                                                            style="position:relative;">
+                                                            <input type="password" name="new_password_confirmation"
+                                                                id="new_password_confirmation"
+                                                                class="woocommerce-Input woocommerce-Input--text input-text @error('new_password_confirmation') is-invalid @enderror"
+                                                                placeholder="Nhập lại mật khẩu" autocomplete="new-password"
+                                                                style="padding-right:40px;">
+                                                            <span id="toggleNewPasswordConfirm"
+                                                                style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#888;">
+                                                                <i class="fa fa-eye"></i>
+                                                            </span>
+                                                        </p>
 
-                                                                <h3
-                                                                    style="margin-top:0; margin-bottom:16px; font-size:18px;">
-                                                                    Hồ sơ của tôi</h3>
-                                                                <p style="color:#666; margin-top:0;">Quản lý thông tin hồ sơ
-                                                                    để bảo mật tài khoản</p>
-                                                                <hr
-                                                                    style="border:none; border-top:1px solid #f0f0f0; margin:16px 0 24px;">
-
-                                                                {{-- Username --}}
-                                                                <div class="form-row"
-                                                                    style="display:flex; gap:24px; margin-bottom:16px;">
-                                                                    <label for="username"
-                                                                        style="flex:0 0 180px; text-align:right; line-height:38px;">Username<span
-                                                                            class="required">*</span></label>
-                                                                    <div style="flex:1;">
-                                                                        <input type="text" id="username" name="username"
-                                                                            class="input-text"
-                                                                            value="{{ old('username', Auth::user()->username) }}"
-                                                                            required autocomplete="username"
-                                                                            style="width:100%; height:38px; padding:8px 12px;">
-                                                                        @error('username')
-                                                                            <div class="woocommerce-error">{{ $message }}
-                                                                            </div>
-                                                                        @enderror
-                                                                    </div>
-                                                                </div>
-
-                                                                {{-- Họ và tên --}}
-                                                                <div class="form-row"
-                                                                    style="display:flex; gap:24px; margin-bottom:16px;">
-                                                                    <label for="name"
-                                                                        style="flex:0 0 180px; text-align:right; line-height:38px;">Họ
-                                                                        và tên<span class="required">*</span></label>
-                                                                    <div style="flex:1;">
-                                                                        <input type="text" id="name" name="name"
-                                                                            class="input-text"
-                                                                            value="{{ old('name', Auth::user()->name) }}"
-                                                                            required autocomplete="name"
-                                                                            style="width:100%; height:38px; padding:8px 12px;">
-                                                                        @error('name')
-                                                                            <div class="woocommerce-error">{{ $message }}
-                                                                            </div>
-                                                                        @enderror
-                                                                    </div>
-                                                                </div>
-
-                                                                {{-- Email --}}
-                                                                <div class="form-row"
-                                                                    style="display:flex; gap:24px; margin-bottom:16px;">
-                                                                    <label for="email"
-                                                                        style="flex:0 0 180px; text-align:right; line-height:38px;">Email<span
-                                                                            class="required">*</span></label>
-                                                                    <div style="flex:1;">
-                                                                        <input type="email" id="email"
-                                                                            name="email" class="input-text"
-                                                                            value="{{ old('email', Auth::user()->email) }}"
-                                                                            required autocomplete="email"
-                                                                            style="width:100%; height:38px; padding:8px 12px;">
-                                                                        @error('email')
-                                                                            <div class="woocommerce-error">{{ $message }}
-                                                                            </div>
-                                                                        @enderror
-                                                                    </div>
-                                                                </div>
-
-                                                                {{-- Số điện thoại --}}
-                                                                <div class="form-row"
-                                                                    style="display:flex; gap:24px; margin-bottom:16px;">
-                                                                    <label for="phone"
-                                                                        style="flex:0 0 180px; text-align:right; line-height:38px;">Số
-                                                                        điện thoại</label>
-                                                                    <div style="flex:1;">
-                                                                        <input type="tel" id="phone"
-                                                                            name="phone" class="input-text"
-                                                                            value="{{ old('phone', Auth::user()->phone) }}"
-                                                                            placeholder="VD: 0981234567"
-                                                                            autocomplete="tel-national"
-                                                                            style="width:100%; height:38px; padding:8px 12px;">
-                                                                        @error('phone')
-                                                                            <div class="woocommerce-error">{{ $message }}
-                                                                            </div>
-                                                                        @enderror
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <hr
-                                                                    style="border:none; border-top:1px solid #f0f0f0; margin:16px 0 24px;">
-
-                                                                <h3 style="margin:0 0 16px; font-size:16px;">Đổi mật khẩu
-                                                                </h3>
-
-                                                                {{-- Mật khẩu hiện tại --}}
-                                                                <div class="form-row"
-                                                                    style="display:flex; gap:24px; margin-bottom:12px;">
-                                                                    <label for="password_current"
-                                                                        style="flex:0 0 180px; text-align:right; line-height:38px;">Mật
-                                                                        khẩu hiện tại</label>
-                                                                    <div style="flex:1;">
-                                                                        <input type="password" id="password_current"
-                                                                            name="password_current" class="input-text"
-                                                                            autocomplete="off"
-                                                                            style="width:100%; height:38px; padding:8px 12px;">
-                                                                        @error('password_current')
-                                                                            <div class="woocommerce-error">{{ $message }}
-                                                                            </div>
-                                                                        @enderror
-                                                                    </div>
-                                                                </div>
-
-                                                                {{-- Mật khẩu mới --}}
-                                                                <div class="form-row"
-                                                                    style="display:flex; gap:24px; margin-bottom:12px;">
-                                                                    <label for="password"
-                                                                        style="flex:0 0 180px; text-align:right; line-height:38px;">Mật
-                                                                        khẩu mới</label>
-                                                                    <div style="flex:1;">
-                                                                        <input type="password" id="password"
-                                                                            name="password" class="input-text"
-                                                                            autocomplete="off"
-                                                                            style="width:100%; height:38px; padding:8px 12px;">
-                                                                        @error('password')
-                                                                            <div class="woocommerce-error">{{ $message }}
-                                                                            </div>
-                                                                        @enderror
-                                                                    </div>
-                                                                </div>
-
-                                                                {{-- Xác nhận mật khẩu --}}
-                                                                <div class="form-row"
-                                                                    style="display:flex; gap:24px; margin-bottom:20px;">
-                                                                    <label for="password_confirmation"
-                                                                        style="flex:0 0 180px; text-align:right; line-height:38px;">Nhập
-                                                                        lại mật khẩu</label>
-                                                                    <div style="flex:1;">
-                                                                        <input type="password" id="password_confirmation"
-                                                                            name="password_confirmation"
-                                                                            class="input-text" autocomplete="off"
-                                                                            style="width:100%; height:38px; padding:8px 12px;">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div style="display:flex; gap:24px;">
-                                                                    <div style="flex:0 0 180px;"></div>
-                                                                    <div style="flex:1;">
-                                                                        <button type="submit"
-                                                                            class="woocommerce-Button button"
-                                                                            style="height:40px; padding:0 20px;">Lưu thay
-                                                                            đổi</button>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
+                                                        <p class="mt-2">
+                                                            <button type="submit"
+                                                                class="woocommerce-Button button">Lưu</button>
+                                                        </p>
                                                     </form>
                                                 </div>
 
-                                                @push('scripts')
-                                                    <script>
-                                                        document.getElementById('avatar')?.addEventListener('change', function(e) {
-                                                            const [file] = e.target.files || [];
-                                                            if (file) {
-                                                                const url = URL.createObjectURL(file);
-                                                                const img = document.getElementById('avatar-preview');
-                                                                if (img) img.src = url;
-                                                            }
-                                                        });
-                                                    </script>
-                                                @endpush
-
                                             </div>
+
+
                                         </div><!-- .entry-content -->
 
                                     </article><!-- #post-## -->
@@ -285,7 +121,48 @@
                     </div>
 
 
-                </div><!-- .site-content-wrapper -->
+                </div>
+                {{-- Toggle mật khẩu --}}
+                {{-- Toggle mật khẩu --}}
+                <script>
+                    (function() {
+                        const toggle = (btnSel, inputSel) => {
+                            const btn = document.querySelector(btnSel);
+                            const input = document.querySelector(inputSel);
+                            if (!btn || !input) return;
+                            btn.addEventListener('click', function() {
+                                const isPw = input.getAttribute('type') === 'password';
+                                input.setAttribute('type', isPw ? 'text' : 'password');
+                                this.innerHTML = isPw ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
+                            });
+                        };
+                        toggle('#toggleCurrentPassword', '#current_password');
+                        toggle('#toggleNewPassword', '#new_password');
+                        toggle('#toggleNewPasswordConfirm', '#new_password_confirmation');
+                    })();
+                </script>
+
+                {{-- Ẩn nút show password mặc định nếu theme có --}}
+                <style>
+                    button.show-password-input {
+                        display: none !important;
+                        visibility: hidden !important;
+                        opacity: 0 !important;
+                    }
+                </style>
+
+                {{-- Ẩn nút show password mặc định nếu theme có --}}
+                <style>
+                    button.show-password-input {
+                        display: none !important;
+                        visibility: hidden !important;
+                        opacity: 0 !important;
+                    }
+                </style>
+
+                {{-- Font Awesome (nếu layout chưa có) --}}
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+                <!-- .site-content-wrapper -->
                 @include('layouts.footer')
                 <div class="nova-overlay-global"></div>
             </div><!-- .kitify-site-wrapper -->

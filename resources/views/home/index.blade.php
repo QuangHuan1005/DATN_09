@@ -156,18 +156,19 @@
 
                                                                         <div
                                                                             class="product-item__thumbnail-placeholder second_image_enabled">
-                                                                            {{-- <a
-																		href="{{ route('products.show', ['id' => $item->id]) }}">
-																		<img loading="lazy" decoding="async" width="700"
-																			height="700" src="{{ $item->image }}"
-																			class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-																			alt=""
-																			srcset="{{ $item->image }} 700w, {{ $item->image }} 300w, {{ $item->image }} 150w, {{ $item->image }} 768w, {{ $item->image }} 250w, {{ $item->image }} 50w, {{ $item->image }} 100w, {{ $item->image }} 1000w"
-																			sizes="(max-width: 700px) 100vw, 700px" /><span
-																			class="product_second_image"
-																			style="background-image: url('{{ $item->image }}')"></span>
-																	</a> --}}
                                                                             <a
+                                                                                href="{{ route('products.show', ['id' => $item->id]) }}">
+                                                                                <img loading="lazy" decoding="async"
+                                                                                    width="700" height="700"
+                                                                                    src="{{ asset('storage/' . $item->image) }}"
+                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
+                                                                                    alt=""
+                                                                                    srcset="{{ asset('storage/' . $item->image) }} 700w, {{ asset('storage/' . $item->image) }} 300w, {{ asset('storage/' . $item->image) }} 150w, {{ asset('storage/' . $item->image) }} 768w, {{ asset('storage/' . $item->image) }} 250w, {{ asset('storage/' . $item->image) }} 50w, {{ asset('storage/' . $item->image) }} 100w, {{ asset('storage/' . $item->image) }} 1000w"
+                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
+                                                                                    class="product_second_image"
+                                                                                    style="background-image: url('{{ asset('storage/' . $item->image) }}')"></span>
+                                                                            </a>
+                                                                            {{-- <a
                                                                                 href="{{ route('products.show', ['id' => $item->id]) }}">
                                                                                 <img loading="lazy" decoding="async"
                                                                                     width="700" height="700"
@@ -178,7 +179,7 @@
                                                                                     sizes="(max-width: 700px) 100vw, 700px" /><span
                                                                                     class="product_second_image"
                                                                                     style="background-image: url('https://picsum.photos/700')"></span>
-                                                                            </a>
+                                                                            </a> --}}
                                                                         </div>
                                                                     </div>
 
@@ -462,13 +463,13 @@
                                                                                 href="{{ route('products.show', ['id' => $item->id]) }}">
                                                                                 <img loading="lazy" decoding="async"
                                                                                     width="700" height="700"
-                                                                                    src="https://picsum.photos/700"
+                                                                                    src="{{ asset('storage/' . $item->image) }}"
                                                                                     class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
                                                                                     alt=""
-                                                                                    srcset="https://picsum.photos/700 700w, https://picsum.photos/300 300w, https://picsum.photos/150 150w, https://picsum.photos/768 768w, https://picsum.photos/250 250w, https://picsum.photos/50 50w, https://picsum.photos/100 100w, https://picsum.photos/1000 1000w"
+                                                                                    srcset="{{ asset('storage/' . $item->image) }} 700w, {{ asset('storage/' . $item->image) }} 300w, {{ asset('storage/' . $item->image) }} 150w, {{ asset('storage/' . $item->image) }} 768w, {{ asset('storage/' . $item->image) }} 250w, {{ asset('storage/' . $item->image) }} 50w, {{ asset('storage/' . $item->image) }} 100w, {{ asset('storage/' . $item->image) }} 1000w"
                                                                                     sizes="(max-width: 700px) 100vw, 700px" /><span
                                                                                     class="product_second_image"
-                                                                                    style="background-image: url('https://picsum.photos/700')"></span>
+                                                                                    style="background-image: url('{{ asset('storage/' . $item->image) }}')"></span>
                                                                             </a>
                                                                         </div>
                                                                     </div>

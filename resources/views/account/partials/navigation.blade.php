@@ -8,11 +8,7 @@
             <a href="{{ route('orders.index') }}">
                 Đơn hàng </a>
         </li>
-        {{-- <li
-                                                            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--downloads">
-                                                            <a href="#">
-                                                                Downloads </a>
-                                                        </li> --}}
+
         <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-address">
             <a href="{{ route('account.addresses') }}">
                 Địa chỉ </a>
@@ -21,9 +17,18 @@
             <a href="{{ route('account.profile') }}">
                 Chi tiết tài khoản </a>
         </li>
+        <li
+            class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--downloads">
+            <a href="{{ route('account.password') }}">Đổi mật khẩu</a>
+        </li>
         <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--customer-logout">
-            <a href="/">
-                Đăng xuất </a>
+            <a href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+
+                Đăng xuất</a>
+
+            <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display:none;">
+                @csrf
+            </form>
         </li>
     </ul>
 </nav>

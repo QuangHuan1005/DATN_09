@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        return view('orders.index');
+        $orders = Order::orderBy('order_code', 'desc')->take(5)->get();
+        return view('orders.index', compact('orders'));
     }
     //
 }

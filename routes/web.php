@@ -83,14 +83,13 @@ Route::prefix('orders')->group(function () {
 
 // Tài khoản cá nhân
 Route::middleware(['auth'])->group(function () {
-    Route::get('/account', [AccountController::class, 'dashboard'])->name('account.dashboard');
+    Route::get('/account', [AccountController::class, 'index'])->name('account.dashboard');
     Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders');
-    Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
-    Route::get('/account/edit', [AccountController::class, 'edit'])->name('account.edit');
+    Route::get('/account/addresses', [AccountController::class, 'address'])->name('account.addresses');
+    Route::get('/account/profile', [AccountController::class, 'edit'])->name('account.profile');
     Route::post('/account/update', [AccountController::class, 'update'])->name('account.update');
     Route::get('/account/change-password', [AccountController::class, 'changePassword'])->name('account.password');
     Route::post('/account/change-password', [AccountController::class, 'updatePassword'])->name('account.password.update');
-    Route::get('/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
 });
 
 /*
@@ -175,5 +174,4 @@ Route::prefix('admin')
 
         Route::post('users/{user}/toggle-lock', [AdminUserController::class, 'toggleLock'])->name('users.toggleLock');
         Route::post('users/{user}/restore', [AdminUserController::class, 'restore'])->name('users.restore');
-
     });
