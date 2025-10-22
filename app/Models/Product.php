@@ -22,9 +22,11 @@ class Product extends Model
         'view',
         'material',
         'onpage',
+
     ];  
 
     protected $dates = ['deleted_at'];  
+
 
     public function variants()
     {
