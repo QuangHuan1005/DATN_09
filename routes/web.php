@@ -82,15 +82,26 @@ Route::prefix('orders')->group(function () {
 });
 
 // Tài khoản cá nhân
-Route::middleware(['auth'])->group(function () {
-    Route::get('/account', [AccountController::class, 'dashboard'])->name('account.dashboard');
-    Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders');
-    Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
-    Route::get('/account/edit', [AccountController::class, 'edit'])->name('account.edit');
-    Route::post('/account/update', [AccountController::class, 'update'])->name('account.update');
-    Route::get('/account/change-password', [AccountController::class, 'changePassword'])->name('account.password');
-    Route::post('/account/change-password', [AccountController::class, 'updatePassword'])->name('account.password.update');
-    Route::get('/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/account', [AccountController::class, 'dashboard'])->name('account.dashboard');
+//     Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders');
+//     Route::get('/profile', [AccountController::class, 'profile'])->name('account.profile');
+//     Route::get('/account/edit', [AccountController::class, 'edit'])->name('account.edit');
+//     Route::post('/account/update', [AccountController::class, 'update'])->name('account.update');
+//     Route::get('/account/change-password', [AccountController::class, 'changePassword'])->name('account.password');
+//     Route::post('/account/change-password', [AccountController::class, 'updatePassword'])->name('account.password.update');
+//     Route::get('/addresses', [AccountController::class, 'addresses'])->name('account.addresses');
+// });
+
+Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
+    Route::get('/',               [AccountController::class, 'dashboard'])->name('dashboard');
+    Route::get('/profile',        [AccountController::class, 'profile'])->name('profile');
+
+    Route::get('/orders',         [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show')->whereNumber('order');
+    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+    Route::get('/history',        [OrderController::class, 'history'])->name('history');
 });
 
 /*
