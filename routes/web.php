@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminVoucherController;
 use App\Http\Controllers\Admin\AdminNewsController;
 use App\Http\Controllers\Admin\AdminContactController;
+use App\Http\Controllers\Admin\InventoryController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -60,12 +62,12 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 | ADMIN (đặt trong nhóm /admin sẵn có của bạn)
 |---------------------------
 */
-Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
-    // Quản lý Tin tức
-    Route::resource('news', AdminNewsController::class, ['as' => 'admin']);
-    // Quản lý liên hệ (xem danh sách & chi tiết, xoá)
-    Route::resource('contacts', AdminContactController::class, ['as' => 'admin'])->only(['index', 'show', 'destroy']);
-});
+// Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
+//     // Quản lý Tin tức
+//     Route::resource('news', AdminNewsController::class, ['as' => 'admin']);
+//     // Quản lý liên hệ (xem danh sách & chi tiết, xoá)
+//     Route::resource('contacts', AdminContactController::class, ['as' => 'admin'])->only(['index', 'show', 'destroy']);
+// });
 
 
 // Giỏ hàng
@@ -180,4 +182,9 @@ Route::prefix('admin')
 
         Route::post('users/{user}/toggle-lock', [AdminUserController::class, 'toggleLock'])->name('users.toggleLock');
         Route::post('users/{user}/restore', [AdminUserController::class, 'restore'])->name('users.restore');
+
+        /* ====== KHO HÀNG (mới) ====== */
+        Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
+        Route::patch('inventory/{variant}', [InventoryController::class, 'updateQuantity'])->name('inventory.update');
+        Route::patch('inventory/bulk', [InventoryController::class, 'bulkUpdate'])->name('inventory.bulk'); // tùy chọn
     });
