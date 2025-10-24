@@ -17,11 +17,11 @@
     <title>Friday &#8211; Fridaywear redesign - branding, website, mobile.</title>
 
     <meta name='robots' content='max-image-preview:large' />
-    <style>
+    {{-- <style>
         img:is([sizes="auto" i], [sizes^="auto," i]) {
             contain-intrinsic-size: 3000px 1500px
         }
-    </style>
+    </style> --}}
     <!-- Novaworks Meta Tags -->
     <meta property="description"
         content="Urban Muse City Chic with a Feminine Twist Shop now Travel bags Shop now Urban Muse Classic Beauties for Modern Women Shop now You are innew arrivalsbest sellertrending Add to wishlist Browse wishlist Add to cart Hoodies Dime Classic Remastered Hoodie, black &#036;140.00 Add to wishlist Browse wishlist Select options Men Dime Sunny Tee, forest green &#036;55.00 Add to wishlist…" />
