@@ -14,7 +14,13 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::query()->with(['category', 'variants']);
+        $query = Product::query()->with([
+            'category',
+            'variants.color',
+            'variants.size',
+            'photoAlbums'
+        ]);
+
 
         // ----- TÌM KIẾM THEO TÊN / MÔ TẢ -----
         if ($request->filled('keyword')) {

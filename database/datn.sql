@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: localhost:3306
--- Thời gian đã tạo: Th10 22, 2025 lúc 02:56 AM
--- Phiên bản máy phục vụ: 8.4.3
--- Phiên bản PHP: 8.3.26
+-- Host: localhost:3306
+-- Generation Time: Oct 24, 2025 at 12:14 PM
+-- Server version: 8.0.30
+-- PHP Version: 8.2.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,37 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `datn`
+-- Database: `datn`
 --
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `accounts`
---
-
-CREATE TABLE `accounts` (
-  `id` bigint UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `auths`
---
-
-CREATE TABLE `auths` (
-  `id` bigint UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `banners`
+-- Table structure for table `banners`
 --
 
 CREATE TABLE `banners` (
@@ -65,7 +41,7 @@ CREATE TABLE `banners` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `banners`
+-- Dumping data for table `banners`
 --
 
 INSERT INTO `banners` (`id`, `location_id`, `image`, `name`, `status`, `product_link`, `start_date`, `end_date`, `created_at`, `updated_at`) VALUES
@@ -78,31 +54,7 @@ INSERT INTO `banners` (`id`, `location_id`, `image`, `name`, `status`, `product_
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cache`
---
-
-CREATE TABLE `cache` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `cache_locks`
---
-
-CREATE TABLE `cache_locks` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `carts`
+-- Table structure for table `carts`
 --
 
 CREATE TABLE `carts` (
@@ -117,7 +69,7 @@ CREATE TABLE `carts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `carts`
+-- Dumping data for table `carts`
 --
 
 INSERT INTO `carts` (`id`, `user_id`, `voucher_id`, `quantity`, `price`, `total_amount`, `created_at`, `updated_at`) VALUES
@@ -130,7 +82,7 @@ INSERT INTO `carts` (`id`, `user_id`, `voucher_id`, `quantity`, `price`, `total_
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cart_details`
+-- Table structure for table `cart_details`
 --
 
 CREATE TABLE `cart_details` (
@@ -145,7 +97,7 @@ CREATE TABLE `cart_details` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `cart_details`
+-- Dumping data for table `cart_details`
 --
 
 INSERT INTO `cart_details` (`id`, `cart_id`, `product_variant_id`, `price`, `quantity`, `total_amount`, `created_at`, `updated_at`) VALUES
@@ -158,7 +110,7 @@ INSERT INTO `cart_details` (`id`, `cart_id`, `product_variant_id`, `price`, `qua
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `categories`
+-- Table structure for table `categories`
 --
 
 CREATE TABLE `categories` (
@@ -173,20 +125,21 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `categories`
+-- Dumping data for table `categories`
 --
 
 INSERT INTO `categories` (`id`, `parent_id`, `name`, `slug`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, 'Thời trang Nam', 'thoi-trang-nam', 'Quần áo nam', '2025-10-03 23:28:17', NULL, NULL),
+(1, NULL, 'Thời trang Nam', 'thoi-trang-nam', 'Quần áo nam', '2025-10-03 23:28:17', '2025-10-16 14:13:17', NULL),
 (2, NULL, 'Thời trang Nữ', 'thoi-trang-nu', 'Quần áo nữ', '2025-10-03 23:28:17', NULL, NULL),
 (3, NULL, 'Phụ kiện', 'phu-kien', 'Phụ kiện thời trang', '2025-10-03 23:28:17', NULL, NULL),
 (4, NULL, 'Giày dép', 'giay-dep', 'Các loại giày dép', '2025-10-03 23:28:17', NULL, NULL),
-(5, NULL, 'Túi xách', 'tui-xach', 'Túi xách cao cấp', '2025-10-03 23:28:17', NULL, NULL);
+(5, NULL, 'Túi xách', 'tui-xach', 'Túi xách cao cấp', '2025-10-03 23:28:17', NULL, NULL),
+(6, 5, 'aaaa', 'rr', 's', '2025-10-16 14:13:35', '2025-10-16 14:13:35', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `chats`
+-- Table structure for table `chats`
 --
 
 CREATE TABLE `chats` (
@@ -199,7 +152,7 @@ CREATE TABLE `chats` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `chats`
+-- Dumping data for table `chats`
 --
 
 INSERT INTO `chats` (`id`, `user_id`, `admin_id`, `is_message_at`, `created_at`, `updated_at`) VALUES
@@ -212,7 +165,7 @@ INSERT INTO `chats` (`id`, `user_id`, `admin_id`, `is_message_at`, `created_at`,
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `chat_details`
+-- Table structure for table `chat_details`
 --
 
 CREATE TABLE `chat_details` (
@@ -228,7 +181,7 @@ CREATE TABLE `chat_details` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `chat_details`
+-- Dumping data for table `chat_details`
 --
 
 INSERT INTO `chat_details` (`id`, `chat_id`, `sender_id`, `receiver_id`, `message`, `is_read`, `status`, `created_at`, `updated_at`) VALUES
@@ -241,7 +194,7 @@ INSERT INTO `chat_details` (`id`, `chat_id`, `sender_id`, `receiver_id`, `messag
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `colors`
+-- Table structure for table `colors`
 --
 
 CREATE TABLE `colors` (
@@ -253,7 +206,7 @@ CREATE TABLE `colors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `colors`
+-- Dumping data for table `colors`
 --
 
 INSERT INTO `colors` (`id`, `name`, `color_code`, `created_at`, `updated_at`) VALUES
@@ -266,7 +219,7 @@ INSERT INTO `colors` (`id`, `name`, `color_code`, `created_at`, `updated_at`) VA
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `comments`
+-- Table structure for table `comments`
 --
 
 CREATE TABLE `comments` (
@@ -283,7 +236,7 @@ CREATE TABLE `comments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `comments`
+-- Dumping data for table `comments`
 --
 
 INSERT INTO `comments` (`id`, `news_id`, `user_id`, `parent_id`, `content`, `status`, `ip`, `user_agent`, `created_at`, `updated_at`) VALUES
@@ -298,23 +251,7 @@ INSERT INTO `comments` (`id`, `news_id`, `user_id`, `parent_id`, `content`, `sta
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `failed_jobs`
---
-
-CREATE TABLE `failed_jobs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `invoices`
+-- Table structure for table `invoices`
 --
 
 CREATE TABLE `invoices` (
@@ -327,7 +264,7 @@ CREATE TABLE `invoices` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `invoices`
+-- Dumping data for table `invoices`
 --
 
 INSERT INTO `invoices` (`id`, `order_id`, `invoice_code`, `issue_date`, `created_at`, `updated_at`) VALUES
@@ -340,42 +277,7 @@ INSERT INTO `invoices` (`id`, `order_id`, `invoice_code`, `issue_date`, `created
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `jobs`
---
-
-CREATE TABLE `jobs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `attempts` tinyint UNSIGNED NOT NULL,
-  `reserved_at` int UNSIGNED DEFAULT NULL,
-  `available_at` int UNSIGNED NOT NULL,
-  `created_at` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `job_batches`
---
-
-CREATE TABLE `job_batches` (
-  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `total_jobs` int NOT NULL,
-  `pending_jobs` int NOT NULL,
-  `failed_jobs` int NOT NULL,
-  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `options` mediumtext COLLATE utf8mb4_unicode_ci,
-  `cancelled_at` int DEFAULT NULL,
-  `created_at` int NOT NULL,
-  `finished_at` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `locations`
+-- Table structure for table `locations`
 --
 
 CREATE TABLE `locations` (
@@ -384,7 +286,7 @@ CREATE TABLE `locations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `locations`
+-- Dumping data for table `locations`
 --
 
 INSERT INTO `locations` (`id`, `name`) VALUES
@@ -395,7 +297,7 @@ INSERT INTO `locations` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `migrations`
+-- Table structure for table `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -405,22 +307,16 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `migrations`
+-- Dumping data for table `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '0001_01_01_000000_create_users_table', 1),
-(4, '0001_01_01_000001_create_cache_table', 2),
-(5, '0001_01_01_000002_create_jobs_table', 2),
-(6, '2025_10_04_162806_create_products_table', 2),
-(7, '2025_10_04_162908_create_categories_table', 2),
-(8, '2025_10_05_024516_create_auths_table', 2),
-(9, '2025_10_05_050828_create_accounts_table', 2);
+(1, '0001_01_01_000000_create_users_table', 1);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `news`
+-- Table structure for table `news`
 --
 
 CREATE TABLE `news` (
@@ -444,7 +340,7 @@ CREATE TABLE `news` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `news`
+-- Dumping data for table `news`
 --
 
 INSERT INTO `news` (`id`, `category_id`, `author_id`, `title`, `slug`, `excerpt`, `content`, `thumbnail`, `status`, `published_at`, `views`, `reading_time`, `seo_title`, `seo_description`, `seo_keywords`, `created_at`, `updated_at`) VALUES
@@ -460,7 +356,7 @@ INSERT INTO `news` (`id`, `category_id`, `author_id`, `title`, `slug`, `excerpt`
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `news_categories`
+-- Table structure for table `news_categories`
 --
 
 CREATE TABLE `news_categories` (
@@ -474,7 +370,7 @@ CREATE TABLE `news_categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `news_categories`
+-- Dumping data for table `news_categories`
 --
 
 INSERT INTO `news_categories` (`id`, `parent_id`, `name`, `slug`, `description`, `created_at`, `updated_at`) VALUES
@@ -489,7 +385,7 @@ INSERT INTO `news_categories` (`id`, `parent_id`, `name`, `slug`, `description`,
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `news_tag`
+-- Table structure for table `news_tag`
 --
 
 CREATE TABLE `news_tag` (
@@ -499,7 +395,7 @@ CREATE TABLE `news_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `news_tag`
+-- Dumping data for table `news_tag`
 --
 
 INSERT INTO `news_tag` (`news_id`, `tag_id`, `created_at`) VALUES
@@ -526,7 +422,7 @@ INSERT INTO `news_tag` (`news_id`, `tag_id`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `notifications`
+-- Table structure for table `notifications`
 --
 
 CREATE TABLE `notifications` (
@@ -540,7 +436,7 @@ CREATE TABLE `notifications` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `notifications`
+-- Dumping data for table `notifications`
 --
 
 INSERT INTO `notifications` (`id`, `user_id`, `order_id`, `title`, `content`, `created_at`, `updated_at`) VALUES
@@ -553,7 +449,7 @@ INSERT INTO `notifications` (`id`, `user_id`, `order_id`, `title`, `content`, `c
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `orders`
+-- Table structure for table `orders`
 --
 
 CREATE TABLE `orders` (
@@ -575,7 +471,7 @@ CREATE TABLE `orders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `orders`
+-- Dumping data for table `orders`
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `payment_status_id`, `order_status_id`, `voucher_id`, `order_code`, `name`, `address`, `phone`, `subtotal`, `discount`, `total_amount`, `note`, `created_at`, `updated_at`) VALUES
@@ -588,7 +484,7 @@ INSERT INTO `orders` (`id`, `user_id`, `payment_status_id`, `order_status_id`, `
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `order_details`
+-- Table structure for table `order_details`
 --
 
 CREATE TABLE `order_details` (
@@ -604,7 +500,7 @@ CREATE TABLE `order_details` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `order_details`
+-- Dumping data for table `order_details`
 --
 
 INSERT INTO `order_details` (`id`, `order_id`, `product_variant_id`, `price`, `quantity`, `status`, `estimated_delivery`, `created_at`, `updated_at`) VALUES
@@ -617,7 +513,7 @@ INSERT INTO `order_details` (`id`, `order_id`, `product_variant_id`, `price`, `q
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `order_statuses`
+-- Table structure for table `order_statuses`
 --
 
 CREATE TABLE `order_statuses` (
@@ -628,7 +524,7 @@ CREATE TABLE `order_statuses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `order_statuses`
+-- Dumping data for table `order_statuses`
 --
 
 INSERT INTO `order_statuses` (`id`, `name`, `created_at`, `updated_at`) VALUES
@@ -643,7 +539,7 @@ INSERT INTO `order_statuses` (`id`, `name`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `password_reset_tokens`
+-- Table structure for table `password_reset_tokens`
 --
 
 CREATE TABLE `password_reset_tokens` (
@@ -655,7 +551,7 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `payments`
+-- Table structure for table `payments`
 --
 
 CREATE TABLE `payments` (
@@ -670,7 +566,7 @@ CREATE TABLE `payments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `payments`
+-- Dumping data for table `payments`
 --
 
 INSERT INTO `payments` (`id`, `order_id`, `payment_method_id`, `payment_code`, `payment_amount`, `status`, `created_at`, `updated_at`) VALUES
@@ -683,7 +579,7 @@ INSERT INTO `payments` (`id`, `order_id`, `payment_method_id`, `payment_code`, `
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `payment_methods`
+-- Table structure for table `payment_methods`
 --
 
 CREATE TABLE `payment_methods` (
@@ -696,7 +592,7 @@ CREATE TABLE `payment_methods` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `payment_methods`
+-- Dumping data for table `payment_methods`
 --
 
 INSERT INTO `payment_methods` (`id`, `name`, `code`, `type`, `created_at`, `updated_at`) VALUES
@@ -707,7 +603,7 @@ INSERT INTO `payment_methods` (`id`, `name`, `code`, `type`, `created_at`, `upda
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `payment_statuses`
+-- Table structure for table `payment_statuses`
 --
 
 CREATE TABLE `payment_statuses` (
@@ -718,7 +614,7 @@ CREATE TABLE `payment_statuses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `payment_statuses`
+-- Dumping data for table `payment_statuses`
 --
 
 INSERT INTO `payment_statuses` (`id`, `name`, `created_at`, `updated_at`) VALUES
@@ -729,7 +625,7 @@ INSERT INTO `payment_statuses` (`id`, `name`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `products`
+-- Table structure for table `products`
 --
 
 CREATE TABLE `products` (
@@ -747,11 +643,11 @@ CREATE TABLE `products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `products`
+-- Dumping data for table `products`
 --
 
 INSERT INTO `products` (`id`, `category_id`, `product_code`, `name`, `description`, `view`, `material`, `onpage`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'SP001', 'Áo sơ mi nam', 'Áo sơ mi công sở', 124, 'Cotton', 1, '2025-10-03 23:28:17', NULL, NULL),
+(1, 1, 'SP001', 'Áo sơ mi nam', 'Áo sơ mi công sở', 124, 'Cotton', 1, '2025-10-03 23:28:17', '2025-10-19 08:45:29', NULL),
 (2, 1, 'SP002', 'Áo thun nam', 'Áo thun basic', 174, 'Polyester', 1, '2025-10-03 23:28:17', NULL, NULL),
 (3, 2, 'SP003', 'Váy nữ xòe', 'Váy công sở xòe nhẹ', 491, 'Lụa', 1, '2025-10-03 23:28:17', NULL, NULL),
 (4, 4, 'SP004', 'Giày sneaker', 'Giày sneaker trẻ trung', 450, 'Da PU', 1, '2025-10-03 23:28:17', NULL, NULL),
@@ -775,7 +671,7 @@ INSERT INTO `products` (`id`, `category_id`, `product_code`, `name`, `descriptio
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `product_favorites`
+-- Table structure for table `product_favorites`
 --
 
 CREATE TABLE `product_favorites` (
@@ -787,7 +683,7 @@ CREATE TABLE `product_favorites` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `product_favorites`
+-- Dumping data for table `product_favorites`
 --
 
 INSERT INTO `product_favorites` (`id`, `product_id`, `user_id`, `created_at`, `updated_at`) VALUES
@@ -800,7 +696,7 @@ INSERT INTO `product_favorites` (`id`, `product_id`, `user_id`, `created_at`, `u
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `product_photo_albums`
+-- Table structure for table `product_photo_albums`
 --
 
 CREATE TABLE `product_photo_albums` (
@@ -812,12 +708,10 @@ CREATE TABLE `product_photo_albums` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `product_photo_albums`
+-- Dumping data for table `product_photo_albums`
 --
 
 INSERT INTO `product_photo_albums` (`id`, `product_id`, `image`, `created_at`, `updated_at`) VALUES
-(1, 1, 'shirt1_detail1.jpg', '2025-10-03 23:28:17', NULL),
-(2, 1, 'shirt1_detail2.jpg', '2025-10-03 23:28:17', NULL),
 (3, 3, 'dress1_detail1.jpg', '2025-10-03 23:28:17', NULL),
 (4, 4, 'shoes1_detail1.jpg', '2025-10-03 23:28:17', NULL),
 (5, 5, 'bag1_detail1.jpg', '2025-10-03 23:28:17', NULL),
@@ -835,12 +729,13 @@ INSERT INTO `product_photo_albums` (`id`, `product_id`, `image`, `created_at`, `
 (17, 17, 'bag3_detail.jpg', '2025-10-08 00:04:37', NULL),
 (18, 18, 'wallet1_detail.jpg', '2025-10-08 00:04:37', NULL),
 (19, 19, 'jacket2_detail.jpg', '2025-10-08 00:04:37', NULL),
-(20, 20, 'jean1_detail.jpg', '2025-10-08 00:04:37', NULL);
+(24, 20, 'products/IGP0BGMwsdQvSRv6E6S5BuBJSzDtDTEJkvE2VRLR.jpg', '2025-10-18 09:39:38', '2025-10-18 09:39:38'),
+(25, 1, 'products/hkb83EXOYqJp5r54CeOVHGC7BRbTO9RIu6OR7rHj.jpg', '2025-10-19 08:44:02', '2025-10-19 08:44:02');
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `product_variants`
+-- Table structure for table `product_variants`
 --
 
 CREATE TABLE `product_variants` (
@@ -858,7 +753,7 @@ CREATE TABLE `product_variants` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `product_variants`
+-- Dumping data for table `product_variants`
 --
 
 INSERT INTO `product_variants` (`id`, `product_id`, `color_id`, `size_id`, `price`, `sale`, `image`, `quantity`, `status`, `created_at`, `updated_at`) VALUES
@@ -886,7 +781,7 @@ INSERT INTO `product_variants` (`id`, `product_id`, `color_id`, `size_id`, `pric
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `rankings`
+-- Table structure for table `rankings`
 --
 
 CREATE TABLE `rankings` (
@@ -898,7 +793,7 @@ CREATE TABLE `rankings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `rankings`
+-- Dumping data for table `rankings`
 --
 
 INSERT INTO `rankings` (`id`, `name`, `min_points`, `created_at`, `updated_at`) VALUES
@@ -909,7 +804,7 @@ INSERT INTO `rankings` (`id`, `name`, `min_points`, `created_at`, `updated_at`) 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `reviews`
+-- Table structure for table `reviews`
 --
 
 CREATE TABLE `reviews` (
@@ -924,7 +819,7 @@ CREATE TABLE `reviews` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `reviews`
+-- Dumping data for table `reviews`
 --
 
 INSERT INTO `reviews` (`id`, `order_id`, `product_id`, `rating`, `content`, `status`, `created_at`, `updated_at`) VALUES
@@ -937,7 +832,7 @@ INSERT INTO `reviews` (`id`, `order_id`, `product_id`, `rating`, `content`, `sta
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `roles`
+-- Table structure for table `roles`
 --
 
 CREATE TABLE `roles` (
@@ -948,7 +843,7 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `roles`
+-- Dumping data for table `roles`
 --
 
 INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
@@ -958,7 +853,7 @@ INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `sessions`
+-- Table structure for table `sessions`
 --
 
 CREATE TABLE `sessions` (
@@ -971,17 +866,19 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `sessions`
+-- Dumping data for table `sessions`
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('7yQHCaNWHqcpywTlEj98U6n7hOLAeTPelOvGHbuC', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoidVBWV3VodnJiMmNHc3NBSDltTGRDNUtVTUo5NGdXOWh3RVhYMHRVTCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjU6Imh0dHA6Ly9kYXRuXzA5LnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1761096065),
-('Xmm1BQ7FMOtcnwIBwo9RcyQqYsSoiGHZ7an7Or82', 6, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiS1U2a1FVZzNQSlJyQnJCczl6UndYRGVFbmpaTE5aZnZnaXo0bkRYMyI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6NjtzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoxOToiaHR0cDovL2RhdG5fMDkudGVzdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1761101676);
+('6uJfWXPLXFDNf3oxIMsNDh0e9xO82wm2ZbtlizQV', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiN0ZVS2o5VFBVMG1DcFJRTzVNdGJWQ21EQXlYT0N6YmxlWFJoU0N5eSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly9kYXRuXzA5LnRlc3QvcHJvZHVjdHMvMjAiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjQ6ImNhcnQiO2E6MTp7aToyMDthOjg6e3M6MTA6InByb2R1Y3RfaWQiO2k6MjA7czoxMDoidmFyaWFudF9pZCI7aToyMDtzOjQ6Im5hbWUiO3M6Mjc6IlF14bqnbiBqZWFuIG5hbSByw6FjaCBn4buRaSI7czo1OiJjb2xvciI7czozOiJSZWQiO3M6NDoic2l6ZSI7czoxOiJMIjtzOjU6InByaWNlIjtzOjk6IjM0MDAwMC4wMCI7czo4OiJxdWFudGl0eSI7aToyO3M6NToiaW1hZ2UiO3M6MTM6ImplYW4xLXJlZC5qcGciO319fQ==', 1760867824),
+('7pzmh6lzaCCY3DeAgXeRJG65fXDNzMBzi1qGTR5K', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMk5ycXdlSkcwekxqVWE5aG9KbzliT0FWUGROa1QzbU1kaDAwVEttMSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjQ6Imh0dHA6Ly9kYXRuXzA5LW1haW4udGVzdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1760867824),
+('GDoMQeRI0doOKMmnDZqatZ8dGzxeIqsCLfOJGpye', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoib0ltSGFGMnBmZzBQMmZFRE8ybHlPOEZsWnFROGM3UEsyUnN1R2pUUCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1760627777),
+('Gh5mK7fzR2HKiBc9siqXRTM0rNGWtErNhZPQ2w9J', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiUVZwUUxvTDROVnZlZjNGVHJ0cFllSE1QaEZESXpsZkQyODU2dUI2MCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTk6Imh0dHA6Ly9kYXRuXzA5LnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1760475502);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `sizes`
+-- Table structure for table `sizes`
 --
 
 CREATE TABLE `sizes` (
@@ -993,7 +890,7 @@ CREATE TABLE `sizes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `sizes`
+-- Dumping data for table `sizes`
 --
 
 INSERT INTO `sizes` (`id`, `name`, `size_code`, `created_at`, `updated_at`) VALUES
@@ -1006,7 +903,7 @@ INSERT INTO `sizes` (`id`, `name`, `size_code`, `created_at`, `updated_at`) VALU
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `tags`
+-- Table structure for table `tags`
 --
 
 CREATE TABLE `tags` (
@@ -1018,7 +915,7 @@ CREATE TABLE `tags` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `tags`
+-- Dumping data for table `tags`
 --
 
 INSERT INTO `tags` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
@@ -1038,7 +935,7 @@ INSERT INTO `tags` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -1046,7 +943,6 @@ CREATE TABLE `users` (
   `role_id` bigint UNSIGNED NOT NULL,
   `ranking_id` bigint UNSIGNED DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `username` varchar(50) DEFAULT NULL,
   `name` varchar(150) NOT NULL,
   `email` varchar(190) NOT NULL,
   `phone` varchar(30) DEFAULT NULL,
@@ -1057,25 +953,29 @@ CREATE TABLE `users` (
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `is_locked` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `users`
+-- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `role_id`, `ranking_id`, `image`, `username`, `name`, `email`, `phone`, `password`, `address`, `is_verified`, `verification_token`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 2, 1, NULL, NULL, 'Nguyen Van A', 'a@example.com', '0900000001', '$2y$10$hashA', 'Ha Noi', 1, NULL, NULL, '2025-10-03 23:28:17', NULL, NULL),
-(2, 2, 1, NULL, NULL, 'Tran Thi B', 'b@example.com', '0900000002', '$2y$10$hashB', 'Hai Phong', 1, NULL, NULL, '2025-10-03 23:28:17', NULL, NULL),
-(3, 2, 2, NULL, NULL, 'Le Van C', 'c@example.com', '0900000003', '$2y$10$hashC', 'Da Nang', 1, NULL, NULL, '2025-10-03 23:28:17', NULL, NULL),
-(4, 2, 2, NULL, NULL, 'Pham Thi D', 'd@example.com', '0900000004', '$2y$10$hashD', 'Hue', 1, NULL, NULL, '2025-10-03 23:28:17', NULL, NULL),
-(5, 1, 3, NULL, NULL, 'Admin', 'admin@example.com', '0900000005', '$2y$10$hashE', 'Ha Noi', 1, NULL, NULL, '2025-10-03 23:28:17', NULL, NULL),
-(6, 2, 1, 'avatar/ycWZn9s9YmSRr2fOyiMf9lkZjGiKTzKGw4M5ggg9.jpg', 'HoangHung04', 'Hoàng Văn Hùng', 'Hoanghung04.work@gmail.com', '0369573472', '$2y$12$fgJjKLx3XgNv2A3hIoEc/e2GFAKjtG0J2IJn/7EN/a0.EDw3M479C', '66 Ng. 132 Đ. Cầu Diễn, Nguyên Xá, Bắc Từ Liêm, Hà Nội, Việt Nam', 1, NULL, 'BkCPcTL2jjc3Y440URdyTD5dFtQNyJhu067NiyYfHbJgTSFex3ENfpjQvzxf', '2025-10-20 14:29:46', '2025-10-22 02:13:22', NULL);
+INSERT INTO `users` (`id`, `role_id`, `ranking_id`, `image`, `name`, `email`, `phone`, `password`, `address`, `is_verified`, `verification_token`, `remember_token`, `created_at`, `updated_at`, `is_locked`, `deleted_at`) VALUES
+(1, 2, 1, NULL, 'Nguyen Van A', 'a@example.com', '0900000001', '$2y$12$5oB6fuLsOfDnIV6zW8ez1erEN9XUDJFPc.2zchnwpAOvSFEv8R75K', 'Ha Noi', 1, NULL, NULL, '2025-10-03 23:28:17', '2025-10-16 15:15:56', 0, NULL),
+(2, 2, 1, NULL, 'Tran Thi B', 'b@example.com', '0900000002', '$2y$10$hashB', 'Hai Phong', 1, NULL, NULL, '2025-10-03 23:28:17', NULL, 0, NULL),
+(3, 2, 2, NULL, 'Le Van C', 'c@example.com', '0900000003', '$2y$10$hashC', 'Da Nang', 1, NULL, NULL, '2025-10-03 23:28:17', NULL, 0, NULL),
+(4, 2, 2, NULL, 'Pham Thi D', 'd@example.com', '0900000004', '$2y$10$hashD', 'Hue', 1, NULL, NULL, '2025-10-03 23:28:17', '2025-10-19 08:41:22', 0, NULL),
+(5, 1, 3, NULL, 'Admin', 'admin@example.com', '0900000005', '$2y$12$3DGrCuGafvhkSVbSbRklkuu.zoAbIB8Fukjig.phphKP8o18YKsfm', 'Ha Noi', 1, NULL, NULL, '2025-10-03 23:28:17', '2025-10-16 15:09:28', 0, NULL),
+(6, 1, NULL, NULL, 'ad', 'ad@gmail.com', '0234567899', '123456', 'hn', 0, 'a', 'fHfIg3RD5zQLPOAYUOzNlWOdMQWni2RgtjMxr1iSndoAUlCZMSlXL6JWp0UX', NULL, NULL, 0, NULL),
+(7, 2, 1, NULL, 'dja', 'h@gmail.com', NULL, '$2y$12$iCGCcqyZpWx2L5L6v/6qgetTNKl3DbAM.58nFZPL8RvQRxT7g3S4.', NULL, 1, NULL, NULL, '2025-10-19 10:28:10', '2025-10-19 10:28:10', 0, NULL),
+(8, 2, 1, NULL, 'abcccc', 'a@gmail.com', NULL, '$2y$12$.q3Ycg24XybMIF.5xy9KoelHSZFh6qhLYflCGAPIyu.l414lITBni', NULL, 1, NULL, NULL, '2025-10-22 14:08:57', '2025-10-22 14:08:57', 0, NULL),
+(9, 2, 1, NULL, 'test', 'test@gmail.com', NULL, '$2y$12$OvMKGbpp4xN2snWDS.zud..UoKynXM4XN/oE4T81jnrfX4I51QCQm', NULL, 1, NULL, NULL, '2025-10-22 14:11:34', '2025-10-22 15:15:55', 0, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `vouchers`
+-- Table structure for table `vouchers`
 --
 
 CREATE TABLE `vouchers` (
@@ -1095,7 +995,7 @@ CREATE TABLE `vouchers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `vouchers`
+-- Dumping data for table `vouchers`
 --
 
 INSERT INTO `vouchers` (`id`, `voucher_code`, `quantity`, `total_used`, `user_limit`, `sale_price`, `min_order_value`, `start_date`, `end_date`, `status`, `description`, `created_at`, `updated_at`) VALUES
@@ -1106,42 +1006,18 @@ INSERT INTO `vouchers` (`id`, `voucher_code`, `quantity`, `total_used`, `user_li
 (5, 'VIP50', 10, 0, 1, 200000.00, 1000000.00, '2025-10-03 23:28:17', '2026-01-01 23:28:17', 1, 'Giảm 200k cho khách VIP', '2025-10-03 23:28:17', NULL);
 
 --
--- Chỉ mục cho các bảng đã đổ
+-- Indexes for dumped tables
 --
 
 --
--- Chỉ mục cho bảng `accounts`
---
-ALTER TABLE `accounts`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `auths`
---
-ALTER TABLE `auths`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `banners`
+-- Indexes for table `banners`
 --
 ALTER TABLE `banners`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_banners_location` (`location_id`);
 
 --
--- Chỉ mục cho bảng `cache`
---
-ALTER TABLE `cache`
-  ADD PRIMARY KEY (`key`);
-
---
--- Chỉ mục cho bảng `cache_locks`
---
-ALTER TABLE `cache_locks`
-  ADD PRIMARY KEY (`key`);
-
---
--- Chỉ mục cho bảng `carts`
+-- Indexes for table `carts`
 --
 ALTER TABLE `carts`
   ADD PRIMARY KEY (`id`),
@@ -1149,7 +1025,7 @@ ALTER TABLE `carts`
   ADD KEY `fk_carts_voucher` (`voucher_id`);
 
 --
--- Chỉ mục cho bảng `cart_details`
+-- Indexes for table `cart_details`
 --
 ALTER TABLE `cart_details`
   ADD PRIMARY KEY (`id`),
@@ -1158,7 +1034,7 @@ ALTER TABLE `cart_details`
   ADD KEY `idx_cd_variant` (`product_variant_id`);
 
 --
--- Chỉ mục cho bảng `categories`
+-- Indexes for table `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`),
@@ -1166,7 +1042,7 @@ ALTER TABLE `categories`
   ADD KEY `fk_categories_parent` (`parent_id`);
 
 --
--- Chỉ mục cho bảng `chats`
+-- Indexes for table `chats`
 --
 ALTER TABLE `chats`
   ADD PRIMARY KEY (`id`),
@@ -1174,7 +1050,7 @@ ALTER TABLE `chats`
   ADD KEY `idx_chats_admin` (`admin_id`);
 
 --
--- Chỉ mục cho bảng `chat_details`
+-- Indexes for table `chat_details`
 --
 ALTER TABLE `chat_details`
   ADD PRIMARY KEY (`id`),
@@ -1183,14 +1059,14 @@ ALTER TABLE `chat_details`
   ADD KEY `idx_cd_receiver` (`receiver_id`);
 
 --
--- Chỉ mục cho bảng `colors`
+-- Indexes for table `colors`
 --
 ALTER TABLE `colors`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uq_colors_name` (`name`);
 
 --
--- Chỉ mục cho bảng `comments`
+-- Indexes for table `comments`
 --
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`),
@@ -1200,14 +1076,7 @@ ALTER TABLE `comments`
   ADD KEY `idx_comments_status` (`status`);
 
 --
--- Chỉ mục cho bảng `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
-
---
--- Chỉ mục cho bảng `invoices`
+-- Indexes for table `invoices`
 --
 ALTER TABLE `invoices`
   ADD PRIMARY KEY (`id`),
@@ -1215,33 +1084,20 @@ ALTER TABLE `invoices`
   ADD KEY `idx_inv_order` (`order_id`);
 
 --
--- Chỉ mục cho bảng `jobs`
---
-ALTER TABLE `jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `jobs_queue_index` (`queue`);
-
---
--- Chỉ mục cho bảng `job_batches`
---
-ALTER TABLE `job_batches`
-  ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `locations`
+-- Indexes for table `locations`
 --
 ALTER TABLE `locations`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Chỉ mục cho bảng `migrations`
+-- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `news`
+-- Indexes for table `news`
 --
 ALTER TABLE `news`
   ADD PRIMARY KEY (`id`),
@@ -1253,7 +1109,7 @@ ALTER TABLE `news`
 ALTER TABLE `news` ADD FULLTEXT KEY `ft_news_text` (`title`,`excerpt`,`content`);
 
 --
--- Chỉ mục cho bảng `news_categories`
+-- Indexes for table `news_categories`
 --
 ALTER TABLE `news_categories`
   ADD PRIMARY KEY (`id`),
@@ -1261,14 +1117,14 @@ ALTER TABLE `news_categories`
   ADD KEY `idx_news_categories_parent` (`parent_id`);
 
 --
--- Chỉ mục cho bảng `news_tag`
+-- Indexes for table `news_tag`
 --
 ALTER TABLE `news_tag`
   ADD PRIMARY KEY (`news_id`,`tag_id`),
   ADD KEY `idx_news_tag_tag` (`tag_id`);
 
 --
--- Chỉ mục cho bảng `notifications`
+-- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`),
@@ -1276,7 +1132,7 @@ ALTER TABLE `notifications`
   ADD KEY `idx_notif_order` (`order_id`);
 
 --
--- Chỉ mục cho bảng `orders`
+-- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
@@ -1287,7 +1143,7 @@ ALTER TABLE `orders`
   ADD KEY `fk_orders_voucher` (`voucher_id`);
 
 --
--- Chỉ mục cho bảng `order_details`
+-- Indexes for table `order_details`
 --
 ALTER TABLE `order_details`
   ADD PRIMARY KEY (`id`),
@@ -1295,20 +1151,20 @@ ALTER TABLE `order_details`
   ADD KEY `idx_od_variant` (`product_variant_id`);
 
 --
--- Chỉ mục cho bảng `order_statuses`
+-- Indexes for table `order_statuses`
 --
 ALTER TABLE `order_statuses`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Chỉ mục cho bảng `password_reset_tokens`
+-- Indexes for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
 
 --
--- Chỉ mục cho bảng `payments`
+-- Indexes for table `payments`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`),
@@ -1316,21 +1172,21 @@ ALTER TABLE `payments`
   ADD KEY `idx_pay_method` (`payment_method_id`);
 
 --
--- Chỉ mục cho bảng `payment_methods`
+-- Indexes for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `code` (`code`);
 
 --
--- Chỉ mục cho bảng `payment_statuses`
+-- Indexes for table `payment_statuses`
 --
 ALTER TABLE `payment_statuses`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Chỉ mục cho bảng `products`
+-- Indexes for table `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
@@ -1338,7 +1194,7 @@ ALTER TABLE `products`
   ADD KEY `fk_products_category` (`category_id`);
 
 --
--- Chỉ mục cho bảng `product_favorites`
+-- Indexes for table `product_favorites`
 --
 ALTER TABLE `product_favorites`
   ADD PRIMARY KEY (`id`),
@@ -1346,14 +1202,14 @@ ALTER TABLE `product_favorites`
   ADD KEY `idx_fav_product` (`product_id`);
 
 --
--- Chỉ mục cho bảng `product_photo_albums`
+-- Indexes for table `product_photo_albums`
 --
 ALTER TABLE `product_photo_albums`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_ppa_product` (`product_id`);
 
 --
--- Chỉ mục cho bảng `product_variants`
+-- Indexes for table `product_variants`
 --
 ALTER TABLE `product_variants`
   ADD PRIMARY KEY (`id`),
@@ -1362,14 +1218,14 @@ ALTER TABLE `product_variants`
   ADD KEY `idx_pv_size` (`size_id`);
 
 --
--- Chỉ mục cho bảng `rankings`
+-- Indexes for table `rankings`
 --
 ALTER TABLE `rankings`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Chỉ mục cho bảng `reviews`
+-- Indexes for table `reviews`
 --
 ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`),
@@ -1377,14 +1233,14 @@ ALTER TABLE `reviews`
   ADD KEY `idx_reviews_product` (`product_id`);
 
 --
--- Chỉ mục cho bảng `roles`
+-- Indexes for table `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Chỉ mục cho bảng `sessions`
+-- Indexes for table `sessions`
 --
 ALTER TABLE `sessions`
   ADD PRIMARY KEY (`id`),
@@ -1392,14 +1248,14 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
--- Chỉ mục cho bảng `sizes`
+-- Indexes for table `sizes`
 --
 ALTER TABLE `sizes`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uq_sizes_name` (`name`);
 
 --
--- Chỉ mục cho bảng `tags`
+-- Indexes for table `tags`
 --
 ALTER TABLE `tags`
   ADD PRIMARY KEY (`id`),
@@ -1407,7 +1263,7 @@ ALTER TABLE `tags`
   ADD KEY `idx_tags_name` (`name`);
 
 --
--- Chỉ mục cho bảng `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -1416,265 +1272,241 @@ ALTER TABLE `users`
   ADD KEY `fk_users_ranking` (`ranking_id`);
 
 --
--- Chỉ mục cho bảng `vouchers`
+-- Indexes for table `vouchers`
 --
 ALTER TABLE `vouchers`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `voucher_code` (`voucher_code`);
 
 --
--- AUTO_INCREMENT cho các bảng đã đổ
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT cho bảng `accounts`
---
-ALTER TABLE `accounts`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `auths`
---
-ALTER TABLE `auths`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `banners`
+-- AUTO_INCREMENT for table `banners`
 --
 ALTER TABLE `banners`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `carts`
+-- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `cart_details`
+-- AUTO_INCREMENT for table `cart_details`
 --
 ALTER TABLE `cart_details`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `categories`
+-- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT cho bảng `chats`
+-- AUTO_INCREMENT for table `chats`
 --
 ALTER TABLE `chats`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `chat_details`
+-- AUTO_INCREMENT for table `chat_details`
 --
 ALTER TABLE `chat_details`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `colors`
+-- AUTO_INCREMENT for table `colors`
 --
 ALTER TABLE `colors`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `comments`
+-- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208;
 
 --
--- AUTO_INCREMENT cho bảng `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `invoices`
+-- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `jobs`
---
-ALTER TABLE `jobs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `locations`
+-- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT cho bảng `migrations`
+-- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT cho bảng `news`
+-- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
--- AUTO_INCREMENT cho bảng `news_categories`
+-- AUTO_INCREMENT for table `news_categories`
 --
 ALTER TABLE `news_categories`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT cho bảng `notifications`
+-- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `orders`
+-- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `order_details`
+-- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `order_statuses`
+-- AUTO_INCREMENT for table `order_statuses`
 --
 ALTER TABLE `order_statuses`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT cho bảng `payments`
+-- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `payment_methods`
+-- AUTO_INCREMENT for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT cho bảng `payment_statuses`
+-- AUTO_INCREMENT for table `payment_statuses`
 --
 ALTER TABLE `payment_statuses`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT cho bảng `products`
+-- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT cho bảng `product_favorites`
+-- AUTO_INCREMENT for table `product_favorites`
 --
 ALTER TABLE `product_favorites`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `product_photo_albums`
+-- AUTO_INCREMENT for table `product_photo_albums`
 --
 ALTER TABLE `product_photo_albums`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT cho bảng `product_variants`
+-- AUTO_INCREMENT for table `product_variants`
 --
 ALTER TABLE `product_variants`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT cho bảng `rankings`
+-- AUTO_INCREMENT for table `rankings`
 --
 ALTER TABLE `rankings`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT cho bảng `reviews`
+-- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `roles`
+-- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT cho bảng `sizes`
+-- AUTO_INCREMENT for table `sizes`
 --
 ALTER TABLE `sizes`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `tags`
+-- AUTO_INCREMENT for table `tags`
 --
 ALTER TABLE `tags`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT cho bảng `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT cho bảng `vouchers`
+-- AUTO_INCREMENT for table `vouchers`
 --
 ALTER TABLE `vouchers`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- Ràng buộc đối với các bảng kết xuất
+-- Constraints for dumped tables
 --
 
 --
--- Ràng buộc cho bảng `banners`
+-- Constraints for table `banners`
 --
 ALTER TABLE `banners`
   ADD CONSTRAINT `fk_banners_location` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `carts`
+-- Constraints for table `carts`
 --
 ALTER TABLE `carts`
   ADD CONSTRAINT `fk_carts_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_carts_voucher` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `cart_details`
+-- Constraints for table `cart_details`
 --
 ALTER TABLE `cart_details`
   ADD CONSTRAINT `fk_cd_cart` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_cd_variant` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variants` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `categories`
+-- Constraints for table `categories`
 --
 ALTER TABLE `categories`
   ADD CONSTRAINT `fk_categories_parent` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `chats`
+-- Constraints for table `chats`
 --
 ALTER TABLE `chats`
   ADD CONSTRAINT `fk_chats_admin` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_chats_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `chat_details`
+-- Constraints for table `chat_details`
 --
 ALTER TABLE `chat_details`
   ADD CONSTRAINT `fk_cdetail_chat` FOREIGN KEY (`chat_id`) REFERENCES `chats` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -1682,7 +1514,7 @@ ALTER TABLE `chat_details`
   ADD CONSTRAINT `fk_cdetail_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `comments`
+-- Constraints for table `comments`
 --
 ALTER TABLE `comments`
   ADD CONSTRAINT `fk_comments_news` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -1690,40 +1522,40 @@ ALTER TABLE `comments`
   ADD CONSTRAINT `fk_comments_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `invoices`
+-- Constraints for table `invoices`
 --
 ALTER TABLE `invoices`
   ADD CONSTRAINT `fk_inv_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `news`
+-- Constraints for table `news`
 --
 ALTER TABLE `news`
   ADD CONSTRAINT `fk_news_author` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_news_category` FOREIGN KEY (`category_id`) REFERENCES `news_categories` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `news_categories`
+-- Constraints for table `news_categories`
 --
 ALTER TABLE `news_categories`
   ADD CONSTRAINT `fk_news_categories_parent` FOREIGN KEY (`parent_id`) REFERENCES `news_categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `news_tag`
+-- Constraints for table `news_tag`
 --
 ALTER TABLE `news_tag`
   ADD CONSTRAINT `fk_news_tag_news` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_news_tag_tag` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `notifications`
+-- Constraints for table `notifications`
 --
 ALTER TABLE `notifications`
   ADD CONSTRAINT `fk_notif_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_notif_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `orders`
+-- Constraints for table `orders`
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `fk_orders_order_status` FOREIGN KEY (`order_status_id`) REFERENCES `order_statuses` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -1732,40 +1564,40 @@ ALTER TABLE `orders`
   ADD CONSTRAINT `fk_orders_voucher` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `order_details`
+-- Constraints for table `order_details`
 --
 ALTER TABLE `order_details`
   ADD CONSTRAINT `fk_od_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_od_variant` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variants` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `payments`
+-- Constraints for table `payments`
 --
 ALTER TABLE `payments`
   ADD CONSTRAINT `fk_pay_method` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_methods` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_pay_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `products`
+-- Constraints for table `products`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `fk_products_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `product_favorites`
+-- Constraints for table `product_favorites`
 --
 ALTER TABLE `product_favorites`
   ADD CONSTRAINT `fk_fav_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_fav_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `product_photo_albums`
+-- Constraints for table `product_photo_albums`
 --
 ALTER TABLE `product_photo_albums`
   ADD CONSTRAINT `fk_ppa_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `product_variants`
+-- Constraints for table `product_variants`
 --
 ALTER TABLE `product_variants`
   ADD CONSTRAINT `fk_pv_color` FOREIGN KEY (`color_id`) REFERENCES `colors` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -1773,14 +1605,14 @@ ALTER TABLE `product_variants`
   ADD CONSTRAINT `fk_pv_size` FOREIGN KEY (`size_id`) REFERENCES `sizes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `reviews`
+-- Constraints for table `reviews`
 --
 ALTER TABLE `reviews`
   ADD CONSTRAINT `fk_reviews_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_reviews_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ràng buộc cho bảng `users`
+-- Constraints for table `users`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `fk_users_ranking` FOREIGN KEY (`ranking_id`) REFERENCES `rankings` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
