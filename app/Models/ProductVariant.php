@@ -60,5 +60,5 @@ class ProductVariant extends Model
     public function getStatusTextAttribute()
     {
         return $this->status == 1 ? 'Hoạt động' : 'Ngừng bán';
-    }
+    }   
 }
