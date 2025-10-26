@@ -210,6 +210,7 @@
                                     </li>
                                     <li id="menu-item-77"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
+<<<<<<< Updated upstream
                                         <a href="../blog/index.html"><span>Blog</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <ul class="sub-menu">
@@ -235,6 +236,9 @@
                                                         — Single</span></a>
                                             </li>
                                         </ul>
+=======
+                                        <a href="{{ route('blog.index') }}"><span>Tin tức</span></a>
+>>>>>>> Stashed changes
                                     </li>
                                     <li id="menu-item-84"
                                         class="menu-item menu-item-type-post_type menu-item-object-page"><a
