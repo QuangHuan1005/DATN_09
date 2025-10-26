@@ -458,7 +458,7 @@ a.btn-checkout:hover{ opacity:.92; }
     </div>
 
     {{-- nút này đã có .btn-checkout { margin-top:16px } nên KHÔNG dính bảng --}}
-    <a href=""
+    <a href="{{ route('checkout.index') }}"
        class="btn-checkout d-block"
        onclick="return checkCartBeforeCheckout({{ $coSanPham ? 'true':'false' }})">
        Tiến hành thanh toán

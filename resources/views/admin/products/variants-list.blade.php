@@ -1,34 +1,21 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý {{ $typeName }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container-fluid">
-        <!-- Header -->
-        <div class="row bg-dark text-white py-2">
-            <div class="col-6">
-                <a href="{{ route('admin.products.variants') }}" class="text-white text-decoration-none">
-                    <i class="fas fa-arrow-left"></i> Quay lại
-                </a>
-            </div>
-            <div class="col-6 text-end">
-                <span>Quản lý {{ $typeName }}</span>
-            </div>
-        </div>
+@extends('layouts.admin.app')
 
-        <div class="container mt-4">
+@section('title', 'Quản lý ' . $typeName)
+
+@section('content')
+<div class="container mt-4">
             <!-- Title -->
             <div class="row mb-4">
                 <div class="col-12">
-                    <h1 class="h2">
-                        <i class="fas {{ $type === 'size' ? 'fa-ruler' : 'fa-palette' }}"></i> 
-                        Quản lý {{ $typeName }}
-                    </h1>
+                    <div class="d-flex align-items-center mb-3">
+                        <a href="{{ route('admin.products.variants') }}" class="btn btn-outline-secondary me-3">
+                            <i class="fas fa-arrow-left"></i> Quay lại
+                        </a>
+                        <h1 class="h2 mb-0">
+                            <i class="fas {{ $type === 'size' ? 'fa-ruler' : 'fa-palette' }}"></i> 
+                            Quản lý {{ $typeName }}
+                        </h1>
+                    </div>
                 </div>
             </div>
 
@@ -194,7 +181,4 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

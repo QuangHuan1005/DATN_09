@@ -19,7 +19,7 @@
                     <i class="fas fa-palette fa-3x text-success mb-3"></i>
                     <h5 class="card-title">Quản lý biến thể sản phẩm</h5>
                     <p class="card-text">Quản lý kích thước và màu sắc của sản phẩm</p>
-                    <a href="{{ route('admin.product-variants.index') }}" class="btn btn-success btn-lg">
+                    <a href="{{ route('admin.products.variants') }}" class="btn btn-success btn-lg">
                         Quản lý biến thể
                     </a>
                 </div>
@@ -32,8 +32,8 @@
         <div class="col-12 text-center">
             <h3>Thao tác nhanh</h3>
             <div class="d-flex justify-content-center gap-2">
-                <a href="{{ route('admin.product-variants.create') }}" class="btn btn-outline-success">
-                    <i class="fas fa-plus"></i> Thêm biến thể sản phẩm
+                <a href="{{ route('admin.products.variants') }}" class="btn btn-outline-success">
+                    <i class="fas fa-plus"></i> Quản lý biến thể sản phẩm
                 </a>
             </div>
         </div>

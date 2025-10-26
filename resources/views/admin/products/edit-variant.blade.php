@@ -1,33 +1,20 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sửa biến thể sản phẩm</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container-fluid">
-        <!-- Header -->
-        <div class="row bg-dark text-white py-2">
-            <div class="col-6">
-                <a href="{{ route('admin.products.variants.type', $variant->type) }}" class="text-white text-decoration-none">
+@extends('layouts.admin.app')
+
+@section('title', 'Sửa biến thể sản phẩm')
+
+@section('content')
+<div class="container mt-4">
+    <!-- Title -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-3">
+                <a href="{{ $type ? route('admin.products.variants.type', $type) : route('admin.products.variants') }}" class="btn btn-outline-secondary me-3">
                     <i class="fas fa-arrow-left"></i> Quay lại
                 </a>
-            </div>
-            <div class="col-6 text-end">
-                <span>Sửa biến thể sản phẩm</span>
+                <h1 class="h2 mb-0">Sửa {{ $typeName ?? 'biến thể' }}</h1>
             </div>
         </div>
-
-        <div class="container mt-4">
-            <!-- Title -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h1 class="h2">Sửa biến thể sản phẩm</h1>
-                </div>
-            </div>
+    </div>
 
             <!-- Success Message -->
             @if(session('success'))
@@ -51,27 +38,29 @@
                                 @csrf
                                 @method('PUT')
                                 
+                                <input type="hidden" name="type" value="{{ $type }}">
+                                
                                 <div class="mb-3">
-                                    <label for="type" class="form-label">Loại biến thể</label>
-                                    <select class="form-select" id="type" name="type" required>
-                                        <option value="">Chọn loại biến thể</option>
-                                        <option value="size" {{ $variant->type === 'size' ? 'selected' : '' }}>Kích thước</option>
-                                        <option value="color" {{ $variant->type === 'color' ? 'selected' : '' }}>Màu sắc</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Tên biến thể</label>
+                                    <label for="name" class="form-label">Tên {{ $typeName ?? 'biến thể' }}</label>
                                     <input type="text" class="form-control" id="name" name="name" 
                                            value="{{ old('name', $variant->name) }}" required>
                                 </div>
 
+                                @if($type === 'size')
                                 <div class="mb-3">
-                                    <label for="value" class="form-label">Giá trị</label>
-                                    <input type="text" class="form-control" id="value" name="value" 
-                                           value="{{ old('value', $variant->value) }}" required 
-                                           placeholder="VD: S, M, L hoặc #FF0000">
+                                    <label for="size_code" class="form-label">Giá trị</label>
+                                    <input type="text" class="form-control" id="size_code" name="size_code" 
+                                           value="{{ old('size_code', $variant->size_code) }}" 
+                                           placeholder="VD: S, M, L, XL">
                                 </div>
+                                @elseif($type === 'color')
+                                <div class="mb-3">
+                                    <label for="color_code" class="form-label">Giá trị</label>
+                                    <input type="text" class="form-control" id="color_code" name="color_code" 
+                                           value="{{ old('color_code', $variant->color_code) }}" 
+                                           placeholder="VD: #FF0000, #0000FF">
+                                </div>
+                                @endif
 
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Mô tả</label>
@@ -81,8 +70,8 @@
                                 <div class="mb-3">
                                     <label for="status" class="form-label">Trạng thái</label>
                                     <select class="form-select" id="status" name="status" required>
-                                        <option value="active" {{ $variant->status === 'active' ? 'selected' : '' }}>Hoạt động</option>
-                                        <option value="inactive" {{ $variant->status === 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
+                                        <option value="active" {{ old('status', $variant->status) === 'active' ? 'selected' : '' }}>Hoạt động</option>
+                                        <option value="inactive" {{ old('status', $variant->status) === 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
                                     </select>
                                 </div>
 
@@ -90,7 +79,7 @@
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-save"></i> Cập nhật
                                     </button>
-                                    <a href="{{ route('admin.products.variants.type', $variant->type) }}" class="btn btn-secondary">
+                                    <a href="{{ $type ? route('admin.products.variants.type', $type) : route('admin.products.variants') }}" class="btn btn-secondary">
                                         <i class="fas fa-times"></i> Hủy
                                     </a>
                                 </div>
@@ -101,9 +90,6 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection
 
 
