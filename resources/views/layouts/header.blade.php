@@ -214,8 +214,7 @@
                                     </li> --}}
                                     <li id="menu-item-77"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
-                                        <a href="{{ route('blog.index') }}"><span>Tin tức</span><i
-                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
+                                        <a href="{{ route('blog.index') }}"><span>Tin tức</span></a>
                                     </li>
                                     <li id="menu-item-84"
                                         class="menu-item menu-item-type-post_type menu-item-object-page"><a

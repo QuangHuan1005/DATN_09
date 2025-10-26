@@ -17,9 +17,26 @@ class ContactController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'your-name'     => 'required|string|max:255',
+            'your-email'    => 'required|email|string|max:255',
+            'your-subject'  => 'required|string|max:255',
+            'your-message'  => 'nullable|string|max:2000',
+        ], [
+            'your-name.required'    => 'Vui lòng nhập Tên của bạn.',
+            'your-name.max'         => 'Tên không được vượt quá 255 ký tự.',
+            'your-email.required'   => 'Vui lòng nhập Email.',
+            'your-email.email'      => 'Địa chỉ Email không hợp lệ.',
+            'your-subject.required' => 'Vui lòng nhập Tiêu đề.',
+            'your-message.max'      => 'Nội dung không được vượt quá 2000 ký tự.',
+        ]);
+
+        return redirect()->route('contact.index')->with('success', '✅ Đăng ký nhận tin thành công');
+    }
+
     public function create()
     {
         //
@@ -28,14 +45,7 @@ class ContactController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Contact $contact)
     {
         //

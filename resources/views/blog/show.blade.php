@@ -1709,79 +1709,141 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="elementor-element elementor-element-60042dcc elementor-post-navigation-borders-yes elementor-widget kitify elementor-kitify-post-navigation"
-                                data-id="60042dcc" data-element_type="widget"
-                                data-widget_type="kitify-post-navigation.default">
-                                <div class="elementor-widget-container">
-                                    <div class="elementor-post-navigation">
-                                        <div class="elementor-post-navigation__prev elementor-post-navigation__link">
-                                            <a class="nav-links__item nav-links__item--prev"
-                                                href="../dress-to-impress-a-guide-to-power-dressing-for-success/index.html"
-                                                rel="prev"><span
-                                                    class="post-navigation__arrow-wrapper post-navigation__arrow-prev"><i
-                                                        aria-hidden="true" class="novaicon-arrow-left"></i></span><span
-                                                    class="elementor-post-navigation__link__prev"><span
-                                                        class="post-navigation__prev--label">Prev Post</span><span
-                                                        class="post-navigation__prev--title">Dress to Impress: A Guide
-                                                        to Power Dressing for Success</span></span></a>
-                                        </div>
-                                        <div class="elementor-post-navigation__separator-wrapper">
-                                            <div class="elementor-post-navigation__separator"></div>
-                                        </div>
-                                        <div class="elementor-post-navigation__next elementor-post-navigation__link">
+                            <div class="elementor-element elementor-element-13e29120 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                                data-id="13e29120" data-element_type="container">
+                                <div class="e-con-inner">
+
+                                    <div class="elementor-element elementor-element-7f9b23a2 elementor-widget kitify elementor-widget-theme-post-content elementor-kitify-post-content"
+                                        data-id="7f9b23a2" data-element_type="widget"
+                                        data-widget_type="kitify-post-content.default">
+                                        <div class="elementor-widget-container">
+
+                                            {!! $post->content !!}
+
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="elementor-element elementor-element-1be3fb1 elementor-widget kitify elementor-kitify-post-comment"
-                                data-id="1be3fb1" data-element_type="widget"
-                                data-widget_type="kitify-post-comment.default">
-                                <div class="elementor-widget-container">
 
-                                    <div id="comments" class="comments-area">
+                                    <div class="elementor-element elementor-element-7c0c515d elementor-share-buttons--skin-boxed elementor-grid-mobile-3 elementor-share-buttons--align-left elementor-share-buttons--color-custom elementor-share-buttons--view-icon-text elementor-share-buttons--shape-square elementor-grid-0 elementor-widget kitify elementor-kitify-social-share"
+                                        data-id="7c0c515d" data-element_type="widget"
+                                        data-widget_type="kitify-social-share.default">
+                                        <div class="elementor-widget-container">
+                                            <div class="elementor-grid">
+                                                <div class="elementor-grid-item">
+                                                    <div class="elementor-share-btn elementor-share-btn_facebook">
+                                                        <span class="elementor-share-btn__icon">
+                                                            <i class="novaicon-b-facebook" aria-hidden="true"></i>
+                                                            <span class="elementor-screen-only">Share on facebook</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="elementor-grid-item">
+                                                    <div class="elementor-share-btn elementor-share-btn_twitter">
+                                                        <span class="elementor-share-btn__icon">
+                                                            <i class="novaicon-b-twitter" aria-hidden="true"></i>
+                                                            <span class="elementor-screen-only">Share on twitter</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="elementor-grid-item">
+                                                    <div class="elementor-share-btn elementor-share-btn_linkedin">
+                                                        <span class="elementor-share-btn__icon">
+                                                            <i class="novaicon-b-linkedin" aria-hidden="true"></i>
+                                                            <span class="elementor-screen-only">Share on linkedin</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-60042dcc elementor-post-navigation-borders-yes elementor-widget kitify elementor-kitify-post-navigation"
+                                        data-id="60042dcc" data-element_type="widget"
+                                        data-widget_type="kitify-post-navigation.default">
+                                        <div class="elementor-widget-container">
+                                            <div class="elementor-post-navigation">
+                                                <div
+                                                    class="elementor-post-navigation__prev elementor-post-navigation__link">
+                                                    <a class="nav-links__item nav-links__item--prev"
+                                                        href="../dress-to-impress-a-guide-to-power-dressing-for-success/index.html"
+                                                        rel="prev"><span
+                                                            class="post-navigation__arrow-wrapper post-navigation__arrow-prev"><i
+                                                                aria-hidden="true"
+                                                                class="novaicon-arrow-left"></i></span><span
+                                                            class="elementor-post-navigation__link__prev"><span
+                                                                class="post-navigation__prev--label">Prev Post</span><span
+                                                                class="post-navigation__prev--title">Dress to Impress: A
+                                                                Guide
+                                                                to Power Dressing for Success</span></span></a>
+                                                </div>
+                                                <div class="elementor-post-navigation__separator-wrapper">
+                                                    <div class="elementor-post-navigation__separator"></div>
+                                                </div>
+                                                <div
+                                                    class="elementor-post-navigation__next elementor-post-navigation__link">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-1be3fb1 elementor-widget kitify elementor-kitify-post-comment"
+                                        data-id="1be3fb1" data-element_type="widget"
+                                        data-widget_type="kitify-post-comment.default">
+                                        <div class="elementor-widget-container">
 
-                                        <div id="respond" class="comment-respond">
-                                            <h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a
-                                                        rel="nofollow" id="cancel-comment-reply-link"
-                                                        href="index.html#respond" style="display:none;">Cancel
-                                                        reply</a></small></h3>
-                                            <form action="https://mixtas.novaworks.net/wp-comments-post.php"
-                                                method="post" id="commentform" class="comment-form">
-                                                <p class="comment-notes"><span id="email-notes">Your email address will
-                                                        not be published.</span> <span
-                                                        class="required-field-message">Required fields are marked <span
-                                                            class="required">*</span></span></p>
-                                                <p class="comment-form-comment"><label for="comment">Comment <span
-                                                            class="required">*</span></label> <textarea id="comment"
-                                                        name="comment" cols="45" rows="8" maxlength="65525"
-                                                        required></textarea></p>
-                                                <p class="comment-form-author"><label for="author">Name <span
-                                                            class="required">*</span></label> <input id="author"
-                                                        name="author" type="text" value="" size="30" maxlength="245"
-                                                        autocomplete="name" required /></p>
-                                                <p class="comment-form-email"><label for="email">Email <span
-                                                            class="required">*</span></label> <input id="email"
-                                                        name="email" type="email" value="" size="30" maxlength="100"
-                                                        aria-describedby="email-notes" autocomplete="email" required />
-                                                </p>
-                                                <p class="comment-form-url"><label for="url">Website</label> <input
-                                                        id="url" name="url" type="url" value="" size="30"
-                                                        maxlength="200" autocomplete="url" /></p>
-                                                <p class="comment-form-cookies-consent"><input
-                                                        id="wp-comment-cookies-consent"
-                                                        name="wp-comment-cookies-consent" type="checkbox" value="yes" />
-                                                    <label for="wp-comment-cookies-consent">Save my name, email, and
-                                                        website in this browser for the next time I comment.</label>
-                                                </p>
-                                                <p class="form-submit"><input name="submit" type="submit" id="submit"
-                                                        class="submit" value="Post Comment" /> <input type='hidden'
-                                                        name='comment_post_ID' value='863' id='comment_post_ID' />
-                                                    <input type='hidden' name='comment_parent' id='comment_parent'
-                                                        value='0' />
-                                                </p>
-                                            </form>
-                                        </div><!-- #respond -->
+                                            <div id="comments" class="comments-area">
 
+                                                <div id="respond" class="comment-respond">
+                                                    <h3 id="reply-title" class="comment-reply-title">Leave a Reply
+                                                        <small><a rel="nofollow" id="cancel-comment-reply-link"
+                                                                href="index.html#respond" style="display:none;">Cancel
+                                                                reply</a></small>
+                                                    </h3>
+                                                    <form action="https://mixtas.novaworks.net/wp-comments-post.php"
+                                                        method="post" id="commentform" class="comment-form">
+                                                        <p class="comment-notes"><span id="email-notes">Your email address
+                                                                will
+                                                                not be published.</span> <span
+                                                                class="required-field-message">Required fields are marked
+                                                                <span class="required">*</span></span></p>
+                                                        <p class="comment-form-comment"><label for="comment">Comment
+                                                                <span class="required">*</span></label>
+                                                            <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required></textarea>
+                                                        </p>
+                                                        <p class="comment-form-author"><label for="author">Name <span
+                                                                    class="required">*</span></label> <input
+                                                                id="author" name="author" type="text"
+                                                                value="" size="30" maxlength="245"
+                                                                autocomplete="name" required /></p>
+                                                        <p class="comment-form-email"><label for="email">Email <span
+                                                                    class="required">*</span></label> <input
+                                                                id="email" name="email" type="email"
+                                                                value="" size="30" maxlength="100"
+                                                                aria-describedby="email-notes" autocomplete="email"
+                                                                required />
+                                                        </p>
+                                                        <p class="comment-form-url"><label for="url">Website</label>
+                                                            <input id="url" name="url" type="url"
+                                                                value="" size="30" maxlength="200"
+                                                                autocomplete="url" />
+                                                        </p>
+                                                        <p class="comment-form-cookies-consent"><input
+                                                                id="wp-comment-cookies-consent"
+                                                                name="wp-comment-cookies-consent" type="checkbox"
+                                                                value="yes" />
+                                                            <label for="wp-comment-cookies-consent">Save my name, email,
+                                                                and
+                                                                website in this browser for the next time I comment.</label>
+                                                        </p>
+                                                        <p class="form-submit"><input name="submit" type="submit"
+                                                                id="submit" class="submit" value="Post Comment" />
+                                                            <input type='hidden' name='comment_post_ID' value='863'
+                                                                id='comment_post_ID' />
+                                                            <input type='hidden' name='comment_parent'
+                                                                id='comment_parent' value='0' />
+                                                        </p>
+                                                    </form>
+                                                </div><!-- #respond -->
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
