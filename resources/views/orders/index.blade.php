@@ -49,7 +49,7 @@
                         @endphp
 
                         <style>
-                        /* Select filter đặt ở góc phải */
+                        /* ========= POLISH: Filter select ========= */
                         .orders-filter-select-wrap{
                             display:flex; justify-content:flex-end; margin:0 0 12px;
                         }
@@ -58,35 +58,73 @@
                             padding:10px 38px 10px 14px; border:1px solid #e5e7eb; border-radius:999px;
                             background:#fff url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6 8l4 4 4-4" stroke="%236b7280" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat right 12px center/16px;
                             font-size:.95rem; color:#111827; cursor:pointer;
+                            box-shadow:0 1px 0 rgba(17,24,39,.04);
                         }
-                        .orders-select:focus{ outline:none; border-color:#111827 }
-                        /* Badges trong bảng (giữ như cũ) */
-                        .badge{display:inline-block;padding:.15rem .5rem;border-radius:6px;font-size:.75rem;font-weight:600}
-                        .badge-processing{background:#e6f4ff;color:#1d4ed8}
-                        .badge-shipping{background:#ecfdf5;color:#047857}
-                        .badge-completed{background:#eefdf3;color:#166534}
-                        .badge-cancelled{background:#fef2f2;color:#b91c1c}
-                        .badge-on-hold{background:#fff7ed;color:#9a3412}
-                        .badge-refunded{background:#f5f3ff;color:#6d28d9}
+                        .orders-select:focus{ outline:none; border-color:#111827; box-shadow:0 0 0 3px rgba(17,24,39,.06); }
+
+                        /* ========= POLISH: Table as clean card ========= */
+                        .account-orders-table{
+                          border:1px solid #eceff3; border-radius:12px; overflow:hidden; background:#fff;
+                        }
+                        .account-orders-table thead th{
+                          background:#fafafa; font-weight:600; letter-spacing:.2px; padding:14px 16px;
+                        }
+                        .account-orders-table tbody td, 
+                        .account-orders-table tbody th{
+                          padding:14px 16px; vertical-align:middle; border-top:1px solid #f2f4f6;
+                        }
+                        .account-orders-table tbody tr{
+                          transition:background .15s ease, transform .05s ease;
+                        }
+                        .account-orders-table tbody tr:hover{ background:#fcfcfd; }
+
+                        /* ========= POLISH: Badges ========= */
+                        .badge{
+                          display:inline-flex; align-items:center; gap:.4rem;
+                          padding:.25rem .6rem; border-radius:999px; font-size:.78rem; font-weight:700
+                        }
+                        .badge::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor; opacity:.85}
+                        .badge-processing{background:#eaf3ff;color:#1d4ed8}
+                        .badge-shipping{background:#e9fdf4;color:#047857}
+                        .badge-completed{background:#eafaf0;color:#166534}
+                        .badge-cancelled{background:#fff1f1;color:#b91c1c}
+                        .badge-on-hold{background:#fff6ea;color:#9a3412}
+                        .badge-refunded{background:#f3efff;color:#6d28d9}
                         .badge-default{background:#f3f4f6;color:#374151}
-                        .account-orders-table tbody tr:hover{background:#fafafa}
+
+                        /* ========= POLISH: Order code / amount ========= */
+                        .woocommerce-orders-table__cell-order-number a{ font-weight:700; text-decoration:none; }
+                        .woocommerce-orders-table__cell-order-number a:hover{ text-decoration:underline; }
+                        .woocommerce-orders-table__cell-order-total .amount{ font-weight:700; }
+
+                        /* ========= POLISH: Action button ========= */
+                        .woocommerce-orders-table__cell-order-actions .button.view{
+                          display:inline-flex; align-items:center; gap:6px;
+                          padding:8px 12px; border-radius:8px; border:1px solid #e5e7eb;
+                          text-decoration:none; font-weight:600;
+                        }
+                        .woocommerce-orders-table__cell-order-actions .button.view:hover{
+                          border-color:#111827; box-shadow:0 1px 0 rgba(17,24,39,.06);
+                        }
+
+                        /* ========= POLISH: Pagination ========= */
+                        nav[role="navigation"] { display:flex; justify-content:center; margin-top:12px }
                         </style>
 
                         <div class="orders-filter-select-wrap">
-                        <form id="order-filter-form" method="GET" action="{{ route('orders.index') }}">
+                          <form id="order-filter-form" method="GET" action="{{ route('orders.index') }}">
                             <select name="status_id" class="orders-select" onchange="this.form.submit()">
-                            <option value="0" {{ (int)$statusId === 0 ? 'selected' : '' }}>
+                              <option value="0" {{ (int)$statusId === 0 ? 'selected' : '' }}>
                                 Tất cả ({{ $orders->total() }})
-                            </option>
-                            @foreach($statuses as $st)
+                              </option>
+                              @foreach($statuses as $st)
                                 <option value="{{ $st->id }}" {{ (int)$statusId === (int)$st->id ? 'selected' : '' }}>
-                                {{ $st->name }} ({{ $counts[$st->id] ?? 0 }})
+                                  {{ $st->name }} ({{ $counts[$st->id] ?? 0 }})
                                 </option>
-                            @endforeach
+                              @endforeach
                             </select>
-                        </form>
+                          </form>
                         </div>
-
 
                         {{-- ====================== TABLE ====================== --}}
                         @if($orders->isEmpty())
@@ -134,10 +172,10 @@
                                     <span class="woocommerce-Price-amount amount">
                                       <span class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($order->total_amount) }}
                                     </span>
-                                    @if($itemsCount) for {{ $itemsCount }} item{{ $itemsCount>1?'s':'' }} @endif
+                                    @if($itemsCount) cho {{ $itemsCount }} sản phẩm @endif
                                   </td>
                                   <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions" data-title="Actions">
-                                    <a href="{{ route('orders.show', $order->id) }}" class="woocommerce-button button view" aria-label="View order {{ $order->order_code }}">View</a>
+                                    <a href="{{ route('orders.show', $order->id) }}" class="woocommerce-button button view" aria-label="View order {{ $order->order_code }}">Xem</a>
                                   </td>
                                 </tr>
                               @endforeach
