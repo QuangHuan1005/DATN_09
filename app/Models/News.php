@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
 {
-<<<<<<< Updated upstream:app/Models/Account.php
-    /** @use HasFactory<\Database\Factories\AccountFactory> */
-=======
->>>>>>> Stashed changes:app/Models/News.php
     use HasFactory;
     protected $fillable = [
         'category_id',
