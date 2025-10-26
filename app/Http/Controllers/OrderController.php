@@ -11,7 +11,7 @@ use App\Models\OrderStatus;
 class OrderController extends Controller
 {
     // Danh sách đơn hàng của user
-   public function index(Request $request)
+    public function index(Request $request)
     {
         $statusId = (int) $request->query('status_id', 0);
 
@@ -29,9 +29,9 @@ class OrderController extends Controller
             ->with(['status','paymentStatus','payment.method','details']) // eager để tính SL
             ->where('user_id', Auth::id())
             ->when($statusId > 0, fn($q) => $q->where('order_status_id', $statusId))
-            ->latest('created_at')
-            ->paginate(10)
-            ->withQueryString(); // giữ ?status_id khi next page
+            ->latest('created_at')                 // mới nhất lên đầu
+            ->paginate(5)                          // <= chỉ 5 đơn mỗi trang
+            ->withQueryString();                   // giữ ?status_id khi next page
 
         return view('orders.index', compact('orders','statuses','statusId','counts'));
     }
@@ -108,5 +108,30 @@ class OrderController extends Controller
 
         return redirect()->route('orders.show',$order->id)->with('success','Đã hủy đơn hàng.');
     }
-}
 
+    /**
+     * Người dùng xác nhận "Hoàn thành" đơn hàng.
+     * Chỉ cho phép khi trạng thái hiện tại là 4 = ĐÃ GIAO HÀNG.
+     */
+    public function complete(Request $request, $id)
+    {
+        $order = Order::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$order) {
+            return back()->with('error', 'Không tìm thấy đơn hàng.');
+        }
+
+        if ((int)$order->order_status_id !== 4) {
+            return back()->with('error', 'Chỉ có thể hoàn thành khi đơn đang ở trạng thái Đã giao hàng.');
+        }
+
+        $order->order_status_id = 5; // Hoàn thành
+        $order->save();
+
+        return redirect()
+            ->route('orders.show', $order->id)
+            ->with('success', 'Đơn hàng đã chuyển sang trạng thái Hoàn thành.');
+    }
+}

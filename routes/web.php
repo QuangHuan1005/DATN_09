@@ -83,7 +83,8 @@ Route::prefix('orders')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel')->middleware('auth');
-
+    // Thêm: người dùng bấm "Hoàn thành" khi đơn đang ở trạng thái ĐÃ GIAO (4)
+    Route::post('/{id}/complete', [OrderController::class, 'complete'])->name('orders.complete')->middleware('auth');
 });
 
 // Tài khoản cá nhân
