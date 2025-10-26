@@ -10,6 +10,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="auth-check" content="{{ auth()->check() ? 'true' : 'false' }}">
     <link rel="profile" href="https://gmpg.org/xfn/11" />
     <script>
         document.documentElement.className = document.documentElement.className + ' yes-js js_active js'
@@ -46,6 +48,10 @@
 @yield('content')
 <!-- .kitify-site-wrapper -->
 @include('layouts.js')
+
+@yield('scripts')
+
+<script src="{{ asset('js/wishlist-handler.js') }}"></script>
 
 </body>
 

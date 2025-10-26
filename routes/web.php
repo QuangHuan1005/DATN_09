@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\AdminVoucherController;
 use App\Http\Controllers\Admin\AdminNewsController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +89,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/account/update', [AccountController::class, 'update'])->name('account.update');
     Route::get('/account/change-password', [AccountController::class, 'changePassword'])->name('account.password');
     Route::post('/account/change-password', [AccountController::class, 'updatePassword'])->name('account.password.update');
+
+    // Wishlist routes
+    Route::prefix('wishlist')->group(function () {
+        Route::get('/', [WishlistController::class, 'index'])->name('wishlist.index');
+        Route::post('/add', [WishlistController::class, 'add'])->name('wishlist.add');
+        Route::post('/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
+        Route::post('/check', [WishlistController::class, 'check'])->name('wishlist.check');
+    });
 });
 
 /*
