@@ -125,8 +125,7 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
                                         <a href="/"><span>Home</span></a>
                                     </li>
-                                    <li
-                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
                                         <a href="{{ route('products.index') }}"><span>Sản phẩm</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <ul class="sub-menu mega-menu">
@@ -134,23 +133,28 @@
                                             <li class="mega-menu-container container-custom" style="width: 1440px">
 
                                                 <ul class='mega-menu-main'>
-                                                    @foreach($categories as $cat)<li
-                                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_5">
-                                                        {{-- <a href="#"><span>Shop
+                                                    @php
+                                                        use App\Models\Category;
+                                                        $categories = Category::all();
+                                                    @endphp
+                                                    @foreach ($categories as $cat)
+                                                        <li
+                                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_5">
+                                                            {{-- <a href="#"><span>Shop
                                                                 Pages</span><i
                                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                                         --}}
-                                                        <ul class="sub-menu">
+                                                            <ul class="sub-menu">
 
-                                                            <li
-                                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
-                                                                <a
-                                                                    href="{{ route('products.index', ['category' => $cat->id]) }}"><span>{{
-                                                                        $cat->name }}</span></a>
-                                                            </li>
-                                                        </ul>
+                                                                <li
+                                                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
+                                                                    <a
+                                                                        href="{{ route('products.index', ['category' => $cat->id]) }}"><span>{{ $cat->name }}</span></a>
+                                                                </li>
+                                                            </ul>
 
-                                                    </li> @endforeach
+                                                        </li>
+                                                    @endforeach
                                                     {{-- <li
                                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_4">
                                                         <a href="#"><span>Shop Pages</span><i
@@ -188,7 +192,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    <li id="menu-item-80"
+                                    {{-- <li id="menu-item-80"
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
                                         <a href="#"><span>Pages</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
@@ -207,42 +211,14 @@
                                                         Tracking</span></a>
                                             </li>
                                         </ul>
-                                    </li>
+                                    </li> --}}
                                     <li id="menu-item-77"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
-<<<<<<< Updated upstream
-                                        <a href="../blog/index.html"><span>Blog</span><i
-                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                        <ul class="sub-menu">
-                                            <li id="menu-item-644"
-                                                class="menu-item menu-item-type-post_type menu-item-object-page">
-                                                <a href="../blog/index.html"><span>Blog — Style
-                                                        01</span></a>
-                                            </li>
-                                            <li id="menu-item-643"
-                                                class="menu-item menu-item-type-custom menu-item-object-custom">
-                                                <a href="../blog/indexc144.html?theme_template_id=637"><span>Blog
-                                                        — Style 02</span></a>
-                                            </li>
-                                            <li id="menu-item-652"
-                                                class="menu-item menu-item-type-custom menu-item-object-custom">
-                                                <a href="../blog/index0f67.html?theme_template_id=646"><span>Blog
-                                                        — Style 03</span></a>
-                                            </li>
-                                            <li id="menu-item-645"
-                                                class="menu-item menu-item-type-post_type menu-item-object-post">
-                                                <a
-                                                    href="../2023/12/gentlemans-gazette-a-guide-to-timeless-mens-fashion/index.html"><span>Blog
-                                                        — Single</span></a>
-                                            </li>
-                                        </ul>
-=======
                                         <a href="{{ route('blog.index') }}"><span>Tin tức</span></a>
->>>>>>> Stashed changes
                                     </li>
                                     <li id="menu-item-84"
                                         class="menu-item menu-item-type-post_type menu-item-object-page"><a
-                                            href="../contact-us/index.html"><span>Contact Us</span></a></li>
+                                            href="{{ route('contact.index') }}"><span>Liên hệ</span></a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -258,11 +234,13 @@
                             <div class="kitify-search__popup-trigger">
                                 <div class="kitify-search__popup-trigger-container">
                                     <a id="js_header_search_modal" href="#headerSearchModal"><span
-                                            class="kitify-search__popup-trigger-icon kitify-blocks-icon"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="20" height="21"
+                                            class="kitify-search__popup-trigger-icon kitify-blocks-icon">
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21"
                                                 viewBox="0 0 20 21" fill="none">
                                                 <path d="M18.4375 18.9376L13.2988 13.7988" stroke="currentColor"
-                                                    stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                                                    stroke-width="1.2" stroke-linecap="round"
+                                                    stroke-linejoin="round">
                                                 </path>
                                                 <path
                                                     d="M8.4375 15.8125C12.2345 15.8125 15.3125 12.7345 15.3125 8.9375C15.3125 5.14054 12.2345 2.0625 8.4375 2.0625C4.64054 2.0625 1.5625 5.14054 1.5625 8.9375C1.5625 12.7345 4.64054 15.8125 8.4375 15.8125Z"
@@ -278,140 +256,212 @@
                 </div>
 
                 {{-- ✅ ICON NGƯỜI DÙNG CÓ XỬ LÝ LOGIN / LOGOUT --}}
-                <div class="elementor-element elementor-element-18b9cccf elementor-widget kitify elementor-kitify-menu-account" data-id="18b9cccf" data-element_type="widget" data-widget_type="kitify-menu-account.default">
-    <div class="elementor-widget-container">
-        <div class="kitify-menu-account">
-            <div class="kitify-menu-account__box" style="position: relative;">
+                <div class="elementor-element elementor-element-18b9cccf elementor-widget kitify elementor-kitify-menu-account"
+                    data-id="18b9cccf" data-element_type="widget" data-widget_type="kitify-menu-account.default">
+                    <div class="elementor-widget-container">
+                        <div class="kitify-menu-account">
+                            <div class="kitify-menu-account__box" style="position: relative;">
 
-                {{-- ✅ Khi chưa đăng nhập --}}
-                @guest
-                    <div class="user-menu" style="position: relative; display: inline-block;">
-                        <span class="kitify-menu-account__icon kitify-blocks-icon user-icon" style="cursor: pointer;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21"
-                                viewBox="0 0 20 21" fill="none">
-                                <g clip-path="url(#clip0_188_1479)">
-                                    <path
-                                        d="M0.833313 19.6666C0.833313 15.0641 4.56415 11.3333 9.16665 11.3333H10.8333C15.4358 11.3333 19.1666 15.0641 19.1666 19.6666"
-                                        stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path
-                                        d="M10 11.3333C12.7614 11.3333 15 9.09468 15 6.33325C15 3.57183 12.7614 1.33325 10 1.33325C7.23858 1.33325 5 3.57183 5 6.33325C5 9.09468 7.23858 11.3333 10 11.3333Z"
-                                        stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </g>
-                            </svg>
-                        </span>
+                                {{-- ✅ Khi chưa đăng nhập --}}
+                                @guest
+                                    <div class="user-menu" style="position: relative; display: inline-block;">
+                                        <span class="kitify-menu-account__icon kitify-blocks-icon user-icon"
+                                            style="cursor: pointer;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21"
+                                                viewBox="0 0 20 21" fill="none">
+                                                <g clip-path="url(#clip0_188_1479)">
+                                                    <path
+                                                        d="M0.833313 19.6666C0.833313 15.0641 4.56415 11.3333 9.16665 11.3333H10.8333C15.4358 11.3333 19.1666 15.0641 19.1666 19.6666"
+                                                        stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path
+                                                        d="M10 11.3333C12.7614 11.3333 15 9.09468 15 6.33325C15 3.57183 12.7614 1.33325 10 1.33325C7.23858 1.33325 5 3.57183 5 6.33325C5 9.09468 7.23858 11.3333 10 11.3333Z"
+                                                        stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                </g>
+                                            </svg>
+                                        </span>
 
-                        <div class="user-dropdown"
-                            style="display:none; position:absolute; top:35px; right:0; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1); min-width:180px; z-index:999;">
-                            <a href="{{ route('login') }}"
-                                style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
-                                🔑 Đăng nhập
-                            </a>
-                            <a href="{{ route('register') }}"
-                                style="display:block; padding:10px 15px; color:#333; text-decoration:none;">
-                                🧾 Đăng ký
-                            </a>
+                                        <div class="user-dropdown"
+                                            style="display:none; position:absolute; top:35px; right:0; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1); min-width:180px; z-index:999;">
+                                            <a href="{{ route('login') }}"
+                                                style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
+                                                🔑 Đăng nhập
+                                            </a>
+                                            <a href="{{ route('register') }}"
+                                                style="display:block; padding:10px 15px; color:#333; text-decoration:none;">
+                                                🧾 Đăng ký
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endguest
+
+                                {{-- ✅ Khi đã đăng nhập --}}
+                                @auth
+                                    <div class="user-menu"
+                                        style="position: relative; display: flex; align-items: center; gap: 8px;">
+                                        <span class="kitify-menu-account__icon kitify-blocks-icon user-icon"
+                                            style="cursor: pointer; display: flex; align-items: center;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21"
+                                                viewBox="0 0 20 21" fill="none">
+                                                <g clip-path="url(#clip0_188_1479)">
+                                                    <path
+                                                        d="M0.833313 19.6666C0.833313 15.0641 4.56415 11.3333 9.16665 11.3333H10.8333C15.4358 11.3333 19.1666 15.0641 19.1666 19.6666"
+                                                        stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path
+                                                        d="M10 11.3333C12.7614 11.3333 15 9.09468 15 6.33325C15 3.57183 12.7614 1.33325 10 1.33325C7.23858 1.33325 5 3.57183 5 6.33325C5 9.09468 7.23858 11.3333 10 11.3333Z"
+                                                        stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                </g>
+                                            </svg>
+                                        </span>
+
+                                        <div class="user-dropdown"
+                                            style="display:none; position:absolute; top:35px; right:0; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1); min-width:180px; z-index:999;">
+                                            <div
+                                                style="display:block; text-align: center; padding:10px 15px; color:#1f2937;font-size:14px; font-weight:bold; border-bottom:1px solid #eee;">
+                                                Xin chào, <strong>{{ Str::afterLast(Auth::user()->name, ' ') }}</strong> 👋
+                                            </div>
+                                            @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                <a href="{{ route('admin.dashboard') }}"
+                                                    style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
+                                                    🔑 Truy cập quản trị
+                                                </a>
+                                                <a href="{{ route('account.dashboard') }}"
+                                                    style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
+                                                    🧾 Tài khoản của tôi
+                                                </a>
+                                            @endif
+                                            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                                                @csrf
+                                                <button type="submit"
+                                                    style="width:100%; background:none; border:none; padding:10px 15px; text-align:left; cursor:pointer; color:#d00;">
+                                                    🚪&nbsp;Đăng xuất
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @endauth
+
+                            </div>
                         </div>
                     </div>
-                @endguest
-
-                {{-- ✅ Khi đã đăng nhập --}}
-                @auth
-                <div class="user-menu" style="position: relative; display: flex; align-items: center; gap: 8px;">
-                    <div class="user-greeting" style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
-                        <span style="font-size: 16px;">👋</span>
-                        <span style="font-size: 15px;">Xin chào,</span>
-                        <strong style="font-size: 15px; text-transform: uppercase;">{{ Str::afterLast(Auth::user()->name, ' ') }}</strong>
-                    </div>
-
-                    <span class="kitify-menu-account__icon kitify-blocks-icon user-icon"
-                        style="cursor: pointer; display: flex; align-items: center;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
-                            <g clip-path="url(#clip0_188_1479)">
-                                <path
-                                    d="M0.833313 19.6666C0.833313 15.0641 4.56415 11.3333 9.16665 11.3333H10.8333C15.4358 11.3333 19.1666 15.0641 19.1666 19.6666"
-                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
-                                    stroke-linejoin="round"></path>
-                                <path
-                                    d="M10 11.3333C12.7614 11.3333 15 9.09468 15 6.33325C15 3.57183 12.7614 1.33325 10 1.33325C7.23858 1.33325 5 3.57183 5 6.33325C5 9.09468 7.23858 11.3333 10 11.3333Z"
-                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
-                                    stroke-linejoin="round"></path>
-                            </g>
-                        </svg>
-                    </span>
-
-                    <div class="user-dropdown"
-                        style="display:none; position:absolute; top:35px; right:0; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1); min-width:180px; z-index:999;">
-                        <a href="{{ route('account.dashboard') }}"
-                            style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
-                            🧾 Tài khoản của tôi
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
-                            @csrf
-                            <button type="submit"
-                                style="width:100%; background:none; border:none; padding:10px 15px; text-align:left; cursor:pointer; color:#d00;">
-                                🚪 Đăng xuất
-                            </button>
-                        </form>
-                    </div>
                 </div>
-                @endauth
 
-            </div>
-        </div>
-    </div>
-</div>
+                {{-- ✅ Script điều khiển hover --}}
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.querySelectorAll('.user-menu').forEach(menu => {
+                            const dropdown = menu.querySelector('.user-dropdown');
+                            let timer;
 
-{{-- ✅ Script điều khiển hover --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.user-menu').forEach(menu => {
-            const dropdown = menu.querySelector('.user-dropdown');
-            let timer;
+                            menu.addEventListener('mouseenter', () => {
+                                clearTimeout(timer);
+                                dropdown.style.display = 'block';
+                                dropdown.style.opacity = '1';
+                                dropdown.style.visibility = 'visible';
+                            });
 
-            menu.addEventListener('mouseenter', () => {
-                clearTimeout(timer);
-                dropdown.style.display = 'block';
-                dropdown.style.opacity = '1';
-                dropdown.style.visibility = 'visible';
-            });
+                            menu.addEventListener('mouseleave', () => {
+                                timer = setTimeout(() => {
+                                    dropdown.style.opacity = '0';
+                                    dropdown.style.visibility = 'hidden';
+                                    setTimeout(() => dropdown.style.display = 'none', 200);
+                                }, 250);
+                            });
+                        });
+                    });
+                </script>
 
-            menu.addEventListener('mouseleave', () => {
-                timer = setTimeout(() => {
-                    dropdown.style.opacity = '0';
-                    dropdown.style.visibility = 'hidden';
-                    setTimeout(() => dropdown.style.display = 'none', 200);
-                }, 250);
-            });
-        });
-    });
-</script>
+                <style>
+                    .user-dropdown {
+                        transition: opacity 0.2s ease, visibility 0.2s ease;
+                    }
+                    
+                    /* CSS cho wishlist count badge */
+                    .wishlist-icon-box {
+                        position: relative;
+                        display: inline-block;
+                    }
+                    
+                    .wishlist-count-badge {
+                        position: absolute;
+                        top: -8px;
+                        right: -8px;
+                        background: #e74c3c;
+                        color: white;
+                        border-radius: 50%;
+                        width: 20px;
+                        height: 20px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 12px;
+                        font-weight: bold;
+                        min-width: 20px;
+                        line-height: 1;
+                    }
+                    
+                    .wishlist-count-badge:empty {
+                        display: none;
+                    }
+                </style>
+                
+                <script>
+                // Cập nhật số lượng wishlist
+                function updateWishlistCount() {
+                    fetch('{{ route("wishlist.index") }}')
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const wishlistItems = doc.querySelectorAll('.product-card');
+                        const count = wishlistItems.length;
 
-<style>
-    .user-dropdown {
-        transition: opacity 0.2s ease, visibility 0.2s ease;
-    }
-</style>
+                        const countElement = document.getElementById('wishlist-count-badge');
+                        if (countElement) {
+                            countElement.textContent = count;
+                            countElement.style.display = count > 0 ? 'flex' : 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating wishlist count:', error);
+                    });
+                }
+                
+                // Cập nhật khi trang load
+                document.addEventListener('DOMContentLoaded', function() {
+                    updateWishlistCount();
+                });
+                
+                // Cập nhật khi có thay đổi wishlist
+                document.addEventListener('wishlistUpdated', function() {
+                    updateWishlistCount();
+                });
+                </script>
 
                 {{-- phần wishlist và cart giữ nguyên --}}
                 <div class="elementor-element elementor-element-16239ba6 elementor-hidden-mobile elementor-view-default elementor-widget elementor-widget-icon"
                     data-id="16239ba6" data-element_type="widget" data-widget_type="icon.default">
                     <div class="elementor-widget-container">
                         <div class="elementor-icon-wrapper">
-                            <a class="elementor-icon" href="../wishlist/index.html">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19"
-                                    fill="none">
-                                    <g clip-path="url(#clip0_188_1484)">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M4.10276 1.53575C1.83186 2.44932 -0.014983 4.82626 0.26654 8.33725C0.477821 10.9722 1.93049 13.1153 3.64664 14.7279C5.36367 16.3412 7.39577 17.4739 8.89721 18.0966C9.41075 18.3095 9.98779 18.3219 10.512 18.1223C12.0881 17.5221 14.1129 16.3949 15.8125 14.7748C17.5105 13.1563 18.9254 11.004 19.1783 8.35972C19.6544 4.79448 17.7508 2.42314 15.4153 1.52878C13.4653 0.782019 11.0862 1.04962 9.7063 2.64136C8.31911 1.03756 6.02213 0.763589 4.10276 1.53575Z"
-                                            fill="currentColor"></path>
-                                    </g>
-                                </svg> </a>
+                            <a class="elementor-icon" href="{{ route('wishlist.index') }}" title="Wishlist">
+                                <div class="wishlist-icon-box">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19"
+                                        viewBox="0 0 20 19" fill="none">
+                                        <g clip-path="url(#clip0_188_1484)">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M4.10276 1.53575C1.83186 2.44932 -0.014983 4.82626 0.26654 8.33725C0.477821 10.9722 1.93049 13.1153 3.64664 14.7279C5.36367 16.3412 7.39577 17.4739 8.89721 18.0966C9.41075 18.3095 9.98779 18.3219 10.512 18.1223C12.0881 17.5221 14.1129 16.3949 15.8125 14.7748C17.5105 13.1563 18.9254 11.004 19.1783 8.35972C19.6544 4.79448 17.7508 2.42314 15.4153 1.52878C13.4653 0.782019 11.0862 1.04962 9.7063 2.64136C8.31911 1.03756 6.02213 0.763589 4.10276 1.53575ZM4.59785 2.76642C6.37434 2.05175 8.28816 2.53025 9.1221 4.13032C9.23724 4.35131 9.46656 4.48909 9.71577 4.487C9.96498 4.48493 10.192 4.34333 10.3035 4.12045C11.0791 2.56964 13.0744 2.05275 14.941 2.76758C16.7373 3.45545 18.2576 5.26658 17.8619 8.19549C17.8607 8.20434 17.8596 8.21327 17.8588 8.22211C17.6487 10.4557 16.4499 12.3346 14.8972 13.8147C13.3432 15.2959 11.4761 16.3357 10.0401 16.8826C9.8371 16.9598 9.61062 16.9563 9.40536 16.8713C8.01666 16.2954 6.13049 15.2415 4.55499 13.7611C2.9786 12.28 1.76454 10.4225 1.58883 8.23122C1.35374 5.29932 2.86493 3.46358 4.59785 2.76642Z"
+                                                fill="currentColor"></path>
+                                        </g>
+                                    </svg>
+                                    <div class="wishlist-count-badge" id="wishlist-count-badge">0</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
-
                 <div class="elementor-element elementor-element-4cfba4d5 elementor-widget kitify elementor-kitify-nova-cart"
                     data-id="4cfba4d5" data-element_type="widget" data-widget_type="kitify-nova-cart.default">
                     <div class="elementor-widget-container">

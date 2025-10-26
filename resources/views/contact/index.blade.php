@@ -1,104 +1,106 @@
 @extends('master')
 @section('content')
-    <link rel="stylesheet" id="elementor-post-70-css"
-        href="https://mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-70.css?ver=1745088068" type="text/css"
-        media="all">
-    <link rel="stylesheet" id="elementor-post-459-css"
-        href="https://mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-459.css?ver=1743737313" type="text/css"
-        media="all">
+  
 
-    <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"
-        id="jquery-core-js"></script>
-    <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"
-        id="jquery-migrate-js"></script>
-    <script type="text/javascript"
-        src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js?ver=2.7.0-wc.9.7.1"
-        id="jquery-blockui-js" data-wp-strategy="defer"></script>
-    <script type="text/javascript" id="wc-add-to-cart-js-extra">
-        /* <![CDATA[ */
-        var wc_add_to_cart_params = {
-            "ajax_url": "\/wp-admin\/admin-ajax.php",
-            "wc_ajax_url": "\/?wc-ajax=%%endpoint%%",
-            "i18n_view_cart": "View cart",
-            "cart_url": "https:\/\/mixtas.novaworks.net\/cart\/",
-            "is_cart": "",
-            "cart_redirect_after_add": "no"
-        };
-        /* ]]> */
-    </script>
-    <script type="text/javascript"
-        src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min.js?ver=9.7.1"
-        id="wc-add-to-cart-js" defer="defer" data-wp-strategy="defer"></script>
-    <script type="text/javascript"
-        src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min.js?ver=2.1.4-wc.9.7.1"
-        id="js-cookie-js" defer="defer" data-wp-strategy="defer"></script>
-    <script type="text/javascript" id="woocommerce-js-extra">
-        /* <![CDATA[ */
-        var woocommerce_params = {
-            "ajax_url": "\/wp-admin\/admin-ajax.php",
-            "wc_ajax_url": "\/?wc-ajax=%%endpoint%%",
-            "i18n_password_show": "Show password",
-            "i18n_password_hide": "Hide password"
-        };
-        /* ]]> */
-    </script>
-    <script type="text/javascript"
-        src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js?ver=9.7.1"
-        id="woocommerce-js" defer="defer" data-wp-strategy="defer"></script>
-    <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/underscore.min.js?ver=1.13.7"
-        id="underscore-js"></script>
-    <script type="text/javascript" id="wp-util-js-extra">
-        /* <![CDATA[ */
-        var _wpUtilSettings = {
-            "ajax": {
-                "url": "\/wp-admin\/admin-ajax.php"
-            }
-        };
-        /* ]]> */
-    </script>
-    <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/wp-util.min.js?ver=6.8.3" id="wp-util-js">
-    </script>
-    <script type="text/javascript" id="wp-statistics-tracker-js-extra">
-        /* <![CDATA[ */
-        var WP_Statistics_Tracker_Object = {
-            "hitRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/hit?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=70&search_query&page_uri=L2NvbnRhY3QtdXMv",
-            "keepOnlineRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/online?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=70&search_query&page_uri=L2NvbnRhY3QtdXMv",
-            "option": {
-                "dntEnabled": "1",
-                "cacheCompatibility": "1"
-            }
-        };
-        /* ]]> */
-    </script>
-    <script type="text/javascript"
-        src="https://mixtas.b-cdn.net/wp-content/plugins/wp-statistics/assets/js/tracker.js?ver=6.8.3"
-        id="wp-statistics-tracker-js"></script>
-    <script type="text/javascript"
-        src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/select2/select2.full.min.js?ver=4.0.3-wc.9.7.1"
-        id="select2-js" defer="defer" data-wp-strategy="defer"></script>
-    <script type="text/javascript"
-        src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/flexslider/jquery.flexslider.min.js?ver=2.7.2-wc.9.7.1"
-        id="flexslider-js" defer="defer" data-wp-strategy="defer"></script>
+        <link rel="stylesheet" id="elementor-post-70-css"
+            href="https://mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-70.css?ver=1745088068" type="text/css"
+            media="all">
+        <link rel="stylesheet" id="elementor-post-459-css"
+            href="https://mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-459.css?ver=1743737313" type="text/css"
+            media="all">
 
-    <script type="text/javascript" charset="UTF-8"
-        src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/common.js"></script>
-    <script type="text/javascript" charset="UTF-8"
-        src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/util.js"></script>
-    <script type="text/javascript" charset="UTF-8"
-        src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/map.js"></script>
-    <script type="text/javascript" charset="UTF-8"
-        src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/marker.js"></script>
-    <script type="text/javascript" charset="UTF-8"
-        src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/infowindow.js"></script>
-    <script type="text/javascript" charset="UTF-8"
-        src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/log.js"></script>
-    <script type="text/javascript" charset="UTF-8"
-        src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/onion.js"></script>
-    <script type="text/javascript" charset="UTF-8"
-        src="https://maps.googleapis.com/maps/vt?pb=!1m4!1m3!1i15!2i29576!3i20106!1m4!1m3!1i15!2i29576!3i20107!1m4!1m3!1i15!2i29577!3i20106!1m4!1m3!1i15!2i29577!3i20107!1m4!1m3!1i15!2i29578!3i20106!1m4!1m3!1i15!2i29578!3i20107!1m4!1m3!1i15!2i29576!3i20108!1m4!1m3!1i15!2i29576!3i20109!1m4!1m3!1i15!2i29577!3i20108!1m4!1m3!1i15!2i29577!3i20109!1m4!1m3!1i15!2i29578!3i20108!1m4!1m3!1i15!2i29578!3i20109!2m3!1e0!2sm!3i753513404!3m18!2svi-VN!3sUS!5e18!12m5!1e68!2m2!1sset!2sRoadmap!4e2!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjZ8cy5lOmd8cC5jOiNlOWU5ZTl8cC5sOjE3LHMudDo1fHMuZTpnfHAuYzojZjVmNWY1fHAubDoyMCxzLnQ6NDl8cy5lOmcuZnxwLmM6I2ZmZmZmZnxwLmw6MTcscy50OjQ5fHMuZTpnLnN8cC5jOiNmZmZmZmZ8cC5sOjI5fHAudzowLjIscy50OjUwfHMuZTpnfHAuYzojZmZmZmZmfHAubDoxOCxzLnQ6NTF8cy5lOmd8cC5jOiNmZmZmZmZ8cC5sOjE2LHMudDoyfHMuZTpnfHAuYzojZjVmNWY1fHAubDoyMSxzLnQ6NDB8cy5lOmd8cC5jOiNkZWRlZGV8cC5sOjIxLHMuZTpsLnQuc3xwLnY6b258cC5jOiNmZmZmZmZ8cC5sOjE2LHMuZTpsLnQuZnxwLnM6MzZ8cC5jOiMzMzMzMzN8cC5sOjQwLHMuZTpsLml8cC52Om9mZixzLnQ6NHxzLmU6Z3xwLmM6I2YyZjJmMnxwLmw6MTkscy50OjF8cy5lOmcuZnxwLmM6I2ZlZmVmZXxwLmw6MjAscy50OjF8cy5lOmcuc3xwLmM6I2ZlZmVmZXxwLmw6MTd8cC53OjEuMg!4e3!12m1!5b1!23i46991212!23i47054750&amp;callback=_xdc_._iql04i&amp;key=AIzaSyDH-rtpwvyMwHPW0joNQHm5te6FE7DOk-U&amp;token=47629">
-    </script>
-    <script type="text/javascript" charset="UTF-8"
-        src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/controls.js"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"
+            id="jquery-core-js"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"
+            id="jquery-migrate-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js?ver=2.7.0-wc.9.7.1"
+            id="jquery-blockui-js" data-wp-strategy="defer"></script>
+        <script type="text/javascript" id="wc-add-to-cart-js-extra">
+            /* <![CDATA[ */
+            var wc_add_to_cart_params = {
+                "ajax_url": "\/wp-admin\/admin-ajax.php",
+                "wc_ajax_url": "\/?wc-ajax=%%endpoint%%",
+                "i18n_view_cart": "View cart",
+                "cart_url": "https:\/\/mixtas.novaworks.net\/cart\/",
+                "is_cart": "",
+                "cart_redirect_after_add": "no"
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min.js?ver=9.7.1"
+            id="wc-add-to-cart-js" defer="defer" data-wp-strategy="defer"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min.js?ver=2.1.4-wc.9.7.1"
+            id="js-cookie-js" defer="defer" data-wp-strategy="defer"></script>
+        <script type="text/javascript" id="woocommerce-js-extra">
+            /* <![CDATA[ */
+            var woocommerce_params = {
+                "ajax_url": "\/wp-admin\/admin-ajax.php",
+                "wc_ajax_url": "\/?wc-ajax=%%endpoint%%",
+                "i18n_password_show": "Show password",
+                "i18n_password_hide": "Hide password"
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js?ver=9.7.1"
+            id="woocommerce-js" defer="defer" data-wp-strategy="defer"></script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/underscore.min.js?ver=1.13.7"
+            id="underscore-js"></script>
+        <script type="text/javascript" id="wp-util-js-extra">
+            /* <![CDATA[ */
+            var _wpUtilSettings = {
+                "ajax": {
+                    "url": "\/wp-admin\/admin-ajax.php"
+                }
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript" src="https://mixtas.b-cdn.net/wp-includes/js/wp-util.min.js?ver=6.8.3" id="wp-util-js">
+        </script>
+        <script type="text/javascript" id="wp-statistics-tracker-js-extra">
+            /* <![CDATA[ */
+            var WP_Statistics_Tracker_Object = {
+                "hitRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/hit?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=70&search_query&page_uri=L2NvbnRhY3QtdXMv",
+                "keepOnlineRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/online?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=70&search_query&page_uri=L2NvbnRhY3QtdXMv",
+                "option": {
+                    "dntEnabled": "1",
+                    "cacheCompatibility": "1"
+                }
+            };
+            /* ]]> */
+        </script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/wp-statistics/assets/js/tracker.js?ver=6.8.3"
+            id="wp-statistics-tracker-js"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/select2/select2.full.min.js?ver=4.0.3-wc.9.7.1"
+            id="select2-js" defer="defer" data-wp-strategy="defer"></script>
+        <script type="text/javascript"
+            src="https://mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/flexslider/jquery.flexslider.min.js?ver=2.7.2-wc.9.7.1"
+            id="flexslider-js" defer="defer" data-wp-strategy="defer"></script>
+        
+        <script type="text/javascript" charset="UTF-8"
+            src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/common.js"></script>
+        <script type="text/javascript" charset="UTF-8"
+            src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/util.js"></script>
+        <script type="text/javascript" charset="UTF-8"
+            src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/map.js"></script>
+        <script type="text/javascript" charset="UTF-8"
+            src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/marker.js"></script>
+        <script type="text/javascript" charset="UTF-8"
+            src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/infowindow.js"></script>
+        <script type="text/javascript" charset="UTF-8"
+            src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/log.js"></script>
+        <script type="text/javascript" charset="UTF-8"
+            src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/onion.js"></script>
+        <script type="text/javascript" charset="UTF-8"
+            src="https://maps.googleapis.com/maps/vt?pb=!1m4!1m3!1i15!2i29576!3i20106!1m4!1m3!1i15!2i29576!3i20107!1m4!1m3!1i15!2i29577!3i20106!1m4!1m3!1i15!2i29577!3i20107!1m4!1m3!1i15!2i29578!3i20106!1m4!1m3!1i15!2i29578!3i20107!1m4!1m3!1i15!2i29576!3i20108!1m4!1m3!1i15!2i29576!3i20109!1m4!1m3!1i15!2i29577!3i20108!1m4!1m3!1i15!2i29577!3i20109!1m4!1m3!1i15!2i29578!3i20108!1m4!1m3!1i15!2i29578!3i20109!2m3!1e0!2sm!3i753513404!3m18!2svi-VN!3sUS!5e18!12m5!1e68!2m2!1sset!2sRoadmap!4e2!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjZ8cy5lOmd8cC5jOiNlOWU5ZTl8cC5sOjE3LHMudDo1fHMuZTpnfHAuYzojZjVmNWY1fHAubDoyMCxzLnQ6NDl8cy5lOmcuZnxwLmM6I2ZmZmZmZnxwLmw6MTcscy50OjQ5fHMuZTpnLnN8cC5jOiNmZmZmZmZ8cC5sOjI5fHAudzowLjIscy50OjUwfHMuZTpnfHAuYzojZmZmZmZmfHAubDoxOCxzLnQ6NTF8cy5lOmd8cC5jOiNmZmZmZmZ8cC5sOjE2LHMudDoyfHMuZTpnfHAuYzojZjVmNWY1fHAubDoyMSxzLnQ6NDB8cy5lOmd8cC5jOiNkZWRlZGV8cC5sOjIxLHMuZTpsLnQuc3xwLnY6b258cC5jOiNmZmZmZmZ8cC5sOjE2LHMuZTpsLnQuZnxwLnM6MzZ8cC5jOiMzMzMzMzN8cC5sOjQwLHMuZTpsLml8cC52Om9mZixzLnQ6NHxzLmU6Z3xwLmM6I2YyZjJmMnxwLmw6MTkscy50OjF8cy5lOmcuZnxwLmM6I2ZlZmVmZXxwLmw6MjAscy50OjF8cy5lOmcuc3xwLmM6I2ZlZmVmZXxwLmw6MTd8cC53OjEuMg!4e3!12m1!5b1!23i46991212!23i47054750&amp;callback=_xdc_._iql04i&amp;key=AIzaSyDH-rtpwvyMwHPW0joNQHm5te6FE7DOk-U&amp;token=47629">
+        </script>
+        <script type="text/javascript" charset="UTF-8"
+            src="https://maps.googleapis.com/maps-api-v3/api/js/62/9c/intl/vi_ALL/controls.js"></script>
     </head>
 
     <body

@@ -10,10 +10,8 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
-    // Tên bảng trong cơ sở dữ liệu
     protected $table = 'products';
 
-    // Các cột có thể gán giá trị hàng loạt
     protected $fillable = [
         'category_id',
         'role_id',
@@ -25,32 +23,37 @@ class Product extends Model
         'material',
         'onpage',
 
-    public function variants()
-    {
-        return $this->hasMany(\App\Models\ProductVariant::class, 'product_id');
-    }
+    ];
 
-    /**
-     * Mối quan hệ 1-nhiều: Product có nhiều ảnh chi tiết (ProductPhotoAlbum)
-     */
-    public function photoAlbums()
-    {
-        return $this->hasMany(\App\Models\ProductPhotoAlbum::class, 'product_id');
-    }
+    protected $dates = ['deleted_at'];
 
-    /**
-     * Mối quan hệ 1-nhiều: Product có nhiều đánh giá (Review)
-     */
-    public function reviews()
-    {
-        return $this->hasMany(\App\Models\Review::class, 'product_id');
-    }
+    // App\Models\Product.php
 
-    /**
-     * Mối quan hệ n-1: Product thuộc về một Category
-     */
-    public function category()
-    {
-        return $this->belongsTo(\App\Models\Category::class, 'category_id')->withDefault();
-    }
+public function category()
+{
+    return $this->belongsTo(Category::class);
+}
+
+public function variants()
+{
+    return $this->hasMany(ProductVariant::class);
+}
+
+public function photoAlbums()
+{
+    return $this->hasMany(ProductPhotoAlbum::class);
+}
+
+// Ảnh đại diện (1 ảnh duy nhất cho card sản phẩm)
+public function firstPhoto()
+{
+    return $this->hasOne(ProductPhotoAlbum::class)
+                ->orderBy('id', 'asc'); // hoặc where('is_main', 1)
+}
+
+public function reviews()
+{
+    return $this->hasMany(Review::class);
+}
+
 }

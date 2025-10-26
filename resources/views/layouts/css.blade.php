@@ -1,7 +1,9 @@
 <!-- Google Tag Manager for WordPress by gtm4wp.com -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script data-cfasync="false" data-pagespeed-no-defer>
     var gtm4wp_datalayer_name = "dataLayer";
-		var dataLayer = dataLayer || [];
+    var dataLayer = dataLayer || [];
 </script>
 <!-- End Google Tag Manager for WordPress by gtm4wp.com -->
 <link rel='dns-prefetch' href='http://client.crisp.chat/' />
@@ -14,10 +16,128 @@
 <link rel="alternate" type="application/rss+xml" title="Mixtas &raquo; Products Feed" href="feed/index.html" />
 <script type="text/javascript">
     /* <![CDATA[ */
-		window._wpemojiSettings = { "baseUrl": "https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/72x72\/", "ext": ".png", "svgUrl": "https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/svg\/", "svgExt": ".svg", "source": { "concatemoji": "https:\/\/mixtas.b-cdn.net\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.8.2" } };
-		/*! This file is auto-generated */
-		!function (s, n) { var o, i, e; function c(e) { try { var t = { supportTests: e, timestamp: (new Date).valueOf() }; sessionStorage.setItem(o, JSON.stringify(t)) } catch (e) { } } function p(e, t, n) { e.clearRect(0, 0, e.canvas.width, e.canvas.height), e.fillText(t, 0, 0); var t = new Uint32Array(e.getImageData(0, 0, e.canvas.width, e.canvas.height).data), a = (e.clearRect(0, 0, e.canvas.width, e.canvas.height), e.fillText(n, 0, 0), new Uint32Array(e.getImageData(0, 0, e.canvas.width, e.canvas.height).data)); return t.every(function (e, t) { return e === a[t] }) } function u(e, t) { e.clearRect(0, 0, e.canvas.width, e.canvas.height), e.fillText(t, 0, 0); for (var n = e.getImageData(16, 16, 1, 1), a = 0; a < n.data.length; a++)if (0 !== n.data[a]) return !1; return !0 } function f(e, t, n, a) { switch (t) { case "flag": return n(e, "\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f", "\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f") ? !1 : !n(e, "\ud83c\udde8\ud83c\uddf6", "\ud83c\udde8\u200b\ud83c\uddf6") && !n(e, "\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f", "\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f"); case "emoji": return !a(e, "\ud83e\udedf") }return !1 } function g(e, t, n, a) { var r = "undefined" != typeof WorkerGlobalScope && self instanceof WorkerGlobalScope ? new OffscreenCanvas(300, 150) : s.createElement("canvas"), o = r.getContext("2d", { willReadFrequently: !0 }), i = (o.textBaseline = "top", o.font = "600 32px Arial", {}); return e.forEach(function (e) { i[e] = t(o, e, n, a) }), i } function t(e) { var t = s.createElement("script"); t.src = e, t.defer = !0, s.head.appendChild(t) } "undefined" != typeof Promise && (o = "wpEmojiSettingsSupports", i = ["flag", "emoji"], n.supports = { everything: !0, everythingExceptFlag: !0 }, e = new Promise(function (e) { s.addEventListener("DOMContentLoaded", e, { once: !0 }) }), new Promise(function (t) { var n = function () { try { var e = JSON.parse(sessionStorage.getItem(o)); if ("object" == typeof e && "number" == typeof e.timestamp && (new Date).valueOf() < e.timestamp + 604800 && "object" == typeof e.supportTests) return e.supportTests } catch (e) { } return null }(); if (!n) { if ("undefined" != typeof Worker && "undefined" != typeof OffscreenCanvas && "undefined" != typeof URL && URL.createObjectURL && "undefined" != typeof Blob) try { var e = "postMessage(" + g.toString() + "(" + [JSON.stringify(i), f.toString(), p.toString(), u.toString()].join(",") + "));", a = new Blob([e], { type: "text/javascript" }), r = new Worker(URL.createObjectURL(a), { name: "wpTestEmojiSupports" }); return void (r.onmessage = function (e) { c(n = e.data), r.terminate(), t(n) }) } catch (e) { } c(n = g(i, f, p, u)) } t(n) }).then(function (e) { for (var t in e) n.supports[t] = e[t], n.supports.everything = n.supports.everything && n.supports[t], "flag" !== t && (n.supports.everythingExceptFlag = n.supports.everythingExceptFlag && n.supports[t]); n.supports.everythingExceptFlag = n.supports.everythingExceptFlag && !n.supports.flag, n.DOMReady = !1, n.readyCallback = function () { n.DOMReady = !0 } }).then(function () { return e }).then(function () { var e; n.supports.everything || (n.readyCallback(), (e = n.source || {}).concatemoji ? t(e.concatemoji) : e.wpemoji && e.twemoji && (t(e.twemoji), t(e.wpemoji))) })) }((window, document), window._wpemojiSettings);
-		/* ]]> */
+    window._wpemojiSettings = {
+        "baseUrl": "https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/72x72\/",
+        "ext": ".png",
+        "svgUrl": "https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/svg\/",
+        "svgExt": ".svg",
+        "source": {
+            "concatemoji": "https:\/\/mixtas.b-cdn.net\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.8.2"
+        }
+    };
+    /*! This file is auto-generated */
+    ! function(s, n) {
+        var o, i, e;
+
+        function c(e) {
+            try {
+                var t = {
+                    supportTests: e,
+                    timestamp: (new Date).valueOf()
+                };
+                sessionStorage.setItem(o, JSON.stringify(t))
+            } catch (e) {}
+        }
+
+        function p(e, t, n) {
+            e.clearRect(0, 0, e.canvas.width, e.canvas.height), e.fillText(t, 0, 0);
+            var t = new Uint32Array(e.getImageData(0, 0, e.canvas.width, e.canvas.height).data),
+                a = (e.clearRect(0, 0, e.canvas.width, e.canvas.height), e.fillText(n, 0, 0), new Uint32Array(e
+                    .getImageData(0, 0, e.canvas.width, e.canvas.height).data));
+            return t.every(function(e, t) {
+                return e === a[t]
+            })
+        }
+
+        function u(e, t) {
+            e.clearRect(0, 0, e.canvas.width, e.canvas.height), e.fillText(t, 0, 0);
+            for (var n = e.getImageData(16, 16, 1, 1), a = 0; a < n.data.length; a++)
+                if (0 !== n.data[a]) return !1;
+            return !0
+        }
+
+        function f(e, t, n, a) {
+            switch (t) {
+                case "flag":
+                    return n(e, "\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f", "\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f") ? !1 : !
+                        n(e, "\ud83c\udde8\ud83c\uddf6", "\ud83c\udde8\u200b\ud83c\uddf6") && !n(e,
+                            "\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f",
+                            "\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f"
+                        );
+                case "emoji":
+                    return !a(e, "\ud83e\udedf")
+            }
+            return !1
+        }
+
+        function g(e, t, n, a) {
+            var r = "undefined" != typeof WorkerGlobalScope && self instanceof WorkerGlobalScope ? new OffscreenCanvas(
+                    300, 150) : s.createElement("canvas"),
+                o = r.getContext("2d", {
+                    willReadFrequently: !0
+                }),
+                i = (o.textBaseline = "top", o.font = "600 32px Arial", {});
+            return e.forEach(function(e) {
+                i[e] = t(o, e, n, a)
+            }), i
+        }
+
+        function t(e) {
+            var t = s.createElement("script");
+            t.src = e, t.defer = !0, s.head.appendChild(t)
+        }
+        "undefined" != typeof Promise && (o = "wpEmojiSettingsSupports", i = ["flag", "emoji"], n.supports = {
+            everything: !0,
+            everythingExceptFlag: !0
+        }, e = new Promise(function(e) {
+            s.addEventListener("DOMContentLoaded", e, {
+                once: !0
+            })
+        }), new Promise(function(t) {
+            var n = function() {
+                try {
+                    var e = JSON.parse(sessionStorage.getItem(o));
+                    if ("object" == typeof e && "number" == typeof e.timestamp && (new Date).valueOf() <
+                        e.timestamp + 604800 && "object" == typeof e.supportTests) return e.supportTests
+                } catch (e) {}
+                return null
+            }();
+            if (!n) {
+                if ("undefined" != typeof Worker && "undefined" != typeof OffscreenCanvas && "undefined" !=
+                    typeof URL && URL.createObjectURL && "undefined" != typeof Blob) try {
+                    var e = "postMessage(" + g.toString() + "(" + [JSON.stringify(i), f.toString(), p
+                            .toString(), u.toString()
+                        ].join(",") + "));",
+                        a = new Blob([e], {
+                            type: "text/javascript"
+                        }),
+                        r = new Worker(URL.createObjectURL(a), {
+                            name: "wpTestEmojiSupports"
+                        });
+                    return void(r.onmessage = function(e) {
+                        c(n = e.data), r.terminate(), t(n)
+                    })
+                } catch (e) {}
+                c(n = g(i, f, p, u))
+            }
+            t(n)
+        }).then(function(e) {
+            for (var t in e) n.supports[t] = e[t], n.supports.everything = n.supports.everything && n
+                .supports[t], "flag" !== t && (n.supports.everythingExceptFlag = n.supports
+                    .everythingExceptFlag && n.supports[t]);
+            n.supports.everythingExceptFlag = n.supports.everythingExceptFlag && !n.supports.flag, n
+                .DOMReady = !1, n.readyCallback = function() {
+                    n.DOMReady = !0
+                }
+        }).then(function() {
+            return e
+        }).then(function() {
+            var e;
+            n.supports.everything || (n.readyCallback(), (e = n.source || {}).concatemoji ? t(e
+                .concatemoji) : e.wpemoji && e.twemoji && (t(e.twemoji), t(e.wpemoji)))
+        }))
+    }((window, document), window._wpemojiSettings);
+    /* ]]> */
 </script>
 <link rel='stylesheet' id='kitify-css-transform-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/css-transform40d7.css?ver=1759215509'
@@ -1144,18 +1264,23 @@
     <p role="alert">Sorry, this product is unavailable. Please choose a different combination.</p>
 </script>
 <script type="text/javascript" src="../../mixtas.b-cdn.net/wp-includes/js/jquery/jquery.minf43b.js?ver=3.7.1"
-    id="jquery-core-js">
-</script>
+    id="jquery-core-js"></script>
 <script type="text/javascript" src="../../mixtas.b-cdn.net/wp-includes/js/jquery/jquery-migrate.min5589.js?ver=3.4.1"
-    id="jquery-migrate-js">
-</script>
+    id="jquery-migrate-js"></script>
 <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min4a91.js?ver=2.7.0-wc.9.7.1"
     id="jquery-blockui-js" data-wp-strategy="defer"></script>
 <script type="text/javascript" id="wc-add-to-cart-js-extra">
     /* <![CDATA[ */
-		var wc_add_to_cart_params = { "ajax_url": "\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/?wc-ajax=%%endpoint%%", "i18n_view_cart": "View cart", "cart_url": "https:\/\/mixtas.novaworks.net\/cart\/", "is_cart": "", "cart_redirect_after_add": "no" };
-		/* ]]> */
+    var wc_add_to_cart_params = {
+        "ajax_url": "\/wp-admin\/admin-ajax.php",
+        "wc_ajax_url": "\/?wc-ajax=%%endpoint%%",
+        "i18n_view_cart": "View cart",
+        "cart_url": "https:\/\/mixtas.novaworks.net\/cart\/",
+        "is_cart": "",
+        "cart_redirect_after_add": "no"
+    };
+    /* ]]> */
 </script>
 <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min04d4.js?ver=9.7.1"
@@ -1165,8 +1290,13 @@
     id="js-cookie-js" defer="defer" data-wp-strategy="defer"></script>
 <script type="text/javascript" id="woocommerce-js-extra">
     /* <![CDATA[ */
-		var woocommerce_params = { "ajax_url": "\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/?wc-ajax=%%endpoint%%", "i18n_password_show": "Show password", "i18n_password_hide": "Hide password" };
-		/* ]]> */
+    var woocommerce_params = {
+        "ajax_url": "\/wp-admin\/admin-ajax.php",
+        "wc_ajax_url": "\/?wc-ajax=%%endpoint%%",
+        "i18n_password_show": "Show password",
+        "i18n_password_hide": "Hide password"
+    };
+    /* ]]> */
 </script>
 <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min04d4.js?ver=9.7.1"
@@ -1175,15 +1305,26 @@
     id="underscore-js"></script>
 <script type="text/javascript" id="wp-util-js-extra">
     /* <![CDATA[ */
-		var _wpUtilSettings = { "ajax": { "url": "\/wp-admin\/admin-ajax.php" } };
-		/* ]]> */
+    var _wpUtilSettings = {
+        "ajax": {
+            "url": "\/wp-admin\/admin-ajax.php"
+        }
+    };
+    /* ]]> */
 </script>
 <script type="text/javascript" src="../../mixtas.b-cdn.net/wp-includes/js/wp-util.min6c2d.js?ver=6.8.2" id="wp-util-js">
 </script>
 <script type="text/javascript" id="wp-statistics-tracker-js-extra">
     /* <![CDATA[ */
-		var WP_Statistics_Tracker_Object = { "hitRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/hit?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=1052&search_query&page_uri=L2hvbWUtdjMv", "keepOnlineRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/online?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=1052&search_query&page_uri=L2hvbWUtdjMv", "option": { "dntEnabled": "1", "cacheCompatibility": "1" } };
-		/* ]]> */
+    var WP_Statistics_Tracker_Object = {
+        "hitRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/hit?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=1052&search_query&page_uri=L2hvbWUtdjMv",
+        "keepOnlineRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/online?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=1052&search_query&page_uri=L2hvbWUtdjMv",
+        "option": {
+            "dntEnabled": "1",
+            "cacheCompatibility": "1"
+        }
+    };
+    /* ]]> */
 </script>
 <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/wp-statistics/assets/js/tracker6c2d.js?ver=6.8.2"
@@ -1196,21 +1337,60 @@
     id="flexslider-js" defer="defer" data-wp-strategy="defer"></script>
 <script type="text/javascript" id="wc-single-product-js-extra">
     /* <![CDATA[ */
-		var wc_single_product_params = { "i18n_required_rating_text": "Please select a rating", "i18n_rating_options": ["1 of 5 stars", "2 of 5 stars", "3 of 5 stars", "4 of 5 stars", "5 of 5 stars"], "i18n_product_gallery_trigger_text": "View full-screen image gallery", "review_rating_required": "yes", "flexslider": { "rtl": false, "animation": "slide", "smoothHeight": true, "directionNav": false, "controlNav": "thumbnails", "slideshow": false, "animationSpeed": 300, "animationLoop": false }, "zoom_enabled": "", "zoom_options": [], "photoswipe_enabled": "1", "photoswipe_options": { "shareEl": false, "closeOnScroll": false, "history": false, "hideAnimationDuration": 400, "showAnimationDuration": 400, "captionEl": false, "showHideOpacity": true }, "flexslider_enabled": "1" };
-		/* ]]> */
+    var wc_single_product_params = {
+        "i18n_required_rating_text": "Please select a rating",
+        "i18n_rating_options": ["1 of 5 stars", "2 of 5 stars", "3 of 5 stars", "4 of 5 stars", "5 of 5 stars"],
+        "i18n_product_gallery_trigger_text": "View full-screen image gallery",
+        "review_rating_required": "yes",
+        "flexslider": {
+            "rtl": false,
+            "animation": "slide",
+            "smoothHeight": true,
+            "directionNav": false,
+            "controlNav": "thumbnails",
+            "slideshow": false,
+            "animationSpeed": 300,
+            "animationLoop": false
+        },
+        "zoom_enabled": "",
+        "zoom_options": [],
+        "photoswipe_enabled": "1",
+        "photoswipe_options": {
+            "shareEl": false,
+            "closeOnScroll": false,
+            "history": false,
+            "hideAnimationDuration": 400,
+            "showAnimationDuration": 400,
+            "captionEl": false,
+            "showHideOpacity": true
+        },
+        "flexslider_enabled": "1"
+    };
+    /* ]]> */
 </script>
 <script type="text/javascript" id="wc-single-product-js-before">
     /* <![CDATA[ */
-		try { wc_single_product_params.flexslider.directionNav = true; wc_single_product_params.flexslider.before = function (slider) { jQuery(document).trigger('kitify/woocommerce/single/init_product_slider', [slider]); } } catch (ex) { }
-		/* ]]> */
+    try {
+        wc_single_product_params.flexslider.directionNav = true;
+        wc_single_product_params.flexslider.before = function(slider) {
+            jQuery(document).trigger('kitify/woocommerce/single/init_product_slider', [slider]);
+        }
+    } catch (ex) {}
+    /* ]]> */
 </script>
 <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/single-product.min04d4.js?ver=9.7.1"
     id="wc-single-product-js" defer="defer" data-wp-strategy="defer"></script>
 <script type="text/javascript" id="wc-add-to-cart-variation-js-extra">
     /* <![CDATA[ */
-		var wc_add_to_cart_variation_params = { "wc_ajax_url": "\/?wc-ajax=%%endpoint%%", "i18n_no_matching_variations_text": "Sorry, no products matched your selection. Please choose a different combination.", "i18n_make_a_selection_text": "Please select some product options before adding this product to your cart.", "i18n_unavailable_text": "Sorry, this product is unavailable. Please choose a different combination.", "i18n_reset_alert_text": "Your selection has been reset. Please select some product options before adding this product to your cart." };
-		/* ]]> */
+    var wc_add_to_cart_variation_params = {
+        "wc_ajax_url": "\/?wc-ajax=%%endpoint%%",
+        "i18n_no_matching_variations_text": "Sorry, no products matched your selection. Please choose a different combination.",
+        "i18n_make_a_selection_text": "Please select some product options before adding this product to your cart.",
+        "i18n_unavailable_text": "Sorry, this product is unavailable. Please choose a different combination.",
+        "i18n_reset_alert_text": "Your selection has been reset. Please select some product options before adding this product to your cart."
+    };
+    /* ]]> */
 </script>
 <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart-variation.min04d4.js?ver=9.7.1"
@@ -1230,18 +1410,28 @@
 <!-- Google Tag Manager for WordPress by gtm4wp.com -->
 <!-- GTM Container placement set to footer -->
 <script data-cfasync="false" data-pagespeed-no-defer type="text/javascript">
-    var dataLayer_content = { "pagePostType": "page", "pagePostType2": "single-page", "pagePostAuthor": "admin" };
-		dataLayer.push(dataLayer_content);
+    var dataLayer_content = {
+        "pagePostType": "page",
+        "pagePostType2": "single-page",
+        "pagePostAuthor": "admin"
+    };
+    dataLayer.push(dataLayer_content);
 </script>
 <script data-cfasync="false">
-    (function (w, d, s, l, i) {
-			w[l] = w[l] || []; w[l].push({
-				'gtm.start':
-					new Date().getTime(), event: 'gtm.js'
-			}); var f = d.getElementsByTagName(s)[0],
-				j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-					'../../www.googletagmanager.com/gtm5445.html?id=' + i + dl; f.parentNode.insertBefore(j, f);
-		})(window, document, 'script', 'dataLayer', 'GTM-TH4WGRG');
+    (function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            '../../www.googletagmanager.com/gtm5445.html?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-TH4WGRG');
 </script>
 <!-- End Google Tag Manager for WordPress by gtm4wp.com -->
 <!-- Analytics by WP Statistics v14.5.1 - https://wp-statistics.com/ -->
@@ -1413,60 +1603,67 @@
     /********************************************************************/
 </style>
 <link rel="icon" href="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-32x32.png" sizes="32x32" />
-<link rel="icon" href="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-192x192.png" sizes="192x192" />
+<link rel="icon" href="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-192x192.png"
+    sizes="192x192" />
 <link rel="apple-touch-icon" href="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-180x180.png" />
 <meta name="msapplication-TileImage"
     content="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-270x270.png" />
 <script>
     function setREVStartSize(e) {
-			//window.requestAnimationFrame(function() {
-			window.RSIW = window.RSIW === undefined ? window.innerWidth : window.RSIW;
-			window.RSIH = window.RSIH === undefined ? window.innerHeight : window.RSIH;
-			try {
-				var pw = document.getElementById(e.c).parentNode.offsetWidth,
-					newh;
-				pw = pw === 0 || isNaN(pw) || (e.l == "fullwidth" || e.layout == "fullwidth") ? window.RSIW : pw;
-				e.tabw = e.tabw === undefined ? 0 : parseInt(e.tabw);
-				e.thumbw = e.thumbw === undefined ? 0 : parseInt(e.thumbw);
-				e.tabh = e.tabh === undefined ? 0 : parseInt(e.tabh);
-				e.thumbh = e.thumbh === undefined ? 0 : parseInt(e.thumbh);
-				e.tabhide = e.tabhide === undefined ? 0 : parseInt(e.tabhide);
-				e.thumbhide = e.thumbhide === undefined ? 0 : parseInt(e.thumbhide);
-				e.mh = e.mh === undefined || e.mh == "" || e.mh === "auto" ? 0 : parseInt(e.mh, 0);
-				if (e.layout === "fullscreen" || e.l === "fullscreen")
-					newh = Math.max(e.mh, window.RSIH);
-				else {
-					e.gw = Array.isArray(e.gw) ? e.gw : [e.gw];
-					for (var i in e.rl) if (e.gw[i] === undefined || e.gw[i] === 0) e.gw[i] = e.gw[i - 1];
-					e.gh = e.el === undefined || e.el === "" || (Array.isArray(e.el) && e.el.length == 0) ? e.gh : e.el;
-					e.gh = Array.isArray(e.gh) ? e.gh : [e.gh];
-					for (var i in e.rl) if (e.gh[i] === undefined || e.gh[i] === 0) e.gh[i] = e.gh[i - 1];
+        //window.requestAnimationFrame(function() {
+        window.RSIW = window.RSIW === undefined ? window.innerWidth : window.RSIW;
+        window.RSIH = window.RSIH === undefined ? window.innerHeight : window.RSIH;
+        try {
+            var pw = document.getElementById(e.c).parentNode.offsetWidth,
+                newh;
+            pw = pw === 0 || isNaN(pw) || (e.l == "fullwidth" || e.layout == "fullwidth") ? window.RSIW : pw;
+            e.tabw = e.tabw === undefined ? 0 : parseInt(e.tabw);
+            e.thumbw = e.thumbw === undefined ? 0 : parseInt(e.thumbw);
+            e.tabh = e.tabh === undefined ? 0 : parseInt(e.tabh);
+            e.thumbh = e.thumbh === undefined ? 0 : parseInt(e.thumbh);
+            e.tabhide = e.tabhide === undefined ? 0 : parseInt(e.tabhide);
+            e.thumbhide = e.thumbhide === undefined ? 0 : parseInt(e.thumbhide);
+            e.mh = e.mh === undefined || e.mh == "" || e.mh === "auto" ? 0 : parseInt(e.mh, 0);
+            if (e.layout === "fullscreen" || e.l === "fullscreen")
+                newh = Math.max(e.mh, window.RSIH);
+            else {
+                e.gw = Array.isArray(e.gw) ? e.gw : [e.gw];
+                for (var i in e.rl)
+                    if (e.gw[i] === undefined || e.gw[i] === 0) e.gw[i] = e.gw[i - 1];
+                e.gh = e.el === undefined || e.el === "" || (Array.isArray(e.el) && e.el.length == 0) ? e.gh : e.el;
+                e.gh = Array.isArray(e.gh) ? e.gh : [e.gh];
+                for (var i in e.rl)
+                    if (e.gh[i] === undefined || e.gh[i] === 0) e.gh[i] = e.gh[i - 1];
 
-					var nl = new Array(e.rl.length),
-						ix = 0,
-						sl;
-					e.tabw = e.tabhide >= pw ? 0 : e.tabw;
-					e.thumbw = e.thumbhide >= pw ? 0 : e.thumbw;
-					e.tabh = e.tabhide >= pw ? 0 : e.tabh;
-					e.thumbh = e.thumbhide >= pw ? 0 : e.thumbh;
-					for (var i in e.rl) nl[i] = e.rl[i] < window.RSIW ? 0 : e.rl[i];
-					sl = nl[0];
-					for (var i in nl) if (sl > nl[i] && nl[i] > 0) { sl = nl[i]; ix = i; }
-					var m = pw > (e.gw[ix] + e.tabw + e.thumbw) ? 1 : (pw - (e.tabw + e.thumbw)) / (e.gw[ix]);
-					newh = (e.gh[ix] * m) + (e.tabh + e.thumbh);
-				}
-				var el = document.getElementById(e.c);
-				if (el !== null && el) el.style.height = newh + "px";
-				el = document.getElementById(e.c + "_wrapper");
-				if (el !== null && el) {
-					el.style.height = newh + "px";
-					el.style.display = "block";
-				}
-			} catch (e) {
-				console.log("Failure at Presize of Slider:" + e)
-			}
-			//});
-		};
+                var nl = new Array(e.rl.length),
+                    ix = 0,
+                    sl;
+                e.tabw = e.tabhide >= pw ? 0 : e.tabw;
+                e.thumbw = e.thumbhide >= pw ? 0 : e.thumbw;
+                e.tabh = e.tabhide >= pw ? 0 : e.tabh;
+                e.thumbh = e.thumbhide >= pw ? 0 : e.thumbh;
+                for (var i in e.rl) nl[i] = e.rl[i] < window.RSIW ? 0 : e.rl[i];
+                sl = nl[0];
+                for (var i in nl)
+                    if (sl > nl[i] && nl[i] > 0) {
+                        sl = nl[i];
+                        ix = i;
+                    }
+                var m = pw > (e.gw[ix] + e.tabw + e.thumbw) ? 1 : (pw - (e.tabw + e.thumbw)) / (e.gw[ix]);
+                newh = (e.gh[ix] * m) + (e.tabh + e.thumbh);
+            }
+            var el = document.getElementById(e.c);
+            if (el !== null && el) el.style.height = newh + "px";
+            el = document.getElementById(e.c + "_wrapper");
+            if (el !== null && el) {
+                el.style.height = newh + "px";
+                el.style.display = "block";
+            }
+        } catch (e) {
+            console.log("Failure at Presize of Slider:" + e)
+        }
+        //});
+    };
 </script>
 <style>
     .form-actions-extra {
@@ -1486,8 +1683,284 @@
     .form-actions-extra a:hover {
         text-decoration: underline;
     }
-    .products_ajax_button:not(:first-of-type) {
-    display: none;
-}
 
+    .products_ajax_button:not(:first-of-type) {
+        display: none;
+    }
 </style>
+<style>
+    :root {
+        --bg: #fafafa;
+        --card: #fff;
+        --text: #222;
+        --muted: #6b7280;
+        --primary: #ee4d2d;
+        --primary-600: #d63a1b;
+        --border: #e5e7eb;
+        --ring: #ffefe9;
+    }
+
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    .container {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 24px;
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+    }
+
+    .layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 24px;
+    }
+
+    @media (max-width: 920px) {
+        .layout {
+            grid-template-columns: 1fr
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            z-index: 5
+        }
+    }
+
+    .sidebar {
+        padding: 16px
+    }
+
+    .side-section {
+        margin-bottom: 18px
+    }
+
+    .side-title {
+        font-size: 12px;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 18px 0 8px 12px
+    }
+
+    .nav {
+        list-style: none;
+        margin: 0;
+        padding: 0
+    }
+
+    .nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        color: var(--text);
+        text-decoration: none
+    }
+
+    .nav a:hover {
+        background: #f5f6f7
+    }
+
+    .nav a.active {
+        background: var(--ring);
+        color: var(--primary);
+        font-weight: 600;
+        border: 1px solid #ffd3c6
+    }
+
+    .content {
+        padding: 24px
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px
+    }
+
+    .title {
+        font-size: 20px;
+        font-weight: 700
+    }
+
+    .desc {
+        color: var(--muted);
+        font-size: 14px
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 20px
+    }
+
+    @media (max-width: 920px) {
+        .grid {
+            grid-template-columns: 1fr
+        }
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 14px
+    }
+
+    .label {
+        font-size: 13px;
+        color: #374151
+    }
+
+    .input,
+    .select {
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 0 12px;
+        font-size: 14px;
+        background: #fff
+    }
+
+    .input[readonly] {
+        background: #f8fafc;
+        color: #6b7280
+    }
+
+    .input:focus,
+    .select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--ring)
+    }
+
+    .help {
+        font-size: 12px;
+        color: var(--muted)
+    }
+
+    .error {
+        font-size: 12px;
+        color: #b91c1c
+    }
+
+    .radio-row {
+        display: flex;
+        gap: 16px
+    }
+
+    .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 10px
+    }
+
+    .btn {
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        font-weight: 600
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: #fff
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-600)
+    }
+
+    .btn-ghost {
+        background: #fff;
+        border-color: var(--border)
+    }
+
+    .avatar-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        border-left: 1px dashed var(--border);
+        padding-left: 20px
+    }
+
+    @media (max-width: 920px) {
+        .avatar-card {
+            border-left: 0;
+            border-top: 1px dashed var(--border);
+            padding: 20px 0 0
+        }
+    }
+
+    .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 999px;
+        object-fit: cover;
+        border: 1px solid var(--border);
+        background: #f3f4f6
+    }
+
+    .uploader input {
+        display: none
+    }
+
+    .uploader label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 10px;
+        border: 1px dashed var(--primary);
+        color: var(--primary);
+        background: #fff7f5
+    }
+
+    .note {
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center
+    }
+
+    .alert {
+        padding: 10px 12px;
+        border-radius: 10px;
+        margin-bottom: 14px
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        color: #065f46
+    }
+
+    .alert-error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #7f1d1d
+    }
+</style>
+ 

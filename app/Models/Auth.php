@@ -9,4 +9,13 @@ class Auth extends Model
 {
     /** @use HasFactory<\Database\Factories\AuthFactory> */
     use HasFactory;
+    protected $fillable = [
+        'username',
+        'name',
+        'email',
+        'phone',
+        'address',
+        'password',
+        'image'
+    ];
 }

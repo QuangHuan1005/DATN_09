@@ -11,17 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->foreign('parent_id')->references('id')->on('categories')->onDelete('set null');
-            $table->timestamps();
-            $table->softDeletes(); // thêm dòng này
+        Schema::table('categories', function (Blueprint $table) {
+            if (!Schema::hasColumn('categories', 'deleted_at')) {
+                $table->softDeletes(); // datetime nullable
+            }
         });
-
     }
 
     /**
@@ -29,7 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
-        
+        Schema::table('categories', function (Blueprint $table) {
+            if (Schema::hasColumn('categories', 'deleted_at')) {
+                $table->dropSoftDeletes();
+            }
+        });
     }
 };
