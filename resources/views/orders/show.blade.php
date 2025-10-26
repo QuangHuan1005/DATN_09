@@ -53,6 +53,57 @@
     }
     /* sidebar dính nhẹ khi cuộn (tuỳ thích) */
     .order-sidebar{position:sticky;top:90px}
+    /* ===== OVERRIDES: đặt ở CUỐI <style> ===== */
+
+    /* Gom badge + các nút trên 1 hàng, căn phải gọn gàng */
+    .order-header > div:last-child{
+      display:flex;              /* từ block -> flex để xếp ngang */
+      align-items:center;
+      justify-content:flex-end;
+      gap:8px;
+      flex-wrap:wrap;            /* nếu hẹp màn hình thì tự xuống dòng */
+      text-align:right;
+    }
+    .order-header > div:last-child .order-tools{
+      margin-top:0;              /* bỏ khoảng cách thừa */
+    }
+    .order-header .tag{
+      margin:0 2px 0 0;          /* chút khoảng cách với nút */
+    }
+
+    /* Nút hành động: luôn nền trắng, viền xám; hover xám rất nhẹ */
+    .btn-lite{
+      background:#fff !important;
+      color:#111827 !important;
+      border:1px solid #e5e7eb !important;
+      cursor:pointer;
+    }
+    .btn-lite:hover{
+      background:#f9fafb !important;
+      border-color:#d1d5db !important;
+      color:#111827 !important;
+    }
+    .btn-lite:focus-visible{
+      outline:2px solid #11182722;
+      outline-offset:2px;
+    }
+    .btn-lite:active{
+      transform:translateY(0.5px);
+    }
+
+    /* Mobile: đưa badge + nút căn trái để đỡ chật */
+    @media (max-width: 768px){
+      .order-header > div:last-child{
+        justify-content:flex-start;
+        text-align:left;
+      }
+    }
+    .btn-danger-outline:hover {
+      background: #fef2f2 !important;
+      color: #b91c1c !important;
+      border-color: #ef4444 !important;
+    }
+
   </style>
 
   <div class="site-wrapper">
@@ -85,34 +136,42 @@
                         </div>
 
                         {{-- ======= HEADER TÓM TẮT ======= --}}
-                        @php
-                          $statusId = (int)$order->order_status_id;
-                          $statusName = $order->status?->name ?? '—';
-                          $tagClass = match($statusId){
-                            1 => 'tag-amber',    // Chờ xác nhận
-                            2 => 'tag-primary',  // Xác nhận
-                            3 => 'tag-green',    // Đang giao
-                            4,5 => 'tag-green',  // Đã giao / Hoàn thành
-                            6 => 'tag-red',      // Hủy
-                            7 => 'tag-gray',     // Hoàn hàng
-                            default => 'tag-gray'
-                          };
-                          // đơn giản hoá pipeline 4 mốc
-                          $steps = [
-                            1 => 'Chờ xác nhận',
-                            2 => 'Đã xác nhận',
-                            3 => 'Đang giao',
-                            4 => 'Hoàn thành'
-                          ];
-                          // map statusId vào mức hoàn thành thanh tiến trình
-                          $activeStep = match(true){
-                            $statusId === 1 => 1,
-                            $statusId === 2 => 2,
-                            $statusId === 3 => 3,
-                            $statusId >= 4 => 4,
-                            default => 1
-                          };
-                        @endphp
+                      @php
+                        $statusId = (int)$order->order_status_id;
+                        $statusName = $order->status?->name ?? '—';
+                        $tagClass = match($statusId){
+                          1 => 'tag-amber',    // Chờ xác nhận
+                          2 => 'tag-primary',  // Đã xác nhận
+                          3 => 'tag-amber',    // Đang giao
+                          4 => 'tag-green',    // Đã giao
+                          5 => 'tag-green',    // Hoàn thành
+                          6 => 'tag-red',      // Hủy
+                          7 => 'tag-gray',     // Hoàn hàng
+                          default => 'tag-gray'
+                        };
+
+                        // pipeline 5 mốc (thêm mốc "Đã giao")
+                        $steps = [
+                          1 => 'Chờ xác nhận',
+                          2 => 'Đã xác nhận',
+                          3 => 'Đang giao',
+                          4 => 'Đã giao',
+                          5 => 'Hoàn thành'
+                        ];
+
+                        // map statusId vào mức hoàn thành thanh tiến trình (5 mốc)
+                        // ⚙️ chỉnh lại: nếu đơn bị hủy (6) thì chỉ dừng ở "Chờ xác nhận" (1)
+                        $activeStep = match(true){
+                          $statusId === 6 => 1,          // Hủy -> chỉ hiển thị bước 1
+                          $statusId === 1 => 1,
+                          $statusId === 2 => 2,
+                          $statusId === 3 => 3,
+                          $statusId === 4 => 4,
+                          $statusId >= 5 => 5,
+                          default => 1
+                        };
+                      @endphp
+
 
                         <div class="order-header">
                           <div>
@@ -143,6 +202,15 @@
                               @if($order->invoice)
                                 <a href="#" class="btn-lite">In hoá đơn: {{ $order->invoice->invoice_code }}</a>
                               @endif
+
+                              {{-- Nút HOÀN THÀNH: chỉ hiển thị khi trạng thái là ĐÃ GIAO (4) --}}
+                              @if($order->order_status_id == 4)
+                                <form method="POST" action="{{ route('orders.complete', $order->id) }}">
+                                  @csrf
+                                  <button class="btn-lite" type="submit" title="Xác nhận đã nhận hàng">Hoàn thành</button>
+                                </form>
+                              @endif
+
                               @if($order->cancelable)
                                 <form method="POST" action="{{ route('orders.cancel', $order->id) }}" onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn?')">
                                   @csrf
