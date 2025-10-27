@@ -56,13 +56,14 @@ Route::prefix('blog')->group(function () {
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
-// 🛒 Giỏ hàng
-Route::prefix('cart')->group(function () {
+// 🛒 Giỏ hàng (chỉ cho user đã đăng nhập)
+Route::middleware('auth')->prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
     Route::post('/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
+
 
 // 💳 Thanh toán
 Route::middleware('auth')->group(function () {
@@ -141,7 +142,7 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 */
 
 Route::prefix('admin')
-    // ->middleware(['auth', 'is_admin'])
+    ->middleware(['auth:admin', 'is_admin'])
     ->name('admin.')
     ->group(function () {
 
