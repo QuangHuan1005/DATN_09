@@ -323,7 +323,7 @@
                                                 style="display:block; text-align: center; padding:10px 15px; color:#1f2937;font-size:14px; font-weight:bold; border-bottom:1px solid #eee;">
                                                 Xin chào, <strong>{{ Str::afterLast(Auth::user()->name, ' ') }}</strong> 👋
                                             </div>
-                                            @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                            {{-- @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                                                 <a href="{{ route('admin.dashboard') }}"
                                                     style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
                                                     🔑 Truy cập quản trị
@@ -332,7 +332,22 @@
                                                     style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
                                                     🧾 Tài khoản của tôi
                                                 </a>
-                                            @endif
+                                            @endif --}}
+
+                                            @auth
+                                                @if (Auth::user()->role_id === 1)
+                                                    <a href="{{ route('admin.dashboard') }}"
+                                                    style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
+                                                        🔑 Truy cập quản trị
+                                                    </a>
+                                                @endif
+
+                                                <a href="{{ route('account.dashboard') }}"
+                                                style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
+                                                    🧾 Tài khoản của tôi
+                                                </a>
+                                            @endauth
+
                                             <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                                                 @csrf
                                                 <button type="submit"
