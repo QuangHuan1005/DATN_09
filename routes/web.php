@@ -83,7 +83,6 @@ Route::prefix('orders')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel')->middleware('auth');
-
 });
 
 // Tài khoản cá nhân
@@ -166,7 +165,7 @@ Route::prefix('admin')
         Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
 
         //Vouchers
-         Route::resource('vouchers', AdminVoucherController::class);
+        Route::resource('vouchers', AdminVoucherController::class);
 
         // Đơn hàng
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);

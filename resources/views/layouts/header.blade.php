@@ -97,7 +97,7 @@
                     data-id="2e9ed2a7" data-element_type="widget" data-widget_type="kitify-logo.default">
                     <div class="elementor-widget-container">
                         <div class="kitify-logo kitify-logo-type-image kitify-logo-display-block">
-                            <a href="../index.html" class="kitify-logo__link"><img
+                            <a href="/" class="kitify-logo__link"><img
                                     src="{{ asset('storage/banner/Friday-logo.png') }}"
                                     class="kitify-logo__img kitify-logo-default" alt="Mixtas" width="130"><img
                                     src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo_light.svg"
@@ -402,7 +402,7 @@
                     data-id="4cfba4d5" data-element_type="widget" data-widget_type="kitify-nova-cart.default">
                     <div class="elementor-widget-container">
                         <div class="kitify-nova-cart kitify-nova-cart-style-default kitify-nova-cart-label-off">
-                            <a href="javascript:;" data-toggle="MiniCartCanvas_4cfba4d5">
+                            <a href="{{ route('cart.index') }}" data-toggle="MiniCartCanvas_4cfba4d5">
                                 <div class="header-cart-box">
                                     <span class="kitify-nova-cart__icon kitify-blocks-icon"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="18" height="21"
