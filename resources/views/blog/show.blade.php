@@ -1540,48 +1540,54 @@
 		};</script>
 
 <body
-    class="wp-singular post-template post-template-templates post-template-fullwidth post-template-templatesfullwidth-php single single-post postid-863 single-format-standard wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-kit-6 elementor-page elementor-page-605 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
-    <div class="site-wrapper">
+        class="wp-singular post-template post-template-templates post-template-fullwidth post-template-templatesfullwidth-php single single-post postid-863 single-format-standard wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-kit-6 elementor-page elementor-page-605 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
+        <div class="site-wrapper">
 
-        <div class="kitify-site-wrapper elementor-459kitify">
-           @include('layouts.header')
-            <div id="site-content" class="site-content-wrapper">
-                <div data-elementor-type="single-post" data-elementor-id="605"
-                    class="elementor elementor-605 elementor-location-single post-863 post type-post status-publish format-standard has-post-thumbnail hentry category-news category-women-clothing tag-clothing tag-posts tag-shopping tag-women">
-                    <div class="elementor-element elementor-element-15b81ed1 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                        data-id="15b81ed1" data-element_type="container">
-                        <div class="e-con-inner">
-                            <div class="elementor-element elementor-element-57cde8b elementor-widget kitify elementor-kitify-post-title"
-                                data-id="57cde8b" data-element_type="widget"
-                                data-widget_type="kitify-post-title.default">
-                                <div class="elementor-widget-container">
-                                    <h2 class="kitify-post-title ">Fashion Forward: Emerging Trends You Need to Know
-                                    </h2>
+            <div class="kitify-site-wrapper elementor-459kitify">
+                @include('layouts.header')
+                <div id="site-content" class="site-content-wrapper">
+                    <div data-elementor-type="single-post" data-elementor-id="605"
+                        class="elementor elementor-605 elementor-location-single post-863 post type-post status-publish format-standard has-post-thumbnail hentry category-news category-women-clothing tag-clothing tag-posts tag-shopping tag-women">
+                        <div class="elementor-element elementor-element-15b81ed1 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                            data-id="15b81ed1" data-element_type="container">
+                            <div class="e-con-inner">
+                                <div class="elementor-element elementor-element-57cde8b elementor-widget kitify elementor-kitify-post-title"
+                                    data-id="57cde8b" data-element_type="widget"
+                                    data-widget_type="kitify-post-title.default">
+                                    <div class="elementor-widget-container">
+                                        <h2 class="kitify-post-title ">{{ $post->title }}</h2>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="elementor-element elementor-element-999007c elementor-widget kitify elementor-kitify-post-info"
-                                data-id="999007c" data-element_type="widget"
-                                data-widget_type="kitify-post-info.default">
-                                <div class="elementor-widget-container">
-                                    <div class="kitify-posts__meta kitify-posts__meta">
-                                        <div
-                                            class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
-                                            <span class="meta--icon"><img alt=''
-                                                    src='../../../../mixtas.b-cdn.net/wp-content/uploads/2023/12/admin_avatar-96x96.png'
-                                                    srcset='https://mixtas.b-cdn.net/wp-content/uploads/2023/12/admin_avatar-192x192.png 2x'
-                                                    class='avatar avatar-96 photo' height='96' width='96'
-                                                    decoding='async' /></span><span class="meta--value"><a
-                                                    href="../../../author/admin/index.html" class="posted-by__author"
-                                                    rel="author">admin</a></span>
-                                        </div>
-                                        <div class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
-                                            <span class="meta--value">December 19, 2023</span>
+                                <div class="elementor-element elementor-element-999007c elementor-widget kitify elementor-kitify-post-info"
+                                    data-id="999007c" data-element_type="widget"
+                                    data-widget_type="kitify-post-info.default">
+                                    <div class="elementor-widget-container">
+                                        <div class="kitify-posts__meta kitify-posts__meta">
+                                            <div
+                                                class="kitify-posts__meta__item kitify-posts__meta__item--author post__author posted-by">
+                                                <span class="meta--icon">
+                                                    <img alt=''
+                                                        src='{{ $post->author->avatar_url ?? asset('images/default_avatar.png') }}'
+                                                        class='avatar avatar-96 photo' height='96' width='96'
+                                                        decoding='async' />
+                                                </span>
+                                                <span class="meta--value">
+                                                    <a {{-- href="{{ route('author.show', $post->author->slug ?? '#') }}"  --}} href="#" class="posted-by__author"
+                                                        rel="author">
+                                                        {{ $post->author->name ?? 'Unknown' }}
+                                                    </a>
+                                                </span>
+                                            </div>
+                                            <div
+                                                class="kitify-posts__meta__item kitify-posts__meta__item--date post__date">
+                                                <span class="meta--value">
+                                                    {{ $post->published_at?->format('F d, Y') ?? $post->created_at?->format('F d, Y') }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                     <div class="elementor-element elementor-element-54a1fb19 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
                         data-id="54a1fb19" data-element_type="container">
                         <div class="e-con-inner">
