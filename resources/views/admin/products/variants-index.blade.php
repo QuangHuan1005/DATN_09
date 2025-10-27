@@ -1,27 +1,9 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý biến thể sản phẩm</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container-fluid">
-        <!-- Header -->
-        <div class="row bg-dark text-white py-2">
-            <div class="col-6">
-                <a href="{{ route('admin.dashboard') }}" class="text-white text-decoration-none">
-                    <i class="fas fa-home"></i> Trang chủ
-                </a>
-            </div>
-            <div class="col-6 text-end">
-                <span>Quản lý biến thể sản phẩm</span>
-            </div>
-        </div>
+@extends('layouts.admin.app')
 
-        <div class="container mt-4">
+@section('title', 'Quản lý biến thể sản phẩm')
+
+@section('content')
+<div class="container mt-4">
             <!-- Title -->
             <div class="row mb-4">
                 <div class="col-12">
@@ -74,28 +56,43 @@
                 <div class="col-12">
                     <h3 class="h4 mb-3">Thống kê nhanh</h3>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="card bg-primary text-white">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
                                         <div>
-                                            <h5 class="card-title">Tổng biến thể</h5>
-                                            <h2 class="mb-0">{{ \App\Models\ProductVariant::count() }}</h2>
+                                            <h5 class="card-title">Tổng kích thước</h5>
+                                            <h2 class="mb-0">{{ \App\Models\Size::count() }}</h2>
                                         </div>
                                         <div class="align-self-center">
-                                            <i class="fas fa-list fa-2x"></i>
+                                            <i class="fas fa-ruler fa-2x"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h5 class="card-title">Tổng màu sắc</h5>
+                                            <h2 class="mb-0">{{ \App\Models\Color::count() }}</h2>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="fas fa-palette fa-2x"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="card bg-success text-white">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <h5 class="card-title">Đang hoạt động</h5>
-                                            <h2 class="mb-0">{{ \App\Models\ProductVariant::where('status', 'active')->count() }}</h2>
+                                            <h2 class="mb-0">{{ \App\Models\Size::where('status', 'active')->count() + \App\Models\Color::where('status', 'active')->count() }}</h2>
                                         </div>
                                         <div class="align-self-center">
                                             <i class="fas fa-check-circle fa-2x"></i>
@@ -109,7 +106,4 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

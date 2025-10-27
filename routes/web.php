@@ -19,7 +19,7 @@ use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminVoucherController;
-use App\Http\Controllers\Admin\AdminNewsController;
+// use App\Http\Controllers\Admin\AdminNewsController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\WishlistController;
@@ -69,6 +69,22 @@ Route::middleware('auth')->prefix('cart')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+});
+
+// 💰 Thanh toán Momo
+Route::prefix('payment/momo')->group(function () {
+    Route::post('/create', 'App\Http\Controllers\PaymentController@createMomoPayment')->name('payment.momo.create');
+    Route::get('/qr', 'App\Http\Controllers\PaymentController@showMomoQR')->name('payment.momo.qr');
+    Route::get('/return', 'App\Http\Controllers\PaymentController@momoReturn')->name('payment.momo.return');
+    Route::post('/notify', 'App\Http\Controllers\PaymentController@momoNotify')->name('payment.momo.notify');
+    Route::get('/status', 'App\Http\Controllers\PaymentController@checkPaymentStatus')->name('payment.momo.status');
+});
+
+// 💳 Thanh toán ATM
+Route::prefix('payment/atm')->group(function () {
+    Route::get('/', 'App\Http\Controllers\PaymentController@showATM')->name('payment.atm');
+    Route::post('/process', 'App\Http\Controllers\PaymentController@processATM')->name('payment.atm.process');
 });
 
 // 📦 Đơn hàng người dùng
@@ -160,6 +176,7 @@ Route::prefix('admin')
 
         // Biến thể sản phẩm
         Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
+        Route::get('products/{productId}/variants', [AdminProductController::class, 'productVariants'])->name('products.variants.product');
         Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('products.variants.type');
         Route::post('product-variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
         Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
@@ -175,10 +192,10 @@ Route::prefix('admin')
         Route::post('orders/{id}/status', [AdminOrderController::class, 'update'])->name('orders.status');
 
         // Tin tức
-        Route::resource('news', AdminNewsController::class);
+        // Route::resource('news', AdminNewsController::class);
 
         // Liên hệ
-        Route::resource('contacts', AdminContactController::class)->only(['index', 'show', 'destroy']);
+        // Route::resource('contacts', AdminContactController::class)->only(['index', 'show', 'destroy']);
 
         // Người dùng
         Route::resource('users', AdminUserController::class);
