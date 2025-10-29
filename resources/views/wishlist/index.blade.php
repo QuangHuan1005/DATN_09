@@ -26,63 +26,59 @@
                                 <div class="wishlist-items">
                                     <div class="row">
                                         @foreach($wishlistItems as $item)
-                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                                                <div class="product-card">
-                                                    <div class="product-image">
-                                                        @if($item->product->photoAlbums->count() > 0)
-                                                            <img src="{{ asset('storage/' . $item->product->photoAlbums->first()->image) }}" 
-                                                                 alt="{{ $item->product->name }}" 
-                                                                 class="img-fluid">
-                                                        @else
-                                                            <img src="{{ asset('images/no-image.jpg') }}" 
-                                                                 alt="{{ $item->product->name }}" 
-                                                                 class="img-fluid">
-                                                        @endif
-                                                        
-                                                        <div class="product-actions">
-                                                            <button class="btn btn-wishlist remove-from-wishlist" 
-                                                                    data-product-id="{{ $item->product->id }}">
-                                                                <i class="fas fa-heart"></i>
-                                                            </button>
-                                                            <a href="{{ route('products.show', $item->product->id) }}" 
-                                                               class="btn btn-view">
-                                                                <i class="fas fa-eye"></i>
-                                                            </a>
+                                            @php
+                                                $product = $item->product;
+                                            @endphp
+
+                                            @if($product)
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                                    <div class="product-card">
+                                                        <div class="product-image">
+                                                            @php
+                                                                $image = $product->photoAlbums->count() > 0
+                                                                    ? $product->photoAlbums->first()->image
+                                                                    : 'images/no-image.jpg';
+                                                            @endphp
+                                                            <img src="{{ asset($image) }}" alt="{{ $product->name }}" class="img-fluid">
+
+                                                            <div class="product-actions">
+                                                                <button class="btn btn-wishlist remove-from-wishlist" data-product-id="{{ $product->id }}">
+                                                                    <i class="fas fa-heart"></i>
+                                                                </button>
+                                                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-view">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    
-                                                    <div class="product-info">
-                                                        <h3 class="product-name">
-                                                            <a href="{{ route('products.show', $item->product->id) }}">
-                                                                {{ $item->product->name }}
-                                                            </a>
-                                                        </h3>
-                                                        
-                                                        <div class="product-price">
-                                                            @if($item->product->variants->count() > 0)
-                                                                @php
-                                                                    $minPrice = $item->product->variants->min('price');
-                                                                    $maxPrice = $item->product->variants->max('price');
-                                                                @endphp
-                                                                @if($minPrice == $maxPrice)
-                                                                    <span class="price">{{ number_format($minPrice, 0, ',', '.') }}đ</span>
+
+                                                        <div class="product-info">
+                                                            <h3 class="product-name">
+                                                                <a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
+                                                            </h3>
+
+                                                            <div class="product-price">
+                                                                @if($product->variants->count() > 0)
+                                                                    @php
+                                                                        $minPrice = $product->variants->min('price');
+                                                                        $maxPrice = $product->variants->max('price');
+                                                                    @endphp
+                                                                    @if($minPrice == $maxPrice)
+                                                                        <span class="price">{{ number_format($minPrice, 0, ',', '.') }}đ</span>
+                                                                    @else
+                                                                        <span class="price">{{ number_format($minPrice, 0, ',', '.') }}đ - {{ number_format($maxPrice, 0, ',', '.') }}đ</span>
+                                                                    @endif
                                                                 @else
-                                                                    <span class="price">{{ number_format($minPrice, 0, ',', '.') }}đ - {{ number_format($maxPrice, 0, ',', '.') }}đ</span>
+                                                                    <span class="price">Liên hệ</span>
                                                                 @endif
-                                                            @else
-                                                                <span class="price">Liên hệ</span>
-                                                            @endif
-                                                        </div>
-                                                        
-                                                        <div class="product-actions-bottom">
-                                                            <a href="{{ route('products.show', $item->product->id) }}" 
-                                                               class="btn btn-primary btn-sm">
-                                                                Xem chi tiết
-                                                            </a>
+                                                            </div>
+
+                                                            <div class="product-actions-bottom">
+                                                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            @endif
                                         @endforeach
                                     </div>
                                 </div>
@@ -93,9 +89,7 @@
                                     </div>
                                     <h3>Wishlist của bạn đang trống</h3>
                                     <p class="text-muted mb-4">Hãy thêm những sản phẩm yêu thích vào wishlist!</p>
-                                    <a href="{{ route('home') }}" class="btn btn-primary">
-                                        Tiếp tục mua sắm
-                                    </a>
+                                    <a href="{{ route('home') }}" class="btn btn-primary">Tiếp tục mua sắm</a>
                                 </div>
                             @endif
                         </div>
@@ -105,7 +99,6 @@
             @include('layouts.footer')
         </div>
     </div>
-    
     <style>
     /* CSS cho trang wishlist */
     .page-header {

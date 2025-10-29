@@ -24,64 +24,59 @@
                                 <div class="wishlist-items">
                                     <div class="row">
                                         <?php $__currentLoopData = $wishlistItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                                                <div class="product-card">
-                                                    <div class="product-image">
-                                                        <?php if($item->product->photoAlbums->count() > 0): ?>
-                                                            <img src="<?php echo e(asset('storage/' . $item->product->photoAlbums->first()->image)); ?>" 
-                                                                 alt="<?php echo e($item->product->name); ?>" 
-                                                                 class="img-fluid">
-                                                        <?php else: ?>
-                                                            <img src="<?php echo e(asset('images/no-image.jpg')); ?>" 
-                                                                 alt="<?php echo e($item->product->name); ?>" 
-                                                                 class="img-fluid">
-                                                        <?php endif; ?>
-                                                        
-                                                        <div class="product-actions">
-                                                            <button class="btn btn-wishlist remove-from-wishlist" 
-                                                                    data-product-id="<?php echo e($item->product->id); ?>">
-                                                                <i class="fas fa-heart"></i>
-                                                            </button>
-                                                            <a href="<?php echo e(route('products.show', $item->product->id)); ?>" 
-                                                               class="btn btn-view">
-                                                                <i class="fas fa-eye"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="product-info">
-                                                        <h3 class="product-name">
-                                                            <a href="<?php echo e(route('products.show', $item->product->id)); ?>">
-                                                                <?php echo e($item->product->name); ?>
+                                            <?php
+                                                $product = $item->product;
+                                            ?>
 
-                                                            </a>
-                                                        </h3>
-                                                        
-                                                        <div class="product-price">
-                                                            <?php if($item->product->variants->count() > 0): ?>
-                                                                <?php
-                                                                    $minPrice = $item->product->variants->min('price');
-                                                                    $maxPrice = $item->product->variants->max('price');
-                                                                ?>
-                                                                <?php if($minPrice == $maxPrice): ?>
-                                                                    <span class="price"><?php echo e(number_format($minPrice, 0, ',', '.')); ?>đ</span>
-                                                                <?php else: ?>
-                                                                    <span class="price"><?php echo e(number_format($minPrice, 0, ',', '.')); ?>đ - <?php echo e(number_format($maxPrice, 0, ',', '.')); ?>đ</span>
-                                                                <?php endif; ?>
-                                                            <?php else: ?>
-                                                                <span class="price">Liên hệ</span>
-                                                            <?php endif; ?>
+                                            <?php if($product): ?>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                                    <div class="product-card">
+                                                        <div class="product-image">
+                                                            <?php
+                                                                $image = $product->photoAlbums->count() > 0
+                                                                    ? $product->photoAlbums->first()->image
+                                                                    : 'images/no-image.jpg';
+                                                            ?>
+                                                            <img src="<?php echo e(asset($image)); ?>" alt="<?php echo e($product->name); ?>" class="img-fluid">
+
+                                                            <div class="product-actions">
+                                                                <button class="btn btn-wishlist remove-from-wishlist" data-product-id="<?php echo e($product->id); ?>">
+                                                                    <i class="fas fa-heart"></i>
+                                                                </button>
+                                                                <a href="<?php echo e(route('products.show', $product->id)); ?>" class="btn btn-view">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                            </div>
                                                         </div>
-                                                        
-                                                        <div class="product-actions-bottom">
-                                                            <a href="<?php echo e(route('products.show', $item->product->id)); ?>" 
-                                                               class="btn btn-primary btn-sm">
-                                                                Xem chi tiết
-                                                            </a>
+
+                                                        <div class="product-info">
+                                                            <h3 class="product-name">
+                                                                <a href="<?php echo e(route('products.show', $product->id)); ?>"><?php echo e($product->name); ?></a>
+                                                            </h3>
+
+                                                            <div class="product-price">
+                                                                <?php if($product->variants->count() > 0): ?>
+                                                                    <?php
+                                                                        $minPrice = $product->variants->min('price');
+                                                                        $maxPrice = $product->variants->max('price');
+                                                                    ?>
+                                                                    <?php if($minPrice == $maxPrice): ?>
+                                                                        <span class="price"><?php echo e(number_format($minPrice, 0, ',', '.')); ?>đ</span>
+                                                                    <?php else: ?>
+                                                                        <span class="price"><?php echo e(number_format($minPrice, 0, ',', '.')); ?>đ - <?php echo e(number_format($maxPrice, 0, ',', '.')); ?>đ</span>
+                                                                    <?php endif; ?>
+                                                                <?php else: ?>
+                                                                    <span class="price">Liên hệ</span>
+                                                                <?php endif; ?>
+                                                            </div>
+
+                                                            <div class="product-actions-bottom">
+                                                                <a href="<?php echo e(route('products.show', $product->id)); ?>" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            <?php endif; ?>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </div>
                                 </div>
@@ -92,9 +87,7 @@
                                     </div>
                                     <h3>Wishlist của bạn đang trống</h3>
                                     <p class="text-muted mb-4">Hãy thêm những sản phẩm yêu thích vào wishlist!</p>
-                                    <a href="<?php echo e(route('home')); ?>" class="btn btn-primary">
-                                        Tiếp tục mua sắm
-                                    </a>
+                                    <a href="<?php echo e(route('home')); ?>" class="btn btn-primary">Tiếp tục mua sắm</a>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -104,7 +97,6 @@
             <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         </div>
     </div>
-    
     <style>
     /* CSS cho trang wishlist */
     .page-header {
