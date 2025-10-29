@@ -97,8 +97,8 @@
                     data-id="2e9ed2a7" data-element_type="widget" data-widget_type="kitify-logo.default">
                     <div class="elementor-widget-container">
                         <div class="kitify-logo kitify-logo-type-image kitify-logo-display-block">
-                            <a href="../index.html" class="kitify-logo__link"><img
-                                    src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo.svg"
+                           <a href="/" class="kitify-logo__link"><img
+                                    src="{{ asset('storage/banner/logo.jpg') }}"
                                     class="kitify-logo__img kitify-logo-default" alt="Mixtas" width="130"><img
                                     src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo_light.svg"
                                     class="kitify-logo__img kitify-logo-light" alt="Mixtas" width="130"></a>

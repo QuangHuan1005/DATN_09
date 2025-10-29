@@ -158,7 +158,7 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 */
 
 Route::prefix('admin')
-    ->middleware(['auth:admin', 'is_admin'])
+   // ->middleware(['auth:admin', 'is_admin'])
     ->name('admin.')
     ->group(function () {
 

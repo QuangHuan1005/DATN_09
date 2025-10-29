@@ -103,7 +103,7 @@ class AuthController extends Controller
                 ->with('success', 'Chào mừng quản trị viên!');
         }
 
-        return redirect()->intended('/')->with('success', 'Đăng nhập thành công!');
+         return redirect('/')->with('success', 'Đăng nhập thành công!');
     }
 
     public function logout(Request $request)

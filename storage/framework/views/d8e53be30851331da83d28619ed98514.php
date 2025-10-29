@@ -97,8 +97,8 @@
                     data-id="2e9ed2a7" data-element_type="widget" data-widget_type="kitify-logo.default">
                     <div class="elementor-widget-container">
                         <div class="kitify-logo kitify-logo-type-image kitify-logo-display-block">
-                            <a href="../index.html" class="kitify-logo__link"><img
-                                    src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo.svg"
+                           <a href="/" class="kitify-logo__link"><img
+                                    src="<?php echo e(asset('storage/banner/logo.jpg')); ?>"
                                     class="kitify-logo__img kitify-logo-default" alt="Mixtas" width="130"><img
                                     src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo_light.svg"
                                     class="kitify-logo__img kitify-logo-light" alt="Mixtas" width="130"></a>
@@ -270,16 +270,22 @@
                                                 style="display:block; text-align: center; padding:10px 15px; color:#1f2937;font-size:14px; font-weight:bold; border-bottom:1px solid #eee;">
                                                 Xin chào, <strong><?php echo e(Str::afterLast(Auth::user()->name, ' ')); ?></strong> 👋
                                             </div>
-                                            <?php if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2): ?>
-                                                <a href="<?php echo e(route('admin.dashboard')); ?>"
+                                            
+
+                                            <?php if(auth()->guard()->check()): ?>
+                                                <?php if(Auth::user()->role_id === 1): ?>
+                                                    <a href="<?php echo e(route('admin.dashboard')); ?>"
                                                     style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
-                                                    🔑 Truy cập quản trị
-                                                </a>
+                                                        🔑 Truy cập quản trị
+                                                    </a>
+                                                <?php endif; ?>
+
                                                 <a href="<?php echo e(route('account.dashboard')); ?>"
-                                                    style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
+                                                style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
                                                     🧾 Tài khoản của tôi
                                                 </a>
                                             <?php endif; ?>
+
                                             <form method="POST" action="<?php echo e(route('logout')); ?>" style="margin:0;">
                                                 <?php echo csrf_field(); ?>
                                                 <button type="submit"
