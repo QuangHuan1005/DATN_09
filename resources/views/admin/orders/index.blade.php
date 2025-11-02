@@ -8,7 +8,6 @@
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
     @if(session('error'))
@@ -45,7 +44,9 @@
                     <th>Điện thoại</th>
                     <th>Địa chỉ</th>
                     <th>Tổng tiền</th>
-                    <th>Trạng thái</th>
+                    <th>Trạng thái đơn</th>
+                     <th>Phương thức thanh toán</th>
+                    <th>Trạng thái thanh toán</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
@@ -61,24 +62,63 @@
                         <td>{{ $order->phone }}</td>
                         <td>{{ $order->address }}</td>
                         <td>{{ number_format($order->total_amount, 0, ',', '.') }} đ</td>
+
+                        {{-- Trạng thái đơn --}}
                         <td>
                             <form action="{{ route('admin.orders.status', $order->id) }}" method="POST" class="status-form">
                                 @csrf
-                               <select name="order_status_id" 
-        class="form-select form-select-sm w-auto {{ $colorClass }}" 
-        onchange="changeStatusColor(this); this.form.submit()">
-    @foreach($statuses as $status)
-        <option value="{{ $status->id }}" 
-                data-color="{{ $status->color_class }}"
-                {{ $order->order_status_id == $status->id ? 'selected' : '' }}
-                {{ in_array($status->id, [5,6,7]) ? 'disabled' : '' }}>
-            {{ $status->name }}
-        </option>
-    @endforeach
-</select>
-
+                                <select name="order_status_id" 
+                                        class="form-select form-select-sm w-auto {{ $colorClass }}" 
+                                        onchange="changeStatusColor(this); this.form.submit()">
+                                    @foreach($statuses as $status)
+                                        <option value="{{ $status->id }}" 
+                                                data-color="{{ $status->color_class }}"
+                                                {{ $order->order_status_id == $status->id ? 'selected' : '' }}
+                                                {{ in_array($status->id, [5,6,7]) ? 'disabled' : '' }}>
+                                            {{ $status->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </form>
                         </td>
+
+                         {{-- Phương thức thanh toán --}}
+                        <td>
+                            @if($order->paymentMethod)
+                                @php
+                                    $method = $order->paymentMethod->name;
+                                    $type = $order->paymentMethod->type;
+                                    $badgeColor = $type === 'online' ? 'info' : 'secondary';
+                                    $icon = $type === 'online' ? 'bi-wifi' : 'bi-cash';
+                                @endphp
+                                <span class="badge bg-{{ $badgeColor }}">
+                                    <i class="bi {{ $icon }}"></i> {{ $method }}
+                                </span>
+                            @else
+                                <span class="badge bg-secondary">Chưa chọn</span>
+                            @endif
+                        </td>
+
+                        {{-- Trạng thái thanh toán --}}
+                        <td>
+                            @if($order->paymentStatus)
+                                @php
+                                    $paymentColor = match($order->paymentStatus->id) {
+                                        1 => 'bg-warning',
+                                        2 => 'bg-success',
+                                        3 => 'bg-danger',
+                                        default => 'bg-secondary',
+                                    };
+                                @endphp
+                                <span class="badge {{ $paymentColor }}">
+                                    {{ $order->paymentStatus->name }}
+                                </span>
+                            @else
+                                <span class="badge bg-secondary">Chưa chọn</span>
+                            @endif
+                        </td>
+
+                        {{-- Hành động --}}
                         <td>
                             <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-info btn-sm">
                                 Xem chi tiết
@@ -87,7 +127,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center text-muted">Không có đơn hàng nào</td>
+                        <td colspan="9" class="text-center text-muted">Không có đơn hàng nào</td>
                     </tr>
                 @endforelse
             </tbody>
