@@ -11,7 +11,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\PaymentController;
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -60,7 +59,7 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // 🛒 Giỏ hàng (chỉ cho user đã đăng nhập)
 Route::middleware('auth')->prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/add/{id?}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
@@ -71,31 +70,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-    
-    // Quản lý địa chỉ trong checkout
-    Route::post('/checkout/address', [CheckoutController::class, 'addAddress'])->name('checkout.address.add');
-    Route::get('/checkout/addresses', [CheckoutController::class, 'getAddresses'])->name('checkout.addresses.get');
-    Route::get('/checkout/address/{id}', [CheckoutController::class, 'getAddress'])->name('checkout.address.get');
-    Route::match(['put', 'post'], '/checkout/address/{id}', [CheckoutController::class, 'updateAddress'])->name('checkout.address.update');
-    Route::delete('/checkout/address/{id}', [CheckoutController::class, 'deleteAddress'])->name('checkout.address.delete');
-    Route::post('/checkout/address/{id}/set-default', [CheckoutController::class, 'setDefaultAddress'])->name('checkout.address.set-default');
-    
-    // Quản lý địa chỉ mặc định (thông tin user)
-    Route::get('/checkout/user-info', [CheckoutController::class, 'getUserInfo'])->name('checkout.user-info.get');
-    Route::post('/checkout/user-info/update', [CheckoutController::class, 'updateUserInfo'])->name('checkout.user-info.update');
-    Route::post('/checkout/user-info/clear-address', [CheckoutController::class, 'clearUserAddress'])->name('checkout.user-info.clear-address');
-    
-    // Voucher
-    Route::get('/checkout/vouchers', [CheckoutController::class, 'getAvailableVouchers'])->name('checkout.vouchers.get');
-    Route::post('/checkout/voucher/apply', [CheckoutController::class, 'applyVoucher'])->name('checkout.voucher.apply');
-    Route::post('/checkout/voucher/remove', [CheckoutController::class, 'removeVoucher'])->name('checkout.voucher.remove');
+
+     // ➕ THÊM MỚI: Mua ngay (chuyển thẳng sang checkout với 1 biến thể & số lượng)
+    Route::post('/checkout/buy-now', [CheckoutController::class, 'buyNow'])->name('checkout.buy_now');
 });
 
-// 💰 Thanh toán VNPay
-Route::prefix('payment/vnpay')->group(function () {
-    Route::get('/return', [PaymentController::class, 'vnpayReturn'])->name('payment.vnpay.return');
-    Route::post('/ipn', [PaymentController::class, 'vnpayIpn'])->name('payment.vnpay.ipn');
-});
 
 // 💰 Thanh toán Momo
 Route::prefix('payment/momo')->group(function () {

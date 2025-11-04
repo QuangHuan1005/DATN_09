@@ -123,7 +123,7 @@
                                 <ul id="menu-main-menu" class="menu nav-menu">
                                     <li id="menu-item-766"
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
-                                        <a href="/"><span>Home</span></a>
+                                        <a href="/"><span>Trang Chủ</span></a>
                                     </li>
                                     <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
                                         <a href="{{ route('products.index') }}"><span>Sản phẩm</span><i
@@ -393,13 +393,13 @@
                     .user-dropdown {
                         transition: opacity 0.2s ease, visibility 0.2s ease;
                     }
-                    
+
                     /* CSS cho wishlist count badge */
                     .wishlist-icon-box {
                         position: relative;
                         display: inline-block;
                     }
-                    
+
                     .wishlist-count-badge {
                         position: absolute;
                         top: -8px;
@@ -417,12 +417,12 @@
                         min-width: 20px;
                         line-height: 1;
                     }
-                    
+
                     .wishlist-count-badge:empty {
                         display: none;
                     }
                 </style>
-                
+
                 <script>
                 // Cập nhật số lượng wishlist
                 function updateWishlistCount() {
@@ -444,12 +444,12 @@
                         console.error('Error updating wishlist count:', error);
                     });
                 }
-                
+
                 // Cập nhật khi trang load
                 document.addEventListener('DOMContentLoaded', function() {
                     updateWishlistCount();
                 });
-                
+
                 // Cập nhật khi có thay đổi wishlist
                 document.addEventListener('wishlistUpdated', function() {
                     updateWishlistCount();
