@@ -16,37 +16,46 @@ class AdminProductController extends Controller
 {
     // Hiển thị danh sách sản phẩm
     public function index(Request $request)
-    {  
-    $query = Product::with(['category', 'variants'])
-        ->withTrashed()
-        ->orderBy('id', 'asc');
+    {
+        $query = Product::with(['category', 'variants'])
+            ->withTrashed()
+            ->orderBy('id', 'desc');
 
-    if ($request->has('keyword') && $request->keyword != '') {
-        $keyword = $request->keyword;
-        $query->where(function ($q) use ($keyword) {
-            $q->where('name', 'like', '%' . $keyword . '%')
-              ->orWhere('product_code', 'like', '%' . $keyword . '%');
-        });
-    }
+        if ($request->has('keyword') && $request->keyword != '') {
+            $keyword = $request->keyword;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhere('product_code', 'like', '%' . $keyword . '%');
+            });
+        }
 
-    $products = Product::with(['category', 'variants'])
-        ->withTrashed()
-        ->paginate(5);
+        $products = Product::with(['category', 'variants'])
+            ->withTrashed()->orderBy('id', 'desc')
+            ->paginate(5);
 
-    if ($request->filled('keyword')) {
-        $products = $query->paginate(5);
-        $products->appends(['keyword' => $request->keyword]);
-    }
+        if ($request->filled('keyword')) {
+            $products = $query->paginate(5);
+            $products->appends(['keyword' => $request->keyword]);
+        }
+        
 
 
-        return view('admin.products.index', compact('products'));
+        return view(
+            'admin.products.index',
+            compact('products'),
+            ['pageTitle' => 'Danh sách sản phẩm']
+        );
     }
 
     // Form tạo sản phẩm mới
     public function create()
     {
         $categories = Category::all();
-        return view('admin.products.create', compact('categories'));
+        return view(
+            'admin.products.create',
+            compact('categories'),
+            ['pageTitle' => 'Thêm mới sản phẩm']
+        );
     }
 
     // Lưu sản phẩm mới
@@ -80,10 +89,16 @@ class AdminProductController extends Controller
     }
 
     // Xem chi tiết sản phẩm
-    public function show(Product $product)
+    public function show($id)
     {
-        return view('admin.products.show', compact('product'));
+        $product = Product::with(['photoAlbums', 'variants.color', 'variants.size'])->findOrFail($id);
+        return view(
+            'admin.products.show',
+            compact('product'),
+            ['pageTitle' => 'Chi tiết sản phẩm']
+        );
     }
+
 
     // Form chỉnh sửa sản phẩm
     public function edit(Product $product)
@@ -91,7 +106,11 @@ class AdminProductController extends Controller
         $product = Product::withTrashed()->findOrFail($product->id);
         $categories = Category::all();
 
-        return view('admin.products.edit', compact('product', 'categories'));
+        return view(
+            'admin.products.edit',
+            compact('product', 'categories'),
+            ['pageTitle' => 'Chỉnh sửa sản phẩm']
+        );
     }
 
     // Cập nhật sản phẩm
@@ -157,6 +176,11 @@ class AdminProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Sản phẩm đã được hiển thị lại.');
+    }
+    public function forceDelete($id)
+    {
+        Product::withTrashed()->where('id', $id)->forceDelete();
+        return redirect()->back()->with('success', 'Đã xóa vĩnh viễn sản phẩm!');
     }
 
 
@@ -225,28 +249,28 @@ class AdminProductController extends Controller
     }
 
     public function variantsByType(Request $request, $type)
-{
-    $query = \App\Models\ProductVariant::query();
+    {
+        $query = \App\Models\ProductVariant::query();
 
-    if ($type === 'size') {
-        $query->whereNotNull('size_id');
-    } elseif ($type === 'color') {
-        $query->whereNotNull('color_id');
-    } else {
-        // Nếu type không hợp lệ, trả về view trống hoặc redirect
-        return view('admin.product_variants.index', ['variants' => collect(), 'type' => $type]);
+        if ($type === 'size') {
+            $query->whereNotNull('size_id');
+        } elseif ($type === 'color') {
+            $query->whereNotNull('color_id');
+        } else {
+            // Nếu type không hợp lệ, trả về view trống hoặc redirect
+            return view('admin.product_variants.index', ['variants' => collect(), 'type' => $type]);
+        }
+
+        $variants = $query->orderBy('created_at', 'desc')
+            ->orderBy('id')
+            ->get();
+
+        // Trả về view, truyền dữ liệu biến thể và loại
+        return view('admin.product_variants.index', [
+            'variants' => $variants,
+            'type' => $type,
+        ]);
     }
-
-    $variants = $query->orderBy('created_at', 'desc')
-                      ->orderBy('id')
-                      ->get();
-
-    // Trả về view, truyền dữ liệu biến thể và loại
-    return view('admin.product_variants.index', [
-        'variants' => $variants,
-        'type' => $type,
-    ]);
-}
 
 
     // Cập nhật biến thể

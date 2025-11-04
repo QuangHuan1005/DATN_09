@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 24, 2025 at 12:14 PM
+-- Generation Time: Oct 29, 2025 at 12:52 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.20
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `datn`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounts`
+--
+
+CREATE TABLE `accounts` (
+  `id` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auths`
+--
+
+CREATE TABLE `auths` (
+  `id` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -50,6 +74,30 @@ INSERT INTO `banners` (`id`, `location_id`, `image`, `name`, `status`, `product_
 (3, 2, 'banner3.jpg', 'Flash Sale', 1, '/products/3', '2025-10-03', '2025-10-08', '2025-10-03 23:28:17', NULL),
 (4, 3, 'banner4.jpg', 'Back to School', 1, '/products/4', '2025-10-03', '2025-10-23', '2025-10-03 23:28:17', NULL),
 (5, 2, 'banner5.jpg', 'Hot Deal', 1, '/products/5', '2025-10-03', '2025-10-10', '2025-10-03 23:28:17', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache`
+--
+
+CREATE TABLE `cache` (
+  `key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache_locks`
+--
+
+CREATE TABLE `cache_locks` (
+  `key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -129,12 +177,13 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `parent_id`, `name`, `slug`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, NULL, 'Thời trang Nam', 'thoi-trang-nam', 'Quần áo nam', '2025-10-03 23:28:17', '2025-10-16 14:13:17', NULL),
+(1, NULL, 'Thời trang Nam', 'thoi-trang-nam', 'Quần áo nam', '2025-10-03 23:28:17', '2025-10-26 23:53:49', NULL),
 (2, NULL, 'Thời trang Nữ', 'thoi-trang-nu', 'Quần áo nữ', '2025-10-03 23:28:17', NULL, NULL),
 (3, NULL, 'Phụ kiện', 'phu-kien', 'Phụ kiện thời trang', '2025-10-03 23:28:17', NULL, NULL),
 (4, NULL, 'Giày dép', 'giay-dep', 'Các loại giày dép', '2025-10-03 23:28:17', NULL, NULL),
 (5, NULL, 'Túi xách', 'tui-xach', 'Túi xách cao cấp', '2025-10-03 23:28:17', NULL, NULL),
-(6, 5, 'aaaa', 'rr', 's', '2025-10-16 14:13:35', '2025-10-16 14:13:35', NULL);
+(6, 5, 'aaaa', 'rr', 's', '2025-10-16 14:13:35', '2025-10-16 14:13:35', NULL),
+(11, NULL, 'aa', 'aa', NULL, '2025-10-27 13:00:21', '2025-10-27 13:00:21', NULL);
 
 -- --------------------------------------------------------
 
@@ -201,6 +250,8 @@ CREATE TABLE `colors` (
   `id` bigint UNSIGNED NOT NULL,
   `name` varchar(100) NOT NULL,
   `color_code` varchar(20) DEFAULT NULL,
+  `description` text,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -209,12 +260,11 @@ CREATE TABLE `colors` (
 -- Dumping data for table `colors`
 --
 
-INSERT INTO `colors` (`id`, `name`, `color_code`, `created_at`, `updated_at`) VALUES
-(1, 'Red', '#FF0000', '2025-10-03 23:28:17', NULL),
-(2, 'Blue', '#0000FF', '2025-10-03 23:28:17', NULL),
-(3, 'White', '#FFFFFF', '2025-10-03 23:28:17', NULL),
-(4, 'Black', '#000000', '2025-10-03 23:28:17', NULL),
-(5, 'Green', '#00FF00', '2025-10-03 23:28:17', NULL);
+INSERT INTO `colors` (`id`, `name`, `color_code`, `description`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Redc', '#FF0000', NULL, 'inactive', '2025-10-03 23:28:17', '2025-10-26 16:29:11'),
+(2, 'Blue', '#0000FF', NULL, 'active', '2025-10-03 23:28:17', NULL),
+(3, 'White', '#FFFFFF', NULL, 'active', '2025-10-03 23:28:17', NULL),
+(4, 'Black', '#000000', NULL, 'active', '2025-10-03 23:28:17', NULL);
 
 -- --------------------------------------------------------
 
@@ -251,6 +301,22 @@ INSERT INTO `comments` (`id`, `news_id`, `user_id`, `parent_id`, `content`, `sta
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `failed_jobs`
+--
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `invoices`
 --
 
@@ -273,6 +339,41 @@ INSERT INTO `invoices` (`id`, `order_id`, `invoice_code`, `issue_date`, `created
 (3, 3, 'INV003', '2025-10-03', '2025-10-03 23:28:17', NULL),
 (4, 4, 'INV004', '2025-10-03', '2025-10-03 23:28:17', NULL),
 (5, 5, 'INV005', '2025-10-03', '2025-10-03 23:28:17', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `queue` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint UNSIGNED NOT NULL,
+  `reserved_at` int UNSIGNED DEFAULT NULL,
+  `available_at` int UNSIGNED NOT NULL,
+  `created_at` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_batches`
+--
+
+CREATE TABLE `job_batches` (
+  `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_jobs` int NOT NULL,
+  `pending_jobs` int NOT NULL,
+  `failed_jobs` int NOT NULL,
+  `failed_job_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `cancelled_at` int DEFAULT NULL,
+  `created_at` int NOT NULL,
+  `finished_at` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -311,7 +412,16 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '0001_01_01_000000_create_users_table', 1);
+(1, '0001_01_01_000000_create_users_table', 1),
+(4, '0001_01_01_000001_create_cache_table', 2),
+(5, '0001_01_01_000002_create_jobs_table', 2),
+(6, '2025_10_04_162806_create_products_table', 2),
+(7, '2025_10_04_162908_create_categories_table', 2),
+(8, '2025_10_05_024516_create_auths_table', 2),
+(9, '2025_10_05_050828_create_accounts_table', 2),
+(10, '2025_10_22_065108_create_wishlists_table', 3),
+(11, '2025_10_26_162159_add_description_and_status_to_sizes_table', 4),
+(12, '2025_10_26_162205_add_description_and_status_to_colors_table', 5);
 
 -- --------------------------------------------------------
 
@@ -479,7 +589,8 @@ INSERT INTO `orders` (`id`, `user_id`, `payment_status_id`, `order_status_id`, `
 (2, 2, 2, 2, 2, 'ORD002', 'Tran Thi B', 'Hai Phong', '0900000002', 150000.00, 30000.00, 120000.00, '', '2025-10-03 23:28:17', NULL),
 (3, 3, 1, 1, NULL, 'ORD003', 'Le Van C', 'Da Nang', '0900000003', 900000.00, 0.00, 900000.00, 'Ship giờ hành chính', '2025-10-03 23:28:17', NULL),
 (4, 4, 1, 1, 3, 'ORD004', 'Pham Thi D', 'Hue', '0900000004', 350000.00, 100000.00, 250000.00, '', '2025-10-03 23:28:17', NULL),
-(5, 5, 2, 3, 4, 'ORD005', 'Admin', 'Ha Noi', '0900000005', 2000000.00, 70000.00, 1930000.00, '', '2025-10-03 23:28:17', NULL);
+(5, 5, 2, 4, 4, 'ORD005', 'Admin', 'Ha Noi', '0900000005', 2000000.00, 70000.00, 1930000.00, '', '2025-10-03 23:28:17', '2025-10-26 23:58:03'),
+(6, 1, 1, 4, NULL, 'ORD21', 'aaaa', 'aaaa', '0900000001', 0.00, 0.00, 0.00, NULL, NULL, '2025-10-27 13:11:18');
 
 -- --------------------------------------------------------
 
@@ -650,21 +761,21 @@ INSERT INTO `products` (`id`, `category_id`, `product_code`, `name`, `descriptio
 (1, 1, 'SP001', 'Áo sơ mi nam', 'Áo sơ mi công sở', 124, 'Cotton', 1, '2025-10-03 23:28:17', '2025-10-19 08:45:29', NULL),
 (2, 1, 'SP002', 'Áo thun nam', 'Áo thun basic', 174, 'Polyester', 1, '2025-10-03 23:28:17', NULL, NULL),
 (3, 2, 'SP003', 'Váy nữ xòe', 'Váy công sở xòe nhẹ', 491, 'Lụa', 1, '2025-10-03 23:28:17', NULL, NULL),
-(4, 4, 'SP004', 'Giày sneaker', 'Giày sneaker trẻ trung', 450, 'Da PU', 1, '2025-10-03 23:28:17', NULL, NULL),
-(5, 5, 'SP005', 'Túi xách tay', 'Túi xách nữ thời trang', 275, 'Da bò', 1, '2025-10-03 23:28:17', NULL, NULL),
+(4, 4, 'SP004', 'Quần dài túi hộp', 'Giày sneaker trẻ trung', 450, 'Da PU', 1, '2025-10-03 23:28:17', '2025-10-27 11:36:15', NULL),
+(5, 1, 'SP005', 'Quần short jean', 'Túi xách nữ thời trang', 275, 'Da bò', 1, '2025-10-03 23:28:17', '2025-10-27 11:41:15', NULL),
 (6, 1, 'SP006', 'Áo polo nam cao cấp', 'Áo polo vải thun lạnh, thoáng mát', 17, 'Thun lạnh', 1, '2025-10-08 00:04:37', NULL, NULL),
 (7, 1, 'SP007', 'Áo khoác nam chống nắng', 'Áo khoác dù siêu nhẹ, chống tia UV', 230, 'Polyester', 1, '2025-10-08 00:04:37', NULL, NULL),
-(8, 2, 'SP008', 'Đầm công sở tay dài', 'Đầm thiết kế thanh lịch cho dân văn phòng', 109, 'Lụa Nhật', 1, '2025-10-08 00:04:37', NULL, NULL),
-(9, 2, 'SP009', 'Áo kiểu nữ trễ vai', 'Áo nữ thiết kế trẻ trung, phong cách', 338, 'Voan mịn', 1, '2025-10-08 00:04:37', NULL, NULL),
-(10, 3, 'SP010', 'Kính mát thời trang', 'Kính gọng kim loại cao cấp', 370, 'Kim loại', 1, '2025-10-08 00:04:37', NULL, NULL),
-(11, 3, 'SP011', 'Thắt lưng da bò thật', 'Thắt lưng nam khóa hợp kim cao cấp', 335, 'Da bò thật', 1, '2025-10-08 00:04:37', NULL, NULL),
-(12, 3, 'SP012', 'Mũ lưỡi trai Unisex', 'Mũ lưỡi trai trơn phong cách Hàn Quốc', 63, 'Cotton', 1, '2025-10-08 00:04:37', NULL, NULL),
-(13, 4, 'SP013', 'Giày thể thao nữ', 'Giày sneaker đế êm, nhẹ', 284, 'Da tổng hợp', 1, '2025-10-08 00:04:37', NULL, NULL),
-(14, 4, 'SP014', 'Dép lê nam đơn giản', 'Dép lê cao su, thoải mái khi di chuyển', 241, 'Cao su', 1, '2025-10-08 00:04:37', NULL, NULL),
-(15, 4, 'SP015', 'Giày da công sở nam', 'Giày tây nam bóng mịn, sang trọng', 341, 'Da bò', 1, '2025-10-08 00:04:37', NULL, NULL),
-(16, 5, 'SP016', 'Túi đeo chéo unisex', 'Túi đeo chéo tiện lợi, phong cách trẻ', 484, 'Vải canvas', 1, '2025-10-08 00:04:37', NULL, NULL),
-(17, 5, 'SP017', 'Balo laptop chống nước', 'Balo thời trang, chống thấm nước', 403, 'Nylon', 1, '2025-10-08 00:04:37', NULL, NULL),
-(18, 5, 'SP018', 'Ví da nam mini', 'Ví nhỏ gọn, nhiều ngăn, da mềm', 65, 'Da thật', 1, '2025-10-08 00:04:37', NULL, NULL),
+(8, 2, 'SP008', 'Áo thun sleep', 'Đầm thiết kế thanh lịch cho dân văn phòng', 109, 'Lụa Nhật', 1, '2025-10-08 00:04:37', '2025-10-27 11:39:12', NULL),
+(9, 1, 'SP009', 'Quần jean line up', 'Áo nữ thiết kế trẻ trung, phong cách', 338, 'Voan mịn', 1, '2025-10-08 00:04:37', '2025-10-27 11:42:32', NULL),
+(10, 3, 'SP010', 'Kính mát thời trang', 'Kính gọng kim loại cao cấp', 370, 'Kim loại', 0, '2025-10-08 00:04:37', '2025-10-27 11:44:36', '2025-10-27 04:44:36'),
+(11, 1, 'SP011', 'Áo tanktop', 'Thắt lưng nam khóa hợp kim cao cấp', 335, 'Da bò thật', 0, '2025-10-08 00:04:37', '2025-10-27 11:44:45', '2025-10-27 04:44:45'),
+(12, 3, 'SP012', 'Mũ lưỡi trai Unisex', 'Mũ lưỡi trai trơn phong cách Hàn Quốc', 63, 'Cotton', 0, '2025-10-08 00:04:37', '2025-10-27 11:44:51', '2025-10-27 04:44:51'),
+(13, 4, 'SP013', 'Giày thể thao nữ', 'Giày sneaker đế êm, nhẹ', 284, 'Da tổng hợp', 0, '2025-10-08 00:04:37', '2025-10-27 11:44:56', '2025-10-27 04:44:56'),
+(14, 4, 'SP014', 'Dép lê nam đơn giản', 'Dép lê cao su, thoải mái khi di chuyển', 241, 'Cao su', 0, '2025-10-08 00:04:37', '2025-10-27 11:45:00', '2025-10-27 04:45:00'),
+(15, 4, 'SP015', 'Giày da công sở nam', 'Giày tây nam bóng mịn, sang trọng', 341, 'Da bò', 0, '2025-10-08 00:04:37', '2025-10-27 11:45:05', '2025-10-27 04:45:05'),
+(16, 5, 'SP016', 'Áo polo overthinking', 'Túi đeo chéo tiện lợi, phong cách trẻ', 484, 'Vải canvas', 1, '2025-10-08 00:04:37', '2025-10-27 11:43:47', NULL),
+(17, 5, 'SP017', 'Balo laptop chống nước', 'Balo thời trang, chống thấm nước', 403, 'Nylon', 0, '2025-10-08 00:04:37', '2025-10-27 11:33:10', '2025-10-27 04:33:10'),
+(18, 5, 'SP018', 'Ví da nam mini', 'Ví nhỏ gọn, nhiều ngăn, da mềm', 65, 'Da thật', 0, '2025-10-08 00:04:37', '2025-10-27 11:33:16', '2025-10-27 04:33:16'),
 (19, 2, 'SP019', 'Áo khoác nữ form rộng', 'Áo khoác nữ phong cách Hàn Quốc', 87, 'Kaki', 1, '2025-10-08 00:04:37', NULL, NULL),
 (20, 1, 'SP020', 'Quần jean nam rách gối', 'Quần jean rách phong cách streetwear', 231, 'Jean cotton', 1, '2025-10-08 00:04:37', NULL, NULL);
 
@@ -712,25 +823,26 @@ CREATE TABLE `product_photo_albums` (
 --
 
 INSERT INTO `product_photo_albums` (`id`, `product_id`, `image`, `created_at`, `updated_at`) VALUES
-(3, 3, 'dress1_detail1.jpg', '2025-10-03 23:28:17', NULL),
-(4, 4, 'shoes1_detail1.jpg', '2025-10-03 23:28:17', NULL),
-(5, 5, 'bag1_detail1.jpg', '2025-10-03 23:28:17', NULL),
-(6, 6, 'polo1_detail.jpg', '2025-10-08 00:04:37', NULL),
-(7, 7, 'jacket1_detail.jpg', '2025-10-08 00:04:37', NULL),
-(8, 8, 'dress2_detail.jpg', '2025-10-08 00:04:37', NULL),
-(9, 9, 'top1_detail.jpg', '2025-10-08 00:04:37', NULL),
 (10, 10, 'sunglasses1_detail.jpg', '2025-10-08 00:04:37', NULL),
 (11, 11, 'belt1_detail.jpg', '2025-10-08 00:04:37', NULL),
 (12, 12, 'cap1_detail.jpg', '2025-10-08 00:04:37', NULL),
 (13, 13, 'shoes2_detail.jpg', '2025-10-08 00:04:37', NULL),
 (14, 14, 'slipper1_detail.jpg', '2025-10-08 00:04:37', NULL),
 (15, 15, 'shoes3_detail.jpg', '2025-10-08 00:04:37', NULL),
-(16, 16, 'bag2_detail.jpg', '2025-10-08 00:04:37', NULL),
-(17, 17, 'bag3_detail.jpg', '2025-10-08 00:04:37', NULL),
-(18, 18, 'wallet1_detail.jpg', '2025-10-08 00:04:37', NULL),
-(19, 19, 'jacket2_detail.jpg', '2025-10-08 00:04:37', NULL),
-(24, 20, 'products/IGP0BGMwsdQvSRv6E6S5BuBJSzDtDTEJkvE2VRLR.jpg', '2025-10-18 09:39:38', '2025-10-18 09:39:38'),
-(25, 1, 'products/hkb83EXOYqJp5r54CeOVHGC7BRbTO9RIu6OR7rHj.jpg', '2025-10-19 08:44:02', '2025-10-19 08:44:02');
+(28, 1, 'products/F1Zj7nANKXVBUd9cGyYpoD07Dssff5AntuXs6FiE.jpg', '2025-10-27 11:16:42', '2025-10-27 11:16:42'),
+(29, 2, 'products/ekqMIftlkq9YPhhfOTfketVGr9e5lTPk2h0ldiNN.png', '2025-10-27 11:19:44', '2025-10-27 11:19:44'),
+(30, 20, 'products/8YcE5GttjJyXZHuxbVKCMCWVu8ZV7ddfezTIKTsS.jpg', '2025-10-27 11:23:48', '2025-10-27 11:23:48'),
+(31, 19, 'products/vsybQC2j9rInqirFrFRnMnj2TObMeOWkKwhVbNws.jpg', '2025-10-27 11:26:36', '2025-10-27 11:26:36'),
+(32, 18, 'products/9VvHbkTN2bAsAKco7W5kCq5guBj3chqr8ghUSZZ3.webp', '2025-10-27 11:29:33', '2025-10-27 11:29:33'),
+(34, 17, 'products/nFF21nWIXRuwHGF8d4t6lfBV9cSgzSjrQHew6rvh.jpg', '2025-10-27 11:32:22', '2025-10-27 11:32:22'),
+(35, 3, 'products/uHhG7KKbdOTSSSDH7cHBLnVDkNDMQVEDrMCJhxaP.jpg', '2025-10-27 11:34:19', '2025-10-27 11:34:19'),
+(36, 4, 'products/jlpPqOWyWC0Jvkc2ct6pHoyjT1ljOq3KN5Lo8Rbl.jpg', '2025-10-27 11:36:15', '2025-10-27 11:36:15'),
+(37, 6, 'products/kejqFmT4tDPnQOUYl1J86VV9seTYvbghPwB42Ak4.jpg', '2025-10-27 11:37:21', '2025-10-27 11:37:21'),
+(38, 7, 'products/7P2w2aGECKbUF0TX8V2hogDFtxpEShYAhYn5nsJV.jpg', '2025-10-27 11:38:06', '2025-10-27 11:38:06'),
+(39, 8, 'products/QHAdt4vCKOnFBjlxwUAXOLr7I99MuptWKHX6KHAs.jpg', '2025-10-27 11:39:12', '2025-10-27 11:39:12'),
+(40, 5, 'products/bLmL1OesbwM82Os7jAB9JST0rQggPbXQ76Nd1O7T.jpg', '2025-10-27 11:41:15', '2025-10-27 11:41:15'),
+(41, 9, 'products/vLgpEXecj1XQ6JxDtfDJrjXnrdGu3izIW69ylj7a.jpg', '2025-10-27 11:42:44', '2025-10-27 11:42:44'),
+(42, 16, 'products/GiiQ8WU5MOuDysGNM6QJbXbmUrMc2MxzMxiEQh81.jpg', '2025-10-27 11:43:48', '2025-10-27 11:43:48');
 
 -- --------------------------------------------------------
 
@@ -757,7 +869,7 @@ CREATE TABLE `product_variants` (
 --
 
 INSERT INTO `product_variants` (`id`, `product_id`, `color_id`, `size_id`, `price`, `sale`, `image`, `quantity`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, 250000.00, 200000.00, 'shirt1-red.jpg', 0, 1, '2025-10-03 23:28:17', NULL),
+(1, 1, 1, 1, 250000.00, 200000.00, 'shirt1-red.jpg', 50, 1, '2025-10-03 23:28:17', NULL),
 (2, 1, 2, 2, 260000.00, NULL, 'shirt1-blue.jpg', 0, 1, '2025-10-03 23:28:17', NULL),
 (3, 2, 1, 2, 150000.00, NULL, 'shirt2-red.jpg', 0, 1, '2025-10-03 23:28:17', NULL),
 (4, 3, 3, 3, 350000.00, 300000.00, 'dress1-white.jpg', 0, 1, '2025-10-03 23:28:17', NULL),
@@ -768,15 +880,15 @@ INSERT INTO `product_variants` (`id`, `product_id`, `color_id`, `size_id`, `pric
 (9, 9, 2, 2, 280000.00, NULL, 'top1-blue.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
 (10, 10, 4, NULL, 250000.00, NULL, 'sunglasses1-black.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
 (11, 11, 4, NULL, 300000.00, 270000.00, 'belt1-black.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
-(12, 12, 5, NULL, 180000.00, NULL, 'cap1-green.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
+(12, 12, NULL, NULL, 180000.00, NULL, 'cap1-green.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
 (13, 13, 3, 3, 480000.00, 450000.00, 'shoes2-white.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
 (14, 14, 4, NULL, 120000.00, NULL, 'slipper1-black.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
 (15, 15, 4, 3, 650000.00, 600000.00, 'shoes3-black.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
-(16, 16, 5, NULL, 230000.00, NULL, 'bag2-green.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
+(16, 16, NULL, NULL, 230000.00, NULL, 'bag2-green.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
 (17, 17, 2, NULL, 490000.00, 460000.00, 'bag3-blue.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
 (18, 18, 4, NULL, 210000.00, 180000.00, 'wallet1-black.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
-(19, 19, 2, 4, 400000.00, 350000.00, 'jacket2-blue.jpg', 0, 1, '2025-10-08 00:04:37', NULL),
-(20, 20, 1, 3, 370000.00, 340000.00, 'jean1-red.jpg', 0, 1, '2025-10-08 00:04:37', NULL);
+(19, 19, 2, 4, 400000.00, 350000.00, 'jacket2-blue.jpg', 120, 1, '2025-10-08 00:04:37', '2025-10-26 23:52:48'),
+(20, 20, 1, 3, 370000.00, 340000.00, 'jean1-red.jpg', 100, 1, '2025-10-08 00:04:37', NULL);
 
 -- --------------------------------------------------------
 
@@ -870,10 +982,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('6uJfWXPLXFDNf3oxIMsNDh0e9xO82wm2ZbtlizQV', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiN0ZVS2o5VFBVMG1DcFJRTzVNdGJWQ21EQXlYT0N6YmxlWFJoU0N5eSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly9kYXRuXzA5LnRlc3QvcHJvZHVjdHMvMjAiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjQ6ImNhcnQiO2E6MTp7aToyMDthOjg6e3M6MTA6InByb2R1Y3RfaWQiO2k6MjA7czoxMDoidmFyaWFudF9pZCI7aToyMDtzOjQ6Im5hbWUiO3M6Mjc6IlF14bqnbiBqZWFuIG5hbSByw6FjaCBn4buRaSI7czo1OiJjb2xvciI7czozOiJSZWQiO3M6NDoic2l6ZSI7czoxOiJMIjtzOjU6InByaWNlIjtzOjk6IjM0MDAwMC4wMCI7czo4OiJxdWFudGl0eSI7aToyO3M6NToiaW1hZ2UiO3M6MTM6ImplYW4xLXJlZC5qcGciO319fQ==', 1760867824),
-('7pzmh6lzaCCY3DeAgXeRJG65fXDNzMBzi1qGTR5K', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMk5ycXdlSkcwekxqVWE5aG9KbzliT0FWUGROa1QzbU1kaDAwVEttMSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjQ6Imh0dHA6Ly9kYXRuXzA5LW1haW4udGVzdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1760867824),
-('GDoMQeRI0doOKMmnDZqatZ8dGzxeIqsCLfOJGpye', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoib0ltSGFGMnBmZzBQMmZFRE8ybHlPOEZsWnFROGM3UEsyUnN1R2pUUCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1760627777),
-('Gh5mK7fzR2HKiBc9siqXRTM0rNGWtErNhZPQ2w9J', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiUVZwUUxvTDROVnZlZjNGVHJ0cFllSE1QaEZESXpsZkQyODU2dUI2MCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTk6Imh0dHA6Ly9kYXRuXzA5LnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1760475502);
+('aa20rjg1eZQ4Vk0KR7IWFbUghoS38P7lkDhb5NqR', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo3OntzOjY6Il90b2tlbiI7czo0MDoiQW1SVjlxa0dwaTNWTlhuQTdEeVRrV2ZuUHdCYkVuSnlOT2lhMDM2cyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjIxOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO3M6NDoiY2FydCI7YToyOntpOjIwO2E6OTp7czoxMDoidmFyaWFudF9pZCI7aToyMDtzOjEwOiJwcm9kdWN0X2lkIjtpOjIwO3M6NDoibmFtZSI7czoyNzoiUXXhuqduIGplYW4gbmFtIHLDoWNoIGfhu5FpIjtzOjU6ImNvbG9yIjtzOjQ6IlJlZGMiO3M6NDoic2l6ZSI7czoxOiJMIjtzOjU6InByaWNlIjtkOjM0MDAwMDtzOjg6InF1YW50aXR5IjtpOjE7czo1OiJpbWFnZSI7czo0NDoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2ltYWdlcy9wbGFjZWhvbGRlci5wbmciO3M6NDoic2x1ZyI7Tjt9aToxOTthOjk6e3M6MTA6InZhcmlhbnRfaWQiO2k6MTk7czoxMDoicHJvZHVjdF9pZCI7aToxOTtzOjQ6Im5hbWUiO3M6Mjc6IsOBbyBraG/DoWMgbuG7ryBmb3JtIHLhu5luZyI7czo1OiJjb2xvciI7czo0OiJCbHVlIjtzOjQ6InNpemUiO3M6MjoiWEwiO3M6NToicHJpY2UiO2Q6MzUwMDAwO3M6ODoicXVhbnRpdHkiO2k6MTtzOjU6ImltYWdlIjtzOjQ0OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvaW1hZ2VzL3BsYWNlaG9sZGVyLnBuZyI7czo0OiJzbHVnIjtOO319czoxMzoicGVuZGluZ19vcmRlciI7YTo0OntzOjc6Im9yZGVySWQiO3M6MTg6Ik9SREVSXzE3NjE1MDQwNTVfMSI7czoxMToidG90YWxBbW91bnQiO2Q6NzcwMDAwO3M6OToib3JkZXJJbmZvIjtzOjM4OiJUaGFuaCB0b2FuIGRvbiBoYW5nIE9SREVSXzE3NjE1MDQwNTVfMSI7czoxNDoicGF5bWVudF9tZXRob2QiO3M6MzoiYXRtIjt9fQ==', 1761504124),
+('u4BsBicqlGe6K8eFU4542Ijz2Djsa9iA6GpZFbFN', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiRGlMTU1ZN3VjNlhvanZOOXNqM1BTSGYybTdOdkI4WXRWYzc3Y0JucCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjU6Imh0dHA6Ly9kYXRuXzA5LnRlc3QvbG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1761554629);
 
 -- --------------------------------------------------------
 
@@ -885,6 +995,8 @@ CREATE TABLE `sizes` (
   `id` bigint UNSIGNED NOT NULL,
   `name` varchar(50) NOT NULL,
   `size_code` varchar(50) DEFAULT NULL,
+  `description` text,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -893,12 +1005,11 @@ CREATE TABLE `sizes` (
 -- Dumping data for table `sizes`
 --
 
-INSERT INTO `sizes` (`id`, `name`, `size_code`, `created_at`, `updated_at`) VALUES
-(1, 'S', 'S', '2025-10-03 23:28:17', NULL),
-(2, 'M', 'M', '2025-10-03 23:28:17', NULL),
-(3, 'L', 'L', '2025-10-03 23:28:17', NULL),
-(4, 'XL', 'XL', '2025-10-03 23:28:17', NULL),
-(5, 'XXL', 'XXL', '2025-10-03 23:28:17', NULL);
+INSERT INTO `sizes` (`id`, `name`, `size_code`, `description`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'S', 'Sc', NULL, 'inactive', '2025-10-03 23:28:17', '2025-10-27 10:43:40'),
+(2, 'M', 'M', NULL, 'active', '2025-10-03 23:28:17', NULL),
+(3, 'L', 'L', NULL, 'active', '2025-10-03 23:28:17', NULL),
+(4, 'XL', 'XL', NULL, 'active', '2025-10-03 23:28:17', NULL);
 
 -- --------------------------------------------------------
 
@@ -967,10 +1078,11 @@ INSERT INTO `users` (`id`, `role_id`, `ranking_id`, `image`, `name`, `email`, `p
 (3, 2, 2, NULL, 'Le Van C', 'c@example.com', '0900000003', '$2y$10$hashC', 'Da Nang', 1, NULL, NULL, '2025-10-03 23:28:17', NULL, 0, NULL),
 (4, 2, 2, NULL, 'Pham Thi D', 'd@example.com', '0900000004', '$2y$10$hashD', 'Hue', 1, NULL, NULL, '2025-10-03 23:28:17', '2025-10-19 08:41:22', 0, NULL),
 (5, 1, 3, NULL, 'Admin', 'admin@example.com', '0900000005', '$2y$12$3DGrCuGafvhkSVbSbRklkuu.zoAbIB8Fukjig.phphKP8o18YKsfm', 'Ha Noi', 1, NULL, NULL, '2025-10-03 23:28:17', '2025-10-16 15:09:28', 0, NULL),
-(6, 1, NULL, NULL, 'ad', 'ad@gmail.com', '0234567899', '123456', 'hn', 0, 'a', 'fHfIg3RD5zQLPOAYUOzNlWOdMQWni2RgtjMxr1iSndoAUlCZMSlXL6JWp0UX', NULL, NULL, 0, NULL),
+(6, 1, NULL, NULL, 'ad', 'ad@gmail.com', '0234567899', '123456', 'hn', 0, 'a', 'iLXm2pPH6rWEDIxsC82uQEW3UAUfGu9REg2fK2hzfj1o6UHuzZ205uDM6iKI', NULL, NULL, 0, NULL),
 (7, 2, 1, NULL, 'dja', 'h@gmail.com', NULL, '$2y$12$iCGCcqyZpWx2L5L6v/6qgetTNKl3DbAM.58nFZPL8RvQRxT7g3S4.', NULL, 1, NULL, NULL, '2025-10-19 10:28:10', '2025-10-19 10:28:10', 0, NULL),
 (8, 2, 1, NULL, 'abcccc', 'a@gmail.com', NULL, '$2y$12$.q3Ycg24XybMIF.5xy9KoelHSZFh6qhLYflCGAPIyu.l414lITBni', NULL, 1, NULL, NULL, '2025-10-22 14:08:57', '2025-10-22 14:08:57', 0, NULL),
-(9, 2, 1, NULL, 'test', 'test@gmail.com', NULL, '$2y$12$OvMKGbpp4xN2snWDS.zud..UoKynXM4XN/oE4T81jnrfX4I51QCQm', NULL, 1, NULL, NULL, '2025-10-22 14:11:34', '2025-10-22 15:15:55', 0, NULL);
+(9, 1, 1, NULL, 'test', 'test@gmail.com', NULL, '$2y$12$.DUpHvFrmB3f61zPNJXP6u9mVK.JFe1fbHFo7OcsjAPHMYQXow/r6', NULL, 1, NULL, NULL, '2025-10-22 14:11:34', '2025-10-26 23:52:14', 0, NULL),
+(11, 2, 1, NULL, 'Nguyễn Quang Huân', 'huan1@gmail.com', NULL, '$2y$12$XSbW2v/kK99Y2reC4UnVpu50F.M7SoMF6xeuUOeXtylVXh5.vRizS', NULL, 1, NULL, NULL, '2025-10-27 12:26:11', '2025-10-27 12:26:11', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1005,9 +1117,45 @@ INSERT INTO `vouchers` (`id`, `voucher_code`, `quantity`, `total_used`, `user_li
 (4, 'NEWUSER', 200, 0, 1, 70000.00, 200000.00, '2025-10-03 23:28:17', '2025-12-02 23:28:17', 1, 'Voucher khách hàng mới', '2025-10-03 23:28:17', NULL),
 (5, 'VIP50', 10, 0, 1, 200000.00, 1000000.00, '2025-10-03 23:28:17', '2026-01-01 23:28:17', 1, 'Giảm 200k cho khách VIP', '2025-10-03 23:28:17', NULL);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wishlists`
+--
+
+CREATE TABLE `wishlists` (
+  `id` bigint UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED NOT NULL,
+  `product_id` bigint UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `wishlists`
+--
+
+INSERT INTO `wishlists` (`id`, `user_id`, `product_id`, `created_at`, `updated_at`) VALUES
+(2, 1, 19, '2025-10-26 16:30:46', '2025-10-26 16:30:46'),
+(3, 1, 6, '2025-10-27 02:10:26', '2025-10-27 02:10:26'),
+(4, 1, 4, '2025-10-27 02:10:30', '2025-10-27 02:10:30'),
+(5, 1, 14, '2025-10-27 02:10:37', '2025-10-27 02:10:37');
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `accounts`
+--
+ALTER TABLE `accounts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `auths`
+--
+ALTER TABLE `auths`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `banners`
@@ -1015,6 +1163,18 @@ INSERT INTO `vouchers` (`id`, `voucher_code`, `quantity`, `total_used`, `user_li
 ALTER TABLE `banners`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_banners_location` (`location_id`);
+
+--
+-- Indexes for table `cache`
+--
+ALTER TABLE `cache`
+  ADD PRIMARY KEY (`key`);
+
+--
+-- Indexes for table `cache_locks`
+--
+ALTER TABLE `cache_locks`
+  ADD PRIMARY KEY (`key`);
 
 --
 -- Indexes for table `carts`
@@ -1076,12 +1236,32 @@ ALTER TABLE `comments`
   ADD KEY `idx_comments_status` (`status`);
 
 --
+-- Indexes for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
 -- Indexes for table `invoices`
 --
 ALTER TABLE `invoices`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `invoice_code` (`invoice_code`),
   ADD KEY `idx_inv_order` (`order_id`);
+
+--
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
+-- Indexes for table `job_batches`
+--
+ALTER TABLE `job_batches`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `locations`
@@ -1279,8 +1459,28 @@ ALTER TABLE `vouchers`
   ADD UNIQUE KEY `voucher_code` (`voucher_code`);
 
 --
+-- Indexes for table `wishlists`
+--
+ALTER TABLE `wishlists`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `wishlists_user_id_product_id_unique` (`user_id`,`product_id`),
+  ADD KEY `wishlists_product_id_foreign` (`product_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `accounts`
+--
+ALTER TABLE `accounts`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `auths`
+--
+ALTER TABLE `auths`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `banners`
@@ -1304,7 +1504,7 @@ ALTER TABLE `cart_details`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `chats`
@@ -1331,10 +1531,22 @@ ALTER TABLE `comments`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208;
 
 --
+-- AUTO_INCREMENT for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `locations`
@@ -1346,7 +1558,7 @@ ALTER TABLE `locations`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `news`
@@ -1370,7 +1582,7 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `order_details`
@@ -1418,7 +1630,7 @@ ALTER TABLE `product_favorites`
 -- AUTO_INCREMENT for table `product_photo_albums`
 --
 ALTER TABLE `product_photo_albums`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `product_variants`
@@ -1460,12 +1672,18 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `vouchers`
 --
 ALTER TABLE `vouchers`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `wishlists`
+--
+ALTER TABLE `wishlists`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
@@ -1617,6 +1835,13 @@ ALTER TABLE `reviews`
 ALTER TABLE `users`
   ADD CONSTRAINT `fk_users_ranking` FOREIGN KEY (`ranking_id`) REFERENCES `rankings` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_users_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+--
+-- Constraints for table `wishlists`
+--
+ALTER TABLE `wishlists`
+  ADD CONSTRAINT `wishlists_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `wishlists_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

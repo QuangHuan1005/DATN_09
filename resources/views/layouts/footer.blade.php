@@ -541,7 +541,7 @@
             </div>
         </div>
     </div>
-    <div class="kitify-offcanvas minicart-canvas site-canvas-menu off-canvas position-right"
+    {{-- <div class="kitify-offcanvas minicart-canvas site-canvas-menu off-canvas position-right"
         id="MiniCartCanvas_4cfba4d5" data-off-canvas data-transition="overlap">
         <h2 class="title">Shopping Cart<span class="nova_js_count_bag_item_canvas count-item-canvas">0</span>
         </h2>
@@ -556,7 +556,7 @@
                 <use xlink:href="#nova-close-canvas"></use>
             </svg>
         </button>
-    </div>
+    </div> --}}
 </div>
 <div id="svg-defs" class="svg-defs hide">
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

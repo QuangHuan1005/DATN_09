@@ -1963,4 +1963,16 @@
         color: #7f1d1d
     }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&subset=vietnamese" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap&subset=vietnamese" rel="stylesheet">
+<style>/* Thân bài */
+body, button, input, textarea, select {
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important;
+}
+
+/* Tiêu đề */
+h1, h2, h3, .entry-title, .site-title, .product_title {
+  font-family: 'Outfit', 'Inter', sans-serif !important;
+}
+</style>
  

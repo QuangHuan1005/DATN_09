@@ -91,4 +91,6 @@ class User extends Authenticatable
     {
         return $this->is_locked === true;
     }
+    
+    
 }

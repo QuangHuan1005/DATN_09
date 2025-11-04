@@ -125,7 +125,8 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
                                         <a href="/"><span>Home</span></a>
                                     </li>
-                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
+                                    <li
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
                                         <a href="{{ route('products.index') }}"><span>Sản phẩm</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <ul class="sub-menu mega-menu">
@@ -135,26 +136,37 @@
                                                 <ul class='mega-menu-main'>
                                                     @php
                                                         use App\Models\Category;
-                                                        $categories = Category::all();
+                                                        $categories = Category::with('children')->get();
                                                     @endphp
-                                                    @foreach ($categories as $cat)
+
+                                                    @foreach ($categories->whereNull('parent_id') as $parent)
                                                         <li
-                                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_5">
-                                                            {{-- <a href="#"><span>Shop
-                                                                Pages</span><i
-                                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                        --}}
-                                                            <ul class="sub-menu">
+                                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children mega-sub-menu col-1_5">
+                                                            <a href="{{ route('products.index', $parent->slug) }}">
+                                                                <span>{{ $parent->name }}</span>
+                                                                <i class="kitify-nav-arrow novaicon-down-arrow"></i>
+                                                            </a>
 
-                                                                <li
-                                                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
-                                                                    <a
-                                                                        href="{{ route('products.index', ['category' => $cat->id]) }}"><span>{{ $cat->name }}</span></a>
-                                                                </li>
-                                                            </ul>
+                                                            @php
+                                                                $childs = $categories->where('parent_id', $parent->id);
+                                                            @endphp
 
+                                                            @if ($childs->count() > 0)
+                                                                <ul class="sub-menu">
+                                                                    @foreach ($childs as $child)
+                                                                        <li
+                                                                            class="menu-item menu-item-type-post_type menu-item-object-page">
+                                                                            <a
+                                                                                href="{{ route('products.index', ['category' => $child->id]) }}">
+                                                                                <span>{{ $child->name }}</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            @endif
                                                         </li>
                                                     @endforeach
+
                                                     {{-- <li
                                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_4">
                                                         <a href="#"><span>Shop Pages</span><i
@@ -214,8 +226,7 @@
                                     </li> --}}
                                     <li id="menu-item-77"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
-                                        <a href="{{ route('blog.index') }}"><span>Tin tức</span><i
-                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
+                                        <a href="{{ route('blog.index') }}"><span>Tin tức</span></a>
                                     </li>
                                     <li id="menu-item-84"
                                         class="menu-item menu-item-type-post_type menu-item-object-page"><a
@@ -324,7 +335,7 @@
                                                 style="display:block; text-align: center; padding:10px 15px; color:#1f2937;font-size:14px; font-weight:bold; border-bottom:1px solid #eee;">
                                                 Xin chào, <strong>{{ Str::afterLast(Auth::user()->name, ' ') }}</strong> 👋
                                             </div>
-                                            @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                            {{-- @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                                                 <a href="{{ route('admin.dashboard') }}"
                                                     style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
                                                     🔑 Truy cập quản trị
@@ -333,7 +344,22 @@
                                                     style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
                                                     🧾 Tài khoản của tôi
                                                 </a>
-                                            @endif
+                                            @endif --}}
+
+                                            @auth
+                                                @if (Auth::user()->role_id === 1)
+                                                    <a href="{{ route('admin.dashboard') }}"
+                                                        style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
+                                                        🔑 Truy cập quản trị
+                                                    </a>
+                                                @endif
+
+                                                <a href="{{ route('account.dashboard') }}"
+                                                    style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
+                                                    🧾 Tài khoản của tôi
+                                                </a>
+                                            @endauth
+
                                             <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                                                 @csrf
                                                 <button type="submit"
@@ -379,22 +405,87 @@
                     .user-dropdown {
                         transition: opacity 0.2s ease, visibility 0.2s ease;
                     }
+
+                    /* CSS cho wishlist count badge */
+                    .wishlist-icon-box {
+                        position: relative;
+                        display: inline-block;
+                    }
+
+                    .wishlist-count-badge {
+                        position: absolute;
+                        top: -8px;
+                        right: -8px;
+                        background: #e74c3c;
+                        color: white;
+                        border-radius: 50%;
+                        width: 20px;
+                        height: 20px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 12px;
+                        font-weight: bold;
+                        min-width: 20px;
+                        line-height: 1;
+                    }
+
+                    .wishlist-count-badge:empty {
+                        display: none;
+                    }
                 </style>
+
+                <script>
+                    // Cập nhật số lượng wishlist
+                    function updateWishlistCount() {
+                        fetch('{{ route('wishlist.index') }}')
+                            .then(response => response.text())
+                            .then(html => {
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                const wishlistItems = doc.querySelectorAll('.product-card');
+                                const count = wishlistItems.length;
+
+                                const countElement = document.getElementById('wishlist-count-badge');
+                                if (countElement) {
+                                    countElement.textContent = count;
+                                    countElement.style.display = count > 0 ? 'flex' : 'none';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error updating wishlist count:', error);
+                            });
+                    }
+
+                    // Cập nhật khi trang load
+                    document.addEventListener('DOMContentLoaded', function() {
+                        updateWishlistCount();
+                    });
+
+                    // Cập nhật khi có thay đổi wishlist
+                    document.addEventListener('wishlistUpdated', function() {
+                        updateWishlistCount();
+                    });
+                </script>
 
                 {{-- phần wishlist và cart giữ nguyên --}}
                 <div class="elementor-element elementor-element-16239ba6 elementor-hidden-mobile elementor-view-default elementor-widget elementor-widget-icon"
                     data-id="16239ba6" data-element_type="widget" data-widget_type="icon.default">
                     <div class="elementor-widget-container">
                         <div class="elementor-icon-wrapper">
-                            <a class="elementor-icon" href="../wishlist/index.html">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19"
-                                    viewBox="0 0 20 19" fill="none">
-                                    <g clip-path="url(#clip0_188_1484)">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M4.10276 1.53575C1.83186 2.44932 -0.014983 4.82626 0.26654 8.33725C0.477821 10.9722 1.93049 13.1153 3.64664 14.7279C5.36367 16.3412 7.39577 17.4739 8.89721 18.0966C9.41075 18.3095 9.98779 18.3219 10.512 18.1223C12.0881 17.5221 14.1129 16.3949 15.8125 14.7748C17.5105 13.1563 18.9254 11.004 19.1783 8.35972C19.6544 4.79448 17.7508 2.42314 15.4153 1.52878C13.4653 0.782019 11.0862 1.04962 9.7063 2.64136C8.31911 1.03756 6.02213 0.763589 4.10276 1.53575ZM4.59785 2.76642C6.37434 2.05175 8.28816 2.53025 9.1221 4.13032C9.23724 4.35131 9.46656 4.48909 9.71577 4.487C9.96498 4.48493 10.192 4.34333 10.3035 4.12045C11.0791 2.56964 13.0744 2.05275 14.941 2.76758C16.7373 3.45545 18.2576 5.26658 17.8619 8.19549C17.8607 8.20434 17.8596 8.21327 17.8588 8.22211C17.6487 10.4557 16.4499 12.3346 14.8972 13.8147C13.3432 15.2959 11.4761 16.3357 10.0401 16.8826C9.8371 16.9598 9.61062 16.9563 9.40536 16.8713C8.01666 16.2954 6.13049 15.2415 4.55499 13.7611C2.9786 12.28 1.76454 10.4225 1.58883 8.23122C1.35374 5.29932 2.86493 3.46358 4.59785 2.76642Z"
-                                            fill="currentColor"></path>
-                                    </g>
-                                </svg> </a>
+                            <a class="elementor-icon" href="{{ route('wishlist.index') }}" title="Wishlist">
+                                <div class="wishlist-icon-box">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19"
+                                        viewBox="0 0 20 19" fill="none">
+                                        <g clip-path="url(#clip0_188_1484)">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M4.10276 1.53575C1.83186 2.44932 -0.014983 4.82626 0.26654 8.33725C0.477821 10.9722 1.93049 13.1153 3.64664 14.7279C5.36367 16.3412 7.39577 17.4739 8.89721 18.0966C9.41075 18.3095 9.98779 18.3219 10.512 18.1223C12.0881 17.5221 14.1129 16.3949 15.8125 14.7748C17.5105 13.1563 18.9254 11.004 19.1783 8.35972C19.6544 4.79448 17.7508 2.42314 15.4153 1.52878C13.4653 0.782019 11.0862 1.04962 9.7063 2.64136C8.31911 1.03756 6.02213 0.763589 4.10276 1.53575ZM4.59785 2.76642C6.37434 2.05175 8.28816 2.53025 9.1221 4.13032C9.23724 4.35131 9.46656 4.48909 9.71577 4.487C9.96498 4.48493 10.192 4.34333 10.3035 4.12045C11.0791 2.56964 13.0744 2.05275 14.941 2.76758C16.7373 3.45545 18.2576 5.26658 17.8619 8.19549C17.8607 8.20434 17.8596 8.21327 17.8588 8.22211C17.6487 10.4557 16.4499 12.3346 14.8972 13.8147C13.3432 15.2959 11.4761 16.3357 10.0401 16.8826C9.8371 16.9598 9.61062 16.9563 9.40536 16.8713C8.01666 16.2954 6.13049 15.2415 4.55499 13.7611C2.9786 12.28 1.76454 10.4225 1.58883 8.23122C1.35374 5.29932 2.86493 3.46358 4.59785 2.76642Z"
+                                                fill="currentColor"></path>
+                                        </g>
+                                    </svg>
+                                    <div class="wishlist-count-badge" id="wishlist-count-badge">0</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
