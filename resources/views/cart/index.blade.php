@@ -506,8 +506,66 @@ a.btn-checkout:hover{ opacity:.92; }
 
           </div>
         </div>
+        </div>
+    </main>
 
-      </div>
+    <script>
+        function checkCartBeforeCheckout(hasItem) {
+            if (!hasItem) {
+                alert('Hiện không có sản phẩm trong giỏ hàng, vui lòng thêm sản phẩm');
+                window.location.href = "{{ route('products.index') }}";
+                return false;
+            }
+            return true;
+        }
+
+        document.querySelectorAll('form[id^="qty-form-"] input[name="quantity"]').forEach(inp => {
+            inp.addEventListener('input', function() {
+                this.closest('form').dataset.dirty = '1';
+            });
+        });
+
+        document.getElementById('btnUpdateCart')?.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Đang cập nhật...';
+
+            const forms = Array.from(document.querySelectorAll('form[id^="qty-form-"][data-dirty="1"]'));
+
+            if (forms.length === 0) {
+                window.location.replace(window.location.pathname + '?t=' + Date.now());
+                return;
+            }
+
+            try {
+                for (const form of forms) {
+                    const fd = new FormData(form); // _token, quantity, variant_id
+                    const res = await fetch(form.action, {
+                        method: 'POST', // KHỚP route POST /cart/update/{id}
+                        headers: {
+                            'X-CSRF-TOKEN': fd.get('_token'),
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        },
+                        body: fd,
+                        credentials: 'same-origin'
+                    });
+
+                    if (!res.ok) {
+                        const text = await res.text();
+                        console.error('Update failed for variant', form.dataset.variant, res.status, text);
+                    }
+                }
+            } catch (err) {
+                console.error('Update error:', err);
+            } finally {
+                window.location.replace(window.location.pathname + '?t=' + Date.now());
+            }
+        });
+    </script>
+    <div id="custom-footer-wrapper">
+        @include('layouts.footer')
     </div>
   </div>
 </main>

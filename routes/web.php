@@ -177,6 +177,7 @@ Route::prefix('admin')
         // Sản phẩm
         Route::resource('products', AdminProductController::class);
         Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('products.restore');
+        Route::delete('products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('products.forceDelete');
 
         // Biến thể sản phẩm
         Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');

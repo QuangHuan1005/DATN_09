@@ -97,8 +97,8 @@
                     data-id="2e9ed2a7" data-element_type="widget" data-widget_type="kitify-logo.default">
                     <div class="elementor-widget-container">
                         <div class="kitify-logo kitify-logo-type-image kitify-logo-display-block">
-                           <a href="/" class="kitify-logo__link"><img
-                                    src="{{ asset('storage/banner/logo.jpg') }}"
+                            <a href="/" class="kitify-logo__link"><img
+                                    src="{{ asset('storage/banner/Friday-logo.png') }}"
                                     class="kitify-logo__img kitify-logo-default" alt="Mixtas" width="130"><img
                                     src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo_light.svg"
                                     class="kitify-logo__img kitify-logo-light" alt="Mixtas" width="130"></a>
@@ -125,7 +125,8 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
                                         <a href="/"><span>Trang Chủ</span></a>
                                     </li>
-                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
+                                    <li
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
                                         <a href="{{ route('products.index') }}"><span>Sản phẩm</span><i
                                                 class="kitify-nav-arrow novaicon-down-arrow"></i></a>
                                         <ul class="sub-menu mega-menu">
@@ -135,26 +136,37 @@
                                                 <ul class='mega-menu-main'>
                                                     @php
                                                         use App\Models\Category;
-                                                        $categories = Category::all();
+                                                        $categories = Category::with('children')->get();
                                                     @endphp
-                                                    @foreach ($categories as $cat)
+
+                                                    @foreach ($categories->whereNull('parent_id') as $parent)
                                                         <li
-                                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_5">
-                                                            {{-- <a href="#"><span>Shop
-                                                                Pages</span><i
-                                                                class="kitify-nav-arrow novaicon-down-arrow"></i></a>
-                                                        --}}
-                                                            <ul class="sub-menu">
+                                                            class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children mega-sub-menu col-1_5">
+                                                            <a href="{{ route('products.index', $parent->slug) }}">
+                                                                <span>{{ $parent->name }}</span>
+                                                                <i class="kitify-nav-arrow novaicon-down-arrow"></i>
+                                                            </a>
 
-                                                                <li
-                                                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-360">
-                                                                    <a
-                                                                        href="{{ route('products.index', ['category' => $cat->id]) }}"><span>{{ $cat->name }}</span></a>
-                                                                </li>
-                                                            </ul>
+                                                            @php
+                                                                $childs = $categories->where('parent_id', $parent->id);
+                                                            @endphp
 
+                                                            @if ($childs->count() > 0)
+                                                                <ul class="sub-menu">
+                                                                    @foreach ($childs as $child)
+                                                                        <li
+                                                                            class="menu-item menu-item-type-post_type menu-item-object-page">
+                                                                            <a
+                                                                                href="{{ route('products.index', ['category' => $child->id]) }}">
+                                                                                <span>{{ $child->name }}</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            @endif
                                                         </li>
                                                     @endforeach
+
                                                     {{-- <li
                                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-358 mega-sub-menu col-1_4">
                                                         <a href="#"><span>Shop Pages</span><i
@@ -337,13 +349,13 @@
                                             @auth
                                                 @if (Auth::user()->role_id === 1)
                                                     <a href="{{ route('admin.dashboard') }}"
-                                                    style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
+                                                        style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
                                                         🔑 Truy cập quản trị
                                                     </a>
                                                 @endif
 
                                                 <a href="{{ route('account.dashboard') }}"
-                                                style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
+                                                    style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
                                                     🧾 Tài khoản của tôi
                                                 </a>
                                             @endauth
@@ -424,24 +436,35 @@
                 </style>
 
                 <script>
-                // Cập nhật số lượng wishlist
-                function updateWishlistCount() {
-                    fetch('{{ route("wishlist.index") }}')
-                    .then(response => response.text())
-                    .then(html => {
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(html, 'text/html');
-                        const wishlistItems = doc.querySelectorAll('.product-card');
-                        const count = wishlistItems.length;
+                    // Cập nhật số lượng wishlist
+                    function updateWishlistCount() {
+                        fetch('{{ route('wishlist.index') }}')
+                            .then(response => response.text())
+                            .then(html => {
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                const wishlistItems = doc.querySelectorAll('.product-card');
+                                const count = wishlistItems.length;
 
-                        const countElement = document.getElementById('wishlist-count-badge');
-                        if (countElement) {
-                            countElement.textContent = count;
-                            countElement.style.display = count > 0 ? 'flex' : 'none';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error updating wishlist count:', error);
+                                const countElement = document.getElementById('wishlist-count-badge');
+                                if (countElement) {
+                                    countElement.textContent = count;
+                                    countElement.style.display = count > 0 ? 'flex' : 'none';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error updating wishlist count:', error);
+                            });
+                    }
+
+                    // Cập nhật khi trang load
+                    document.addEventListener('DOMContentLoaded', function() {
+                        updateWishlistCount();
+                    });
+
+                    // Cập nhật khi có thay đổi wishlist
+                    document.addEventListener('wishlistUpdated', function() {
+                        updateWishlistCount();
                     });
                 }
 
@@ -481,7 +504,7 @@
                     data-id="4cfba4d5" data-element_type="widget" data-widget_type="kitify-nova-cart.default">
                     <div class="elementor-widget-container">
                         <div class="kitify-nova-cart kitify-nova-cart-style-default kitify-nova-cart-label-off">
-                            <a href="javascript:;" data-toggle="MiniCartCanvas_4cfba4d5">
+                            <a href="{{ route('cart.index') }}" data-toggle="MiniCartCanvas_4cfba4d5">
                                 <div class="header-cart-box">
                                     <span class="kitify-nova-cart__icon kitify-blocks-icon"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="18" height="21"

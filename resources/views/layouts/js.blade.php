@@ -295,9 +295,9 @@
 		var novaapf_params = { "shop_loop_container": ".novaapf-before-products", "not_found_container": ".novaapf-before-products", "pagination_container": ".woocommerce-pagination", "overlay_bg_color": "#fff", "sorting_control": "1", "scroll_to_top": "1", "scroll_to_top_offset": "150", "enable_font_awesome": "", "custom_scripts": "", "disable_transients": "" };
 		/* ]]> */
 </script>
-<script type="text/javascript"
+{{-- <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/nova-ajax-product-filter/assets/js/scripts11a8.js?ver=20120206"
-    id="novaapf-script-js"></script>
+    id="novaapf-script-js"></script> --}}
 <script type="text/javascript" id="wc-cart-fragments-js-extra">
     /* <![CDATA[ */
 		var wc_cart_fragments_params = { "ajax_url": "\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/?wc-ajax=%%endpoint%%", "cart_hash_key": "wc_cart_hash_5d3227775be22d377568ebad71c4a81b", "fragment_name": "wc_fragments_5d3227775be22d377568ebad71c4a81b", "request_timeout": "5000" };
@@ -831,6 +831,32 @@
 
 		if (window.RS_MODULES.checkMinimal !== undefined) { window.RS_MODULES.checkMinimal(); };
 </script>
+<script>
+document.addEventListener('click', function (e) {
+  const a = e.target.closest('.category-filter a'); // .category-filter = ul bọc danh mục
+  if (!a) return;
+  const li = a.closest('li');
+  if (!li) return;
+  li.parentElement.querySelectorAll('li.chosen').forEach(el => el.classList.remove('chosen'));
+  li.classList.add('chosen'); // tô sáng ngay
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.novaapf-active-filters');
+    document.querySelectorAll('.category-filter a').forEach(a => {
+        a.addEventListener('click', () => {
+            const name = a.querySelector('.name').textContent.trim();
+            const href = a.getAttribute('href');
+            container.innerHTML = `
+                <a href="${href}" data-key="product-cata">${name}</a>
+                <a href="/shop" class="reset">Reset</a>
+            `;
+        });
+    });
+});
+</script>
+
 </body>
 
 <!-- Mirrored from mixtas.novaworks.net/home-v2/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Sep 2025 12:52:16 GMT -->

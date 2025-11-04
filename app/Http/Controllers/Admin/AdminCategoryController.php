@@ -16,18 +16,20 @@ class AdminCategoryController extends Controller
     public function index(Request $request)
     {
         $query = Category::withTrashed()
-            ->whereNull('parent_id')
-            ->orderBy('id', 'asc');
+            ->with('parent')
+            ->orderBy('id', 'desc');
 
         if ($request->filled('keyword')) {
             $keyword = $request->keyword;
             $query->where('name', 'like', '%' . $keyword . '%');
         }
 
-        $categories = $query->paginate(3);
+        $categories = $query->paginate(5);
 
-        return view('admin.categories.index', compact('categories'))
-               ->with('keyword', $request->keyword);
+        return view('admin.categories.index', compact('categories'), [
+            'pageTitle' => 'Danh sách danh mục'
+        ])
+            ->with('keyword', $request->keyword);
     }
 
     /**
@@ -38,7 +40,8 @@ class AdminCategoryController extends Controller
         // Lấy danh mục cha (danh mục gốc) để chọn parent
         $categories = Category::whereNull('parent_id')->get();
 
-        return view('admin.categories.create', compact('categories'));
+        return view('admin.categories.create', compact('categories'),
+            ['pageTitle' => 'Thêm mới danh mục']);
     }
 
     /**
@@ -60,8 +63,8 @@ class AdminCategoryController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()
-                             ->withErrors($validator)
-                             ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
 
         Category::create([
@@ -72,7 +75,7 @@ class AdminCategoryController extends Controller
         ]);
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'Thêm danh mục thành công');
+            ->with('success', 'Thêm danh mục thành công');
     }
 
     /**
@@ -106,8 +109,8 @@ class AdminCategoryController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()
-                             ->withErrors($validator)
-                             ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $category->update([
@@ -118,7 +121,7 @@ class AdminCategoryController extends Controller
         ]);
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'Cập nhật danh mục thành công');
+            ->with('success', 'Cập nhật danh mục thành công');
     }
 
     /**
@@ -143,7 +146,7 @@ class AdminCategoryController extends Controller
         $category->delete();
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'Đã xóa mềm danh mục');
+            ->with('success', 'Đã xóa mềm danh mục');
     }
 
     /**
@@ -155,7 +158,7 @@ class AdminCategoryController extends Controller
         $category->restore();
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'Khôi phục danh mục thành công');
+            ->with('success', 'Khôi phục danh mục thành công');
     }
 
     /**
@@ -172,6 +175,6 @@ class AdminCategoryController extends Controller
         $category->forceDelete();
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'Xóa vĩnh viễn danh mục thành công');
+            ->with('success', 'Xóa vĩnh viễn danh mục thành công');
     }
 }
