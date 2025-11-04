@@ -188,8 +188,19 @@ class AdminProductController extends Controller
      * Phần quản lý biến thể sản phẩm
      */
 
-    // Danh sách biến thể của 1 sản phẩm
-    public function variants($productId)
+    // Danh sách tất cả biến thể sản phẩm
+    public function variants()
+    {
+        $variants = ProductVariant::with(['product', 'color', 'size'])
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return view('admin.products.variants-index', compact('variants'));
+    }
+
+    // Danh sách biến thể của 1 sản phẩm cụ thể
+    public function productVariants($productId)
     {
         $product = Product::withTrashed()->findOrFail($productId);
         $variants = ProductVariant::where('product_id', $productId)
@@ -233,88 +244,138 @@ class AdminProductController extends Controller
 
         $variant->save();
 
-        return redirect()->route('admin.products.variants', $productId)
+        return redirect()->route('admin.products.variants.product', $productId)
             ->with('success', 'Thêm biến thể sản phẩm thành công!');
     }
 
     // Form sửa biến thể
-    public function editVariant($productId, $variantId)
+    public function editVariant($variantId)
     {
-        $product = Product::findOrFail($productId);
-        $variant = ProductVariant::findOrFail($variantId);
-        $colors = Color::all();
-        $sizes = Size::all();
+        // Kiểm tra xem đây là Size hay Color dựa trên route
+        $request = request();
+        $type = null;
+        
+        // Lấy type từ referer URL
+        if ($request->header('referer')) {
+            $referer = $request->header('referer');
+            if (strpos($referer, '/size') !== false) {
+                $type = 'size';
+            } elseif (strpos($referer, '/color') !== false) {
+                $type = 'color';
+            }
+        }
+        
+        if ($type === 'size') {
+            $variant = Size::findOrFail($variantId);
+            $typeName = 'Kích thước';
+        } elseif ($type === 'color') {
+            $variant = Color::findOrFail($variantId);
+            $typeName = 'Màu sắc';
+        } else {
+            // Fallback: thử tìm trong ProductVariant
+            $variant = ProductVariant::findOrFail($variantId);
+            $typeName = 'Biến thể sản phẩm';
+        }
 
-        return view('admin.products.edit-variant', compact('product', 'variant', 'colors', 'sizes'));
+        return view('admin.products.edit-variant', compact('variant', 'type', 'typeName'));
     }
 
     public function variantsByType(Request $request, $type)
     {
-        $query = \App\Models\ProductVariant::query();
-
+        // Xác định loại biến thể và tên hiển thị
+        $typeName = $type === 'size' ? 'Kích thước' : 'Màu sắc';
+        
+        // Lấy dữ liệu từ bảng colors hoặc sizes
         if ($type === 'size') {
-            $query->whereNotNull('size_id');
+            $variants = \App\Models\Size::query();
         } elseif ($type === 'color') {
-            $query->whereNotNull('color_id');
+            $variants = \App\Models\Color::query();
         } else {
-            // Nếu type không hợp lệ, trả về view trống hoặc redirect
-            return view('admin.product_variants.index', ['variants' => collect(), 'type' => $type]);
+            return redirect()->route('admin.products.variants')
+                ->with('error', 'Loại biến thể không hợp lệ');
         }
 
-        $variants = $query->orderBy('created_at', 'desc')
-            ->orderBy('id')
-            ->get();
+        // Tìm kiếm nếu có
+        if ($request->has('search') && $request->search) {
+            $variants->where('name', 'like', '%' . $request->search . '%');
+        }
 
-        // Trả về view, truyền dữ liệu biến thể và loại
-        return view('admin.product_variants.index', [
+        $variants = $variants->orderBy('created_at', 'desc')
+                            ->orderBy('id')
+                            ->get();
+
+        // Trả về view danh sách biến thể
+        return view('admin.products.variants-list', [
             'variants' => $variants,
             'type' => $type,
+            'typeName' => $typeName,
         ]);
     }
 
 
     // Cập nhật biến thể
-    public function updateVariant(Request $request, $productId, $variantId)
+    public function updateVariant(Request $request, $variantId)
     {
-        $variant = ProductVariant::findOrFail($variantId);
-
-        $validated = $request->validate([
-            'color_id' => 'required|exists:colors,id',
-            'size_id' => 'nullable|exists:sizes,id',
-            'price' => 'required|numeric|min:0',
-            'sale' => 'nullable|numeric|min:0',
-            'quantity' => 'required|integer|min:0',
-            'status' => 'required|in:active,inactive',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
-
-        if ($request->hasFile('image')) {
-            if ($variant->image && Storage::disk('public')->exists($variant->image)) {
-                Storage::disk('public')->delete($variant->image);
-            }
-
-            $path = $request->file('image')->store('product_variants', 'public');
-            $validated['image'] = $path;
+        $type = $request->input('type');
+        
+        if ($type === 'size') {
+            $variant = Size::findOrFail($variantId);
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'size_code' => 'nullable|string|max:50',
+                'description' => 'nullable|string',
+                'status' => 'required|in:active,inactive',
+            ]);
+        } elseif ($type === 'color') {
+            $variant = Color::findOrFail($variantId);
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'color_code' => 'nullable|string|max:50',
+                'description' => 'nullable|string',
+                'status' => 'required|in:active,inactive',
+            ]);
+        } else {
+            return redirect()->route('admin.products.variants')
+                ->with('error', 'Loại biến thể không hợp lệ');
         }
 
         $variant->update($validated);
 
-        return redirect()->route('admin.products.variants', $productId)
-            ->with('success', 'Cập nhật biến thể sản phẩm thành công!');
+        $typeName = $type === 'size' ? 'kích thước' : 'màu sắc';
+        return redirect()->route('admin.products.variants.type', $type)
+            ->with('success', "Cập nhật {$typeName} thành công!");
     }
 
     // Xóa biến thể
-    public function destroyVariant($productId, $variantId)
+    public function destroyVariant($variantId)
     {
-        $variant = ProductVariant::findOrFail($variantId);
-
-        if ($variant->image && Storage::disk('public')->exists($variant->image)) {
-            Storage::disk('public')->delete($variant->image);
+        // Kiểm tra xem đây là Size hay Color dựa trên referer
+        $request = request();
+        $type = null;
+        
+        if ($request->header('referer')) {
+            $referer = $request->header('referer');
+            if (strpos($referer, '/size') !== false) {
+                $type = 'size';
+            } elseif (strpos($referer, '/color') !== false) {
+                $type = 'color';
+            }
+        }
+        
+        if ($type === 'size') {
+            $variant = Size::findOrFail($variantId);
+            $typeName = 'kích thước';
+        } elseif ($type === 'color') {
+            $variant = Color::findOrFail($variantId);
+            $typeName = 'màu sắc';
+        } else {
+            return redirect()->route('admin.products.variants')
+                ->with('error', 'Loại biến thể không hợp lệ');
         }
 
         $variant->delete();
 
-        return redirect()->route('admin.products.variants', $productId)
-            ->with('success', 'Xóa biến thể sản phẩm thành công!');
+        return redirect()->route('admin.products.variants.type', $type)
+            ->with('success', "Xóa {$typeName} thành công!");
     }
 }

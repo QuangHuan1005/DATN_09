@@ -123,7 +123,7 @@
                                 <ul id="menu-main-menu" class="menu nav-menu">
                                     <li id="menu-item-766"
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
-                                        <a href="/"><span>Home</span></a>
+                                        <a href="/"><span>Trang Chủ</span></a>
                                     </li>
                                     <li
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-79 menu-item-mega">
@@ -466,6 +466,17 @@
                     document.addEventListener('wishlistUpdated', function() {
                         updateWishlistCount();
                     });
+                }
+
+                // Cập nhật khi trang load
+                document.addEventListener('DOMContentLoaded', function() {
+                    updateWishlistCount();
+                });
+
+                // Cập nhật khi có thay đổi wishlist
+                document.addEventListener('wishlistUpdated', function() {
+                    updateWishlistCount();
+                });
                 </script>
 
                 {{-- phần wishlist và cart giữ nguyên --}}

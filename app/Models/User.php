@@ -91,6 +91,20 @@ class User extends Authenticatable
     {
         return $this->is_locked === true;
     }
-    
-    
+
+    /**
+     * Quan hệ với UserAddress (nhiều địa chỉ)
+     */
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
+    /**
+     * Lấy địa chỉ mặc định
+     */
+    public function defaultAddress()
+    {
+        return $this->hasOne(UserAddress::class)->where('is_default', true);
+    }
 }

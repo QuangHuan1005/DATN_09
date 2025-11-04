@@ -186,9 +186,13 @@ class ProductController extends Controller
         foreach ($variants as $variant) {
             $key = $variant->color_id . '-' . $variant->size_id;
             $variantMap[$key] = [
-                'id' => $variant->id,
+                'id'    => $variant->id,
                 'price' => $variant->price,
-                'stock' => $variant->stock ?? 0,
+                // SAI (đang dùng $variant->stock ?? 0)
+                // 'stock' => $variant->stock ?? 0,
+
+                // ĐÚNG: đọc từ cột product_variants.quantity
+                'stock' => (int) $variant->quantity,
             ];
         }
 

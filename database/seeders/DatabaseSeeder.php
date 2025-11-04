@@ -22,5 +22,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Seed vouchers
+        $this->call([
+            VoucherSeeder::class,
+        ]);
     }
 }

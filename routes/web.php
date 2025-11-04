@@ -59,7 +59,7 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // 🛒 Giỏ hàng (chỉ cho user đã đăng nhập)
 Route::middleware('auth')->prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/add/{id?}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 });
@@ -70,7 +70,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+
+     // ➕ THÊM MỚI: Mua ngay (chuyển thẳng sang checkout với 1 biến thể & số lượng)
+    Route::post('/checkout/buy-now', [CheckoutController::class, 'buyNow'])->name('checkout.buy_now');
 });
+
 
 // 💰 Thanh toán Momo
 Route::prefix('payment/momo')->group(function () {
@@ -158,7 +162,7 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 */
 
 Route::prefix('admin')
-    // ->middleware(['auth:admin', 'is_admin'])
+   // ->middleware(['auth:admin', 'is_admin'])
     ->name('admin.')
     ->group(function () {
 

@@ -541,22 +541,19 @@
             </div>
         </div>
     </div>
-    {{-- <div class="kitify-offcanvas minicart-canvas site-canvas-menu off-canvas position-right"
-        id="MiniCartCanvas_4cfba4d5" data-off-canvas data-transition="overlap">
-        <h2 class="title">Shopping Cart<span class="nova_js_count_bag_item_canvas count-item-canvas">0</span>
+    <a href="{{ route('cart.index') }}"
+    class="kitify-offcanvas minicart-canvas site-canvas-menu off-canvas position-right"
+    id="MiniCartCanvas_4cfba4d5"
+    data-off-canvas data-transition="overlap"
+    style="text-decoration: none; color: inherit; cursor: pointer;">
+        <h2 class="title">
+            Giỏ hàng
+            <span id="miniCartCount" class="nova_js_count_bag_item_canvas count-item-canvas">
+                {{ session('cart') ? collect(session('cart'))->sum('quantity') : 0 }}
+            </span>
         </h2>
-        <div class="add_ajax_loading">
-            <span></span>
-        </div>
-        <div class="widget woocommerce widget_shopping_cart">
-            <h2 class="widgettitle">Cart</h2>
-            <div class="widget_shopping_cart_content"></div>
-        </div> <button class="close-button" aria-label="Close menu" type="button" data-close>
-            <svg class="nova-close-canvas">
-                <use xlink:href="#nova-close-canvas"></use>
-            </svg>
-        </button>
-    </div> --}}
+        <div class="add_ajax_loading"><span></span></div>
+    </a>
 </div>
 <div id="svg-defs" class="svg-defs hide">
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
