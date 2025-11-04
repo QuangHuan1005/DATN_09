@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('content'); ?>
 <div class="container mt-4">
     <h3 class="mb-4">Quản lý đơn hàng</h3>
@@ -9,7 +7,6 @@
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?php echo e(session('success')); ?>
 
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
     <?php if(session('error')): ?>
@@ -48,7 +45,9 @@
                     <th>Điện thoại</th>
                     <th>Địa chỉ</th>
                     <th>Tổng tiền</th>
-                    <th>Trạng thái</th>
+                    <th>Trạng thái đơn</th>
+                     <th>Phương thức thanh toán</th>
+                    <th>Trạng thái thanh toán</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
@@ -64,26 +63,67 @@
                         <td><?php echo e($order->phone); ?></td>
                         <td><?php echo e($order->address); ?></td>
                         <td><?php echo e(number_format($order->total_amount, 0, ',', '.')); ?> đ</td>
+
+                        
                         <td>
                             <form action="<?php echo e(route('admin.orders.status', $order->id)); ?>" method="POST" class="status-form">
                                 <?php echo csrf_field(); ?>
-                               <select name="order_status_id" 
-        class="form-select form-select-sm w-auto <?php echo e($colorClass); ?>" 
-        onchange="changeStatusColor(this); this.form.submit()">
-    <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <option value="<?php echo e($status->id); ?>" 
-                data-color="<?php echo e($status->color_class); ?>"
-                <?php echo e($order->order_status_id == $status->id ? 'selected' : ''); ?>
+                                <select name="order_status_id" 
+                                        class="form-select form-select-sm w-auto <?php echo e($colorClass); ?>" 
+                                        onchange="changeStatusColor(this); this.form.submit()">
+                                    <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($status->id); ?>" 
+                                                data-color="<?php echo e($status->color_class); ?>"
+                                                <?php echo e($order->order_status_id == $status->id ? 'selected' : ''); ?>
 
-                <?php echo e(in_array($status->id, [5,6,7]) ? 'disabled' : ''); ?>>
-            <?php echo e($status->name); ?>
+                                                <?php echo e(in_array($status->id, [5,6,7]) ? 'disabled' : ''); ?>>
+                                            <?php echo e($status->name); ?>
 
-        </option>
-    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-</select>
-
+                                        </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
                             </form>
                         </td>
+
+                         
+                        <td>
+                            <?php if($order->paymentMethod): ?>
+                                <?php
+                                    $method = $order->paymentMethod->name;
+                                    $type = $order->paymentMethod->type;
+                                    $badgeColor = $type === 'online' ? 'info' : 'secondary';
+                                    $icon = $type === 'online' ? 'bi-wifi' : 'bi-cash';
+                                ?>
+                                <span class="badge bg-<?php echo e($badgeColor); ?>">
+                                    <i class="bi <?php echo e($icon); ?>"></i> <?php echo e($method); ?>
+
+                                </span>
+                            <?php else: ?>
+                                <span class="badge bg-secondary">Chưa chọn</span>
+                            <?php endif; ?>
+                        </td>
+
+                        
+                        <td>
+                            <?php if($order->paymentStatus): ?>
+                                <?php
+                                    $paymentColor = match($order->paymentStatus->id) {
+                                        1 => 'bg-warning',
+                                        2 => 'bg-success',
+                                        3 => 'bg-danger',
+                                        default => 'bg-secondary',
+                                    };
+                                ?>
+                                <span class="badge <?php echo e($paymentColor); ?>">
+                                    <?php echo e($order->paymentStatus->name); ?>
+
+                                </span>
+                            <?php else: ?>
+                                <span class="badge bg-secondary">Chưa chọn</span>
+                            <?php endif; ?>
+                        </td>
+
+                        
                         <td>
                             <a href="<?php echo e(route('admin.orders.show', $order->id)); ?>" class="btn btn-info btn-sm">
                                 Xem chi tiết
@@ -92,7 +132,7 @@
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
-                        <td colspan="7" class="text-center text-muted">Không có đơn hàng nào</td>
+                        <td colspan="9" class="text-center text-muted">Không có đơn hàng nào</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

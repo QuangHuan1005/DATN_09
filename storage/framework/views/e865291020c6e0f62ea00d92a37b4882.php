@@ -44,6 +44,19 @@
     <i class="fas fa-users"></i> Quản lý tài khoản
   </a>
 
+    
+  <?php if(Route::has('home')): ?>
+    <a href="<?php echo e(route('home')); ?>"
+       style="margin-top: 16px; color:#1abc9c; font-weight:600;">
+      <i class="fas fa-home"></i> Về trang web
+    </a>
+  <?php else: ?>
+    <a href="<?php echo e(url('/')); ?>"
+       style="margin-top: 16px; color:#1abc9c; font-weight:600;">
+      <i class="fas fa-home"></i> Về trang web
+    </a>
+  <?php endif; ?>
+
   
   <a href="<?php echo e(route('admin.logout')); ?>"
      onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"

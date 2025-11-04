@@ -76,12 +76,17 @@ class OrderController extends Controller
         $calc_subtotal = $lines->sum('line_total');
         $calc_discount = (int)$order->discount;
         $calc_total    = (int)$order->total_amount;
+        
+        // Tính shipping fee: total_amount = subtotal + shipping_fee - discount
+        // => shipping_fee = total_amount - subtotal + discount
+        $calc_shipping_fee = max(0, $calc_total - $calc_subtotal + $calc_discount);
 
         return view('orders.show', [
             'order'         => $order,
             'lines'         => $lines,
             'calc_subtotal' => $calc_subtotal,
             'calc_discount' => $calc_discount,
+            'calc_shipping_fee' => $calc_shipping_fee,
             'calc_total'    => $calc_total,
         ]);
     }

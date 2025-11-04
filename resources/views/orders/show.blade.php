@@ -282,7 +282,12 @@
                             <div class="card-hd">Tổng kết thanh toán</div>
                             <div class="card-bd">
                                 <div class="sum-row"><span>Tạm tính</span><span>₫{{ number_format($calc_subtotal) }}</span></div>
+                                @if($calc_shipping_fee > 0)
+                                <div class="sum-row"><span>Phí vận chuyển</span><span>₫{{ number_format($calc_shipping_fee) }}</span></div>
+                                @endif
+                                @if($calc_discount > 0)
                                 <div class="sum-row"><span>Giảm giá</span><span>-₫{{ number_format($calc_discount) }}</span></div>
+                                @endif
                                 @if($order->voucher)
                                 <div class="sum-row" style="color:#6b7280"><span>Voucher</span><span>{{ $order->voucher->voucher_code }}</span></div>
                                 @endif
