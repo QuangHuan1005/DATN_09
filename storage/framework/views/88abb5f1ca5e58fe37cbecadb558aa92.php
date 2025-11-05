@@ -2,13 +2,13 @@
     <!-- Sidebar Logo -->
     <div class="logo-box">
         <a href="index.html" class="logo-dark">
-            <img src="{{ asset('assets/images/logo-sm.png') }}" class="logo-sm" alt="logo sm">
-            <img src="{{ asset('storage/banner/Friday-logo.png') }}" class="logo-lg" alt="logo dark">
+            <img src="<?php echo e(asset('assets/images/logo-sm.png')); ?>" class="logo-sm" alt="logo sm">
+            <img src="<?php echo e(asset('storage/banner/Friday-logo.png')); ?>" class="logo-lg" alt="logo dark">
         </a>
 
         <a href="index.html" class="logo-light">
-            <img src="{{ asset('assets/images/logo-sm.png') }}" class="logo-sm" alt="logo sm">
-            <img src="{{ asset('storage/banner/Friday-logo.png') }}" class="logo-lg" alt="logo light">
+            <img src="<?php echo e(asset('assets/images/logo-sm.png')); ?>" class="logo-sm" alt="logo sm">
+            <img src="<?php echo e(asset('storage/banner/Friday-logo.png')); ?>" class="logo-lg" alt="logo light">
         </a>
     </div>
 
@@ -21,12 +21,12 @@
         <ul class="navbar-nav" id="navbar-nav">
 
             <li class="menu-title">Tổng quan</li>
-            {{-- ... Kết thúc khối Invoices ở trên --}}
+            
             </li>
 
-            {{-- Nút quay về trang web (đặt ngay sau Invoices) --}}
+            
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('home') }}" target="_blank" rel="noopener">
+                <a class="nav-link" href="<?php echo e(route('home')); ?>" target="_blank" rel="noopener">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:home-2-bold-duotone"></iconify-icon>
                     </span>
@@ -36,7 +36,7 @@
 
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                <a class="nav-link" href="<?php echo e(route('admin.dashboard')); ?>">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:widget-5-bold-duotone"></iconify-icon>
                     </span>
@@ -45,7 +45,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.products.index') }}" role="button" aria-expanded="false"
+                <a class="nav-link" href="<?php echo e(route('admin.products.index')); ?>" role="button" aria-expanded="false"
                     aria-controls="sidebarProducts">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:t-shirt-bold-duotone"></iconify-icon>
@@ -55,7 +55,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.categories.index') }}" role="button" aria-expanded="false"
+                <a class="nav-link" href="<?php echo e(route('admin.categories.index')); ?>" role="button" aria-expanded="false"
                     aria-controls="sidebarCategory">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:clipboard-list-bold-duotone"></iconify-icon>
@@ -66,14 +66,14 @@
 
             <li class="nav-item">
                <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}"
-                href="{{ route('admin.inventory.index') }}">
-                    <span class="nav-icon">
-                        <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
-                    </span>
-                    <span class="nav-text"> Quản Lý Kho </span>
-                </a>
-            </li>
+    <a class="nav-link <?php echo e(request()->routeIs('admin.inventory.*') ? 'active' : ''); ?>"
+       href="<?php echo e(route('admin.inventory.index')); ?>">
+        <span class="nav-icon">
+            <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
+        </span>
+        <span class="nav-text"> Quản Lý Kho </span>
+    </a>
+</li>
                 <div class="collapse" id="sidebarInventory">
                     <ul class="nav sub-navbar-nav">
 
@@ -88,7 +88,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.orders.index') }}" role="button" aria-expanded="false"
+                <a class="nav-link" href="<?php echo e(route('admin.orders.index')); ?>" role="button" aria-expanded="false"
                     aria-controls="sidebarOrders">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:bag-smile-bold-duotone"></iconify-icon>
@@ -143,7 +143,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.users.index') }}" role="button" aria-expanded="false"
+                <a class="nav-link" href="<?php echo e(route('admin.users.index')); ?>" role="button" aria-expanded="false"
                     aria-controls="sidebarCustomers">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:users-group-two-rounded-bold-duotone"></iconify-icon>
@@ -757,3 +757,4 @@
         </ul>
     </div>
 </div>
+<?php /**PATH C:\laragon\www\DATN_09\resources\views/admin/layouts/menu-nav.blade.php ENDPATH**/ ?>

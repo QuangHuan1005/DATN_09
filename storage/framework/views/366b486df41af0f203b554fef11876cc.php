@@ -6,24 +6,25 @@
                 quả</p>
             <div class="woocommerce-archive-toolbar sh--color">
                 <div class="nova-product-filter" data-breakpoint="1024">
-                    <button class="js-column-toggle"><span class="icon-filter"><i
-                                class="inova ic-options"></i></span><span class="title-filter">Filters</span></button>
+                    <button class="js-column-toggle"><span class="icon-filter"><i class="inova ic-options"></i></span><span
+                            class="title-filter">Filters</span></button>
                 </div>
                  <label for="sort" class="nova-custom-view">Sắp xếp:</label>
                 <form class="woocommerce-ordering" method="get" action="<?php echo e(route('products.index')); ?>">
                     <?php $__currentLoopData = request()->except('sort'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <input type="hidden" name="<?php echo e($key); ?>" value="<?php echo e($val); ?>">
+                        <input type="hidden" name="<?php echo e($key); ?>" value="<?php echo e($val); ?>">
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-                    <select name="sort" class="orderby" id="sort" aria-label="Shop order" onchange="this.form.submit()">
+                    <select name="sort" class="orderby" id="sort" aria-label="Shop order"
+                        onchange="this.form.submit()">
                         <option value="default" selected='selected'>
                             Mặc định</option>
-                        <option value="newest" <?php echo e(request('sort')=='newest' ? 'selected' : ''); ?>>Mới nhất</option>
-                        <option value="bestseller" <?php echo e(request('sort')=='bestseller' ? 'selected' : ''); ?>>Bán chạy
+                        <option value="newest" <?php echo e(request('sort') == 'newest' ? 'selected' : ''); ?>>Mới nhất</option>
+                        <option value="bestseller" <?php echo e(request('sort') == 'bestseller' ? 'selected' : ''); ?>>Bán chạy
                         </option>
-                        <option value="price_asc" <?php echo e(request('sort')=='price_asc' ? 'selected' : ''); ?>>Giá tăng dần
+                        <option value="price_asc" <?php echo e(request('sort') == 'price_asc' ? 'selected' : ''); ?>>Giá tăng dần
                         </option>
-                        <option value="price_desc" <?php echo e(request('sort')=='price_desc' ? 'selected' : ''); ?>>Giá giảm dần
+                        <option value="price_desc" <?php echo e(request('sort') == 'price_desc' ? 'selected' : ''); ?>>Giá giảm dần
                         </option>
                     </select>
                     </select>
@@ -44,4 +45,5 @@
             </div>
         </div>
     </header>
-</div><?php /**PATH C:\laragon\www\DATN_09\resources\views/products/partials/toolbar.blade.php ENDPATH**/ ?>
+</div>
+<?php /**PATH C:\laragon\www\DATN_09\resources\views/products/partials/toolbar.blade.php ENDPATH**/ ?>
