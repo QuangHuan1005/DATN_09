@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\MomoPaymentService;
 use App\Services\DemoPaymentService;
+use App\Services\VNPayService;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 
@@ -12,11 +13,13 @@ class PaymentController extends Controller
 {
     protected $momoService;
     protected $demoService;
+    protected $vnpayService;
 
     public function __construct()
     {
         $this->momoService = new MomoPaymentService();
         $this->demoService = new DemoPaymentService();
+        $this->vnpayService = new VNPayService();
     }
 
     /**
@@ -215,5 +218,137 @@ class PaymentController extends Controller
                 'message' => 'Thanh toán thất bại. Vui lòng thử lại.'
             ], 400);
         }
+    }
+
+    /**
+     * Xử lý callback khi người dùng quay lại từ VNPay
+     */
+    public function vnpayReturn(Request $request)
+    {
+        $vnp_SecureHash = $request->input('vnp_SecureHash');
+        $data = $request->all();
+
+        // Verify signature
+        $isValid = $this->vnpayService->verifyCallback($data);
+
+        if (!$isValid) {
+            Log::warning('VNPay return callback signature invalid', $data);
+            return redirect()->route('checkout.index')
+                ->with('error', 'Xác thực thanh toán không thành công. Vui lòng thử lại.');
+        }
+
+        $vnp_ResponseCode = $request->input('vnp_ResponseCode');
+        $vnp_TxnRef = $request->input('vnp_TxnRef');
+        $vnp_Amount = $request->input('vnp_Amount') / 100; // VNPay trả về số tiền nhân 100
+        $vnp_TransactionStatus = $request->input('vnp_TransactionStatus');
+        $vnp_BankCode = $request->input('vnp_BankCode');
+        $vnp_PayDate = $request->input('vnp_PayDate');
+
+        Log::info('VNPay Return Callback', [
+            'vnp_ResponseCode' => $vnp_ResponseCode,
+            'vnp_TxnRef' => $vnp_TxnRef,
+            'vnp_Amount' => $vnp_Amount,
+            'vnp_TransactionStatus' => $vnp_TransactionStatus,
+        ]);
+
+        // ResponseCode = '00' và TransactionStatus = '00' nghĩa là thanh toán thành công
+        if ($vnp_ResponseCode == '00' && $vnp_TransactionStatus == '00') {
+            // Lấy thông tin đơn hàng từ session
+            $pendingOrder = Session::get('pending_order');
+            
+            if ($pendingOrder && $pendingOrder['orderId'] == $vnp_TxnRef) {
+                // TODO: Tạo đơn hàng trong database
+                // TODO: Cập nhật trạng thái thanh toán
+                
+                // Xóa giỏ hàng và pending order
+                Session::forget('cart');
+                Session::forget('pending_order');
+
+                return redirect()->route('checkout.success')
+                    ->with('success', 'Thanh toán thành công! Cảm ơn bạn đã mua hàng.');
+            } else {
+                return redirect()->route('checkout.index')
+                    ->with('error', 'Không tìm thấy thông tin đơn hàng.');
+            }
+        } else {
+            // Thanh toán thất bại
+            $errorMessage = $this->getVNPayErrorMessage($vnp_ResponseCode);
+            
+            return redirect()->route('checkout.index')
+                ->with('error', 'Thanh toán thất bại: ' . $errorMessage);
+        }
+    }
+
+    /**
+     * Xử lý IPN (Instant Payment Notification) từ VNPay
+     * VNPay sẽ gọi URL này để thông báo kết quả thanh toán
+     */
+    public function vnpayIpn(Request $request)
+    {
+        $data = $request->all();
+
+        // Verify signature
+        $isValid = $this->vnpayService->verifyCallback($data);
+
+        if (!$isValid) {
+            Log::warning('VNPay IPN signature invalid', $data);
+            return response()->json([
+                'RspCode' => '97',
+                'Message' => 'Checksum failed'
+            ], 400);
+        }
+
+        $vnp_ResponseCode = $request->input('vnp_ResponseCode');
+        $vnp_TxnRef = $request->input('vnp_TxnRef');
+        $vnp_Amount = $request->input('vnp_Amount') / 100;
+        $vnp_TransactionStatus = $request->input('vnp_TransactionStatus');
+        $vnp_BankCode = $request->input('vnp_BankCode');
+
+        Log::info('VNPay IPN Callback', [
+            'vnp_ResponseCode' => $vnp_ResponseCode,
+            'vnp_TxnRef' => $vnp_TxnRef,
+            'vnp_Amount' => $vnp_Amount,
+            'vnp_TransactionStatus' => $vnp_TransactionStatus,
+        ]);
+
+        // ResponseCode = '00' và TransactionStatus = '00' nghĩa là thanh toán thành công
+        if ($vnp_ResponseCode == '00' && $vnp_TransactionStatus == '00') {
+            // TODO: Cập nhật đơn hàng trong database
+            // TODO: Gửi email xác nhận cho khách hàng
+            
+            return response()->json([
+                'RspCode' => '00',
+                'Message' => 'Success'
+            ]);
+        } else {
+            // Thanh toán thất bại
+            return response()->json([
+                'RspCode' => $vnp_ResponseCode,
+                'Message' => $this->getVNPayErrorMessage($vnp_ResponseCode)
+            ]);
+        }
+    }
+
+    /**
+     * Lấy thông báo lỗi từ mã response của VNPay
+     */
+    private function getVNPayErrorMessage($responseCode)
+    {
+        $messages = [
+            '00' => 'Giao dịch thành công',
+            '07' => 'Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường).',
+            '09' => 'Thẻ/Tài khoản chưa đăng ký dịch vụ InternetBanking',
+            '10' => 'Xác thực thông tin thẻ/tài khoản không đúng quá 3 lần',
+            '11' => 'Đã hết hạn chờ thanh toán. Xin vui lòng thực hiện lại giao dịch.',
+            '12' => 'Thẻ/Tài khoản bị khóa.',
+            '13' => 'Nhập sai mật khẩu xác thực giao dịch (OTP). Xin vui lòng thực hiện lại giao dịch.',
+            '51' => 'Tài khoản không đủ số dư để thực hiện giao dịch.',
+            '65' => 'Tài khoản đã vượt quá hạn mức giao dịch trong ngày.',
+            '75' => 'Ngân hàng thanh toán đang bảo trì.',
+            '79' => 'Nhập sai mật khẩu thanh toán quá số lần quy định.',
+            '99' => 'Lỗi không xác định',
+        ];
+
+        return $messages[$responseCode] ?? 'Lỗi không xác định (Mã: ' . $responseCode . ')';
     }
 }

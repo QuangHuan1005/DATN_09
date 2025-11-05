@@ -44,6 +44,19 @@
     <i class="fas fa-users"></i> Quản lý tài khoản
   </a>
 
+    {{-- Quay về website (đặt ngay trên Đăng xuất) --}}
+  @if (Route::has('home'))
+    <a href="{{ route('home') }}"
+       style="margin-top: 16px; color:#1abc9c; font-weight:600;">
+      <i class="fas fa-home"></i> Về trang web
+    </a>
+  @else
+    <a href="{{ url('/') }}"
+       style="margin-top: 16px; color:#1abc9c; font-weight:600;">
+      <i class="fas fa-home"></i> Về trang web
+    </a>
+  @endif
+
   {{-- Logout: dùng route admin.logout cho khu admin --}}
   <a href="{{ route('admin.logout') }}"
      onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();"

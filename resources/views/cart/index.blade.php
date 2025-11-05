@@ -7,11 +7,11 @@
 
 
 <style>
-	
+
   :root { --brand-gold:#c1995a; --card-border:#e9e9e9; }
 
   /* Khung trang giỏ hàng thu hẹp & căn giữa */
-  .cart-page { max-width: 1100px; margin: 0 auto; }
+  .cart-page { max-width: 1280px; margin: 0 auto; }
 
   /* BREADCRUMB */
   .breadcrumb-area { background:#f7f7f7; padding:14px 0; margin-bottom:22px; }
@@ -33,13 +33,28 @@
     background:var(--brand-gold); color:#fff; font-weight:600; border:none!important; padding:14px 16px;
   }
   .cart-table .table tbody td{
-    vertical-align:middle; border-color:#eee!important; padding:18px 16px; background:#fff;
+    vertical-align:middle; border-color:#eee!important; padding:14px 14px; background:#fff;
   }
   .cart-table .pro-thumbnail img{
     width:120px; height:120px; object-fit:cover; border-radius:6px; border:1px solid #eee;
   }
-  .pro-title .name{ font-weight:600; color:#222; }
-  .pro-title .meta{ color:#666; }
+/* Tên sp: hiển thị tối đa 2 dòng, có ellipsis nếu dài */
+.pro-title .name{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  line-height:1.3;
+  max-height:calc(1.3em * 2);
+  white-space:normal;
+}
+
+/* Dòng meta (Màu/Size): cố gắng nằm 1 dòng, nếu dài thì ellipsis */
+.pro-title .meta{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 
   /* CỤM SỐ LƯỢNG – căn giữa trong ô */
   .pro-quantity { text-align: center; }
@@ -92,15 +107,22 @@
 .totals-row{ margin-top:24px; }
 
 /* Box tổng đơn hàng (bảng bên phải) */
+/* Box tổng đơn hàng (cột phải) */
 .cart-summary{
   width:100%;
-  max-width:520px;
+  /* bỏ giới hạn để nó fit theo col-lg-4 */
+  max-width:none;
   border:1px solid var(--card-border);
   border-radius:10px;
-  background:#fff;
-  box-shadow:0 2px 12px rgba(0,0,0,.04);
   overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  background:#fff;
 }
+
+@media (min-width: 992px){
+  .totals-row{ margin-top:0; }
+}
+
 .cart-summary table{ width:100%; margin:0; border-collapse:separate; border-spacing:0; }
 .cart-summary thead th{
   background:#000; color:#fff; font-weight:700; padding:12px 16px; border:none;
@@ -112,15 +134,17 @@
 /* Nút Thanh toán: thêm khoảng cách với bảng */
 /* Checkout button – đứng sau bảng có khoảng cách rõ ràng */
 a.btn-checkout{
-  display:block;              /* d-block trong HTML cũng OK, thêm ở đây để chắc */
-  width:100%;
-  margin-top:16px !important; /* ép khoảng cách với bảng */
-  background:#000 !important; /* màu đen như bạn đang dùng */
-  border:none;
-  padding:12px 16px;
-  border-radius:6px;
-  font-weight:700;
-  color:#fff;
+  display: flex;                 /* thay vì block */
+  align-items: center;           /* canh giữa theo chiều dọc */
+  justify-content: center;       /* canh giữa theo chiều ngang */
+  text-align: center;            /* phòng hờ */
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 6px;
+  background: #000 !important;
+  color: #fff;
+  font-weight: 700;
+  border: none;
 }
 a.btn-checkout:hover{ opacity:.92; }
 
@@ -215,10 +239,18 @@ a.btn-checkout:hover{ opacity:.92; }
   padding: 20px;
 }
 
+.table .js-check{ width:16px; height:16px; cursor:pointer; }
 
+#check-all,
+.js-check{
+  accent-color: #000;   /* nền/tô đen khi checked, dấu tick trắng */
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;   /* bo nhẹ cho đẹp */
+}
 </style>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <main>
   {{-- breadcrumb --}}
   {{-- <div class="breadcrumb-area">
@@ -238,20 +270,27 @@ a.btn-checkout:hover{ opacity:.92; }
             @if(session('success')) <div class="alert alert-success">{{ session('success') }}</div> @endif
             @if(session('error'))   <div class="alert alert-danger">{{ session('error') }}</div> @endif
 
-            {{-- Cart Table --}}
-            <div class="cart-table cart-box table-responsive">
-              <table class="table align-middle mb-0">
-                <thead>
-                  <tr>
-                    <th class="pro-thumbnail" style="width:140px">Ảnh Sản Phẩm</th>
-                    <th class="pro-title">Tên Sản Phẩm</th>
-                    <th class="pro-price" style="width:140px">Giá Tiền</th>
-                    <th class="pro-quantity" style="width:180px">Số Lượng</th>
-                    <th class="pro-subtotal" style="width:160px">Tổng Tiền</th>
-                    <th class="pro-remove" style="width:90px">Thao Tác</th>
-                  </tr>
-                </thead>
-                <tbody>
+            {{-- Hàng chính: TRÁI = bảng giỏ hàng, PHẢI = tổng đơn hàng + thanh toán --}}
+            <div class="row align-items-start g-4">
+            {{-- Cột trái: Bảng giỏ hàng + nút cập nhật --}}
+            <div class="col-12 col-lg-9">
+                <div class="cart-table cart-box table-responsive">
+                <table class="table align-middle mb-0">
+                    {{-- giữ nguyên THEAD/TBODY hiện có của bạn --}}
+                    <thead>
+                    <tr>
+                        <th style="width:44px;text-align:center">
+                            <input type="checkbox" id="check-all" />
+                        </th>
+                        <th class="pro-thumbnail" style="width:120px">Ảnh Sản Phẩm</th>
+                        <th class="pro-title">Tên Sản Phẩm</th>
+                        <th class="pro-price" style="width:120px">Giá Tiền</th>
+                        <th class="pro-quantity" style="width:150px">Số Lượng</th>
+                        <th class="pro-subtotal" style="width:140px">Tổng Tiền</th>
+                        <th class="pro-remove" style="width:70px">Thao Tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                 @php
                   $tongGioHang = 0;
                   $coSanPham = !empty($cart) && count($cart) > 0;
@@ -309,9 +348,16 @@ a.btn-checkout:hover{ opacity:.92; }
                         }
                     }
                   @endphp
-                  <tr>
-                <td class="pro-thumbnail">
-                @php
+                  <tr data-variant="{{ $row['variant_id'] }}">
+                    <td style="text-align:center">
+                    <input type="checkbox"
+                            class="js-check"
+                            data-variant="{{ $row['variant_id'] }}"
+                            checked />
+                    </td>
+
+                    <td class="pro-thumbnail">
+                    @php
 
                 // Giá trị thô từ session (có thể là URL, có thể chỉ là tên file)
                 $raw = (string) ($row['image'] ?? '');
@@ -369,40 +415,50 @@ a.btn-checkout:hover{ opacity:.92; }
                     </td>
 
                     <td class="pro-price">
-                      <span>{{ number_format($row['price'] ?? 0) }}đ</span>
+                    <span>{{ number_format($row['price'] ?? 0) }}đ</span>
                     </td>
 
                     <td class="pro-quantity">
-                      <form id="qty-form-{{ $row['variant_id'] }}"
+                     <form id="qty-form-{{ $row['variant_id'] }}"
                             action="{{ route('cart.update', $row['variant_id']) }}"
-                            method="POST" data-variant="{{ $row['variant_id'] }}">
+                            method="POST"
+                            data-variant="{{ $row['variant_id'] }}"
+                            data-price="{{ (float)($row['price'] ?? 0) }}"> {{-- giá đơn vị --}}
                         @csrf
 
                         <input type="hidden" name="variant_id" value="{{ $row['variant_id'] }}">
                         <div class="qty-wrap">
-                          <button type="button"
-                                  onclick="const i=this.nextElementSibling;i.stepDown();i.dispatchEvent(new Event('change'));">−</button>
-                          <input type="number" min="1" name="quantity"
-                                    value="{{ (int)($row['quantity'] ?? 1) }}"
-                                    onchange="this.closest('form').dataset.dirty='1'">
-                          <button type="button"
-                                  onclick="const i=this.previousElementSibling;i.stepUp();i.dispatchEvent(new Event('change'));">+</button>
+                            <button type="button"
+                            onclick="const i=this.nextElementSibling;i.stepDown();i.dispatchEvent(new Event('input',{bubbles:true}));">−</button>
+
+                            <input type="number" min="1" name="quantity"
+                                value="{{ (int)($row['quantity'] ?? 1) }}"
+                                class="js-qty"
+                                data-variant="{{ $row['variant_id'] }}"
+                                oninput="/* để JS bắt sự kiện */">
+
+                            <button type="button"
+                            onclick="const i=this.previousElementSibling;i.stepUp();i.dispatchEvent(new Event('input',{bubbles:true}));">+</button>
                         </div>
-                      </form>
+                        </form>
                     </td>
 
                     <td class="pro-subtotal">
-                      <span class="fw-semibold">{{ number_format($lineTotal) }}đ</span>
+                        <span class="fw-semibold" id="line-total-{{ $row['variant_id'] }}">{{ number_format($lineTotal) }}đ</span>
                     </td>
 
                     <td class="pro-remove text-center">
-                      <form action="{{ route('cart.remove', $row['variant_id']) }}" method="POST"
-                            onsubmit="return confirm('Bạn có chắc muốn xoá sản phẩm này?')">
+                    <form action="{{ route('cart.remove', $row['variant_id']) }}" method="POST" class="js-remove-form">
                         @csrf @method('DELETE')
-                        <button class="btn-remove" title="Xóa">
-                          <i class="fa fa-trash-o"></i>
+                        <button type="button"
+                                class="btn-remove js-remove"
+                                title="Xóa"
+                                data-name="{{ $row['name'] ?? 'Sản phẩm' }}"
+                                data-price="{{ number_format($row['price'] ?? 0) }}đ"
+                                data-image="{{ $imgUrl ?? '' }}">
+                        <i class="fa fa-trash-o"></i>
                         </button>
-                      </form>
+                    </form>
                     </td>
                   </tr>
                 @empty
@@ -411,66 +467,105 @@ a.btn-checkout:hover{ opacity:.92; }
                   </tr>
                 @endforelse
                 </tbody>
-              </table>
+                </table>
+                </div>
             </div>
 
-            @if($coSanPham)
-            <div class="cart-actions">
-            <button id="btnUpdateCart" class="btn-update">Cập nhật giỏ hàng</button>
+            {{-- Cột phải: Tổng đơn hàng + nút thanh toán --}}
+             <div class="col-12 col-lg-3">
+               <div class="cart-summary">
+                    <table class="table table-borderless mb-0">
+                        <thead>
+                        <tr><th colspan="2">Tổng đơn hàng</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Tổng tiền sản phẩm</td>
+                            <td class="text-end" id="sum-products">{{ number_format($tongGioHang) }}đ</td>
+                        </tr>
+                        <tr class="total">
+                            <td>Tổng thanh toán</td>
+                            <td class="text-end" id="sum-grand">{{ number_format($tongGioHang) }}đ</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    </tbody>
+                </table>
+                </div>
+
+                <a href="{{ route('checkout.index') }}"
+                class="btn-checkout mt-3 w-100"
+                onclick="return checkCartBeforeCheckout({{ $coSanPham ? 'true':'false' }})">
+                Tiến hành thanh toán
+                </a>
             </div>
-            @endif
-
-          </div>
-        </div>
-
-{{-- Hàng dưới: bên trái là nút cập nhật, bên phải là bảng Tổng đơn hàng --}}
-<div class="row align-items-start totals-row g-4">
-  {{-- Cột phải: Bảng Tổng đơn hàng + nút Thanh toán --}}
-  <div class="col-lg-6">
-    <div class="cart-summary">
-      <table class="table table-borderless mb-0">
-        <thead>
-          <tr><th colspan="2">Tổng đơn hàng</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Tổng tiền sản phẩm</td>
-            <td class="text-end">{{ number_format($tongGioHang) }}đ</td>
-          </tr>
-          @if($coSanPham)
-            @php $phiVanChuyen = 30000; @endphp
-            <tr>
-              <td>Vận chuyển</td>
-              <td class="text-end">{{ number_format($phiVanChuyen) }}đ</td>
-            </tr>
-            <tr class="total">
-              <td>Tổng thanh toán</td>
-              <td class="text-end">{{ number_format($tongGioHang + $phiVanChuyen) }}đ</td>
-            </tr>
-          @else
-            <tr class="total">
-              <td>Tổng thanh toán</td>
-              <td class="text-end">0đ</td>
-            </tr>
-          @endif
-        </tbody>
-      </table>
-    </div>
-
-    {{-- nút này đã có .btn-checkout { margin-top:16px } nên KHÔNG dính bảng --}}
-    <a href="{{ route('checkout.index') }}"
-       class="btn-checkout d-block"
-       onclick="return checkCartBeforeCheckout({{ $coSanPham ? 'true':'false' }})">
-       Tiến hành thanh toán
-    </a>
-  </div>
-</div>
+            </div>
 
 
           </div>
         </div>
+        </div>
+    </main>
 
-      </div>
+    <script>
+        function checkCartBeforeCheckout(hasItem) {
+            if (!hasItem) {
+                alert('Hiện không có sản phẩm trong giỏ hàng, vui lòng thêm sản phẩm');
+                window.location.href = "{{ route('products.index') }}";
+                return false;
+            }
+            return true;
+        }
+
+        document.querySelectorAll('form[id^="qty-form-"] input[name="quantity"]').forEach(inp => {
+            inp.addEventListener('input', function() {
+                this.closest('form').dataset.dirty = '1';
+            });
+        });
+
+        document.getElementById('btnUpdateCart')?.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Đang cập nhật...';
+
+            const forms = Array.from(document.querySelectorAll('form[id^="qty-form-"][data-dirty="1"]'));
+
+            if (forms.length === 0) {
+                window.location.replace(window.location.pathname + '?t=' + Date.now());
+                return;
+            }
+
+            try {
+                for (const form of forms) {
+                    const fd = new FormData(form); // _token, quantity, variant_id
+                    const res = await fetch(form.action, {
+                        method: 'POST', // KHỚP route POST /cart/update/{id}
+                        headers: {
+                            'X-CSRF-TOKEN': fd.get('_token'),
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        },
+                        body: fd,
+                        credentials: 'same-origin'
+                    });
+
+                    if (!res.ok) {
+                        const text = await res.text();
+                        console.error('Update failed for variant', form.dataset.variant, res.status, text);
+                    }
+                }
+            } catch (err) {
+                console.error('Update error:', err);
+            } finally {
+                window.location.replace(window.location.pathname + '?t=' + Date.now());
+            }
+        });
+    </script>
+    <div id="custom-footer-wrapper">
+        @include('layouts.footer')
     </div>
   </div>
 </main>
@@ -485,49 +580,200 @@ a.btn-checkout:hover{ opacity:.92; }
     return true;
   }
 
+  // (giữ lại nếu bạn còn dùng ở nơi khác, không ảnh hưởng)
   document.querySelectorAll('form[id^="qty-form-"] input[name="quantity"]').forEach(inp => {
     inp.addEventListener('input', function(){
       this.closest('form').dataset.dirty = '1';
     });
   });
 
-   document.getElementById('btnUpdateCart')?.addEventListener('click', async function (e) {
-  e.preventDefault();
-  const btn = this;
-  btn.disabled = true;
-  btn.textContent = 'Đang cập nhật...';
-
-  const forms = Array.from(document.querySelectorAll('form[id^="qty-form-"][data-dirty="1"]'));
-
-  if (forms.length === 0) {
-    window.location.replace(window.location.pathname + '?t=' + Date.now());
-    return;
+  // format tiền
+  function fmt(n){
+    try { return new Intl.NumberFormat('vi-VN').format(n) + 'đ'; }
+    catch(e){ return (n||0).toLocaleString('vi-VN') + 'đ'; }
   }
 
-  try {
-    for (const form of forms) {
-      const fd = new FormData(form); // _token, quantity, variant_id
-      const res = await fetch(form.action, {
-        method: 'POST', // KHỚP route POST /cart/update/{id}
-        headers: {
-          'X-CSRF-TOKEN': fd.get('_token'),
-          'X-Requested-With': 'XMLHttpRequest',
-          'Accept': 'application/json'
-        },
-        body: fd,
-        credentials: 'same-origin'
-      });
+  // debounce chống bắn request dồn dập
+  const timers = new Map();
+  function debounce(key, fn, wait=350){
+    clearTimeout(timers.get(key));
+    const t = setTimeout(fn, wait);
+    timers.set(key, t);
+  }
 
-      if (!res.ok) {
-        const text = await res.text();
-        console.error('Update failed for variant', form.dataset.variant, res.status, text);
-      }
+  // Cập nhật 1 dòng + tổng khi đổi số lượng (KHÔNG xử lý phí ship)
+  async function updateLine(variantId, qty){
+    const form = document.querySelector(`form[id="qty-form-${variantId}"]`);
+    if(!form) return;
+
+    const fd = new FormData(form);
+    fd.set('quantity', qty);
+
+    const res = await fetch(form.action, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': fd.get('_token'),
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json'
+      },
+      body: fd,
+      credentials: 'same-origin'
+    });
+
+    let data = {};
+    try { data = await res.json(); } catch(e) {}
+
+    // fallback nếu server chưa trả JSON chuẩn
+    if(!data || !('line_total' in data)){
+      const price = parseFloat(form.dataset.price || 0);
+      data = { ok: res.ok, line_total: price * qty };
     }
-  } catch (err) {
-    console.error('Update error:', err);
-  } finally {
-    window.location.replace(window.location.pathname + '?t=' + Date.now());
+
+    // cập nhật tiền dòng
+    const lineEl = document.getElementById(`line-total-${variantId}`);
+    if(lineEl){ lineEl.textContent = fmt(Math.max(0, data.line_total||0)); }
+
+    // cập nhật tổng (grand = cart_total, không có shipping)
+    if('cart_total' in data){
+      const sp = document.getElementById('sum-products');
+      if(sp) sp.textContent = fmt(data.cart_total||0);
+
+      const g = document.getElementById('sum-grand');
+      if(g) g.textContent = fmt(data.cart_total||0); // grand = cart_total
+    }
   }
+
+  // Lắng nghe thay đổi số lượng
+  document.querySelectorAll('.js-qty').forEach(inp => {
+    inp.addEventListener('input', function(){
+      let qty = parseInt(this.value, 10);
+      if(!Number.isFinite(qty) || qty < 1){ qty = 1; this.value = 1; }
+      const variantId = this.dataset.variant;
+      debounce('v'+variantId, () => updateLine(variantId, qty));
+    });
+  });
+
+  (function(){
+  // Màu/nút theo tông đen của site
+  const theme = {
+    confirmButtonColor: '#000000',
+    cancelButtonColor:  '#6b7280' // xám
+  };
+
+  // Click thùng rác -> hỏi xoá
+  document.querySelectorAll('.js-remove').forEach(btn => {
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      const form  = this.closest('form.js-remove-form');
+      const name  = this.dataset.name || 'sản phẩm';
+      const image = this.dataset.image || '';
+
+      Swal.fire({
+        title: 'Xoá sản phẩm?',
+        html: `
+          <div style="display:flex;align-items:center;gap:12px;justify-content:center">
+            ${image ? `<img src="${image}" alt="" style="width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid #eee">` : ''}
+            <div style="text-align:left">
+              <div style="font-weight:700;color:#111">${name}</div>
+              <div style="color:#666;font-size:13px">Sản phẩm sẽ bị xoá khỏi giỏ hàng</div>
+            </div>
+          </div>
+        `,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Xoá',
+        cancelButtonText: 'Huỷ',
+        reverseButtons: true,
+        focusCancel: true,
+        ...theme
+      }).then((res) => {
+        if (res.isConfirmed && form) {
+          form.submit(); // submit form xoá như cũ
+        }
+      });
+    });
+  });
+
+  // Nếu Controller trả về flash success/error thì show SweetAlert “đẹp” luôn
+  @if(session('success'))
+    Swal.fire({
+      icon: 'success',
+      title: 'Đã xoá khỏi giỏ!',
+      text: @json(session('success')),
+      timer: 1400,
+      showConfirmButton: false
+    });
+  @endif
+
+  @if(session('error'))
+    Swal.fire({
+      icon: 'error',
+      title: 'Không thể xoá',
+      text: @json(session('error')),
+      confirmButtonText: 'Đã hiểu',
+      ...theme
+    });
+  @endif
+})();
+
+// == TÍNH TỔNG MỚI CHO CÁC DÒNG ĐANG ĐƯỢC TICK ==
+function recomputeTotals(){
+  let sum = 0;
+  document.querySelectorAll('tr[data-variant]').forEach(tr => {
+    const cb = tr.querySelector('.js-check');
+    if(!cb || !cb.checked) return;
+
+    const form = tr.querySelector('form[id^="qty-form-"]');
+    const unit = parseFloat(form?.dataset.price || 0);
+    const qty  = parseInt(form?.querySelector('input[name="quantity"]')?.value || '1', 10);
+    sum += (unit * qty);
+  });
+
+  const sp = document.getElementById('sum-products');
+  const g  = document.getElementById('sum-grand');
+  if(sp) sp.textContent = fmt(sum);
+  if(g)  g.textContent  = fmt(sum);
+}
+
+// Khi đổi số lượng 1 dòng, sau khi update server -> cập nhật tổng theo lựa chọn
+const _origUpdateLine = updateLine;
+updateLine = async function(variantId, qty){
+  await _origUpdateLine(variantId, qty);
+  recomputeTotals();
+};
+
+// Tick / bỏ tick 1 dòng
+document.querySelectorAll('.js-check').forEach(cb => {
+  cb.addEventListener('change', recomputeTotals);
+});
+
+// Tick tất cả
+document.getElementById('check-all')?.addEventListener('change', function(){
+  const checked = this.checked;
+  document.querySelectorAll('.js-check').forEach(cb => { cb.checked = checked; });
+  recomputeTotals();
+});
+
+// Khởi tạo tổng lần đầu
+document.addEventListener('DOMContentLoaded', recomputeTotals);
+
+// Bảo vệ nút Thanh toán: phải có ít nhất 1 dòng được chọn
+document.querySelectorAll('a.btn-checkout').forEach(a => {
+  a.addEventListener('click', function(e){
+    const chosen = [...document.querySelectorAll('.js-check:checked')].map(x => x.dataset.variant);
+    if(chosen.length === 0){
+      Swal.fire({
+        icon: 'warning',
+        title: 'Chưa chọn sản phẩm',
+        text: 'Hãy tích chọn ít nhất 1 sản phẩm trước khi thanh toán.',
+        confirmButtonColor: '#000'
+      });
+      e.preventDefault();
+      return;
+    }
+    // (tuỳ chọn) đính kèm danh sách chọn lên URL để xử lý ở trang checkout
+    this.href = this.href.split('?')[0] + '?items=' + encodeURIComponent(chosen.join(','));
+  });
 });
 </script>
 <div id="custom-footer-wrapper">

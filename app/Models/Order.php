@@ -39,6 +39,7 @@ class Order extends Model
     const STATUS_CANCEL    = 6; // Hủy
     const STATUS_RETURNED  = 7; // Trả hàng / Hoàn trả
 
+
     /**
      * =====================
      * 🔗 Quan hệ (Relationships)
@@ -105,6 +106,18 @@ class Order extends Model
      * - Chỉ khi trạng thái là "Chờ xác nhận" (1) hoặc "Đã xác nhận" (2)
      * - Và trạng thái thanh toán KHÔNG phải "Đã hoàn tiền" (3)
      */
+    // Product model
+    public function photoAlbums()
+    {
+        return $this->hasMany(ProductPhotoAlbum::class, 'product_id');
+    }
+
+    // ProductPhotoAlbum model
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
     public function getCancelableAttribute(): bool
     {
         return in_array($this->order_status_id, [self::STATUS_PENDING, self::STATUS_CONFIRMED])
@@ -132,7 +145,7 @@ class Order extends Model
      */
     public function getCalcSubtotalAttribute(): int
     {
-        return $this->details->sum(function($d) {
+        return $this->details->sum(function ($d) {
             return $d->price * $d->quantity;
         });
     }

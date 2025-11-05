@@ -77,7 +77,7 @@ class CartController extends Controller
                 'variant_id' => (int) $variant->id,     // để remove/update theo id cũ không đổi
                 'product_id' => (int) ($product->id ?? 0),
                 'name'       => $name,
-'color'      => $colorName,
+                'color'      => $colorName,
                 'size'       => $sizeName,
                 'price'      => $price,
                 'quantity'   => $qty,
@@ -90,10 +90,29 @@ class CartController extends Controller
 
         Session::put('cart', $cart);
 
-        // Hành vi cũ thường là quay về (back) hoặc chuyển sang trang giỏ;
-        // để an toàn với flow cũ, mình giữ redirect back + flash message.
-        // Nếu bạn muốn nhảy sang trang giỏ thì đổi: return redirect()->route('cart.index')
-        return redirect()->route('cart.index')->with('success', 'Đã thêm vào giỏ hàng!');
+        // [EDIT] Trả JSON khi là AJAX để không chuyển trang
+        $cartCount = collect($cart)->sum(fn($row) => (int)($row['quantity'] ?? 0));
+        $subtotal  = collect($cart)->reduce(function($sum, $row){
+            return $sum + (float)($row['price'] ?? 0) * (int)($row['quantity'] ?? 0);
+        }, 0);
+
+        if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
+            return response()->json([
+                'ok'         => true,
+                'message'    => 'Đã thêm vào giỏ hàng.',
+                'cart_count' => $cartCount,
+                'subtotal'   => $subtotal,
+                'item'       => [
+                    'variant_id' => (int) $variant->id,
+                    'quantity'   => (int) $cart[$key]['quantity'],
+                    'price'      => (float) $cart[$key]['price'],
+                    'name'       => $cart[$key]['name'] ?? ($product->name ?? 'Sản phẩm'),
+                    'image'      => $cart[$key]['image'] ?? null,
+                ]
+            ]);
+        }
+
+        return back()->with('success', 'Đã thêm vào giỏ hàng.');
     }
 
     /**
@@ -177,7 +196,6 @@ return back()->with('error', 'Sản phẩm không tồn tại trong giỏ');
      */
     public function update(Request $req, $variantId)
     {
-        // Validate & chuẩn hóa
         $qty = (int) $req->input('quantity', 1);
         if ($qty < 1) $qty = 1;
 
@@ -185,7 +203,7 @@ return back()->with('error', 'Sản phẩm không tồn tại trong giỏ');
         $key  = (string) $variantId;
 
         if (!isset($cart[$key])) {
-            if ($req->wantsJson() || $req->ajax()) {
+            if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
                 return response()->json(['ok' => false, 'message' => 'Sản phẩm không tồn tại trong giỏ'], 404);
             }
             return back()->with('error', 'Sản phẩm không tồn tại trong giỏ');
@@ -195,23 +213,28 @@ return back()->with('error', 'Sản phẩm không tồn tại trong giỏ');
         $cart[$key]['quantity'] = $qty;
         Session::put('cart', $cart);
 
-        // Tính lại tạm tính & tổng giỏ (để trả JSON nếu cần)
-        $itemSubtotal = (float)($cart[$key]['price'] ?? 0) * (int)($cart[$key]['quantity'] ?? 0);
+        // Tính lại tiền dòng & tổng giỏ (KHÔNG có phí ship)
+        $linePrice = (float)($cart[$key]['price'] ?? 0);
+        $lineTotal = $linePrice * (int)$cart[$key]['quantity'];
+
         $cartTotal = 0;
         foreach ($cart as $row) {
             $cartTotal += (float)($row['price'] ?? 0) * (int)($row['quantity'] ?? 0);
         }
 
-        if ($req->wantsJson() || $req->ajax()) {
+        if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
             return response()->json([
-                'ok'            => true,
-                'item_subtotal' => $itemSubtotal,
-                'cart_total'    => $cartTotal,
+                'ok'           => true,
+                'line_total'   => $lineTotal,
+                'cart_total'   => $cartTotal,
+                'grand_total'  => $cartTotal, // ở giỏ hàng = cart_total
+                'item_subtotal'=> $lineTotal, // giữ tương thích cũ
             ]);
         }
 
         return back()->with('success', 'Đã cập nhật số lượng');
     }
+
 
     // Giữ lại hàm cũ để tương thích, cho gọi sang update()
     public function updateQty(Request $req, $variantId)

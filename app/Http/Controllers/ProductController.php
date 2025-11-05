@@ -33,7 +33,15 @@ class ProductController extends Controller
 
         // ----- LỌC THEO DANH MỤC -----
         if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+            $categoryId = (int) $request->category;
+
+            // Lấy tất cả category con trực tiếp của category được chọn
+            $childrenIds = Category::where('parent_id', $categoryId)->pluck('id')->toArray();
+
+            // Gom lại: chính nó + các con
+            $filterCategoryIds = array_merge([$categoryId], $childrenIds);
+
+            $query->whereIn('category_id', $filterCategoryIds);
         }
 
         // ----- LỌC THEO MÀU -----
@@ -93,6 +101,60 @@ class ProductController extends Controller
         return view('products.index', compact('products', 'categories', 'colors', 'sizes'));
     }
 
+// public function index(Request $request)
+// {
+//     // Đọc tham số lọc từ query string
+//     $categoryId = $request->integer('category');                  // 1 danh mục
+//     $minPrice   = $request->integer('min_price');                 // số
+//     $maxPrice   = $request->integer('max_price');                 // số
+//     $colorIds   = array_filter((array) $request->input('colors'));// mảng id
+//     $sizeIds    = array_filter((array) $request->input('sizes')); // mảng id
+
+//     // Query sản phẩm + áp dụng bộ lọc
+//     $products = Product::query()
+//         ->with(['category', 'variants']) // tối ưu N+1
+//         ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
+//         ->when($minPrice || $maxPrice, function ($q) use ($minPrice, $maxPrice) {
+//             $q->whereHas('variants', function ($v) use ($minPrice, $maxPrice) {
+//                 if ($minPrice) $v->where('price', '>=', $minPrice);
+//                 if ($maxPrice) $v->where('price', '<=', $maxPrice);
+//             });
+//         })
+//         ->when(!empty($colorIds), fn($q) => $q->whereHas('variants', fn($v) => $v->whereIn('color_id', $colorIds)))
+//         ->when(!empty($sizeIds),  fn($q) => $q->whereHas('variants', fn($v) => $v->whereIn('size_id',  $sizeIds)))
+//         ->latest('id')
+//         ->paginate(12)
+//         ->appends($request->query()); // giữ nguyên tham số khi phân trang
+
+//     // Dữ liệu cho sidebar
+//     $categories = Category::query()
+//         ->withCount(['products as products_count' => function ($q) {
+//             // tuỳ cấu trúc, có thể where('status','published')...
+//         }])->get();
+
+//     $colors = Color::where('status', 1)->get();
+//     $sizes  = Size::where('status', 1)->get();
+
+//     // Build danh sách "active filters" để hiển thị/gỡ từng cái
+//     $activeFilters = [];
+//     if ($categoryId) {
+//         $activeFilters[] = ['key' => 'category', 'label' => 'Danh mục: '.$categories->firstWhere('id',$categoryId)?->name, 'value' => $categoryId];
+//     }
+//     if ($minPrice) $activeFilters[] = ['key'=>'min_price','label'=>"Giá từ: {$minPrice}"];
+//     if ($maxPrice) $activeFilters[] = ['key'=>'max_price','label'=>"Giá đến: {$maxPrice}"];
+//     if ($colorIds) {
+//         $labels = $colors->whereIn('id',$colorIds)->pluck('name')->implode(', ');
+//         $activeFilters[] = ['key'=>'colors','label'=>"Màu: {$labels}", 'value'=>$colorIds];
+//     }
+//     if ($sizeIds) {
+//         $labels = $sizes->whereIn('id',$sizeIds)->pluck('name')->implode(', ');
+//         $activeFilters[] = ['key'=>'sizes','label'=>"Size: {$labels}", 'value'=>$sizeIds];
+//     }
+
+//     return view('products.index', compact(
+//         'products','categories','colors','sizes','activeFilters'
+//     ));
+// }
     public function suggest(Request $request)
     {
         $keyword = $request->get('q', '');
@@ -124,9 +186,13 @@ class ProductController extends Controller
         foreach ($variants as $variant) {
             $key = $variant->color_id . '-' . $variant->size_id;
             $variantMap[$key] = [
-                'id' => $variant->id,
+                'id'    => $variant->id,
                 'price' => $variant->price,
-                'stock' => $variant->stock ?? 0,
+                // SAI (đang dùng $variant->stock ?? 0)
+                // 'stock' => $variant->stock ?? 0,
+
+                // ĐÚNG: đọc từ cột product_variants.quantity
+                'stock' => (int) $variant->quantity,
             ];
         }
 

@@ -15,7 +15,8 @@ class HomeController extends Controller
     {
         // 1. Danh mục (ví dụ: danh mục mới / danh mục có SP)
         $categories = Category::query()
-            ->withCount('products') // đếm số sản phẩm / danh mục
+            ->whereNull('parent_id') // chỉ lấy danh mục cha
+            ->withCount('products')  // đếm số sản phẩm trực tiếp trong từng danh mục
             ->latest('id')
             ->take(8)
             ->get();

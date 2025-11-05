@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="checkout-address-delivery">
                             <div class="row">
                                 <div class="col-12 col-2xl-7 pb-3">
@@ -58,7 +58,7 @@
                                             <span class="btn btn--large">Mặc định</span>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModal" aria-hidden="true">
                                         <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
@@ -87,7 +87,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <button type="button" class="btn btn--large mt-4 btn-add-address-modal" data-toggle="modal" data-target="#addAddressModal">
                                         <span class="icon-ic_plus"></span><span>Thêm Địa Chỉ</span>
                                     </button>
@@ -104,7 +104,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-12 col-2xl-5">
                                     <h3 class="checkout-title">Phương thức giao hàng</h3>
                                     <div class="block-border">
@@ -117,7 +117,7 @@
                                             </span>
                                         </label>
                                     </div>
-                                    
+
                                     <div class="pt-4">
                                         <div class="d-flex align-items-start">
                                             <h3 class="checkout-title mb-0 me-2">
@@ -148,7 +148,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="checkout-payment">
                             <h3 class="checkout-title">Phương thức thanh toán</h3>
                             <div class="block-border">
@@ -163,7 +163,7 @@
                                             <img src="https://pubcdn.ivymoda.com/ivy2/images/1.png" class="">
                                         </span>
                                     </label>
-                                    
+
                                     <label class="ds__item">
                                         <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_2" value="2" />
                                         <span class="ds__item__label">
@@ -171,14 +171,14 @@
                                             <div class="payment-method-description">Hỗ trợ thanh toán online hơn 38 ngân hàng phổ biến Việt Nam.</div>
                                         </span>
                                     </label>
-                                    
+
                                     <label class="ds__item">
                                         <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_5" value="5" />
                                         <span class="ds__item__label">
                                             Thanh toán bằng Momo
                                         </span>
                                     </label>
-                                    
+
                                     <label class="ds__item">
                                         <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_3" value="3" checked />
                                         <span class="ds__item__label">
@@ -188,11 +188,11 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="view-more-product">
                             <button type="button" class="btn btn--large" id="toggleCartBtn">Hiển thị sản phẩm</button>
                         </div>
-                        
+
                         <div class="checkout-my-cart" id="cartSection" style="display: none;">
                             <div class="cart__list">
                                 <h2 class="cart-title">Giỏ hàng của bạn</h2>
@@ -256,7 +256,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-lg-4 col-2xl-3 cart-page__col-summary">
                         <div class="cart-summary">
                             <div id="box_product_total">
@@ -272,7 +272,7 @@
                                     </div>
                                     <div class="cart-summary__overview__item">
                                         <p>Phí vận chuyển</p>
-                                        <p>0đ</p>
+                                        <p>30.000đ</p>
                                     </div>
                                     <div class="cart-summary__overview__item">
                                         <p>Tiền thanh toán</p>
@@ -280,7 +280,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="cart-summary__voucher-form">
                                 <div class="cart-summary__voucher-form__title">
                                     <h4 class="active">Mã phiếu giảm giá</h4>
@@ -309,7 +309,7 @@
                                     <button type="button" class="btn btn--large" id="but_coupon_delete" style="display: none;">Bỏ Mã</button>
                                 </div>
                             </div>
-                            
+
                             <div class="cart-summary__button">
                                 <button type="submit" id="but-checkout-continue-step2" name="btn_continue_step2" class="btn btn--large">
                                     Hoàn thành
@@ -339,7 +339,7 @@ document.querySelector('input[name="receive_vat"]').addEventListener('change', f
 document.getElementById('toggleCartBtn').addEventListener('click', function() {
     const cartSection = document.getElementById('cartSection');
     const btn = this;
-    
+
     if (cartSection.style.display === 'none') {
         cartSection.style.display = 'block';
         btn.textContent = 'Ẩn sản phẩm';

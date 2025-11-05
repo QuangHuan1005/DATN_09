@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
@@ -15,32 +17,59 @@ class AdminUserController extends Controller
     /**
      * Hiển thị danh sách người dùng (không gồm admin)
      */
-   public function index(Request $request)
-{
-    $query = User::withTrashed();
+    public function index(Request $request)
+    {
+        $query = User::withTrashed();
 
-    // 🔍 Tìm kiếm theo tên, email hoặc số điện thoại
-    if ($search = $request->input('search')) {
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'like', "%$search%")
-              ->orWhere('email', 'like', "%$search%")
-              ->orWhere('phone', 'like', "%$search%");
-        });
+        // 🔍 Tìm kiếm theo tên, email hoặc số điện thoại
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('phone', 'like', "%$search%");
+            });
+        }
+
+        // 📌 Lọc theo vai trò (role_id)
+        if ($role = $request->input('role_id')) {
+            $query->where('role_id', $role);
+        }
+
+        // 📄 Phân trang
+        $users = $query->orderByDesc('created_at')->paginate(5)->withQueryString();
+
+        $roles = Role::all();
+
+        return view(
+            'admin.users.index',
+            compact('users', 'roles'),
+            ['pageTitle' => 'Danh sách người dùng']
+        );
     }
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        $orders = Order::where('user_id', $user->id)->with([
+            'details.productVariant.product',
+            'details.productVariant.size',
+            'details.productVariant.color',
+            'status',
+            'user',
+            'payment.method',
+        ])->latest('id','desc')->paginate(5);
+        $latestOrder = $orders->first();
 
-    // 📌 Lọc theo vai trò (role_id)
-    if ($role = $request->input('role_id')) {
-        $query->where('role_id', $role);
+
+
+        return view('admin.users.show', compact('orders'), [
+            'users' => $user,
+            'orders' => $orders,
+            'latestOrder' => $latestOrder,
+            'invoiceCount' => $orders->count(),
+            'orderCount' => $orders->count(),
+            'totalExpense' => $orders->sum('total_price'),
+        ]);
     }
-
-    // 📄 Phân trang
-    $users = $query->orderByDesc('created_at')->paginate(3)->withQueryString();
-
-    $roles = Role::all();
-
-    return view('admin.users.index', compact('users', 'roles'));
-}
-
 
     /**
      * Hiển thị form sửa người dùng
@@ -55,7 +84,7 @@ class AdminUserController extends Controller
         }
 
         $roles = Role::all();
-      //  $rankings = Ranking::all();
+        //  $rankings = Ranking::all();
 
         return view('admin.users.edit', compact('user', 'roles'));
     }
@@ -129,24 +158,26 @@ class AdminUserController extends Controller
         $user->is_locked = !$user->is_locked;
         $user->save();
 
-        return redirect()->back()->with('success', 'Thay đổi trạng thái khóa tài khoản thành công.');
+        return redirect()->back()->with('success', '
+       ' . ($user->is_locked ? 'Khóa' : 'Mở khóa') . ' tài khoản thành công.
+       ');
     }
 
     public function restore($id)
-{
-    $user = User::withTrashed()->findOrFail($id);
+    {
+        $user = User::withTrashed()->findOrFail($id);
 
-    if ($user->isAdmin()) {
-        return redirect()->back()->with('error', 'Không thể khôi phục tài khoản Admin!');
+        if ($user->isAdmin()) {
+            return redirect()->back()->with('error', 'Không thể khôi phục tài khoản Admin!');
+        }
+
+        if ($user->trashed()) {
+            $user->restore();
+            return redirect()->back()->with('success', 'Khôi phục người dùng thành công.');
+        }
+
+        return redirect()->back()->with('info', 'Người dùng chưa bị ẩn.');
     }
-
-    if ($user->trashed()) {
-        $user->restore();
-        return redirect()->back()->with('success', 'Khôi phục người dùng thành công.');
-    }
-
-    return redirect()->back()->with('info', 'Người dùng chưa bị ẩn.');
-}
 
 
     /**
