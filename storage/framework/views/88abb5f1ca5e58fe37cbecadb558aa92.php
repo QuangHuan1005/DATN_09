@@ -66,14 +66,14 @@
 
             <li class="nav-item">
                <li class="nav-item">
-    <a class="nav-link <?php echo e(request()->routeIs('admin.inventory.*') ? 'active' : ''); ?>"
-       href="<?php echo e(route('admin.inventory.index')); ?>">
-        <span class="nav-icon">
-            <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
-        </span>
-        <span class="nav-text"> Quản Lý Kho </span>
-    </a>
-</li>
+                <a class="nav-link <?php echo e(request()->routeIs('admin.inventory.*') ? 'active' : ''); ?>"
+                href="<?php echo e(route('admin.inventory.index')); ?>">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Quản Lý Kho </span>
+                </a>
+            </li>
                 <div class="collapse" id="sidebarInventory">
                     <ul class="nav sub-navbar-nav">
 
