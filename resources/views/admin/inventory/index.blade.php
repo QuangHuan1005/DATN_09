@@ -180,4 +180,47 @@ document.addEventListener('click', async (e) => {
   }
 });
 </script>
+{{-- Tô sáng dòng theo tham số ?highlight=ID --}}
+{{-- <script>
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const hl = params.get('highlight');
+  if (!hl) return;
+
+  // tìm đúng <tr> đang render: <tr data-id="{{ $v->id }}">
+  const row = document.querySelector(`tbody tr[data-id="${hl}"]`);
+  if (!row) return;
+
+  // thêm style nhẹ để nhìn rõ
+  row.style.transition = 'background-color .6s ease';
+  row.classList.add('bg-warning-subtle');     // Bootstrap 5.3
+  row.classList.add('position-relative');
+
+  // viền trái nhỏ để nổi bật hơn (tùy chọn)
+  const css = document.createElement('style');
+  css.textContent = `
+    .pulse-highlight::before{
+      content:'';
+      position:absolute; left:0; top:0; height:100%; width:4px; background:#f59f00;
+    }`;
+  document.head.appendChild(css);
+  row.classList.add('pulse-highlight');
+
+  // cuộn vào giữa màn hình
+  row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // nháy nhẹ 2-3 lần cho dễ thấy (tùy chọn)
+  let i = 0;
+  const blink = setInterval(() => {
+    row.classList.toggle('table-active');
+    if (++i > 5) { clearInterval(blink); row.classList.remove('table-active'); }
+  }, 250);
+
+  // tự bỏ highlight sau 4s
+  setTimeout(() => {
+    row.classList.remove('bg-warning-subtle', 'pulse-highlight');
+  }, 4000);
+})();
+</script> --}}
+
 @endsection

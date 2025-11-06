@@ -1,529 +1,378 @@
 @extends('admin.master')
+@section('title', 'Dashboard')
+
 @section('content')
-    <div class="container-fluid">
 
-        <!-- Start here.... -->
-        <div class="row">
-            <div class="col-xxl-5">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="alert alert-primary text-truncate mb-3" role="alert">
-                            We regret to inform you that our server is currently experiencing technical
-                            difficulties.
-                        </div>
-                    </div>
+<div class="container-fluid py-3">
+    <h3 class="mb-3">Dashboard thống kê</h3>
 
-                    <div class="col-md-6">
-                        <div class="card overflow-hidden">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="avatar-md bg-soft-primary rounded">
-                                            <iconify-icon icon="solar:cart-5-bold-duotone"
-                                                class="avatar-title fs-32 text-primary"></iconify-icon>
-                                        </div>
-                                    </div> <!-- end col -->
-                                    <div class="col-6 text-end">
-                                        <p class="text-muted mb-0 text-truncate">Total Orders</p>
-                                        <h3 class="text-dark mt-1 mb-0">13, 647</h3>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row-->
-                            </div> <!-- end card body -->
-                            <div class="card-footer py-2 bg-light bg-opacity-50">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i>
-                                            2.3%</span>
-                                        <span class="text-muted ms-1 fs-12">Last Week</span>
-                                    </div>
-                                    <a href="#!" class="text-reset fw-semibold fs-12">View More</a>
-                                </div>
-                            </div> <!-- end card body -->
-                        </div> <!-- end card -->
-                    </div> <!-- end col -->
-                    <div class="col-md-6">
-                        <div class="card overflow-hidden">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="avatar-md bg-soft-primary rounded">
-                                            <i class="bx bx-award avatar-title fs-24 text-primary"></i>
-                                        </div>
-                                    </div> <!-- end col -->
-                                    <div class="col-6 text-end">
-                                        <p class="text-muted mb-0 text-truncate">New Leads</p>
-                                        <h3 class="text-dark mt-1 mb-0">9, 526</h3>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row-->
-                            </div> <!-- end card body -->
-                            <div class="card-footer py-2 bg-light bg-opacity-50">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i>
-                                            8.1%</span>
-                                        <span class="text-muted ms-1 fs-12">Last Month</span>
-                                    </div>
-                                    <a href="#!" class="text-reset fw-semibold fs-12">View More</a>
-                                </div>
-                            </div> <!-- end card body -->
-                        </div> <!-- end card -->
-                    </div> <!-- end col -->
-                    <div class="col-md-6">
-                        <div class="card overflow-hidden">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="avatar-md bg-soft-primary rounded">
-                                            <i class="bx bxs-backpack avatar-title fs-24 text-primary"></i>
-                                        </div>
-                                    </div> <!-- end col -->
-                                    <div class="col-6 text-end">
-                                        <p class="text-muted mb-0 text-truncate">Deals</p>
-                                        <h3 class="text-dark mt-1 mb-0">976</h3>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row-->
-                            </div> <!-- end card body -->
-                            <div class="card-footer py-2 bg-light bg-opacity-50">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i>
-                                            0.3%</span>
-                                        <span class="text-muted ms-1 fs-12">Last Month</span>
-                                    </div>
-                                    <a href="#!" class="text-reset fw-semibold fs-12">View More</a>
-                                </div>
-                            </div> <!-- end card body -->
-                        </div> <!-- end card -->
-                    </div> <!-- end col -->
-                    <div class="col-md-6">
-                        <div class="card overflow-hidden">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="avatar-md bg-soft-primary rounded">
-                                            <i class="bx bx-dollar-circle avatar-title text-primary fs-24"></i>
-                                        </div>
-                                    </div> <!-- end col -->
-                                    <div class="col-6 text-end">
-                                        <p class="text-muted mb-0 text-truncate">Booked Revenue</p>
-                                        <h3 class="text-dark mt-1 mb-0">$123.6k</h3>
-                                    </div> <!-- end col -->
-                                </div> <!-- end row-->
-                            </div> <!-- end card body -->
-                            <div class="card-footer py-2 bg-light bg-opacity-50">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i>
-                                            10.6%</span>
-                                        <span class="text-muted ms-1 fs-12">Last Month</span>
-                                    </div>
-                                    <a href="#!" class="text-reset fw-semibold fs-12">View More</a>
-                                </div>
-                            </div> <!-- end card body -->
-                        </div> <!-- end card -->
-                    </div> <!-- end col -->
-                </div> <!-- end row -->
-            </div> <!-- end col -->
+    {{-- Bộ lọc thời gian --}}
+    <form class="row g-2 align-items-end mb-3" method="GET" action="{{ route('admin.dashboard') }}">
+        <div class="col-auto">
+            <label class="form-label">Từ ngày</label>
+            <input type="date" name="from" class="form-control" value="{{ request('from', optional($from)->format('Y-m-d')) }}">
+        </div>
+        <div class="col-auto">
+            <label class="form-label">Đến ngày</label>
+            <input type="date" name="to" class="form-control" value="{{ request('to', optional($to)->format('Y-m-d')) }}">
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary">Lọc</button>
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary">Reset</a>
+        </div>
 
-            <div class="col-xxl-7">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="card-title">Performance</h4>
-                            <div>
-                                <button type="button" class="btn btn-sm btn-outline-light">ALL</button>
-                                <button type="button" class="btn btn-sm btn-outline-light">1M</button>
-                                <button type="button" class="btn btn-sm btn-outline-light">6M</button>
-                                <button type="button" class="btn btn-sm btn-outline-light active">1Y</button>
-                            </div>
-                        </div> <!-- end card-title-->
+        <div class="col-12 mt-2">
+            <small class="text-muted">
+                Khoảng: {{ $from->format('d/m/Y') }} — {{ $to->format('d/m/Y') }}
+            </small>
+        </div>
+    </form>
 
-                        <div dir="ltr">
-                            <div id="dash-performance-chart" class="apex-charts"></div>
-                        </div>
-                    </div> <!-- end card body -->
-                </div> <!-- end card -->
-            </div> <!-- end col -->
-        </div> <!-- end row -->
-
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Conversions</h5>
-                        <div id="conversions" class="apex-charts mb-2 mt-n2"></div>
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <p class="text-muted mb-2">This Week</p>
-                                <h3 class="text-dark mb-3">23.5k</h3>
-                            </div> <!-- end col -->
-                            <div class="col-6">
-                                <p class="text-muted mb-2">Last Week</p>
-                                <h3 class="text-dark mb-3">41.05k</h3>
-                            </div> <!-- end col -->
-                        </div> <!-- end row -->
-                        <div class="text-center">
-                            <button type="button" class="btn btn-light shadow-none w-100">View
-                                Details</button>
-                        </div> <!-- end row -->
-                    </div>
+    {{-- KPI nhanh --}}
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted">Tổng doanh thu (đã TT)</div>
+                    <div class="h4">{{ number_format($totalRevenue, 0, ',', '.') }} ₫</div>
                 </div>
-            </div> <!-- end left chart card -->
-
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Sessions by Country</h5>
-                        <div id="world-map-markers" style="height: 316px">
-                        </div>
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <p class="text-muted mb-2">This Week</p>
-                                <h3 class="text-dark mb-3">23.5k</h3>
-                            </div> <!-- end col -->
-                            <div class="col-6">
-                                <p class="text-muted mb-2">Last Week</p>
-                                <h3 class="text-dark mb-3">41.05k</h3>
-                            </div> <!-- end col -->
-                        </div> <!-- end row -->
-                    </div>
-                </div> <!-- end card-->
-            </div> <!-- end col -->
-
-            <div class="col-lg-4">
-                <div class="card card-height-100">
-                    <div class="card-header d-flex align-items-center justify-content-between gap-2">
-                        <h4 class="card-title flex-grow-1">Top Pages</h4>
-
-                        <a href="#" class="btn btn-sm btn-soft-primary">View All</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover table-nowrap table-centered m-0">
-                            <thead class="bg-light bg-opacity-50">
-                                <tr>
-                                    <th class="text-muted ps-3">Page Path</th>
-                                    <th class="text-muted">Page Views</th>
-                                    <th class="text-muted">Exit Rate</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="ps-3"><a href="#" class="text-muted">larkon/ecommerce.html</a>
-                                    </td>
-                                    <td>465 </td>
-                                    <td><span class="badge badge-soft-success">4.4%</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3"><a href="#" class="text-muted">larkon/dashboard.html</a>
-                                    </td>
-                                    <td> 426</td>
-                                    <td><span class="badge badge-soft-danger">20.4%</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3"><a href="#" class="text-muted">larkon/chat.html</a></td>
-                                    <td>254 </td>
-                                    <td><span class="badge badge-soft-warning">12.25%</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3"><a href="#" class="text-muted">larkon/auth-login.html</a>
-                                    </td>
-                                    <td> 3369</td>
-                                    <td><span class="badge badge-soft-success">5.2%</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3"><a href="#" class="text-muted">larkon/email.html</a></td>
-                                    <td>985 </td>
-                                    <td><span class="badge badge-soft-danger">64.2%</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3"><a href="#" class="text-muted">larkon/social.html</a></td>
-                                    <td>653 </td>
-                                    <td><span class="badge badge-soft-success">2.4%</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3"><a href="#" class="text-muted">larkon/blog.html</a></td>
-                                    <td>478 </td>
-                                    <td><span class="badge badge-soft-danger">1.4%</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div> <!-- end col -->
-
-            <div class="col-xl-4 d-none">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title">Recent Transactions</h4>
-                        <div>
-                            <a href="#!" class="btn btn-sm btn-primary">
-                                <i class="bx bx-plus me-1"></i>Add
-                            </a>
-                        </div>
-                    </div> <!-- end card-header-->
-                    <div class="card-body p-0">
-                        <div class="px-3" data-simplebar style="max-height: 398px;">
-                            <table class="table table-hover mb-0 table-centered">
-                                <tbody>
-                                    <tr>
-                                        <td>24 April, 2024</td>
-                                        <td>$120.55</td>
-                                        <td><span class="badge bg-success">Cr</span></td>
-                                        <td>Commisions </td>
-                                    </tr>
-                                    <tr>
-                                        <td>24 April, 2024</td>
-                                        <td>$9.68</td>
-                                        <td><span class="badge bg-success">Cr</span></td>
-                                        <td>Affiliates </td>
-                                    </tr>
-                                    <tr>
-                                        <td>20 April, 2024</td>
-                                        <td>$105.22</td>
-                                        <td><span class="badge bg-danger">Dr</span></td>
-                                        <td>Grocery </td>
-                                    </tr>
-                                    <tr>
-                                        <td>18 April, 2024</td>
-                                        <td>$80.59</td>
-                                        <td><span class="badge bg-success">Cr</span></td>
-                                        <td>Refunds </td>
-                                    </tr>
-                                    <tr>
-                                        <td>18 April, 2024</td>
-                                        <td>$750.95</td>
-                                        <td><span class="badge bg-danger">Dr</span></td>
-                                        <td>Bill Payments </td>
-                                    </tr>
-                                    <tr>
-                                        <td>17 April, 2024</td>
-                                        <td>$455.62</td>
-                                        <td><span class="badge bg-danger">Dr</span></td>
-                                        <td>Electricity </td>
-                                    </tr>
-                                    <tr>
-                                        <td>17 April, 2024</td>
-                                        <td>$102.77</td>
-                                        <td><span class="badge bg-success">Cr</span></td>
-                                        <td>Interest </td>
-                                    </tr>
-                                    <tr>
-                                        <td>16 April, 2024</td>
-                                        <td>$79.49</td>
-                                        <td><span class="badge bg-success">Cr</span></td>
-                                        <td>Refunds </td>
-                                    </tr>
-                                    <tr>
-                                        <td>05 April, 2024</td>
-                                        <td>$980.00</td>
-                                        <td><span class="badge bg-danger">Dr</span></td>
-                                        <td>Shopping</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div> <!-- end card body -->
-                </div> <!-- end card-->
-            </div> <!-- end col-->
-        </div> <!-- end row -->
-
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h4 class="card-title">
-                                Recent Orders
-                            </h4>
-
-                            <a href="#!" class="btn btn-sm btn-soft-primary">
-                                <i class="bx bx-plus me-1"></i>Create Order
-                            </a>
-                        </div>
-                    </div>
-                    <!-- end card body -->
-                    <div class="table-responsive table-centered">
-                        <table class="table mb-0">
-                            <thead class="bg-light bg-opacity-50">
-                                <tr>
-                                    <th class="ps-3">
-                                        Order ID.
-                                    </th>
-                                    <th>
-                                        Date
-                                    </th>
-                                    <th>
-                                        Product
-                                    </th>
-                                    <th>
-                                        Customer Name
-                                    </th>
-                                    <th>
-                                        Email ID
-                                    </th>
-                                    <th>
-                                        Phone No.
-                                    </th>
-                                    <th>
-                                        Address
-                                    </th>
-                                    <th>
-                                        Payment Type
-                                    </th>
-                                    <th>
-                                        Status
-                                    </th>
-                                </tr>
-                            </thead>
-                            <!-- end thead-->
-                            <tbody>
-                                <tr>
-                                    <td class="ps-3">
-                                        <a href="order-detail.html">#RB5625</a>
-                                    </td>
-                                    <td>29 April 2024</td>
-                                    <td>
-                                        <img src="assets/images/products/product-1(1).png" alt="product-1(1)"
-                                            class="img-fluid avatar-sm">
-                                    </td>
-                                    <td>
-                                        <a href="#!">Anna M. Hines</a>
-                                    </td>
-                                    <td>anna.hines@mail.com</td>
-                                    <td>(+1)-555-1564-261</td>
-                                    <td>Burr Ridge/Illinois</td>
-                                    <td>Credit Card</td>
-                                    <td>
-                                        <i class="bx bxs-circle text-success me-1"></i>Completed
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3">
-                                        <a href="order-detail.html">#RB9652</a>
-                                    </td>
-                                    <td>25 April 2024</td>
-                                    <td>
-                                        <img src="assets/images/products/product-4.png" alt="product-4"
-                                            class="img-fluid avatar-sm">
-                                    </td>
-                                    <td>
-                                        <a href="#!">Judith H. Fritsche</a>
-                                    </td>
-                                    <td>judith.fritsche.com</td>
-                                    <td>(+57)-305-5579-759</td>
-                                    <td>SULLIVAN/Kentucky</td>
-                                    <td>Credit Card</td>
-                                    <td>
-                                        <i class="bx bxs-circle text-success me-1"></i>Completed
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3">
-                                        <a href="order-detail.html">#RB5984</a>
-                                    </td>
-                                    <td>25 April 2024</td>
-                                    <td>
-                                        <img src="assets/images/products/product-5.png" alt="product-5"
-                                            class="img-fluid avatar-sm">
-                                    </td>
-                                    <td>
-                                        <a href="#!">Peter T. Smith</a>
-                                    </td>
-                                    <td>peter.smith@mail.com</td>
-                                    <td>(+33)-655-5187-93</td>
-                                    <td>Yreka/California</td>
-                                    <td>Pay Pal</td>
-                                    <td>
-                                        <i class="bx bxs-circle text-success me-1"></i>Completed
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3">
-                                        <a href="order-detail.html">#RB3625</a>
-                                    </td>
-                                    <td>21 April 2024</td>
-                                    <td>
-                                        <img src="assets/images/products/product-6.png" alt="product-6"
-                                            class="img-fluid avatar-sm">
-                                    </td>
-                                    <td>
-                                        <a href="#!">Emmanuel J. Delcid</a>
-                                    </td>
-                                    <td>
-                                        emmanuel.delicid@mail.com
-                                    </td>
-                                    <td>(+30)-693-5553-637</td>
-                                    <td>Atlanta/Georgia</td>
-                                    <td>Pay Pal</td>
-                                    <td>
-                                        <i class="bx bxs-circle text-primary me-1"></i>Processing
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="ps-3">
-                                        <a href="order-detail.html">#RB8652</a>
-                                    </td>
-                                    <td>18 April 2024</td>
-                                    <td>
-                                        <img src="assets/images/products/product-1(2).png" alt="product-1(2)"
-                                            class="img-fluid avatar-sm">
-                                    </td>
-                                    <td>
-                                        <a href="#!">William J. Cook</a>
-                                    </td>
-                                    <td>william.cook@mail.com</td>
-                                    <td>(+91)-855-5446-150</td>
-                                    <td>Rosenberg/Texas</td>
-                                    <td>Credit Card</td>
-                                    <td>
-                                        <i class="bx bxs-circle text-primary me-1"></i>Processing
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <!-- end tbody -->
-                        </table>
-                        <!-- end table -->
-                    </div>
-                    <!-- table responsive -->
-
-                    <div class="card-footer border-top">
-                        <div class="row g-3">
-                            <div class="col-sm">
-                                <div class="text-muted">
-                                    Showing
-                                    <span class="fw-semibold">5</span>
-                                    of
-                                    <span class="fw-semibold">90,521</span>
-                                    orders
-                                </div>
-                            </div>
-
-                            <div class="col-sm-auto">
-                                <ul class="pagination m-0">
-                                    <li class="page-item">
-                                        <a href="#" class="page-link"><i class="bx bx-left-arrow-alt"></i></a>
-                                    </li>
-                                    <li class="page-item active">
-                                        <a href="#" class="page-link">1</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a href="#" class="page-link">2</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a href="#" class="page-link">3</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a href="#" class="page-link"><i class="bx bx-right-arrow-alt"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end card -->
             </div>
-            <!-- end col -->
-        </div> <!-- end row -->
-
+        </div>
+        <div class="col-md-3">
+            <a class="card shadow-sm text-decoration-none text-reset" href="{{ route('admin.orders.index') }}">
+                <div class="card-body">
+                    <div class="text-muted">Số đơn đã thanh toán</div>
+                    <div class="h4">{{ $totalPaidOrders }}</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a class="card shadow-sm text-decoration-none text-reset" href="{{ route('admin.orders.index') }}">
+                <div class="card-body">
+                    <div class="text-muted">Tổng đơn</div>
+                    <div class="h4">{{ $allOrders }}</div>
+                </div>
+            </a>
+        </div>
     </div>
+
+    {{-- Hàng 1: Doanh thu theo ngày + Tỉ lệ trạng thái --}}
+    <div class="row g-3 mb-3">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Doanh thu theo ngày</span>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueLine"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">Tỉ lệ đơn theo trạng thái</div>
+                <div class="card-body">
+                    <canvas id="orderStatusPie"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Hàng 2: Top sản phẩm (doanh thu & SL) + Pie tỉ lệ hoàn hàng --}}
+    <div class="row g-3 mb-3">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">Top sản phẩm bán chạy</div>
+                <div class="card-body">
+                    <canvas id="topProductsBar"></canvas>
+                    <div class="mt-3">
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sản phẩm</th>
+                                    <th class="text-end">SL</th>
+                                    <th class="text-end">Doanh thu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($topProducts as $i => $p)
+                                <tr>
+                                    <td>{{ $i+1 }}</td>
+                                    <td>
+                                        <a href="{{ route('admin.products.edit', $p->product_id) }}">
+                                            {{ $p->product_name }}
+                                        </a>
+                                    </td>
+                                    <td class="text-end">{{ (int)$p->qty_sold }}</td>
+                                    <td class="text-end">{{ number_format($p->revenue, 0, ',', '.') }} ₫</td>
+                                </tr>
+                                @empty
+                                <tr><td colspan="4" class="text-center text-muted">Không có dữ liệu</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">Tỉ lệ hoàn hàng theo sản phẩm</div>
+                <div class="card-body">
+                    @if(empty($retLabels))
+                        <div class="text-muted">Không có dữ liệu hoàn hàng</div>
+                    @else
+                        <canvas id="returnPie"></canvas>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Hàng 3: Top danh mục + Top khách hàng --}}
+    <div class="row g-3 mb-3">
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">Top danh mục bán chạy</div>
+                <div class="card-body">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Danh mục</th>
+                                <th class="text-end">SL</th>
+                                <th class="text-end">Doanh thu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($topCategories as $i => $c)
+                            <tr>
+                                <td>{{ $i+1 }}</td>
+                                <td>
+                                    {{-- Không có route admin categories show? dùng edit --}}
+                                    <a href="{{ route('admin.categories.edit', $c->category_id) }}">
+                                        {{ $c->category_name }}
+                                    </a>
+                                </td>
+                                <td class="text-end">{{ (int)$c->qty_sold }}</td>
+                                <td class="text-end">{{ number_format($c->revenue, 0, ',', '.') }} ₫</td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="4" class="text-center text-muted">Không có dữ liệu</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">Top khách hàng</div>
+                <div class="card-body">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Khách hàng</th>
+                                <th class="text-end">Đơn</th>
+                                <th class="text-end">Chi tiêu</th>
+                                <th class="text-end">Đơn TB</th>
+                                <th class="text-end">Hủy/Hoàn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($topCustomers as $i => $u)
+                            <tr>
+                                <td>{{ $i+1 }}</td>
+                                <td>
+                                    <a href="{{ route('admin.users.edit', $u->user_id) }}">
+                                        {{ $u->name }} <small class="text-muted">{{ $u->email }}</small>
+                                    </a>
+                                </td>
+                                <td class="text-end">{{ (int)$u->orders_count }}</td>
+                                <td class="text-end">{{ number_format($u->total_spent, 0, ',', '.') }} ₫</td>
+                                <td class="text-end">{{ number_format($u->avg_order_value, 0, ',', '.') }} ₫</td>
+                                <td class="text-end">{{ (int)$u->cancelled_or_returned }}</td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="6" class="text-center text-muted">Không có dữ liệu</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Hàng 4: Tồn kho + Đơn chờ xác nhận --}}
+    <div class="row g-3 mb-5">
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">Sản phẩm tồn kho thấp</div>
+                <div class="card-body">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Sản phẩm (Biến thể)</th>
+                                <th class="text-end">Tồn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($lowStocks as $i => $v)
+                            <tr>
+                                <td>{{ $i+1 }}</td>
+                                <td>
+                                    <a href="{{ route('admin.products.edit', $v->product_id) }}">
+                                        {{ $v->product_name }}
+                                    </a>
+                                    <small class="text-muted">
+    @if($v->color) • Màu: {{ $v->color }} @endif
+    @if($v->size)  • Size: {{ $v->size }} @endif
+    • <a href="{{ route('admin.inventory.index', ['q' => $v->product_code, 'highlight' => $v->variant_id]) }}">
+        (Xem kho)
+      </a>
+</small>
+
+                                </td>
+                                <td class="text-end">{{ (int)$v->quantity }}</td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="3" class="text-center text-muted">Không có dữ liệu</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">Đơn hàng chờ xác nhận (mới nhất)</div>
+                <div class="card-body">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách</th>
+                                <th class="text-end">Giá trị</th>
+                                <th>Thời gian</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($recentPending as $o)
+                            <tr>
+                                <td><a href="{{ route('admin.orders.show', $o->id) }}">{{ $o->order_code }}</a></td>
+                                <td>{{ $o->customer }}</td>
+                                <td class="text-end">{{ number_format($o->total_amount, 0, ',', '.') }} ₫</td>
+                                <td>{{ \Carbon\Carbon::parse($o->created_at)->format('d/m/Y H:i') }}</td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="4" class="text-center text-muted">Không có đơn chờ xác nhận</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Chart.js CDN --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const money = v => new Intl.NumberFormat('vi-VN').format(v);
+
+// Line: Doanh thu theo ngày
+new Chart(document.getElementById('revenueLine'), {
+    type: 'line',
+    data: {
+        labels: @json($labels),
+        datasets: [{
+            label: 'Doanh thu (₫)',
+            data: @json($revenues),
+            tension: 0.3,
+            fill: true
+        }]
+    },
+    options: {
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+            tooltip: {
+                callbacks: { label: ctx => ' ' + money(ctx.parsed.y) + ' ₫' }
+            }
+        },
+        scales: {
+            y: { ticks: { callback: v => money(v) + ' ₫' } }
+        }
+    }
+});
+
+// Pie: Tỉ lệ đơn theo trạng thái
+new Chart(document.getElementById('orderStatusPie'), {
+    type: 'pie',
+    data: {
+        labels: @json($statusLabels),
+        datasets: [{ data: @json($statusValues) }]
+    }
+});
+
+// Bar: Top sản phẩm (2 trục — doanh thu & SL)
+new Chart(document.getElementById('topProductsBar'), {
+    type: 'bar',
+    data: {
+        labels: @json($tpLabels),
+        datasets: [
+            {
+                type: 'bar',
+                label: 'Doanh thu (₫)',
+                data: @json($tpRevenue),
+                yAxisID: 'y1'
+            },
+            {
+                type: 'line',
+                label: 'Số lượng',
+                data: @json($tpQty),
+                yAxisID: 'y2',
+                tension: 0.2
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+            y1: {
+                position: 'left',
+                ticks: { callback: v => money(v) + ' ₫' }
+            },
+            y2: {
+                position: 'right',
+                grid: { drawOnChartArea: false }
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: ctx => ctx.dataset.label.includes('Doanh thu')
+                        ? ' ' + money(ctx.parsed.y) + ' ₫'
+                        : ' ' + ctx.parsed.y + ' sp'
+                }
+            }
+        }
+    }
+});
+
+// Pie: Tỉ lệ hoàn hàng theo sản phẩm (nếu có)
+@if(!empty($retLabels))
+new Chart(document.getElementById('returnPie'), {
+    type: 'doughnut',
+    data: {
+        labels: @json($retLabels),
+        datasets: [{ data: @json($retValues) }]
+    }
+});
+@endif
+</script>
 @endsection

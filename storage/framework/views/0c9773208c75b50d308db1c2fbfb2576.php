@@ -172,6 +172,9 @@ document.addEventListener('click', async (e) => {
   }
 });
 </script>
+
+
+
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('admin.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09\resources\views/admin/inventory/index.blade.php ENDPATH**/ ?>
