@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\InventoryService;
 use App\Models\Order;
 use App\Models\OrderStatus;
+use App\Models\User; // <-- Để lấy staff
 
 class AdminOrderController extends Controller
 {
@@ -34,42 +35,43 @@ class AdminOrderController extends Controller
         ];
     }
 
-
     /**
      * Hiển thị danh sách đơn hàng
      */
     public function index(Request $request)
-    {
+{
+    $query = Order::with(['status', 'user', 'paymentStatus', 'staff'])
+        ->withSum('details', 'quantity')
+        ->orderByDesc('id');
 
-        $query = Order::with(['status', 'user', 'paymentStatus'])
-            ->withSum('details', 'quantity')
-            ->orderByDesc('id');
-
-        // Lọc theo trạng thái
-        if ($request->filled('status')) {
-            $query->where('order_status_id', $request->status);
-        }
-
-        // Tìm kiếm theo mã đơn hoặc tên khách
-        if ($request->filled('keyword')) {
-            $kw = $request->keyword;
-            $query->where(function ($q) use ($kw) {
-                $q->where('order_code', 'like', "%$kw%")
-                    ->orWhere('name', 'like', "%$kw%");
-            });
-        }
-
-        $orders = $query->paginate(9);
-        $statuses = $this->getStatuses();
-
-        return view(
-            'admin.orders.index',
-            compact('orders', 'statuses'),
-            [
-                'pageTitle' => 'Danh sách đơn hàng'
-            ]
-        );
+    if ($request->filled('status')) {
+        $query->where('order_status_id', $request->status);
     }
+
+    if ($request->filled('keyword')) {
+        $kw = $request->keyword;
+        $query->where(function ($q) use ($kw) {
+            $q->where('order_code', 'like', "%$kw%")
+              ->orWhere('name', 'like', "%$kw%");
+        });
+    }
+
+    $orders = $query->paginate(5);
+    $statuses = $this->getStatuses();
+
+    // Lấy danh sách staff để gán đơn
+ $staffs = User::where('role_id', 3)
+              ->where('is_verified', 1)
+              ->where('is_locked', 0)
+              ->get();
+
+
+
+    return view('admin.orders.index', compact('orders', 'statuses', 'staffs'), [
+        'pageTitle' => 'Danh sách đơn hàng'
+    ]);
+}
+
 
     /**
      * Hiển thị chi tiết đơn hàng
@@ -83,9 +85,9 @@ class AdminOrderController extends Controller
             'status',
             'user',
             'payment.method',
+            'staff',
         ])->findOrFail($id);
 
-        // Chuẩn hóa dữ liệu dòng sản phẩm
         $lines = $order->details->map(function ($d) {
             $v = $d->productVariant;
             $variantText = [];
@@ -104,15 +106,12 @@ class AdminOrderController extends Controller
         $calc_subtotal = $lines->sum('line_total');
         $calc_discount = (int)$order->discount;
         $calc_total    = (int)$order->total_amount;
-
-        $statuses = $this->getStatuses(); // <-- Thêm để đồng bộ trạng thái
+        $statuses = $this->getStatuses();
 
         return view(
             'admin.orders.show',
             compact('order', 'lines', 'calc_subtotal', 'calc_discount', 'calc_total', 'statuses'),
-            [
-                'pageTitle' => 'Chi tiết đơn hàng'
-            ]
+            ['pageTitle' => 'Chi tiết đơn hàng']
         );
     }
 
@@ -130,7 +129,6 @@ class AdminOrderController extends Controller
         $oldStatus = (int) $order->order_status_id;
         $newStatus = (int) $data['order_status_id'];
 
-        // Chỉ cho phép tiến từng bước hoặc giữ nguyên
         if ($newStatus !== $oldStatus && $newStatus !== $oldStatus + 1) {
             return back()->with('error', 'Chỉ được cập nhật trạng thái tiến từng bước một.');
         }
@@ -149,7 +147,6 @@ class AdminOrderController extends Controller
             self::STATUS_RETURNED,
         ];
 
-        // Điều chỉnh tồn kho
         if (!in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusDeductStock)) {
             $inv->deductForOrder($order);
         }
@@ -163,5 +160,41 @@ class AdminOrderController extends Controller
         }
 
         return back()->with('success', 'Đã cập nhật trạng thái đơn hàng');
+    }
+
+    /**
+     * Hiển thị form gán staff
+     */
+    public function assignForm(Order $order)
+{
+    // Chỉ lấy staff nếu đơn chưa có staff_id
+    if ($order->staff_id) {
+        // Nếu đã gán, không cho hiển thị option chọn khác
+        $staffs = User::where('id', $order->staff_id)->get(); 
+    } else {
+        // Nếu chưa gán, hiển thị tất cả staff
+       $staffs = User::where('role_id', 3)
+              ->where('is_verified', 1)
+              ->where('is_locked', 0)
+              ->get();
+
+    }
+
+    return view('admin.orders.assign', compact('order', 'staffs'));
+}
+
+    /**
+     * Xử lý gán staff cho đơn
+     */
+    public function assignStaff(Request $request, Order $order)
+    {
+        $request->validate([
+            'staff_id' => 'required|exists:users,id'
+        ]);
+
+        $order->staff_id = $request->staff_id;
+        $order->save();
+
+        return redirect()->route('admin.orders.index')->with('success', 'Gán staff thành công!');
     }
 }

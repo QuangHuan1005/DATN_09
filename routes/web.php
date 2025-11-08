@@ -23,7 +23,7 @@ use App\Http\Controllers\Admin\AdminVoucherController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\WishlistController;
-
+use App\Http\Controllers\Staff\StaffController;
 /*
 |--------------------------------------------------------------------------
 | FRONTEND ROUTES
@@ -161,6 +161,16 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 |--------------------------------------------------------------------------
 */
 
+Route::prefix('staff')->name('staff.')->middleware('auth:staff')->group(function () {
+    Route::get('/dashboard', [StaffController::class, 'dashboard'])->name('dashboard');
+    Route::get('/orders', [StaffController::class, 'orders'])->name('orders.index');
+    Route::get('/orders/{id}', [StaffController::class, 'show'])->name('orders.show');
+   Route::post('orders/{id}/status', [StaffController::class, 'updateStatus'])->name('orders.status');
+});
+
+
+
+
 Route::prefix('admin')
    // ->middleware(['auth:admin', 'is_admin'])
     ->name('admin.')
@@ -195,6 +205,10 @@ Route::prefix('admin')
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
         Route::delete('orders/{id}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
         Route::post('orders/{id}/status', [AdminOrderController::class, 'update'])->name('orders.status');
+
+        Route::get('orders/{order}/assign', [AdminOrderController::class, 'assignForm'])->name('orders.assignForm');
+        Route::post('orders/{order}/assign', [AdminOrderController::class, 'assignStaff'])->name('orders.assignStaff');
+
 
         // Tin tức
         // Route::resource('news', AdminNewsController::class);

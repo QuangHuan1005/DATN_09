@@ -107,4 +107,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserAddress::class)->where('is_default', true);
     }
+  // Gán đơn hàng cho staff
+    public function assignedOrders()
+{
+    return $this->hasMany(Order::class, 'staff_id');
+}
+
 }

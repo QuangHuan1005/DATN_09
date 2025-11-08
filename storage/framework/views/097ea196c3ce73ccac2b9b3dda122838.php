@@ -13,7 +13,7 @@
     <meta name="author" content="Techzaa" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    @include('admin.layouts.css')
+    <?php echo $__env->make('admin.layouts.css', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
     <div class="wrapper">
 
         <!-- ========== Topbar Start ========== -->
-        @include('admin.layouts.header')
+        <?php echo $__env->make('admin.layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <!-- Activity Timeline -->
         <div>
@@ -312,11 +312,11 @@
 <!-- ========== App Menu Start ========== -->
 <!-- ========== App Menu Start ========== -->
 <div class="app-menu">
-    @hasSection('menu')
-        @yield('menu')
-    @else
-        @include('admin.layouts.menu-nav')
-    @endif
+    <?php if (! empty(trim($__env->yieldContent('menu')))): ?>
+        <?php echo $__env->yieldContent('menu'); ?>
+    <?php else: ?>
+        <?php echo $__env->make('admin.layouts.menu-nav', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php endif; ?>
 </div>
 <!-- ========== App Menu End ========== -->
 
@@ -334,11 +334,11 @@
         <div class="page-content">
 
             <!-- Start Container Fluid -->
-            @yield('content')
+            <?php echo $__env->yieldContent('content'); ?>
             <!-- End Container Fluid -->
 
             <!-- ========== Footer Start ========== -->
-            @include('admin.layouts.footer')
+            <?php echo $__env->make('admin.layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
             <!-- ========== Footer End ========== -->
 
         </div>
@@ -348,10 +348,11 @@
 
     </div>
     <!-- END Wrapper -->
-    @include('admin.layouts.js')
+    <?php echo $__env->make('admin.layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </body>
 
 
 <!-- Mirrored from techzaa.in/larkon/admin/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 25 Oct 2025 16:25:56 GMT -->
 
 </html>
+<?php /**PATH C:\laragon\www\DATN_09\resources\views/admin/master.blade.php ENDPATH**/ ?>

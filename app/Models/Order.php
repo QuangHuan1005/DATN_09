@@ -13,6 +13,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+          'staff_id', 
         'payment_status_id',
         'order_status_id',
         'voucher_id',
@@ -51,6 +52,13 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // Nhân viên phụ trách đơn hàng
+public function staff()
+{
+    return $this->belongsTo(User::class, 'staff_id');
+}
+
 
     // Trạng thái đơn hàng
     public function status()

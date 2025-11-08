@@ -12,7 +12,8 @@
                  <!-- Menu Toggle Button -->
                  <div class="topbar-item">
                      <h4 class="fw-bold topbar-button pe-none text-uppercase mb-0">
-                         {{ $pageTitle ?? 'Dashboard' }}
+                         <?php echo e($pageTitle ?? 'Dashboard'); ?>
+
                      </h4>
                  </div>
 
@@ -161,12 +162,12 @@
                      <a type="button" class="topbar-button" id="page-header-user-dropdown"
                          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                          <span class="d-flex align-items-center">
-                            @php
+                            <?php
     $user = Auth::guard('admin')->check() ? Auth::guard('admin')->user() :
             (Auth::guard('staff')->check() ? Auth::guard('staff')->user() : Auth::user());
-@endphp
+?>
                             <img class="rounded-circle" width="32" height="32"
-     src="{{ $user && $user->image ? asset('storage/' . $user->image) : asset('assets/images/users/default-avatar.jpg') }}"
+     src="<?php echo e($user && $user->image ? asset('storage/' . $user->image) : asset('assets/images/users/default-avatar.jpg')); ?>"
      alt="avatar">
 
                          </span>
@@ -198,13 +199,13 @@
 
                          <div class="dropdown-divider my-1"></div>
 
-                         <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}"
+                         <a class="dropdown-item text-danger" href="<?php echo e(route('admin.logout')); ?>"
                              onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();">
                              <i class="bx bx-log-out fs-18 align-middle me-1"></i><span class="align-middle">Đăng
                                  xuất</span>
                          </a>
-                         <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST">
-                             @csrf
+                         <form id="admin-logout-form" action="<?php echo e(route('admin.logout')); ?>" method="POST">
+                             <?php echo csrf_field(); ?>
                          </form>
                      </div>
                  </div>
@@ -222,3 +223,4 @@
          </div>
      </div>
  </header>
+<?php /**PATH C:\laragon\www\DATN_09\resources\views/admin/layouts/header.blade.php ENDPATH**/ ?>
