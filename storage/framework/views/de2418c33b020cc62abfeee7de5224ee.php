@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('content'); ?>
     <div class="container-xxl">
 
@@ -162,7 +164,7 @@
                                     </span>
                                 </p>
                                 <div>
-                                    <a href="<?php echo e(route('admin.orders.index')); ?>" class="btn btn-primary">Quay lại</a>
+                                    <a href="<?php echo e(route('staff.orders.index')); ?>" class="btn btn-primary">Quay lại</a>
                                 </div>
                             </div>
                         </div>
@@ -325,4 +327,4 @@
     </div>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('admin.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09\resources\views/admin/orders/show.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09\resources\views/staff/orders/show.blade.php ENDPATH**/ ?>

@@ -7,7 +7,7 @@ return [
     | Authentication Defaults
     |--------------------------------------------------------------------------
     |
-    | Đây là guard mặc định và password broker mặc định cho ứng dụng.
+    | Guard mặc định và password broker mặc định cho ứng dụng.
     |
     */
 
@@ -21,7 +21,7 @@ return [
     | Authentication Guards
     |--------------------------------------------------------------------------
     |
-    | Bạn có thể định nghĩa nhiều guard để phân tách đăng nhập admin và client.
+    | Định nghĩa các guard riêng biệt cho khách hàng, admin, staff.
     |
     */
 
@@ -37,6 +37,12 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+
+        // Guard riêng cho staff
+        'staff' => [
+            'driver' => 'session',
+            'provider' => 'staffs',
+        ],
     ],
 
     /*
@@ -44,8 +50,7 @@ return [
     | User Providers
     |--------------------------------------------------------------------------
     |
-    | Các provider xác định cách lấy dữ liệu người dùng từ DB.
-    | Tách riêng provider cho admin nếu muốn.
+    | Cấu hình provider cho các loại user khác nhau.
     |
     */
 
@@ -57,8 +62,12 @@ return [
 
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class, // Nếu bạn dùng cùng bảng users
-            // Nếu muốn tách bảng admin riêng, tạo model Admin và bảng admins
+            'model' => App\Models\User::class, // Hoặc App\Models\Admin nếu dùng bảng riêng
+        ],
+
+        'staffs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class, // Hoặc App\Models\Staff nếu dùng bảng riêng
         ],
     ],
 
@@ -67,7 +76,7 @@ return [
     | Resetting Passwords
     |--------------------------------------------------------------------------
     |
-    | Cấu hình cho việc reset password, có thể tách riêng admin nếu muốn.
+    | Cấu hình reset password riêng cho từng loại người dùng.
     |
     */
 
@@ -81,7 +90,14 @@ return [
 
         'admins' => [
             'provider' => 'admins',
-            'table' => 'password_reset_tokens', // hoặc bảng riêng nếu muốn
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'staffs' => [
+            'provider' => 'staffs',
+            'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],
@@ -97,5 +113,4 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
-
 ];

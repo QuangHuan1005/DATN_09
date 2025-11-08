@@ -308,10 +308,25 @@
             </div>
         </div>
         <!-- ========== Topbar End ========== -->
-
-        <!-- ========== App Menu Start ========== -->
+<!-- ========== App Menu Start ========== -->
+<!-- ========== App Menu Start ========== -->
+<!-- ========== App Menu Start ========== -->
+<div class="app-menu">
+    <?php if (! empty(trim($__env->yieldContent('menu')))): ?>
+        <?php echo $__env->yieldContent('menu'); ?>
+    <?php else: ?>
         <?php echo $__env->make('admin.layouts.menu-nav', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        <!-- ========== App Menu End ========== -->
+    <?php endif; ?>
+</div>
+<!-- ========== App Menu End ========== -->
+
+<!-- ========== App Menu End ========== -->
+
+
+
+<!-- ========== App Menu End ========== -->
+
+
 
         <!-- ==================================================== -->
         <!-- Start right Content here -->
