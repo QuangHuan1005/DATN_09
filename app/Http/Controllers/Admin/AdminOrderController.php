@@ -119,48 +119,77 @@ class AdminOrderController extends Controller
      * Cập nhật trạng thái đơn hàng
      */
     public function update(Request $request, $id, InventoryService $inv)
-    {
-        $data = $request->validate([
-            'order_status_id' => ['required', 'integer'],
-        ]);
+{
+    $data = $request->validate([
+        'order_status_id' => ['required', 'integer'],
+    ]);
 
-        $order = Order::findOrFail($id);
+    $order = Order::findOrFail($id);
 
-        $oldStatus = (int) $order->order_status_id;
-        $newStatus = (int) $data['order_status_id'];
+    $oldStatus = (int) $order->order_status_id;
+    $newStatus = (int) $data['order_status_id'];
 
-        if ($newStatus !== $oldStatus && $newStatus !== $oldStatus + 1) {
-            return back()->with('error', 'Chỉ được cập nhật trạng thái tiến từng bước một.');
-        }
-
-        $order->update($data);
-
-        $statusDeductStock = [
-            self::STATUS_CONFIRMED,
-            self::STATUS_SHIPPING,
-            self::STATUS_DELIVERED,
-            self::STATUS_DONE,
-        ];
-
-        $statusRestoreStock = [
-            self::STATUS_CANCEL,
-            self::STATUS_RETURNED,
-        ];
-
-        if (!in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusDeductStock)) {
-            $inv->deductForOrder($order);
-        }
-
-        if (in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusRestoreStock)) {
-            $inv->restoreForOrder($order);
-        }
-
-        if (in_array($oldStatus, $statusRestoreStock) && in_array($newStatus, $statusDeductStock)) {
-            $inv->deductForOrder($order);
-        }
-
-        return back()->with('success', 'Đã cập nhật trạng thái đơn hàng');
+    // Chỉ cho tăng từng bước
+    if ($newStatus !== $oldStatus && $newStatus !== $oldStatus + 1) {
+        return back()->with('error', 'Chỉ được cập nhật trạng thái tiến từng bước một.');
     }
+
+    // Cập nhật trạng thái đơn
+    $order->order_status_id = $newStatus;
+
+    // ================== LOGIC KHO ==================
+    $statusDeductStock = [
+        self::STATUS_CONFIRMED,
+        self::STATUS_SHIPPING,
+        self::STATUS_DELIVERED,
+        self::STATUS_DONE,
+    ];
+
+    $statusRestoreStock = [
+        self::STATUS_CANCEL,
+        self::STATUS_RETURNED,
+    ];
+
+    if (!in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusDeductStock)) {
+        $inv->deductForOrder($order);
+    }
+
+    if (in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusRestoreStock)) {
+        $inv->restoreForOrder($order);
+    }
+
+    if (in_array($oldStatus, $statusRestoreStock) && in_array($newStatus, $statusDeductStock)) {
+        $inv->deductForOrder($order);
+    }
+
+    // ================== LOGIC THANH TOÁN ==================
+    // map theo view client: 1=Chưa thanh toán, 2=Đã thanh toán, 3=Hoàn tiền
+    $PAYMENT_STATUS_UNPAID = 1;
+    $PAYMENT_STATUS_PAID   = 2;
+    // 1 = Thanh toán khi nhận hàng
+    $PAYMENT_METHOD_COD    = 1;
+
+    // Nếu đơn đã ĐÃ GIAO / HOÀN THÀNH thì auto chuyển sang ĐÃ THANH TOÁN
+    if (in_array($newStatus, [self::STATUS_DELIVERED, self::STATUS_DONE])) {
+
+        // Với COD: khi giao xong là coi như đã thu tiền
+        if ((int)$order->payment_method_id === $PAYMENT_METHOD_COD) {
+            $order->payment_status_id = $PAYMENT_STATUS_PAID;
+        } else {
+            // Với cổng online (VNPAY/MoMo...) mà vẫn đang "chưa thanh toán"
+            // thì cũng ép về "Đã thanh toán" để tránh trạng thái sai lệch
+            if ((int)$order->payment_status_id === $PAYMENT_STATUS_UNPAID) {
+                $order->payment_status_id = $PAYMENT_STATUS_PAID;
+            }
+        }
+    }
+
+    // Lưu lại tất cả thay đổi
+    $order->save();
+
+    return back()->with('success', 'Đã cập nhật trạng thái đơn hàng');
+}
+
 
     /**
      * Hiển thị form gán staff
