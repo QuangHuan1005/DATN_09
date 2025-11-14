@@ -96,10 +96,32 @@
 
     {{-- Giá hiển thị theo biến thể đã chọn --}}
     <div class="mb-3">
-        <label class="form-label fw-semibold">Giá Tiền</label>
-        <div id="priceBox">
-            <span class="text-muted">Vui lòng chọn màu & size</span>
+    <label class="form-label fw-semibold">Giá Tiền</label>
+    <div id="priceBox">
+    @php
+        // Lấy "giá hiệu lực" cho mỗi biến thể: ưu tiên sale nếu có, ngược lại price
+        // Nếu muốn chỉ tính biến thể còn hàng, bỏ comment dòng filter(...) bên dưới.
+        $effPrices = collect($variants ?? [])
+            // ->filter(fn($v) => ($v->quantity ?? 0) > 0) // chỉ tính biến thể còn tồn
+            ->map(fn($v) => (float)($v->sale ?? $v->price));
+
+        $minPrice = $effPrices->min();
+        $maxPrice = $effPrices->max();
+    @endphp
+
+    @if(!is_null($minPrice))
+        <div class="price">
+        <span class="price--normal">
+            {{ number_format($minPrice, 0, ',', '.') }}₫
+            @if(!is_null($maxPrice) && $maxPrice > $minPrice)
+            – {{ number_format($maxPrice, 0, ',', '.') }}₫
+            @endif
+        </span>
         </div>
+    @else
+        <div class="price"><span class="price--normal">Đang cập nhật</span></div>
+    @endif
+    </div>
     </div>
 
     <!-- Tồn kho -->
@@ -482,7 +504,6 @@ list.push(`${urlProductImages}/${trimmed}`);
     </div>
 </div>
 
-
     <!-- Đánh giá sản phẩm -->
     <div class="row mt-5">
         <div class="col-md-12">
@@ -499,8 +520,67 @@ list.push(`${urlProductImages}/${trimmed}`);
             @endif
         </div>
     </div>
-</div>
-               @include('layouts.footer')
+
+    {{-- Sản phẩm cùng danh mục --}}
+    @if(isset($relatedProducts) && $relatedProducts->count())
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="mb-4">Sản phẩm cùng danh mục</h3>
+            </div>
+
+            @foreach($relatedProducts as $item)
+                <div class="col-6 col-md-3 mb-4">
+                    <a href="{{ route('products.show', $item->id) }}"
+                       class="text-decoration-none text-dark">
+                        <div class="card h-100 border-0 shadow-sm">
+                            {{-- Ảnh sản phẩm --}}
+                            @php
+                                $thumb = optional($item->photoAlbums->first())->image;
+                            @endphp
+                            <div class="ratio ratio-4x3">
+                                <img
+                                    src="{{ $thumb
+                                            ? asset('storage/' . $thumb)
+                                            : 'https://via.placeholder.com/400x400?text=No+Image' }}"
+                                    alt="{{ $item->name }}"
+                                    class="card-img-top"
+                                    style="object-fit: cover; border-radius: 8px 8px 0 0;">
+                            </div>
+
+                            <div class="card-body p-2">
+                                {{-- Tên sản phẩm --}}
+                                <div class="fw-semibold text-truncate" title="{{ $item->name }}">
+                                    {{ $item->name }}
+                                </div>
+
+                                {{-- Hiển thị khoảng giá từ variants --}}
+                                @php
+                                    $prices = $item->variants->map(function ($v) {
+                                        return (float)($v->sale ?? $v->price);
+                                    })->filter(fn($p) => $p > 0);
+
+                                    $min = $prices->min();
+                                    $max = $prices->max();
+                                @endphp
+
+                                @if($min)
+                                    <div class="text-danger fw-bold small mt-1">
+                                        {{ number_format($min, 0, ',', '.') }}₫
+                                        @if($max && $max > $min)
+                                            - {{ number_format($max, 0, ',', '.') }}₫
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div> {{-- đóng .container --}}
+@include('layouts.footer')
+
                 <div class="nova-overlay-global"></div>
             </div><!-- .kitify-site-wrapper -->
             @include('layouts.js')
