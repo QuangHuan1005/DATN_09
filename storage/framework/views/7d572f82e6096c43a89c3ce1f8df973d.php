@@ -1,5 +1,50 @@
 <?php $__env->startSection('content'); ?>
 
+<?php $__env->startSection('content'); ?>
+<?php
+    // Trạng thái hiện tại của đơn
+    $currentStatus = (int) $order->order_status_id;
+
+    // Thông tin cho từng bước trên thanh trạng thái
+    $stepMeta = [
+        1 => ['label' => 'Chờ xác nhận',    'desc' => 'Đặt hàng thành công'],
+        2 => ['label' => 'Đã xác nhận',     'desc' => 'Cửa hàng đã xác nhận'],
+        3 => ['label' => 'Đang vận chuyển', 'desc' => 'Đơn đang được giao'],
+        4 => ['label' => 'Đã giao hàng',    'desc' => 'Hàng đã tới địa chỉ nhận'],
+        5 => ['label' => 'Hoàn thành',      'desc' => 'Khách xác nhận đã nhận'],
+    ];
+
+    // Gom log theo trạng thái: [status_id => collection các log]
+    $logsByStatus = $order->statusLogs->groupBy('order_status_id');
+
+    // Thông tin hiển thị badge trạng thái
+    $statusId   = $currentStatus;
+    $statusName = $order->status?->name ?? '—';
+    $tagClass   = match($statusId) {
+        1 => 'tag-amber',    // Chờ xác nhận
+        2 => 'tag-primary',  // Đã xác nhận
+        3 => 'tag-amber',    // Đang giao
+        4 => 'tag-green',    // Đã giao
+        5 => 'tag-green',    // Hoàn thành
+        6 => 'tag-red',      // Hủy
+        7 => 'tag-gray',     // Hoàn hàng
+        default => 'tag-gray',
+    };
+
+    // Map trạng thái đơn vào mốc 1..5 trên thanh tiến trình
+    $activeStep = match (true) {
+        $statusId === 6 => 1,          // Hủy -> chỉ coi như ở bước 1
+        $statusId === 1 => 1,
+        $statusId === 2 => 2,
+        $statusId === 3 => 3,
+        $statusId === 4 => 4,
+        $statusId >= 5  => 5,
+        default         => 1,
+    };
+?>
+
+
+
 <body
   class="wp-singular page-template page-template-templates page-template-fullwidth page-template-templatesfullwidth-php page page-id-11 logged-in wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-account woocommerce-page woocommerce-view-order woocommerce-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-kit-6 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active kitify--js-ready body-loaded e--ua-blink e--ua-chrome e--ua-webkit"
   data-elementor-device-mode="laptop">
@@ -437,41 +482,7 @@
                           <?php if(session('success')): ?> <div class="woocommerce-message"><?php echo e(session('success')); ?></div> <?php endif; ?>
                         </div>
 
-                        
-                        <?php
-                          $statusId = (int)$order->order_status_id;
-                          $statusName = $order->status?->name ?? '—';
-                          $tagClass = match($statusId){
-                            1 => 'tag-amber',    // Chờ xác nhận
-                            2 => 'tag-primary',  // Đã xác nhận
-                            3 => 'tag-amber',    // Đang giao
-                            4 => 'tag-green',    // Đã giao
-                            5 => 'tag-green',    // Hoàn thành
-                            6 => 'tag-red',      // Hủy
-                            7 => 'tag-gray',     // Hoàn hàng
-                            default => 'tag-gray'
-                          };
-
-                          // pipeline 5 mốc (thêm mốc "Đã giao")
-                          $steps = [
-                            1 => 'Chờ xác nhận',
-                            2 => 'Đã xác nhận',
-                            3 => 'Đang giao',
-                            4 => 'Đã giao',
-                            5 => 'Hoàn thành'
-                          ];
-
-                          // map statusId vào mức hoàn thành thanh tiến trình (5 mốc)
-                          $activeStep = match(true){
-                            $statusId === 6 => 1,          // Hủy -> chỉ hiển thị bước 1
-                            $statusId === 1 => 1,
-                            $statusId === 2 => 2,
-                            $statusId === 3 => 3,
-                            $statusId === 4 => 4,
-                            $statusId >= 5 => 5,
-                            default => 1
-                          };
-                        ?>
+                                   
 
                         <div class="order-header">
                           <div>
@@ -484,16 +495,42 @@
 
                             
                             <div class="order-progress" aria-label="Tiến trình đơn hàng">
-                              <?php $__currentLoopData = $steps; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                              <?php $__currentLoopData = $stepMeta; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sid => $meta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php
+                                    // Bước này đã được đi qua chưa?
+                                    $isReached   = $activeStep >= $sid;
+
+                                    // Lấy log đầu tiên của trạng thái này (thời điểm chuyển sang trạng thái)
+                                    $logsForStep = $logsByStatus->get($sid);
+                                    $firstLog    = $logsForStep ? $logsForStep->first() : null;
+                                ?>
+
                                 <div class="step">
-                                  <span class="dot <?php echo e($i <= $activeStep ? 'active':''); ?>"></span>
-                                  <span style="font-size:.83rem;color:#374151"><?php echo e($label); ?></span>
+                                  <span class="dot <?php echo e($isReached ? 'active' : ''); ?>"></span>
+
+                                  <div style="display:flex;flex-direction:column;align-items:flex-start">
+                                    
+                                    <span style="font-size:.83rem;color:#374151"><?php echo e($meta['label']); ?></span>
+                                    <span style="font-size:.78rem;color:#6b7280"><?php echo e($meta['desc']); ?></span>
+
+                                    
+                                    <?php if($firstLog): ?>
+                                      <span style="font-size:.75rem;color:#9ca3af">
+                                        <?php echo e($firstLog->actor_label); ?>
+
+                                        • <?php echo e($firstLog->created_at->format('H:i d/m/Y')); ?>
+
+                                      </span>
+                                    <?php endif; ?>
+                                  </div>
                                 </div>
-                                <?php if($i < count($steps)): ?>
-                                  <span class="bar <?php echo e($i < $activeStep ? 'active':''); ?>"></span>
+
+                                <?php if($sid < count($stepMeta)): ?>
+                                  <span class="bar <?php echo e($sid < $activeStep ? 'active' : ''); ?>"></span>
                                 <?php endif; ?>
                               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
+
                           </div>
 
                           <div style="text-align:right">
@@ -778,4 +815,5 @@
   </div>
 <?php $__env->stopSection(); ?>
 
+<?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09\resources\views/orders/show.blade.php ENDPATH**/ ?>

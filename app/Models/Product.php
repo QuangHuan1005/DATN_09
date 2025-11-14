@@ -36,7 +36,7 @@ public function category()
 
 public function variants()
 {
-    return $this->hasMany(ProductVariant::class);
+    return $this->hasMany(ProductVariant::class, 'product_id');
 }
 
 public function photoAlbums()

@@ -8,6 +8,7 @@ use App\Services\InventoryService;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\User; // <-- Để lấy staff
+use App\Models\OrderStatusLog;
 
 class AdminOrderController extends Controller
 {
@@ -187,7 +188,15 @@ class AdminOrderController extends Controller
     // Lưu lại tất cả thay đổi
     $order->save();
 
+    // Ghi log: hệ thống/admin thay đổi trạng thái
+    OrderStatusLog::create([
+        'order_id'        => $order->id,
+        'order_status_id' => $newStatus,
+        'actor_type'      => 'system',  // thao tác backend
+    ]);
+
     return back()->with('success', 'Đã cập nhật trạng thái đơn hàng');
+
 }
 
 
