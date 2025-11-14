@@ -9,7 +9,7 @@
     $stepMeta = [
         1 => ['label' => 'Chờ xác nhận',    'desc' => 'Đặt hàng thành công'],
         2 => ['label' => 'Đã xác nhận',     'desc' => 'Cửa hàng đã xác nhận'],
-        3 => ['label' => 'Đang vận chuyển', 'desc' => 'Đơn đang được giao'],
+        3 => ['label' => 'Đang giao hàng', 'desc' => 'Đơn đang được giao'],
         4 => ['label' => 'Đã giao hàng',    'desc' => 'Hàng đã tới địa chỉ nhận'],
         5 => ['label' => 'Hoàn thành',      'desc' => 'Khách xác nhận đã nhận'],
     ];
