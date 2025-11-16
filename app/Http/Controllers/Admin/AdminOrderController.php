@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Services\InventoryService;
 use App\Models\Order;
 use App\Models\OrderStatus;
-use App\Models\User; // <-- Để lấy staff
 
 class AdminOrderController extends Controller
 {
@@ -59,15 +58,7 @@ class AdminOrderController extends Controller
     $orders = $query->paginate(5);
     $statuses = $this->getStatuses();
 
-    // Lấy danh sách staff để gán đơn
- $staffs = User::where('role_id', 3)
-              ->where('is_verified', 1)
-              ->where('is_locked', 0)
-              ->get();
-
-
-
-    return view('admin.orders.index', compact('orders', 'statuses', 'staffs'), [
+    return view('admin.orders.index', compact('orders', 'statuses',), [
         'pageTitle' => 'Danh sách đơn hàng'
     ]);
 }
@@ -162,39 +153,5 @@ class AdminOrderController extends Controller
         return back()->with('success', 'Đã cập nhật trạng thái đơn hàng');
     }
 
-    /**
-     * Hiển thị form gán staff
-     */
-    public function assignForm(Order $order)
-{
-    // Chỉ lấy staff nếu đơn chưa có staff_id
-    if ($order->staff_id) {
-        // Nếu đã gán, không cho hiển thị option chọn khác
-        $staffs = User::where('id', $order->staff_id)->get(); 
-    } else {
-        // Nếu chưa gán, hiển thị tất cả staff
-       $staffs = User::where('role_id', 3)
-              ->where('is_verified', 1)
-              ->where('is_locked', 0)
-              ->get();
 
-    }
-
-    return view('admin.orders.assign', compact('order', 'staffs'));
-}
-
-    /**
-     * Xử lý gán staff cho đơn
-     */
-    public function assignStaff(Request $request, Order $order)
-    {
-        $request->validate([
-            'staff_id' => 'required|exists:users,id'
-        ]);
-
-        $order->staff_id = $request->staff_id;
-        $order->save();
-
-        return redirect()->route('admin.orders.index')->with('success', 'Gán staff thành công!');
-    }
 }

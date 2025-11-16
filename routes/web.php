@@ -161,9 +161,9 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('staff')->name('staff.')->middleware('auth:staff')->group(function () {
+Route::prefix('staff')->name('staff.')->group(function () {
     Route::get('/dashboard', [StaffController::class, 'dashboard'])->name('dashboard');
-    Route::get('/orders', [StaffController::class, 'orders'])->name('orders.index');
+    Route::get('/orders', [StaffController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [StaffController::class, 'show'])->name('orders.show');
    Route::post('orders/{id}/status', [StaffController::class, 'updateStatus'])->name('orders.status');
 });
@@ -172,7 +172,7 @@ Route::prefix('staff')->name('staff.')->middleware('auth:staff')->group(function
 
 
 Route::prefix('admin')
-   // ->middleware(['auth:admin', 'is_admin'])
+   ->middleware(['auth:admin', 'is_admin'])
     ->name('admin.')
     ->group(function () {
 

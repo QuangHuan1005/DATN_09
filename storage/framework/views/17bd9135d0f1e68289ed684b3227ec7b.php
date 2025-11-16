@@ -1,36 +1,35 @@
-@extends('admin.master')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-xxl">
     <h3 class="mb-3">Quản lý Voucher</h3>
 
-    {{-- Thông báo thành công / lỗi --}}
-    @if (session('success'))
+    
+    <?php if(session('success')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
+            <?php echo e(session('success')); ?>
+
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    @endif
+    <?php endif; ?>
 
-    {{-- Tìm kiếm + Thêm mới --}}
+    
     <div class="row mb-3 align-items-center">
         <div class="col-md-6">
-            {{-- Form tìm kiếm cơ bản (Tìm theo mã voucher) --}}
-            <form method="GET" action="{{ route('admin.vouchers.index') }}" class="d-flex">
+            
+            <form method="GET" action="<?php echo e(route('admin.vouchers.index')); ?>" class="d-flex">
                 <input type="search" name="keyword" class="form-control me-2" placeholder="Tìm mã voucher"
-                    value="{{ request('keyword') }}">
+                    value="<?php echo e(request('keyword')); ?>">
                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
             </form>
         </div>
         <div class="col-md-6 text-end">
-            {{-- Nút Thêm Voucher --}}
-            <a href="{{ route('admin.vouchers.create') }}" class="btn btn-primary">
+            
+            <a href="<?php echo e(route('admin.vouchers.create')); ?>" class="btn btn-primary">
                 <i class="bi bi-plus-square"></i> Thêm voucher
             </a>
         </div>
     </div>
 
-    {{-- Bảng danh sách Voucher (Sử dụng Card) --}}
+    
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -52,68 +51,72 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($vouchers as $key => $item)
+                        <?php $__empty_1 = true; $__currentLoopData = $vouchers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr>
-                                <td class="text-center">{{ $vouchers->firstItem() + $key }}</td>
-                                <td class="text-center"><strong>{{ $item->voucher_code }}</strong></td>
+                                <td class="text-center"><?php echo e($vouchers->firstItem() + $key); ?></td>
+                                <td class="text-center"><strong><?php echo e($item->voucher_code); ?></strong></td>
                                 <td class="text-center">
-                                    {{ $item->discount_type == 'fixed' ? 'Giảm cố định' : 'Giảm %' }}
+                                    <?php echo e($item->discount_type == 'fixed' ? 'Giảm cố định' : 'Giảm %'); ?>
+
                                 </td>
                                 <td class="text-center">
-                                    {{ $item->discount_type == 'fixed' ? number_format($item->discount_value) . 'đ' : $item->discount_value . '%' }}
+                                    <?php echo e($item->discount_type == 'fixed' ? number_format($item->discount_value) . 'đ' : $item->discount_value . '%'); ?>
+
                                 </td>
                                 <td class="text-center">
-                                    {{ $item->sale_price ? number_format($item->sale_price, 0, ',', '.') . ' đ' : '—' }}
+                                    <?php echo e($item->sale_price ? number_format($item->sale_price, 0, ',', '.') . ' đ' : '—'); ?>
+
                                 </td>
-                                <td class="text-center">{{ number_format($item->min_order_value, 0, ',', '.') }}đ</td>
-                                <td class="text-center">{{ $item->quantity }}</td>
-                                <td class="text-center">{{ $item->total_used }}</td>
-                                <td class="text-center">{{ $item->start_date }}</td>
-                                <td class="text-center">{{ $item->end_date }}</td>
+                                <td class="text-center"><?php echo e(number_format($item->min_order_value, 0, ',', '.')); ?>đ</td>
+                                <td class="text-center"><?php echo e($item->quantity); ?></td>
+                                <td class="text-center"><?php echo e($item->total_used); ?></td>
+                                <td class="text-center"><?php echo e($item->start_date); ?></td>
+                                <td class="text-center"><?php echo e($item->end_date); ?></td>
                                 <td class="text-center">
-                                    @if ($item->status == 1)
+                                    <?php if($item->status == 1): ?>
                                         <span class="badge bg-success border-success text-success px-2 py-1 fs-13">Hoạt động</span>
-                                    @else
+                                    <?php else: ?>
                                         <span class="badge bg-danger border-danger text-danger px-2 py-1 fs-13">Ngừng</span>
-                                    @endif
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-nowrap text-center">
-                                    {{-- Nút Sửa --}}
-                                    <a href="{{ route('admin.vouchers.edit', $item->id) }}" class="btn btn-warning btn-sm" title="Sửa">
+                                    
+                                    <a href="<?php echo e(route('admin.vouchers.edit', $item->id)); ?>" class="btn btn-warning btn-sm" title="Sửa">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </a>
 
-                                    {{-- Form Xóa --}}
-                                    <form action="{{ route('admin.vouchers.destroy', $item->id) }}" method="POST"
-                                        class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa voucher {{ $item->voucher_code }}?')">
-                                        @csrf
-                                        @method('DELETE')
+                                    
+                                    <form action="<?php echo e(route('admin.vouchers.destroy', $item->id)); ?>" method="POST"
+                                        class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa voucher <?php echo e($item->voucher_code); ?>?')">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
                                         <button type="submit" class="btn btn-danger btn-sm" title="Xóa">
                                             <i class="bi bi-trash"></i> Xóa
                                         </button>
                                     </form>
                                 </td>
                             </tr>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
                                 <td colspan="12" class="text-center py-4 text-muted">Không có voucher nào.</td>
                             </tr>
-                        @endforelse
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
         
-        {{-- Phân trang --}}
+        
         <div class="card-footer">
-            {{ $vouchers->withQueryString()->links() }}
+            <?php echo e($vouchers->withQueryString()->links()); ?>
+
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-{{-- Script để ẩn thông báo tự động (tham khảo từ code mẫu) --}}
-@section('script')
+
+<?php $__env->startSection('script'); ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Ẩn alert sau 3s
@@ -122,4 +125,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09\resources\views/admin/vouchers/index.blade.php ENDPATH**/ ?>

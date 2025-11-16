@@ -62,7 +62,6 @@
                             <th>Thanh Toán</th>
                             <th>Sản Phẩm</th>
                             <th>Trạng Thái</th>
-                            <th>Nhân Viên</th>
                             <th>Thao Tác</th>
                         </tr>
                     </thead>
@@ -100,39 +99,18 @@
                                     <form action="{{ route('admin.orders.status', $order->id) }}" method="POST" class="status-form">
                                         @csrf
                                         <select name="order_status_id" class="form-select form-select-sm w-auto {{ $colorClass }}"
-                                                onchange="changeStatusColor(this); this.form.submit()">
-                                            @foreach($statuses as $status)
-                                                <option value="{{ $status->id }}"
-                                                        data-color="{{ $status->color_class }}"
-                                                        {{ $order->order_status_id == $status->id ? 'selected' : '' }}
-                                                        {{ in_array($status->id, [5,6,7]) ? 'disabled' : '' }}>
-                                                    {{ $status->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+        onchange="confirmStatusChange(this)">
+    @foreach($statuses as $status)
+        <option value="{{ $status->id }}"
+                data-color="{{ $status->color_class }}"
+                {{ $order->order_status_id == $status->id ? 'selected' : '' }}
+                {{ in_array($status->id, [5,6,7]) ? 'disabled' : '' }}>
+            {{ $status->name }}
+        </option>
+    @endforeach
+</select>
+
                                     </form>
-                                </td>
-
-                                {{-- Gán nhân viên --}}
-                                <td>
-                                    @if(!$order->staff_id)
-                                        <form action="{{ route('admin.orders.assignStaff', $order->id) }}" method="POST">
-    @csrf
-    <select name="staff_id" class="form-select form-select-sm" onchange="this.form.submit()">
-        <option value="">-- Chọn nhân viên --</option>
-        @foreach($staffs as $staff)
-            <option value="{{ $staff->id }}">{{ $staff->name }}</option>
-        @endforeach
-    </select>
-</form>
-
-                                    @else
-                                        @php
-                                            $assignedStaff = collect($staffs)->firstWhere('id', $order->staff_id);
-
-                                        @endphp
-                                        <span>Đã gán: <strong>{{ $assignedStaff?->name ?? 'Không xác định' }}</strong></span>
-                                    @endif
                                 </td>
 
                                 {{-- Thao tác --}}
@@ -178,6 +156,22 @@
     function changeStatusColor(select){
         const color = select.selectedOptions[0].dataset.color || '';
         select.className = 'form-select form-select-sm w-auto ' + color;
+    }
+
+     function confirmStatusChange(select) {
+        const newStatusText = select.selectedOptions[0].text;
+        const form = select.form;
+
+        if(confirm(`Bạn có chắc chắn muốn đổi trạng thái sang "${newStatusText}" không?`)) {
+            // Nếu đồng ý, đổi màu và submit
+            const color = select.selectedOptions[0].dataset.color || '';
+            select.className = 'form-select form-select-sm w-auto ' + color;
+            select.dataset.current = select.value; // cập nhật giá trị hiện tại
+            form.submit();
+        } else {
+            // Nếu cancel, trả về trạng thái cũ
+            select.value = select.dataset.current;
+        }
     }
 </script>
 @endsection

@@ -63,7 +63,6 @@
                             <th>Thanh Toán</th>
                             <th>Sản Phẩm</th>
                             <th>Trạng Thái</th>
-                            <th>Nhân Viên</th>
                             <th>Thao Tác</th>
                         </tr>
                     </thead>
@@ -102,41 +101,20 @@
                                     <form action="<?php echo e(route('admin.orders.status', $order->id)); ?>" method="POST" class="status-form">
                                         <?php echo csrf_field(); ?>
                                         <select name="order_status_id" class="form-select form-select-sm w-auto <?php echo e($colorClass); ?>"
-                                                onchange="changeStatusColor(this); this.form.submit()">
-                                            <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($status->id); ?>"
-                                                        data-color="<?php echo e($status->color_class); ?>"
-                                                        <?php echo e($order->order_status_id == $status->id ? 'selected' : ''); ?>
+        onchange="confirmStatusChange(this)">
+    <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <option value="<?php echo e($status->id); ?>"
+                data-color="<?php echo e($status->color_class); ?>"
+                <?php echo e($order->order_status_id == $status->id ? 'selected' : ''); ?>
 
-                                                        <?php echo e(in_array($status->id, [5,6,7]) ? 'disabled' : ''); ?>>
-                                                    <?php echo e($status->name); ?>
+                <?php echo e(in_array($status->id, [5,6,7]) ? 'disabled' : ''); ?>>
+            <?php echo e($status->name); ?>
 
-                                                </option>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </select>
+        </option>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+</select>
+
                                     </form>
-                                </td>
-
-                                
-                                <td>
-                                    <?php if(!$order->staff_id): ?>
-                                        <form action="<?php echo e(route('admin.orders.assignStaff', $order->id)); ?>" method="POST">
-    <?php echo csrf_field(); ?>
-    <select name="staff_id" class="form-select form-select-sm" onchange="this.form.submit()">
-        <option value="">-- Chọn nhân viên --</option>
-        <?php $__currentLoopData = $staffs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $staff): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <option value="<?php echo e($staff->id); ?>"><?php echo e($staff->name); ?></option>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    </select>
-</form>
-
-                                    <?php else: ?>
-                                        <?php
-                                            $assignedStaff = collect($staffs)->firstWhere('id', $order->staff_id);
-
-                                        ?>
-                                        <span>Đã gán: <strong><?php echo e($assignedStaff?->name ?? 'Không xác định'); ?></strong></span>
-                                    <?php endif; ?>
                                 </td>
 
                                 
@@ -183,6 +161,22 @@
     function changeStatusColor(select){
         const color = select.selectedOptions[0].dataset.color || '';
         select.className = 'form-select form-select-sm w-auto ' + color;
+    }
+
+     function confirmStatusChange(select) {
+        const newStatusText = select.selectedOptions[0].text;
+        const form = select.form;
+
+        if(confirm(`Bạn có chắc chắn muốn đổi trạng thái sang "${newStatusText}" không?`)) {
+            // Nếu đồng ý, đổi màu và submit
+            const color = select.selectedOptions[0].dataset.color || '';
+            select.className = 'form-select form-select-sm w-auto ' + color;
+            select.dataset.current = select.value; // cập nhật giá trị hiện tại
+            form.submit();
+        } else {
+            // Nếu cancel, trả về trạng thái cũ
+            select.value = select.dataset.current;
+        }
     }
 </script>
 <?php $__env->stopSection(); ?>
