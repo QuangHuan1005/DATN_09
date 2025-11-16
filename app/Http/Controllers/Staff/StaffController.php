@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Order;
 use App\Services\InventoryService;
+use App\Models\Order;
+use App\Models\OrderStatus;
 
-class StaffController extends Controller
+class StaffController  extends Controller
 {
     const STATUS_PENDING   = 1; // Chờ xác nhận
     const STATUS_CONFIRMED = 2; // Xác nhận
@@ -18,61 +19,56 @@ class StaffController extends Controller
     const STATUS_RETURNED  = 7; // Hoàn hàng
 
     /**
-     * Dashboard của Staff
+     * Danh sách trạng thái (có màu hiển thị)
      */
-    public function dashboard()
+    private function getStatuses()
     {
-        $staffId = auth('staff')->id();
-
-        $ordersCount = Order::where('staff_id', $staffId)->count();
-        $ordersPending = Order::where('staff_id', $staffId)
-            ->where('order_status_id', self::STATUS_CONFIRMED)
-            ->count();
-
-        return view('staff.dashboard', compact('ordersCount', 'ordersPending'), [
-            'pageTitle' => 'Dashboard nhân viên'
-        ]);
+        return [
+            (object)['id' => self::STATUS_PENDING,   'name' => 'Chờ xác nhận', 'color_class' => 'bg-warning text-dark'],
+            (object)['id' => self::STATUS_CONFIRMED, 'name' => 'Xác nhận',   'color_class' => 'bg-primary text-white'],
+            (object)['id' => self::STATUS_SHIPPING,  'name' => 'Đang giao hàng',     'color_class' => 'bg-info text-white'],
+            (object)['id' => self::STATUS_DELIVERED, 'name' => 'Đã giao hàng',       'color_class' => 'bg-success text-white'],
+            (object)['id' => self::STATUS_DONE,      'name' => 'Hoàn thành',    'color_class' => 'bg-success text-white'],
+            (object)['id' => self::STATUS_CANCEL,    'name' => 'Đã hủy',       'color_class' => 'bg-danger text-white'],
+            (object)['id' => self::STATUS_RETURNED,  'name' => 'Hoàn hàng',     'color_class' => 'bg-secondary text-white'],
+        ];
     }
 
     /**
-     * Danh sách đơn hàng được gán cho staff
+     * Hiển thị danh sách đơn hàng
      */
-    public function orders(Request $request)
-    {
-        $staffId = auth('staff')->id();
+    public function index(Request $request)
+{
+    $query = Order::with(['status', 'user', 'paymentStatus', 'staff'])
+        ->withSum('details', 'quantity')
+        ->orderByDesc('id');
 
-        $query = Order::with(['status', 'user', 'paymentStatus'])
-            ->withSum('details', 'quantity') 
-            ->where('staff_id', $staffId)
-            ->orderByDesc('id');
-
-        if ($request->filled('status')) {
-            $query->where('order_status_id', $request->status);
-        }
-
-        if ($request->filled('keyword')) {
-            $kw = $request->keyword;
-            $query->where(function ($q) use ($kw) {
-                $q->where('order_code', 'like', "%$kw%")
-                  ->orWhere('name', 'like', "%$kw%");
-            });
-        }
-
-        $orders = $query->paginate(10);
-        $statuses = $this->getStatuses();
-
-        return view('staff.orders.index', compact('orders', 'statuses'), [
-            'pageTitle' => 'Đơn hàng được gán'
-        ]);
+    if ($request->filled('status')) {
+        $query->where('order_status_id', $request->status);
     }
 
-    /**
-     * Chi tiết đơn hàng
-     */
-    public function show($id)
-    {
-        $staffId = auth('staff')->id();
+    if ($request->filled('keyword')) {
+        $kw = $request->keyword;
+        $query->where(function ($q) use ($kw) {
+            $q->where('order_code', 'like', "%$kw%")
+              ->orWhere('name', 'like', "%$kw%");
+        });
+    }
 
+    $orders = $query->paginate(5);
+    $statuses = $this->getStatuses();
+
+    return view('staff.orders.index', compact('orders', 'statuses',), [
+        'pageTitle' => 'Danh sách đơn hàng'
+    ]);
+}
+
+
+    /**
+     * Hiển thị chi tiết đơn hàng
+     */
+    public function show(string $id)
+    {
         $order = Order::with([
             'details.productVariant.product',
             'details.productVariant.size',
@@ -80,7 +76,8 @@ class StaffController extends Controller
             'status',
             'user',
             'payment.method',
-        ])->where('staff_id', $staffId)->findOrFail($id);
+            'staff',
+        ])->findOrFail($id);
 
         $lines = $order->details->map(function ($d) {
             $v = $d->productVariant;
@@ -102,29 +99,29 @@ class StaffController extends Controller
         $calc_total    = (int)$order->total_amount;
         $statuses = $this->getStatuses();
 
-        return view('staff.orders.show', compact('order', 'lines', 'calc_subtotal', 'calc_discount', 'calc_total', 'statuses'), [
-            'pageTitle' => 'Chi tiết đơn hàng'
-        ]);
+        return view(
+            'staff.orders.show',
+            compact('order', 'lines', 'calc_subtotal', 'calc_discount', 'calc_total', 'statuses'),
+            ['pageTitle' => 'Chi tiết đơn hàng']
+        );
     }
 
     /**
-     * Cập nhật trạng thái đơn hàng (staff chỉ được cập nhật tiến từng bước)
+     * Cập nhật trạng thái đơn hàng
      */
-    public function updateStatus(Request $request, $id, InventoryService $inv)
+    public function update(Request $request, $id, InventoryService $inv)
     {
-        $staffId = auth('staff')->id();
-
         $data = $request->validate([
-            'order_status_id' => 'required|integer',
+            'order_status_id' => ['required', 'integer'],
         ]);
 
-        $order = Order::where('staff_id', $staffId)->findOrFail($id);
+        $order = Order::findOrFail($id);
 
         $oldStatus = (int) $order->order_status_id;
         $newStatus = (int) $data['order_status_id'];
 
         if ($newStatus !== $oldStatus && $newStatus !== $oldStatus + 1) {
-            return back()->with('error', 'Chỉ được cập nhật trạng thái tiếp theo.');
+            return back()->with('error', 'Chỉ được cập nhật trạng thái tiến từng bước một.');
         }
 
         $order->update($data);
@@ -153,22 +150,8 @@ class StaffController extends Controller
             $inv->deductForOrder($order);
         }
 
-        return back()->with('success', 'Cập nhật trạng thái thành công.');
+        return back()->with('success', 'Đã cập nhật trạng thái đơn hàng');
     }
 
-    /**
-     * Các trạng thái đơn hàng
-     */
-    private function getStatuses()
-    {
-        return [
-            (object)['id' => self::STATUS_PENDING,   'name' => 'Chờ xác nhận', 'color_class' => 'bg-warning text-dark'],
-            (object)['id' => self::STATUS_CONFIRMED, 'name' => 'Xác nhận',     'color_class' => 'bg-primary text-white'],
-            (object)['id' => self::STATUS_SHIPPING,  'name' => 'Đang giao hàng','color_class' => 'bg-info text-white'],
-            (object)['id' => self::STATUS_DELIVERED, 'name' => 'Đã giao hàng', 'color_class' => 'bg-success text-white'],
-            (object)['id' => self::STATUS_DONE,      'name' => 'Hoàn thành',   'color_class' => 'bg-success text-white'],
-            (object)['id' => self::STATUS_CANCEL,    'name' => 'Đã hủy',       'color_class' => 'bg-danger text-white'],
-            (object)['id' => self::STATUS_RETURNED,  'name' => 'Hoàn hàng',    'color_class' => 'bg-secondary text-white'],
-        ];
-    }
+
 }

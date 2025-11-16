@@ -541,7 +541,7 @@
             </div>
         </div>
     </div>
-    <a href="{{ route('cart.index') }}"
+    {{-- <a href="{{ route('cart.index') }}"
     class="kitify-offcanvas minicart-canvas site-canvas-menu off-canvas position-right"
     id="MiniCartCanvas_4cfba4d5"
     data-off-canvas data-transition="overlap"
@@ -553,7 +553,7 @@
             </span>
         </h2>
         <div class="add_ajax_loading"><span></span></div>
-    </a>
+    </a> --}}
 </div>
 <div id="svg-defs" class="svg-defs hide">
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

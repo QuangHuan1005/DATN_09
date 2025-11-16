@@ -1,87 +1,125 @@
-@extends('layouts.admin.app')
+@extends('admin.master')
 
 @section('content')
-    <div class="container mt-4">
-        <h3 class="mb-3">Quản lý Voucher</h3>
+<div class="container-xxl">
+    <h3 class="mb-3">Quản lý Voucher</h3>
 
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
-        <div class="mb-3">
-            <a href="{{ route('admin.vouchers.create') }}" class="btn btn-primary">+ Thêm voucher</a>
+    {{-- Thông báo thành công / lỗi --}}
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    @endif
 
-        <div class="table-responsive ">
-            <table class="table table-bordered table-striped align-middle text-center">
-                <thead class="table-dark text-center align-middle">
-                    <tr>
-                        <th>#</th>
-                        <th>Mã voucher</th>
-                        <th>Loại giảm giá</th>
-                        <th>Giá trị giảm</th>
-                        <th>Giá sau giảm tối thiểu</th>
-                        <th>Điều kiện (đơn tối thiểu)</th>
-                        <th>Số lượng</th>
-                        <th>Đã dùng</th>
-                        <th>Ngày bắt đầu</th>
-                        <th>Ngày kết thúc</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($vouchers as $key => $item)
-                        <tr>
-                            <td>{{ $key + 1 }}</td>
-                            <td>{{ $item->voucher_code }}</td>
-                            <td>
-                                {{ $item->discount_type == 'fixed' ? 'Giảm cố định' : 'Giảm %' }}
-                            </td>
-                            <td>
-                                {{ $item->discount_type == 'fixed' ? number_format($item->discount_value) . 'đ' : $item->discount_value . '%' }}
-                            </td>
-                              <td>
-                                {{ $item->sale_price ? number_format($item->sale_price, 0, ',', '.') . ' đ' : '—' }}
-                            </td>
-                            <td>{{ number_format($item->min_order_value) }}đ</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>{{ $item->total_used }}</td>
-                            <td>{{ $item->start_date }}</td>
-                            <td>{{ $item->end_date }}</td>
-                            <td>
-                                @if ($item->status == 1)
-                                    <span class="badge bg-success">Hoạt động</span>
-                                @else
-                                    <span class="badge bg-secondary">Ngừng</span>
-                                @endif
-                            </td>
-                            <td class="text-nowrap">
-                                <a href="{{ route('admin.vouchers.edit', $item->id) }}" class="btn btn-sm btn-warning">
-                                    <i class="bi bi-pencil-square"></i> Sửa
-                                </a>
-
-                                <form action="{{ route('admin.vouchers.destroy', $item->id) }}" method="POST"
-                                    class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa voucher này?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="bi bi-trash"></i> Xóa
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="11" class="text-center text-muted">Chưa có voucher nào</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+    {{-- Tìm kiếm + Thêm mới --}}
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-6">
+            {{-- Form tìm kiếm cơ bản (Tìm theo mã voucher) --}}
+            <form method="GET" action="{{ route('admin.vouchers.index') }}" class="d-flex">
+                <input type="search" name="keyword" class="form-control me-2" placeholder="Tìm mã voucher"
+                    value="{{ request('keyword') }}">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </form>
         </div>
-
-        <div class="d-flex justify-content-center">
-            {{ $vouchers->links() }}
+        <div class="col-md-6 text-end">
+            {{-- Nút Thêm Voucher --}}
+            <a href="{{ route('admin.vouchers.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-square"></i> Thêm voucher
+            </a>
         </div>
     </div>
+
+    {{-- Bảng danh sách Voucher (Sử dụng Card) --}}
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-centered mb-0 align-middle">
+                    <thead class="bg-light-subtle">
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Mã voucher</th>
+                            <th class="text-center">Loại giảm giá</th>
+                            <th class="text-center">Giá trị giảm</th>
+                            <th class="text-center">Giảm tối đa</th>
+                            <th class="text-center">Đơn tối thiểu</th>
+                            <th class="text-center">Số lượng</th>
+                            <th class="text-center">Đã dùng</th>
+                            <th class="text-center">Ngày bắt đầu</th>
+                            <th class="text-center">Ngày kết thúc</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($vouchers as $key => $item)
+                            <tr>
+                                <td class="text-center">{{ $vouchers->firstItem() + $key }}</td>
+                                <td class="text-center"><strong>{{ $item->voucher_code }}</strong></td>
+                                <td class="text-center">
+                                    {{ $item->discount_type == 'fixed' ? 'Giảm cố định' : 'Giảm %' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $item->discount_type == 'fixed' ? number_format($item->discount_value) . 'đ' : $item->discount_value . '%' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $item->sale_price ? number_format($item->sale_price, 0, ',', '.') . ' đ' : '—' }}
+                                </td>
+                                <td class="text-center">{{ number_format($item->min_order_value, 0, ',', '.') }}đ</td>
+                                <td class="text-center">{{ $item->quantity }}</td>
+                                <td class="text-center">{{ $item->total_used }}</td>
+                                <td class="text-center">{{ $item->start_date }}</td>
+                                <td class="text-center">{{ $item->end_date }}</td>
+                                <td class="text-center">
+                                    @if ($item->status == 1)
+                                        <span class="badge bg-success border-success text-success px-2 py-1 fs-13">Hoạt động</span>
+                                    @else
+                                        <span class="badge bg-danger border-danger text-danger px-2 py-1 fs-13">Ngừng</span>
+                                    @endif
+                                </td>
+                                <td class="text-nowrap text-center">
+                                    {{-- Nút Sửa --}}
+                                    <a href="{{ route('admin.vouchers.edit', $item->id) }}" class="btn btn-warning btn-sm" title="Sửa">
+                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    </a>
+
+                                    {{-- Form Xóa --}}
+                                    <form action="{{ route('admin.vouchers.destroy', $item->id) }}" method="POST"
+                                        class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa voucher {{ $item->voucher_code }}?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Xóa">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="12" class="text-center py-4 text-muted">Không có voucher nào.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        {{-- Phân trang --}}
+        <div class="card-footer">
+            {{ $vouchers->withQueryString()->links() }}
+        </div>
+    </div>
+</div>
+@endsection
+
+{{-- Script để ẩn thông báo tự động (tham khảo từ code mẫu) --}}
+@section('script')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ẩn alert sau 3s
+        document.querySelectorAll('.alert').forEach(alert => {
+            setTimeout(() => alert.classList.add('d-none'), 3000);
+        });
+    });
+</script>
 @endsection
