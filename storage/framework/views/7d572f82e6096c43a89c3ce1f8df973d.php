@@ -1,8 +1,7 @@
-@extends('master')
-@section('content')
-@extends('master')
-@section('content')
-@php
+<?php $__env->startSection('content'); ?>
+
+<?php $__env->startSection('content'); ?>
+<?php
     // Trạng thái hiện tại của đơn
     $currentStatus = (int) $order->order_status_id;
 
@@ -42,7 +41,7 @@
         $statusId >= 5  => 5,
         default         => 1,
     };
-@endphp
+?>
 
 
 
@@ -455,7 +454,7 @@
 
   <div class="site-wrapper">
     <div class="kitify-site-wrapper elementor-459kitify">
-      @include('layouts.header')
+      <?php echo $__env->make('layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
       <div id="site-content" class="site-content-wrapper">
         <div class="container">
@@ -464,9 +463,10 @@
               <div class="site-content">
                 <div class="page-header-content">
                   <nav class="woocommerce-breadcrumb">
-                    <a href="{{ url('/') }}">Home</a><span class="delimiter">/</span>
-                    <a href="{{ route('orders.index') }}">My account</a><span class="delimiter">/</span>
-                    Order #{{ $order->order_code }}
+                    <a href="<?php echo e(url('/')); ?>">Home</a><span class="delimiter">/</span>
+                    <a href="<?php echo e(route('orders.index')); ?>">My account</a><span class="delimiter">/</span>
+                    Order #<?php echo e($order->order_code); ?>
+
                   </nav>
                   <h1 class="page-title">My account</h1>
                 </div>
@@ -474,74 +474,76 @@
                 <article class="hentry">
                   <div class="entry-content">
                     <div class="woocommerce">
-                      @include('account.partials.navigation')
+                      <?php echo $__env->make('account.partials.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
                       <div class="woocommerce-MyAccount-content">
                         <div class="woocommerce-notices-wrapper">
-                          @if(session('error')) <div class="woocommerce-error">{{ session('error') }}</div> @endif
-                          @if(session('success')) <div class="woocommerce-message">{{ session('success') }}</div> @endif
+                          <?php if(session('error')): ?> <div class="woocommerce-error"><?php echo e(session('error')); ?></div> <?php endif; ?>
+                          <?php if(session('success')): ?> <div class="woocommerce-message"><?php echo e(session('success')); ?></div> <?php endif; ?>
                         </div>
 
-                        {{-- ======= HEADER TÓM TẮT ======= --}}           
+                                   
 
                         <div class="order-header">
                           <div>
-                            <div style="font-weight:700;font-size:1.05rem">Đơn hàng #{{ $order->order_code }}</div>
+                            <div style="font-weight:700;font-size:1.05rem">Đơn hàng #<?php echo e($order->order_code); ?></div>
                             <div class="meta">
-                              <span>Đặt lúc {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i') }}</span>
+                              <span>Đặt lúc <?php echo e(\Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i')); ?></span>
                               <span>•</span>
-                              <span>Tổng: <strong>₫{{ number_format($calc_total) }}</strong></span>
+                              <span>Tổng: <strong>₫<?php echo e(number_format($calc_total)); ?></strong></span>
                             </div>
 
-                            {{-- progress dùng log: hiển thị Người dùng / Hệ thống + thời gian --}}
+                            
                             <div class="order-progress" aria-label="Tiến trình đơn hàng">
-                              @foreach($stepMeta as $sid => $meta)
-                                @php
+                              <?php $__currentLoopData = $stepMeta; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sid => $meta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php
                                     // Bước này đã được đi qua chưa?
                                     $isReached   = $activeStep >= $sid;
 
                                     // Lấy log đầu tiên của trạng thái này (thời điểm chuyển sang trạng thái)
                                     $logsForStep = $logsByStatus->get($sid);
                                     $firstLog    = $logsForStep ? $logsForStep->first() : null;
-                                @endphp
+                                ?>
 
                                 <div class="step">
-                                  <span class="dot {{ $isReached ? 'active' : '' }}"></span>
+                                  <span class="dot <?php echo e($isReached ? 'active' : ''); ?>"></span>
 
                                   <div style="display:flex;flex-direction:column;align-items:flex-start">
-                                    {{-- Tiêu đề + mô tả --}}
-                                    <span style="font-size:.83rem;color:#374151">{{ $meta['label'] }}</span>
-                                    <span style="font-size:.78rem;color:#6b7280">{{ $meta['desc'] }}</span>
+                                    
+                                    <span style="font-size:.83rem;color:#374151"><?php echo e($meta['label']); ?></span>
+                                    <span style="font-size:.78rem;color:#6b7280"><?php echo e($meta['desc']); ?></span>
 
-                                    {{-- Người dùng / Hệ thống + thời gian --}}
-                                    @if($firstLog)
+                                    
+                                    <?php if($firstLog): ?>
                                       <span style="font-size:.75rem;color:#9ca3af">
-                                        {{ $firstLog->actor_label }}
-                                        • {{ $firstLog->created_at->format('H:i d/m/Y') }}
+                                        <?php echo e($firstLog->actor_label); ?>
+
+                                        • <?php echo e($firstLog->created_at->format('H:i d/m/Y')); ?>
+
                                       </span>
-                                    @endif
+                                    <?php endif; ?>
                                   </div>
                                 </div>
 
-                                @if($sid < count($stepMeta))
-                                  <span class="bar {{ $sid < $activeStep ? 'active' : '' }}"></span>
-                                @endif
-                              @endforeach
+                                <?php if($sid < count($stepMeta)): ?>
+                                  <span class="bar <?php echo e($sid < $activeStep ? 'active' : ''); ?>"></span>
+                                <?php endif; ?>
+                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
 
                           </div>
 
                           <div style="text-align:right">
-                            <span class="tag {{ $tagClass }}">{{ $statusName }}</span>
+                            <span class="tag <?php echo e($tagClass); ?>"><?php echo e($statusName); ?></span>
                             <div class="order-tools">
-                              @if($order->invoice)
-                                <a href="#" class="btn-lite">In hoá đơn: {{ $order->invoice->invoice_code }}</a>
-                              @endif
+                              <?php if($order->invoice): ?>
+                                <a href="#" class="btn-lite">In hoá đơn: <?php echo e($order->invoice->invoice_code); ?></a>
+                              <?php endif; ?>
 
-                              {{-- Nút ĐÃ NHẬN HÀNG: chỉ hiển thị khi trạng thái là ĐÃ GIAO (4) --}}
-                              @if($order->order_status_id == 4)
-                                <form id="complete-order-form" method="POST" action="{{ route('orders.complete', $order->id) }}">
-                                  @csrf
+                              
+                              <?php if($order->order_status_id == 4): ?>
+                                <form id="complete-order-form" method="POST" action="<?php echo e(route('orders.complete', $order->id)); ?>">
+                                  <?php echo csrf_field(); ?>
                                   <button
                                     class="btn-complete"
                                     type="button"
@@ -551,69 +553,69 @@
                                     Hoàn thành
                                   </button>
                                 </form>
-                              @endif
+                              <?php endif; ?>
 
-                              @if($order->cancelable)
-                                {{-- form hủy đơn KHÔNG dùng confirm() nữa --}}
-                                <form id="cancel-order-form" method="POST" action="{{ route('orders.cancel', $order->id) }}">
-                                  @csrf
+                              <?php if($order->cancelable): ?>
+                                
+                                <form id="cancel-order-form" method="POST" action="<?php echo e(route('orders.cancel', $order->id)); ?>">
+                                  <?php echo csrf_field(); ?>
                                   <input type="hidden" name="reason" value="Khách yêu cầu hủy">
                                   <button class="btn-danger-outline" type="button" id="btnOpenCancelModal">Hủy đơn</button>
                                 </form>
-                              @endif
+                              <?php endif; ?>
                             </div>
                           </div>
                         </div>
 
-                        {{-- ======= 2 BOX: ĐƠN HÀNG & THÔNG TIN NGƯỜI NHẬN ======= --}}
+                        
                         <div class="order-info-grid">
-                          {{-- Box Đơn hàng --}}
+                          
                           <div class="card">
                             <div class="card-hd">Đơn hàng</div>
                             <div class="card-bd">
                               <div class="sum-row">
                                 <span>Mã đơn</span>
-                                <span>#{{ $order->order_code }}</span>
+                                <span>#<?php echo e($order->order_code); ?></span>
                               </div>
                               <div class="sum-row">
                                 <span>Trạng thái đơn</span>
-                                <span>{{ $statusName }}</span>
+                                <span><?php echo e($statusName); ?></span>
                               </div>
                               <div class="sum-row">
                                 <span>Trạng thái thanh toán</span>
-                                <span>{{ $order->paymentStatus?->name }}</span>
+                                <span><?php echo e($order->paymentStatus?->name); ?></span>
                               </div>
                               <div class="sum-row">
                                 <span>Phương thức thanh toán</span>
-                                <span>{{ $order->payment?->method?->name ?? '—' }}</span>
+                                <span><?php echo e($order->payment?->method?->name ?? '—'); ?></span>
                               </div>
                               <div class="sum-row">
                                 <span>Thời gian đặt</span>
-                                <span>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i') }}</span>
+                                <span><?php echo e(\Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i')); ?></span>
                               </div>
                             </div>
                           </div>
 
-                          {{-- Box Thông tin người nhận --}}
+                          
                           <div class="card">
                             <div class="card-hd">Thông tin người nhận</div>
                             <div class="card-bd">
                               <address style="margin:0">
-                                <strong>{{ $order->name }}</strong><br>
-                                {{ $order->phone }}<br>
-                                {{ $order->address }}<br>
-                                @if($order->user?->email)
-                                  <a href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a>
-                                @endif
+                                <strong><?php echo e($order->name); ?></strong><br>
+                                <?php echo e($order->phone); ?><br>
+                                <?php echo e($order->address); ?><br>
+                                <?php if($order->user?->email): ?>
+                                  <a href="mailto:<?php echo e($order->user->email); ?>"><?php echo e($order->user->email); ?></a>
+                                <?php endif; ?>
                               </address>
-                              @if($order->note)
-                                <div style="margin-top:8px;color:#6b7280">Ghi chú: {{ $order->note }}</div>
-                              @endif
+                              <?php if($order->note): ?>
+                                <div style="margin-top:8px;color:#6b7280">Ghi chú: <?php echo e($order->note); ?></div>
+                              <?php endif; ?>
                             </div>
                           </div>
                         </div>
 
-                        {{-- ======= CHI TIẾT ĐƠN HÀNG (BẢNG SẢN PHẨM) ======= --}}
+                        
                         <section class="woocommerce-order-details card" style="margin-top:18px">
                           <div class="card-hd">Chi tiết đơn hàng</div>
                           <div class="card-bd" style="padding:0">
@@ -627,48 +629,51 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                @foreach($lines as $it)
+                                <?php $__currentLoopData = $lines; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $it): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                   <tr class="order_item">
-                                    <td style="text-align:center">{{ $loop->iteration }}</td>
+                                    <td style="text-align:center"><?php echo e($loop->iteration); ?></td>
                                     <td class="product-name">
                                       <div style="display:flex;gap:12px;align-items:center">
-                                        @if($it->image)
-                                          <img class="thumb" src="{{ asset($it->image) }}" alt="">
-                                        @endif
+                                        <?php if($it->image): ?>
+                                          <img class="thumb" src="<?php echo e(asset($it->image)); ?>" alt="">
+                                        <?php endif; ?>
                                         <div>
-                                          <strong>{{ $it->product_name }}</strong>
+                                          <strong><?php echo e($it->product_name); ?></strong>
                                           <div class="meta">
-                                            @if($it->variant_text) {{ $it->variant_text }} · @endif
-                                            Đơn giá: ₫{{ number_format($it->unit_price) }}
-                                            @if($it->eta)
-                                              · Dự kiến: {{ \Carbon\Carbon::parse($it->eta)->format('d/m') }}
-                                            @endif
+                                            <?php if($it->variant_text): ?> <?php echo e($it->variant_text); ?> · <?php endif; ?>
+                                            Đơn giá: ₫<?php echo e(number_format($it->unit_price)); ?>
+
+                                            <?php if($it->eta): ?>
+                                              · Dự kiến: <?php echo e(\Carbon\Carbon::parse($it->eta)->format('d/m')); ?>
+
+                                            <?php endif; ?>
                                           </div>
                                         </div>
                                       </div>
                                     </td>
-                                    <td class="product-quantity" style="text-align:center">{{ $it->qty }}</td>
+                                    <td class="product-quantity" style="text-align:center"><?php echo e($it->qty); ?></td>
                                     <td class="product-total" style="text-align:right">
                                       <span class="woocommerce-Price-amount amount">
-                                        <span class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($it->line_total) }}
+                                        <span class="woocommerce-Price-currencySymbol">₫</span><?php echo e(number_format($it->line_total)); ?>
+
                                       </span>
                                     </td>
                                   </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                               </tbody>
                             </table>
                           </div>
                         </section>
 
-                        {{-- ======= FOOTER: THÔNG ĐIỆP + TỔNG TIỀN GÓc PHẢI ======= --}}
+                        
                         <div class="order-bottom">
                           <div class="order-bottom-left">
-                            @if($order->order_status_id == 5)
+                            <?php if($order->order_status_id == 5): ?>
                               <div class="woocommerce-message" style="margin-top:14px">
                                 Đơn hàng đã hoàn thành.
                                 <a class="button" href="#">Viết đánh giá</a>
                               </div>
-                            @endif
+                            <?php endif; ?>
                           </div>
 
                           <div class="order-total-card card">
@@ -676,39 +681,39 @@
                             <div class="card-bd">
                               <div class="sum-row">
                                 <span>Tạm tính</span>
-                                <span>₫{{ number_format($calc_subtotal) }}</span>
+                                <span>₫<?php echo e(number_format($calc_subtotal)); ?></span>
                               </div>
-                              @if($calc_shipping_fee > 0)
+                              <?php if($calc_shipping_fee > 0): ?>
                                 <div class="sum-row">
                                   <span>Phí vận chuyển</span>
-                                  <span>₫{{ number_format($calc_shipping_fee) }}</span>
+                                  <span>₫<?php echo e(number_format($calc_shipping_fee)); ?></span>
                                 </div>
-                              @endif
-                              @if($calc_discount > 0)
+                              <?php endif; ?>
+                              <?php if($calc_discount > 0): ?>
                                 <div class="sum-row">
                                   <span>Giảm giá</span>
-                                  <span>-₫{{ number_format($calc_discount) }}</span>
+                                  <span>-₫<?php echo e(number_format($calc_discount)); ?></span>
                                 </div>
-                              @endif
-                              @if($order->voucher)
+                              <?php endif; ?>
+                              <?php if($order->voucher): ?>
                                 <div class="sum-row" style="color:#6b7280">
                                   <span>Voucher</span>
-                                  <span>{{ $order->voucher->voucher_code }}</span>
+                                  <span><?php echo e($order->voucher->voucher_code); ?></span>
                                 </div>
-                              @endif
+                              <?php endif; ?>
                               <div class="sum-row">
                                 <span>TT thanh toán</span>
-                                <span>{{ $order->paymentStatus?->name }}</span>
+                                <span><?php echo e($order->paymentStatus?->name); ?></span>
                               </div>
                               <div class="sum-row total">
                                 <span>Tổng thanh toán</span>
-                                <span>₫{{ number_format($calc_total) }}</span>
+                                <span>₫<?php echo e(number_format($calc_total)); ?></span>
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        {{-- ===== Modal xác nhận hủy đơn ===== --}}
+                        
                         <div class="cancel-order-overlay" id="cancelOrderOverlay">
                           <div class="cancel-order-modal">
                             <h3>Hủy đơn hàng</h3>
@@ -720,7 +725,7 @@
                           </div>
                         </div>
 
-                        {{-- ===== Modal xác nhận ĐÃ NHẬN HÀNG ===== --}}
+                        
                         <div class="complete-order-overlay" id="completeOrderOverlay">
                           <div class="cancel-order-modal">
                             <h3>Đã nhận hàng</h3>
@@ -742,11 +747,11 @@
         </div>
       </div><!-- .site-content-wrapper -->
 
-      @include('layouts.footer')
+      <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
       <div class="nova-overlay-global"></div>
     </div><!-- .kitify-site-wrapper -->
 
-    {{-- JS điều khiển modal hủy đơn & đã nhận hàng --}}
+    
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         // ===== HỦY ĐƠN =====
@@ -806,6 +811,9 @@
       });
     </script>
 
-    @include('layouts.js')
+    <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09\resources\views/orders/show.blade.php ENDPATH**/ ?>

@@ -435,7 +435,9 @@ a.btn-checkout:hover{ opacity:.92; }
                                 value="{{ (int)($row['quantity'] ?? 1) }}"
                                 class="js-qty"
                                 data-variant="{{ $row['variant_id'] }}"
+                                @if(!empty($row['max_qty'])) max="{{ (int)$row['max_qty'] }}" @endif
                                 oninput="/* để JS bắt sự kiện */">
+
 
                             <button type="button"
                             onclick="const i=this.previousElementSibling;i.stepUp();i.dispatchEvent(new Event('input',{bubbles:true}));">+</button>
@@ -775,6 +777,40 @@ document.querySelectorAll('a.btn-checkout').forEach(a => {
     this.href = this.href.split('?')[0] + '?items=' + encodeURIComponent(chosen.join(','));
   });
 });
+
+// Lắng nghe thay đổi số lượng + chặn vượt tồn kho ngay khi gõ (dùng SweetAlert2)
+document.querySelectorAll('.js-qty').forEach(function (inp) {
+  inp.addEventListener('input', function () {
+    let v = parseInt(this.value || '1', 10);
+    if (!Number.isFinite(v) || v < 1) {
+      v = 1;
+    }
+
+    const max = parseInt(this.getAttribute('max') || '0', 10);
+
+    if (max > 0 && v > max) {
+      v = max;
+      this.value = max;
+
+      // Popup đẹp giống phần xoá sản phẩm
+      Swal.fire({
+        icon: 'warning',
+        title: 'Vượt số lượng tồn kho',
+        text: 'Chỉ còn ' + max + ' sản phẩm trong kho.',
+        confirmButtonText: 'Đã hiểu',
+        confirmButtonColor: '#000000', // cùng tông với theme xoá sản phẩm
+      });
+    } else {
+      this.value = v;
+    }
+
+    const variantId = this.dataset.variant;
+    // debounce để không spam request lên server
+    debounce('v' + variantId, () => updateLine(variantId, v));
+  });
+});
+
+
 </script>
 <div id="custom-footer-wrapper">
   @include('layouts.footer')

@@ -171,37 +171,50 @@ class ProductController extends Controller
     }
 
 
-    public function show($id)
-    {
-        $product = Product::with('category')->findOrFail($id);
-        $variants = $product->variants()->with(['color', 'size'])->get();
-        $albums = $product->photoAlbums;
-        $reviews = $product->reviews()->latest()->get();
-        $categories = Category::all();
-        $colors = Color::all();
+ public function show($id)
+{
+    // Giữ nguyên: lấy sản phẩm + category
+    $product = Product::with('category')->findOrFail($id);
 
-        // Tạo variantMap
-        $variantMap = [];
+    // Giữ nguyên: lấy biến thể + color + size
+    $variants = $product->variants()->with(['color', 'size'])->get();
 
-        foreach ($variants as $variant) {
-            $key = $variant->color_id . '-' . $variant->size_id;
-            $variantMap[$key] = [
-                'id'    => $variant->id,
-                'price' => $variant->price,
-                // SAI (đang dùng $variant->stock ?? 0)
-                // 'stock' => $variant->stock ?? 0,
+    // Giữ nguyên: album ảnh, review, category, color
+    $albums = $product->photoAlbums;
+    $reviews = $product->reviews()->latest()->get();
+    $categories = Category::all();
+    $colors = Color::all();
 
-                // ĐÚNG: đọc từ cột product_variants.quantity
-                'stock' => (int) $variant->quantity,
-            ];
-        }
-
-        return view('products.show', compact('product', 'variants', 'albums', 'reviews', 'categories', 'colors', 'variantMap'));
+    // Giữ nguyên: tạo variantMap
+    $variantMap = [];
+    foreach ($variants as $variant) {
+        $key = $variant->color_id . '-' . $variant->size_id;
+        $variantMap[$key] = [
+            'id'    => $variant->id,
+            'price' => $variant->price,
+            'stock' => (int) $variant->quantity, // dùng quantity như bạn đã sửa
+        ];
     }
 
+    // 👉 THÊM MỚI: Lấy sản phẩm cùng danh mục (không đụng vào logic cũ)
+    $relatedProducts = Product::with(['photoAlbums', 'variants'])
+        ->where('category_id', $product->category_id) // cùng danh mục
+        ->where('id', '!=', $product->id)             // loại trừ sản phẩm hiện tại
+        ->take(8)                                     // giới hạn số lượng (tùy bạn chỉnh)
+        ->get();
 
-
-
+    // Giữ nguyên + truyền thêm relatedProducts xuống view
+    return view('products.show', compact(
+        'product',
+        'variants',
+        'albums',
+        'reviews',
+        'categories',
+        'colors',
+        'variantMap',
+        'relatedProducts'
+    ));
+}
 
     public function showByCategory($slug)
     {

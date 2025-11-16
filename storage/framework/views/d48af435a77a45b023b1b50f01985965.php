@@ -1,12 +1,11 @@
-@extends('master')
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <body
   class="wp-singular page-template page-template-templates page-template-fullwidth page-template-templatesfullwidth-php page page-id-11 logged-in wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-account woocommerce-page woocommerce-orders woocommerce-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-kit-6 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active kitify--js-ready body-loaded e--ua-blink e--ua-chrome e--ua-webkit"
   data-elementor-device-mode="laptop">
   <div class="site-wrapper">
     <div class="kitify-site-wrapper elementor-459kitify">
-      @include('layouts.header')
+      <?php echo $__env->make('layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
       <div id="site-content" class="site-content-wrapper">
         <div class="container">
@@ -15,8 +14,8 @@
               <div class="site-content">
                 <div class="page-header-content">
                   <nav class="woocommerce-breadcrumb">
-                    <a href="{{ url('/') }}">Home</a><span class="delimiter">/</span>
-                    <a href="{{ route('orders.index') }}">My account</a><span class="delimiter">/</span>Orders
+                    <a href="<?php echo e(url('/')); ?>">Home</a><span class="delimiter">/</span>
+                    <a href="<?php echo e(route('orders.index')); ?>">My account</a><span class="delimiter">/</span>Orders
                   </nav>
                   <h1 class="page-title">My account</h1>
                 </div>
@@ -24,7 +23,7 @@
                 <article class="hentry">
                   <div class="entry-content">
 
-                    @php
+                    <?php
                     // map trạng thái ĐƠN HÀNG -> class badge
                     $orderBadgeClass = function($sid) {
                         return match((int)$sid){
@@ -49,7 +48,7 @@
                     // fallback label nếu chưa eager-load quan hệ
                     $paymentStatusMap = [1=>'Chưa thanh toán', 2=>'Đã thanh toán', 3=>'Hoàn tiền'];
                     $paymentMethodMap = [1=>'Thanh toán khi nhận hàng', 2=>'VNPAY', 3=>'MoMo'];
-                    @endphp
+                    ?>
 
                    <style>
                     /* ==== 1. GIẢM KHOẢNG TRẮNG TỪ HEADER XUỐNG ==== */
@@ -157,42 +156,42 @@
 
 
                     <div class="woocommerce">
-                      @include('account.partials.navigation')
+                      <?php echo $__env->make('account.partials.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
                       <div class="woocommerce-MyAccount-content">
                         <div class="woocommerce-notices-wrapper">
-                          @if(session('error')) <div class="woocommerce-error">{{ session('error') }}</div> @endif
-                          @if(session('success')) <div class="woocommerce-message">{{ session('success') }}</div> @endif
+                          <?php if(session('error')): ?> <div class="woocommerce-error"><?php echo e(session('error')); ?></div> <?php endif; ?>
+                          <?php if(session('success')): ?> <div class="woocommerce-message"><?php echo e(session('success')); ?></div> <?php endif; ?>
                         </div>
 
-                        {{-- ====================== FILTER BAR ====================== --}}
+                        
                         <div class="orders-filter-select-wrap">
-                          <form id="order-filter-form" method="GET" action="{{ route('orders.index') }}">
+                          <form id="order-filter-form" method="GET" action="<?php echo e(route('orders.index')); ?>">
                             <select name="status_id" class="orders-select" onchange="this.form.submit()">
-                              <option value="0" {{ (int)$statusId === 0 ? 'selected' : '' }}>
-                                Tất cả ({{ $orders->total() }})
+                              <option value="0" <?php echo e((int)$statusId === 0 ? 'selected' : ''); ?>>
+                                Tất cả (<?php echo e($orders->total()); ?>)
                               </option>
-                              @foreach($statuses as $st)
-                                <option value="{{ $st->id }}" {{ (int)$statusId === (int)$st->id ? 'selected' : '' }}>
-                                  {{ $st->name }} ({{ $counts[$st->id] ?? 0 }})
+                              <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $st): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($st->id); ?>" <?php echo e((int)$statusId === (int)$st->id ? 'selected' : ''); ?>>
+                                  <?php echo e($st->name); ?> (<?php echo e($counts[$st->id] ?? 0); ?>)
                                 </option>
-                              @endforeach
+                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                           </form>
                         </div>
 
-                        {{-- ====================== TABLE ====================== --}}
-                        @if($orders->isEmpty())
+                        
+                        <?php if($orders->isEmpty()): ?>
                           <div class="woocommerce-info">
-                            @if($statusId>0)
+                            <?php if($statusId>0): ?>
                               Không có đơn ở trạng thái này.
-                              <a class="woocommerce-Button wc-forward button" href="{{ route('orders.index') }}">Xem tất cả</a>
-                            @else
+                              <a class="woocommerce-Button wc-forward button" href="<?php echo e(route('orders.index')); ?>">Xem tất cả</a>
+                            <?php else: ?>
                               Chưa có đơn hàng nào.
-                              <a class="woocommerce-Button wc-forward button" href="{{ route('products.index') }}">Xem sản phẩm</a>
-                            @endif
+                              <a class="woocommerce-Button wc-forward button" href="<?php echo e(route('products.index')); ?>">Xem sản phẩm</a>
+                            <?php endif; ?>
                           </div>
-                        @else
+                        <?php else: ?>
                           <table class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
                             <thead>
                               <tr>
@@ -205,8 +204,8 @@
                               </tr>
                             </thead>
                             <tbody>
-                              @foreach ($orders as $order)
-                                @php
+                              <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php
                                   $itemsCount = optional($order->details)->sum('quantity') ?? 0;
 
                                   // order status
@@ -220,46 +219,50 @@
 
                                   $pmId       = (int)($order->payment_method_id ?? 0);
                                   $pmLabel    = $order->paymentMethod->name ?? ($paymentMethodMap[$pmId] ?? 'Không xác định');
-                                @endphp
+                                ?>
                                 <tr class="woocommerce-orders-table__row order">
                                   <th class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number" data-title="Order" scope="row">
-                                    <a href="{{ route('orders.show', $order->id) }}" aria-label="View order {{ $order->order_code }}">
-                                      #{{ $order->order_code }}
+                                    <a href="<?php echo e(route('orders.show', $order->id)); ?>" aria-label="View order <?php echo e($order->order_code); ?>">
+                                      #<?php echo e($order->order_code); ?>
+
                                     </a>
                                   </th>
                                   <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date" data-title="Date">
-                                    <time datetime="{{ \Carbon\Carbon::parse($order->created_at)->toAtomString() }}">
-                                      {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i') }}
+                                    <time datetime="<?php echo e(\Carbon\Carbon::parse($order->created_at)->toAtomString()); ?>">
+                                      <?php echo e(\Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i')); ?>
+
                                     </time>
                                   </td>
 
                                   <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status" data-title="Order Status">
-                                    <span class="badge {{ $orderCls }}">{{ $orderLabel }}</span>
+                                    <span class="badge <?php echo e($orderCls); ?>"><?php echo e($orderLabel); ?></span>
                                   </td>
 
                                   <td class="woocommerce-orders-table__cell" data-title="Payment">
-                                    <span class="badge {{ $payCls }}">{{ $payLabel }}</span>
-                                    <span class="method-pill">{{ $pmLabel }}</span>
+                                    <span class="badge <?php echo e($payCls); ?>"><?php echo e($payLabel); ?></span>
+                                    <span class="method-pill"><?php echo e($pmLabel); ?></span>
                                   </td>
 
                                   <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-total" data-title="Total">
                                     <span class="woocommerce-Price-amount amount">
-                                      <span class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($order->total_amount) }}
+                                      <span class="woocommerce-Price-currencySymbol">₫</span><?php echo e(number_format($order->total_amount)); ?>
+
                                     </span>
-                                    @if($itemsCount) cho {{ $itemsCount }} sản phẩm @endif
+                                    <?php if($itemsCount): ?> cho <?php echo e($itemsCount); ?> sản phẩm <?php endif; ?>
                                   </td>
                                   <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions" data-title="Actions">
-                                    <a href="{{ route('orders.show', $order->id) }}" class="woocommerce-button button view" aria-label="View order {{ $order->order_code }}">Xem</a>
+                                    <a href="<?php echo e(route('orders.show', $order->id)); ?>" class="woocommerce-button button view" aria-label="View order <?php echo e($order->order_code); ?>">Xem</a>
                                   </td>
                                 </tr>
-                              @endforeach
+                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                           </table>
 
                           <div class="mt-3">
-                            {{ $orders->links() }}
+                            <?php echo e($orders->links()); ?>
+
                           </div>
-                        @endif
+                        <?php endif; ?>
 
                       </div><!-- /.woocommerce-MyAccount-content -->
                     </div><!-- /.woocommerce -->
@@ -273,9 +276,11 @@
         </div>
       </div><!-- .site-content-wrapper -->
 
-      @include('layouts.footer')
+      <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
       <div class="nova-overlay-global"></div>
     </div><!-- .kitify-site-wrapper -->
-    @include('layouts.js')
+    <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09\resources\views/orders/index.blade.php ENDPATH**/ ?>
