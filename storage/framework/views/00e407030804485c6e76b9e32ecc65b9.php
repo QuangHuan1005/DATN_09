@@ -1,36 +1,31 @@
-@extends('admin.master')
-@section('content')
+<?php $__env->startSection('content'); ?>
     <!-- Start Container Fluid -->
     <div class="container-xxl">
 
         <div class="row">
 
             <div class="col-lg-4">
-                {{-- <div class="col-lg-4">
-                    <a href="{{ route('admin.products.index') }}"
-                        class="btn btn-primary d-flex align-items-center justify-content-center w-100"><i
-                            class="bx bx-chevron-left fs-18"></i> Quay lại</a>
-                </div> --}}
+                
                 <div class="card">
                     <div class="card-body">
                         <!-- Crossfade hình ảnh -->
                      <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner" role="listbox">
-        @php
+        <?php
             // Gộp ảnh từ photoAlbums và variants
             $images = $product->photoAlbums->pluck('image')->toArray();
             $variantImages = $product->variants->pluck('image')->filter()->toArray();
             $allImages = array_merge($images, $variantImages);
-        @endphp
+        ?>
 
-        @foreach ($allImages as $key => $image)
-            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}" class="img-fluid bg-light rounded">
+        <?php $__currentLoopData = $allImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="carousel-item <?php echo e($key == 0 ? 'active' : ''); ?>">
+                <img src="<?php echo e(asset('storage/' . $image)); ?>" alt="<?php echo e($product->name); ?>" class="img-fluid bg-light rounded">
             </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 
-    @if(count($allImages) > 1)
+    <?php if(count($allImages) > 1): ?>
         <a class="carousel-control-prev" href="#carouselExampleFade" role="button" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
             <span class="visually-hidden">Previous</span>
@@ -39,15 +34,15 @@
             <span class="carousel-control-next-icon"></span>
             <span class="visually-hidden">Next</span>
         </a>
-    @endif
+    <?php endif; ?>
 
     <div class="carousel-indicators m-0 mt-2 d-lg-flex d-none position-static h-100">
-        @foreach ($allImages as $key => $image)
-            <button type="button" data-bs-target="#carouselExampleFade" data-bs-slide-to="{{ $key }}"
-                class="w-auto h-auto rounded bg-light {{ $key == 0 ? 'active' : '' }}">
-                <img src="{{ asset('storage/' . $image) }}" class="d-block avatar-xl" alt="thumb">
+        <?php $__currentLoopData = $allImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <button type="button" data-bs-target="#carouselExampleFade" data-bs-slide-to="<?php echo e($key); ?>"
+                class="w-auto h-auto rounded bg-light <?php echo e($key == 0 ? 'active' : ''); ?>">
+                <img src="<?php echo e(asset('storage/' . $image)); ?>" class="d-block avatar-xl" alt="thumb">
             </button>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 </div>
 
@@ -58,12 +53,12 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
-                        @if ($product->created_at >= now()->subDays(2))
+                        <?php if($product->created_at >= now()->subDays(2)): ?>
                             <h4 class="badge bg-success text-light fs-14 py-1 px-2">Sản phẩm mới</h4>
-                        @endif
+                        <?php endif; ?>
 
                         <p class="mb-1">
-                            <a href="#!" class="fs-24 text-dark fw-medium">{{ $product->name }}</a>
+                            <a href="#!" class="fs-24 text-dark fw-medium"><?php echo e($product->name); ?></a>
                         </p>
                         <div class="d-flex gap-2 align-items-center">
                             <ul class="d-flex text-warning m-0 fs-20  list-unstyled">
@@ -86,23 +81,23 @@
                             <p class="mb-0 fw-medium fs-18 text-dark">4.5 <span class="text-muted fs-13">(55
                                     Review)</span></p>
                         </div>
-                        @php
+                        <?php
                             $variant = $product->variants->first();
                             $price = $variant ? $variant->price : 0;
                             $sale = $variant && $variant->sale ? $variant->sale : null;
-                        @endphp
+                        ?>
                         <h2 class="fw-medium my-3">
-                            @if ($sale)
-                                {{ number_format($sale, 0, ',', '.') }}₫ 
+                            <?php if($sale): ?>
+                                <?php echo e(number_format($sale, 0, ',', '.')); ?>₫ 
                                 <span class="fs-16 text-decoration-line-through text-muted">
-                                    {{ number_format($price, 0, ',', '.') }}₫ 
+                                    <?php echo e(number_format($price, 0, ',', '.')); ?>₫ 
                                 </span>
                                 <small class="text-danger ms-2">
-                                    (Giảm giá {{ round((1 - $sale / $price) * 100) }}%)
+                                    (Giảm giá <?php echo e(round((1 - $sale / $price) * 100)); ?>%)
                                 </small>
-                            @else
-                                {{ number_format($price, 0, ',', '.') }}₫ 
-                            @endif
+                            <?php else: ?>
+                                <?php echo e(number_format($price, 0, ',', '.')); ?>₫ 
+                            <?php endif; ?>
 
                             <div class="row align-items-center g-2 mt-3">
                                 <div class="col-lg-3">
@@ -110,19 +105,19 @@
                                         <h5 class="text-dark fw-medium">Màu sắc:</h5>
                                         <div class="d-flex flex-wrap gap-2" role="group"
                                             aria-label="Basic checkbox toggle button group">
-                                            @foreach ($product->variants->unique('color_id') as $variant)
+                                            <?php $__currentLoopData = $product->variants->unique('color_id'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $variant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <div class="d-flex flex-wrap gap-2" role="group"
                                                     aria-label="Chọn màu sản phẩm">
-                                                    @foreach ($product->variants->unique('color_id') as $variant)
+                                                    <?php $__currentLoopData = $product->variants->unique('color_id'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $variant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <label
                                                             class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                                            title="{{ $variant->color->name }}">
+                                                            title="<?php echo e($variant->color->name); ?>">
                                                             <i class="bx bxs-circle fs-18"
-                                                                style="color: {{ $variant->color->color_code }}"></i>
+                                                                style="color: <?php echo e($variant->color->color_code); ?>"></i>
                                                         </label>
-                                                    @endforeach
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </div>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -131,11 +126,11 @@
                                         <h5 class="text-dark fw-medium">Size:</h5>
                                         <div class="d-flex flex-wrap gap-2" role="group"
                                             aria-label="Basic checkbox toggle button group">
-                                            @foreach ($product->variants->unique('size_id') as $variant)
+                                            <?php $__currentLoopData = $product->variants->unique('size_id'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $variant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <label
                                                     class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                                    for="size-s2">{{ $variant->size->size_code }}</label>
-                                            @endforeach
+                                                    for="size-s2"><?php echo e($variant->size->size_code); ?></label>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +139,7 @@
                                 <h4 class="text-dark fw-medium mt-3">Số lượng tồn kho :</h4>
                                 <div
                                     class="input-step border bg-body-secondary p-1 mt-1 rounded d-inline-flex overflow-visible">
-                                    Còn {{ $product->variants->sum('quantity') }} sản phẩm
+                                    Còn <?php echo e($product->variants->sum('quantity')); ?> sản phẩm
                                 </div>
                             </div>
                             <ul class="d-flex flex-column gap-2 list-unstyled fs-15 my-3">
@@ -161,8 +156,9 @@
                                 </li>
                             </ul>
                             <h4 class="text-dark fw-medium">Mô tả chi tiết :</h4>
-                            <p class="text-muted">{{ $product->description ?? 'Chưa có mô tả.' }}
-                                {{-- <a href="#!" class="link-primary">Read more</a> --}}
+                            <p class="text-muted"><?php echo e($product->description ?? 'Chưa có mô tả.'); ?>
+
+                                
                             </p>
                             <h4 class="text-dark fw-medium mt-3">Các ưu đãi hiện có :</h4>
                             <div class="d-flex align-items-center mt-2">
@@ -243,52 +239,7 @@
             </div>
         </div>
         <div class="row">
-            {{-- <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Items Detail</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="">
-                            <ul class="d-flex flex-column gap-2 list-unstyled fs-14 text-muted mb-0">
-                                <li><span class="fw-medium text-dark">Product Dimensions</span><span
-                                        class="mx-2">:</span>53.3 x 40.6 x 6.4 cm; 500 Grams</li>
-                                <li><span class="fw-medium text-dark">Date First Available</span><span
-                                        class="mx-2">:</span>22 September 2023</li>
-                                <li><span class="fw-medium text-dark">Department</span><span class="mx-2">:</span>Men
-                                </li>
-                                <li><span class="fw-medium text-dark">Manufacturer </span><span
-                                        class="mx-2">:</span>Greensboro, NC 27401 Prospa-Pal</li>
-                                <li><span class="fw-medium text-dark">ASIN</span><span class="mx-2">:</span>B0CJMML118
-                                </li>
-                                <li><span class="fw-medium text-dark">Item model number</span><span
-                                        class="mx-2">:</span> 1137AZ</li>
-                                <li><span class="fw-medium text-dark">Country of Origin</span><span
-                                        class="mx-2">:</span>U.S.A</li>
-                                <li><span class="fw-medium text-dark">Manufacturer </span><span
-                                        class="mx-2">:</span>Suite 941 89157 Baumbach Views, Gilbertmouth, TX
-                                    31542-2135</li>
-                                <li><span class="fw-medium text-dark">Packer </span><span class="mx-2">:</span>Apt.
-                                    726 80915 Hung Stream, Rowetown, WV 44364</li>
-                                <li><span class="fw-medium text-dark">Importer</span><span class="mx-2">:</span>Apt.
-                                    726 80915 Hung Stream, Rowetown, WV 44364</li>
-                                <li><span class="fw-medium text-dark">Item Weight</span><span class="mx-2">:</span>500 g
-                                </li>
-                                <li><span class="fw-medium text-dark">Item Dimensions LxWxH</span><span
-                                        class="mx-2">:</span>53.3 x 40.6 x 6.4 Centimeters</li>
-                                <li><span class="fw-medium text-dark">Generic Name</span><span
-                                        class="mx-2">:</span>T-Shirt</li>
-                                <li><span class="fw-medium text-dark">Best Sellers Rank</span><span
-                                        class="mx-2">:</span>#13 in Clothing & Accessories</li>
-                            </ul>
-                        </div>
-                        <div class="mt-3">
-                            <a href="#!" class="link-primary text-decoration-underline link-offset-2">View More
-                                Details <i class="bx bx-arrow-to-right align-middle fs-16"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
+            
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
@@ -377,4 +328,6 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\DATN_09\resources\views/admin/products/show.blade.php ENDPATH**/ ?>
