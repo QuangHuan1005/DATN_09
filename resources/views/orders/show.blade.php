@@ -565,111 +565,111 @@
                           </div>
                         </div>
 
-                        {{-- ======= 2 BOX: ĐƠN HÀNG & THÔNG TIN NGƯỜI NHẬN ======= --}}
-                        <div class="order-info-grid">
-                          {{-- Box Đơn hàng --}}
-                          <div class="card">
-                            <div class="card-hd">Đơn hàng</div>
-                            <div class="card-bd">
-                              <div class="sum-row">
-                                <span>Mã đơn</span>
-                                <span>#{{ $order->order_code }}</span>
-                              </div>
-                              <div class="sum-row">
-                                <span>Trạng thái đơn</span>
-                                <span>{{ $statusName }}</span>
-                              </div>
-                              <div class="sum-row">
-                                <span>Trạng thái thanh toán</span>
-                                <span>{{ $order->paymentStatus?->name }}</span>
-                              </div>
-                              <div class="sum-row">
-                                <span>Phương thức thanh toán</span>
-                                <span>{{ $order->payment?->method?->name ?? '—' }}</span>
-                              </div>
-                              <div class="sum-row">
-                                <span>Thời gian đặt</span>
-                                <span>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i') }}</span>
-                              </div>
-                            </div>
-                          </div>
+                     {{-- ======= CHI TIẾT ĐƠN HÀNG (BẢNG SẢN PHẨM) ======= --}}
+<section class="woocommerce-order-details card" style="margin-top:18px">
+    <div class="card-hd">Chi tiết đơn hàng</div>
+    <div class="card-bd" style="padding:0">
+        <table class="woocommerce-table woocommerce-table--order-details shop_table order_details" style="margin:0">
+            <thead>
+                <tr>
+                    <th style="width:60px">STT</th>
+                    <th class="product-name">Sản phẩm</th>
+                    <th class="product-quantity" style="width:90px">SL</th>
+                    <th class="product-total" style="width:150px">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
 
-                          {{-- Box Thông tin người nhận --}}
-                          <div class="card">
-                            <div class="card-hd">Thông tin người nhận</div>
-                            <div class="card-bd">
-                              <address style="margin:0">
-                                <strong>{{ $order->name }}</strong><br>
-                                {{ $order->phone }}<br>
-                                {{ $order->address }}<br>
-                                @if($order->user?->email)
-                                  <a href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a>
-                                @endif
-                              </address>
-                              @if($order->note)
-                                <div style="margin-top:8px;color:#6b7280">Ghi chú: {{ $order->note }}</div>
-                              @endif
-                            </div>
-                          </div>
-                        </div>
+                @foreach($lines as $it)
+                    <tr class="order_item">
+                        <td style="text-align:center">{{ $loop->iteration }}</td>
 
-                        {{-- ======= CHI TIẾT ĐƠN HÀNG (BẢNG SẢN PHẨM) ======= --}}
-                        <section class="woocommerce-order-details card" style="margin-top:18px">
-                          <div class="card-hd">Chi tiết đơn hàng</div>
-                          <div class="card-bd" style="padding:0">
-                            <table class="woocommerce-table woocommerce-table--order-details shop_table order_details" style="margin:0">
-                              <thead>
-                                <tr>
-                                  <th style="width:60px">STT</th>
-                                  <th class="product-name">Sản phẩm</th>
-                                  <th class="product-quantity" style="width:90px">SL</th>
-                                  <th class="product-total" style="width:150px">Thành tiền</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                @foreach($lines as $it)
-                                  <tr class="order_item">
-                                    <td style="text-align:center">{{ $loop->iteration }}</td>
-                                    <td class="product-name">
-                                      <div style="display:flex;gap:12px;align-items:center">
-                                        @if($it->image)
-                                          <img class="thumb" src="{{ asset($it->image) }}" alt="">
+                        <td class="product-name">
+                            <div style="display:flex;gap:12px;align-items:center">
+
+                                {{-- ẢNH SẢN PHẨM --}}
+                                @php
+                                    // Chuẩn hóa đường dẫn ảnh
+                                    $img = $it->image
+                                        ? asset('storage/' . $it->image)
+                                        : 'https://via.placeholder.com/80';
+                                @endphp
+
+                                <img class="thumb" src="{{ $img }}" alt="" style="width:60px;height:60px;object-fit:cover;border-radius:6px">
+
+                                <div>
+                                    <strong>{{ $it->product_name }}</strong>
+
+                                    <div class="meta">
+                                        @if($it->variant_text)
+                                            {{ $it->variant_text }} ·
                                         @endif
-                                        <div>
-                                          <strong>{{ $it->product_name }}</strong>
-                                          <div class="meta">
-                                            @if($it->variant_text) {{ $it->variant_text }} · @endif
-                                            Đơn giá: ₫{{ number_format($it->unit_price) }}
-                                            @if($it->eta)
-                                              · Dự kiến: {{ \Carbon\Carbon::parse($it->eta)->format('d/m') }}
-                                            @endif
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td class="product-quantity" style="text-align:center">{{ $it->qty }}</td>
-                                    <td class="product-total" style="text-align:right">
-                                      <span class="woocommerce-Price-amount amount">
-                                        <span class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($it->line_total) }}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                @endforeach
-                              </tbody>
-                            </table>
-                          </div>
-                        </section>
 
-                        {{-- ======= FOOTER: THÔNG ĐIỆP + TỔNG TIỀN GÓc PHẢI ======= --}}
-                        <div class="order-bottom">
-                          <div class="order-bottom-left">
-                            @if($order->order_status_id == 5)
-                              <div class="woocommerce-message" style="margin-top:14px">
-                                Đơn hàng đã hoàn thành.
-                                <a class="button" href="#">Viết đánh giá</a>
-                              </div>
-                            @endif
-                          </div>
+                                        Đơn giá: ₫{{ number_format($it->unit_price) }}
+
+                                        @if($it->eta)
+                                            · Dự kiến: {{ \Carbon\Carbon::parse($it->eta)->format('d/m') }}
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="product-quantity" style="text-align:center">
+                            {{ $it->qty }}
+                        </td>
+
+                        <td class="product-total" style="text-align:right">
+                            ₫{{ number_format($it->line_total) }}
+                        </td>
+                    </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+    </div>
+</section>
+
+                        @if($order->order_status_id == 5)
+  <section class="card" style="margin-top:16px;padding:14px">
+    <h4>Viết đánh giá sản phẩm</h4>
+
+    <a href="#" id="btnShowReviews" class="button" style="margin-bottom:10px;">Viết đánh giá</a>
+
+    <div id="reviewForms" style="display:none">
+      @foreach($lines as $item)
+        @php
+            $reviewed = \App\Models\Review::where('user_id', auth()->id())
+                            ->where('order_id', $order->id)
+                            ->where('product_id', $item->product_id)
+                            ->exists();
+        @endphp
+
+        <div class="mb-3">
+          <strong>{{ $item->product_name }}</strong>
+          @if(!$reviewed)
+            <form action="{{ route('account.reviews.store', [$item->product_id, $order->id]) }}" method="POST">
+              @csrf
+              <select name="rating" class="form-select w-25 mb-1">
+                <option value="5">⭐ 5</option>
+                <option value="4">⭐ 4</option>
+                <option value="3">⭐ 3</option>
+                <option value="2">⭐ 2</option>
+                <option value="1">⭐ 1</option>
+              </select>
+              <textarea name="content" class="form-control mb-1" placeholder="Nhận xét của bạn"></textarea>
+              <button type="submit" class="btn btn-primary btn-sm">Gửi đánh giá</button>
+            </form>
+          @else
+            <span style="color:green">Đã đánh giá ✅</span>
+          @endif
+        </div>
+      @endforeach
+    </div>
+  </section>
+@endif
+
+
 
                           <div class="order-total-card card">
                             <div class="card-hd">Tổng thanh toán</div>
@@ -804,6 +804,18 @@
           });
         }
       });
+document.addEventListener('DOMContentLoaded', function() {
+  const btnShow = document.getElementById('btnShowReviews');
+  const reviewForms = document.getElementById('reviewForms');
+
+  if(btnShow && reviewForms) {
+    btnShow.addEventListener('click', function(e) {
+      e.preventDefault(); // ngăn link # reload trang
+      reviewForms.style.display = 'block'; // hiển thị form
+      btnShow.style.display = 'none';      // ẩn link sau khi click
+    });
+  }
+});
     </script>
 
     @include('layouts.js')
