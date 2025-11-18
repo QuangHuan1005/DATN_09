@@ -501,11 +501,13 @@ list.push(`${urlProductImages}/${trimmed}`);
             <h3>Đánh giá sản phẩm</h3>
             <?php if(isset($reviews) && $reviews->count() > 0): ?>
                 <?php $__currentLoopData = $reviews; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <div class="border-bottom py-3">
-                        <strong>⭐ <?php echo e($r->rating); ?>/5</strong>
-                        <p class="mb-0"><?php echo e($r->content); ?></p>
-                    </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    <div class="border-bottom py-3">
+        <strong>⭐ <?php echo e($r->rating); ?>/5</strong>
+        <span class="text-muted ms-2">— <?php echo e($r->user->name ?? 'Khách hàng ẩn danh'); ?></span>
+        <p class="mb-0"><?php echo e($r->content); ?></p>
+    </div>
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
             <?php else: ?>
                 <p>Chưa có đánh giá nào cho sản phẩm này.</p>
             <?php endif; ?>

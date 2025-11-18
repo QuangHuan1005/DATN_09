@@ -510,11 +510,13 @@ list.push(`${urlProductImages}/${trimmed}`);
             <h3>Đánh giá sản phẩm</h3>
             @if(isset($reviews) && $reviews->count() > 0)
                 @foreach($reviews as $r)
-                    <div class="border-bottom py-3">
-                        <strong>⭐ {{ $r->rating }}/5</strong>
-                        <p class="mb-0">{{ $r->content }}</p>
-                    </div>
-                @endforeach
+    <div class="border-bottom py-3">
+        <strong>⭐ {{ $r->rating }}/5</strong>
+        <span class="text-muted ms-2">— {{ $r->user->name ?? 'Khách hàng ẩn danh' }}</span>
+        <p class="mb-0">{{ $r->content }}</p>
+    </div>
+@endforeach
+
             @else
                 <p>Chưa có đánh giá nào cho sản phẩm này.</p>
             @endif

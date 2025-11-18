@@ -59,21 +59,26 @@ class OrderController extends Controller
         }
 
         // Chuẩn hóa dữ liệu hiển thị dòng SP
-        $lines = $order->details->map(function ($d) {
-            $v = $d->productVariant;
-            $variantText = [];
-            if ($v?->size?->name)  $variantText[] = "Size: {$v->size->name}";
-            if ($v?->color?->name) $variantText[] = "Màu: {$v->color->name}";
-            return (object)[
-                'product_name' => $v?->product?->name ?? 'Sản phẩm',
-                'variant_text' => $variantText ? implode(' · ', $variantText) : null,
-                'image'        => $v?->image, // chuỗi path lưu trong DB (vd: shirt1-red.jpg)
-                'unit_price'   => (int)$d->price,
-                'qty'          => (int)$d->quantity,
-                'line_total'   => (int)($d->price * $d->quantity),
-                'eta'          => $d->estimated_delivery,
-            ];
-        });
+    $lines = $order->details->map(function ($d) {
+    $v = $d->productVariant;
+
+    $variantText = [];
+    if ($v?->size?->name)  $variantText[] = "Size: {$v->size->name}";
+    if ($v?->color?->name) $variantText[] = "Màu: {$v->color->name}";
+
+    return (object)[
+        'product_id'   => $v?->product?->id,
+        'product_name' => $v?->product?->name ?? 'Sản phẩm',
+        'variant_text' => $variantText ? implode(' · ', $variantText) : null,
+        'image' => $v?->image ? 'product_images/' . $v->image : null,
+        'unit_price'   => (int)$d->price,
+        'qty'          => (int)$d->quantity,
+        'line_total'   => (int)($d->price * $d->quantity),
+        'eta'          => $d->estimated_delivery,
+    ];
+});
+
+
 
         // Tính tạm tính/tổng (nếu muốn dựa hoàn toàn DB thì dùng cột đã có)
         $calc_subtotal = $lines->sum('line_total');

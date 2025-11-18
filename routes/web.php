@@ -102,6 +102,7 @@ Route::prefix('orders')->middleware('auth')->group(function () {
 });
 
 // 👤 Tài khoản cá nhân
+ // 👤 Tài khoản cá nhân
 Route::middleware(['auth'])->group(function () {
     Route::get('/account', [AccountController::class, 'index'])->name('account.dashboard');
     Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders');
@@ -110,6 +111,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/account/update', [AccountController::class, 'update'])->name('account.update');
     Route::get('/account/change-password', [AccountController::class, 'changePassword'])->name('account.password');
     Route::post('/account/change-password', [AccountController::class, 'updatePassword'])->name('account.password.update');
+    Route::post('/account/reviews/{product}/{order}', [\App\Http\Controllers\ReviewController::class, 'store'])
+        ->name('account.reviews.store');
+});
 
     // Wishlist routes
     Route::prefix('wishlist')->group(function () {
@@ -118,7 +122,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
         Route::post('/check', [WishlistController::class, 'check'])->name('wishlist.check');
     });
-});
 
 /*
 |--------------------------------------------------------------------------
