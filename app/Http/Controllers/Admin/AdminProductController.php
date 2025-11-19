@@ -207,8 +207,11 @@ class AdminProductController extends Controller
             ->with(['color', 'size'])
             ->orderBy('id', 'asc')
             ->get();
+        
+        $colors = Color::where('status', 'active')->get();
+        $sizes = Size::where('status', 'active')->get();
 
-        return view('admin.products.variants-index', compact('product', 'variants'));
+        return view('admin.products.variants-manager', compact('product', 'variants', 'colors', 'sizes'));
     }
 
     // Form tạo biến thể mới
@@ -221,12 +224,12 @@ class AdminProductController extends Controller
         return view('admin.products.create-variant', compact('product', 'colors', 'sizes'));
     }
 
-    // Lưu biến thể mới
+    // Lưu biến thể mới (Thủ công - 1 biến thể)
     public function storeVariant(Request $request, $productId)
     {
         $validated = $request->validate([
             'color_id' => 'required|exists:colors,id',
-            'size_id' => 'nullable|exists:sizes,id',
+            'size_id' => 'required|exists:sizes,id',
             'price' => 'required|numeric|min:0',
             'sale' => 'nullable|numeric|min:0',
             'quantity' => 'required|integer|min:0',
@@ -234,8 +237,25 @@ class AdminProductController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $variant = new ProductVariant($validated);
-        $variant->product_id = $productId;
+        // Kiểm tra xem biến thể này đã tồn tại chưa
+        $existing = ProductVariant::where('product_id', $productId)
+            ->where('color_id', $validated['color_id'])
+            ->where('size_id', $validated['size_id'])
+            ->first();
+
+        if ($existing) {
+            return back()->with('error', 'Biến thể này đã tồn tại!');
+        }
+
+        $variant = new ProductVariant([
+            'product_id' => $productId,
+            'color_id' => $validated['color_id'],
+            'size_id' => $validated['size_id'],
+            'price' => $validated['price'],
+            'sale' => $validated['sale'],
+            'quantity' => $validated['quantity'],
+            'status' => $validated['status'] === 'active' ? 1 : 0,
+        ]);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('product_variants', 'public');
@@ -246,6 +266,64 @@ class AdminProductController extends Controller
 
         return redirect()->route('admin.products.variants.product', $productId)
             ->with('success', 'Thêm biến thể sản phẩm thành công!');
+    }
+
+    // Trộn biến thể tự động (Tạo nhiều biến thể cùng lúc)
+    public function bulkStoreVariants(Request $request, $productId)
+    {
+        $validated = $request->validate([
+            'variants' => 'required|array|min:1',
+            'variants.*.size_id' => 'required|exists:sizes,id',
+            'variants.*.color_id' => 'required|exists:colors,id',
+            'variants.*.price' => 'required|numeric|min:0',
+            'variants.*.sale' => 'nullable|numeric|min:0',
+            'variants.*.quantity' => 'required|integer|min:0',
+        ], [
+            'variants.required' => 'Vui lòng tạo ít nhất 1 biến thể',
+            'variants.*.price.required' => 'Vui lòng nhập giá cho tất cả các biến thể',
+            'variants.*.quantity.required' => 'Vui lòng nhập số lượng cho tất cả các biến thể',
+        ]);
+
+        $product = Product::findOrFail($productId);
+        $createdCount = 0;
+        $skippedCount = 0;
+        $variants = [];
+
+        // Duyệt qua từng biến thể được gửi lên
+        foreach ($validated['variants'] as $variantData) {
+            // Kiểm tra xem biến thể này đã tồn tại chưa
+            $existing = ProductVariant::where('product_id', $productId)
+                ->where('color_id', $variantData['color_id'])
+                ->where('size_id', $variantData['size_id'])
+                ->first();
+
+            if ($existing) {
+                $skippedCount++;
+                continue;
+            }
+
+            // Tạo biến thể mới
+            $variant = ProductVariant::create([
+                'product_id' => $productId,
+                'color_id' => $variantData['color_id'],
+                'size_id' => $variantData['size_id'],
+                'price' => $variantData['price'],
+                'sale' => !empty($variantData['sale']) ? $variantData['sale'] : null,
+                'quantity' => $variantData['quantity'],
+                'status' => 1, // 1 = active
+            ]);
+
+            $variants[] = $variant;
+            $createdCount++;
+        }
+
+        $message = "Đã tạo {$createdCount} biến thể mới!";
+        if ($skippedCount > 0) {
+            $message .= " Bỏ qua {$skippedCount} biến thể đã tồn tại.";
+        }
+
+        return redirect()->route('admin.products.variants.product', $productId)
+            ->with('success', $message);
     }
 
     // Form sửa biến thể
@@ -313,37 +391,54 @@ class AdminProductController extends Controller
     }
 
 
-    // Cập nhật biến thể
+    // Cập nhật biến thể sản phẩm (ProductVariant)
     public function updateVariant(Request $request, $variantId)
     {
-        $type = $request->input('type');
+        $variant = ProductVariant::findOrFail($variantId);
         
-        if ($type === 'size') {
-            $variant = Size::findOrFail($variantId);
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'size_code' => 'nullable|string|max:50',
-                'description' => 'nullable|string',
-                'status' => 'required|in:active,inactive',
-            ]);
-        } elseif ($type === 'color') {
-            $variant = Color::findOrFail($variantId);
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'color_code' => 'nullable|string|max:50',
-                'description' => 'nullable|string',
-                'status' => 'required|in:active,inactive',
-            ]);
-        } else {
-            return redirect()->route('admin.products.variants')
-                ->with('error', 'Loại biến thể không hợp lệ');
+        $validated = $request->validate([
+            'color_id' => 'required|exists:colors,id',
+            'size_id' => 'required|exists:sizes,id',
+            'price' => 'required|numeric|min:0',
+            'sale' => 'nullable|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+            'status' => 'required|in:0,1',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        // Kiểm tra trùng lặp (ngoại trừ chính nó)
+        $existing = ProductVariant::where('product_id', $variant->product_id)
+            ->where('color_id', $validated['color_id'])
+            ->where('size_id', $validated['size_id'])
+            ->where('id', '!=', $variantId)
+            ->first();
+
+        if ($existing) {
+            return back()->with('error', 'Biến thể này đã tồn tại!');
         }
 
-        $variant->update($validated);
+        // Cập nhật dữ liệu
+        $variant->color_id = $validated['color_id'];
+        $variant->size_id = $validated['size_id'];
+        $variant->price = $validated['price'];
+        $variant->sale = !empty($validated['sale']) ? $validated['sale'] : null;
+        $variant->quantity = $validated['quantity'];
+        $variant->status = $validated['status'];
 
-        $typeName = $type === 'size' ? 'kích thước' : 'màu sắc';
-        return redirect()->route('admin.products.variants.type', $type)
-            ->with('success', "Cập nhật {$typeName} thành công!");
+        // Xử lý upload ảnh mới
+        if ($request->hasFile('image')) {
+            // Xóa ảnh cũ nếu có
+            if ($variant->image) {
+                Storage::delete('public/' . $variant->image);
+            }
+            $path = $request->file('image')->store('product_variants', 'public');
+            $variant->image = $path;
+        }
+
+        $variant->save();
+
+        return redirect()->route('admin.products.variants.product', $variant->product_id)
+            ->with('success', 'Cập nhật biến thể sản phẩm thành công!');
     }
 
     // Xóa biến thể

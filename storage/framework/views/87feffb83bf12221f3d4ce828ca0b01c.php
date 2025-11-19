@@ -131,7 +131,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#sidebarAttributes" role="button" aria-expanded="false"
+                <a class="nav-link" data-bs-toggle="collapse" href="#sidebarAttributes" role="button" aria-expanded="false"
                     aria-controls="sidebarAttributes">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:confetti-minimalistic-bold-duotone"></iconify-icon>
@@ -141,13 +141,10 @@
                 <div class="collapse" id="sidebarAttributes">
                     <ul class="nav sub-navbar-nav">
                         <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="attributes-list.html">List</a>
+                            <a class="sub-nav-link" href="<?php echo e(route('admin.attributes.colors.index')); ?>">Màu Sắc</a>
                         </li>
                         <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="attributes-edit.html">Edit</a>
-                        </li>
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="attributes-add.html">Create</a>
+                            <a class="sub-nav-link" href="<?php echo e(route('admin.attributes.sizes.index')); ?>">Kích Thước</a>
                         </li>
                     </ul>
                 </div>

@@ -176,8 +176,11 @@ class ProductController extends Controller
     // Giữ nguyên: lấy sản phẩm + category
     $product = Product::with('category')->findOrFail($id);
 
-    // Giữ nguyên: lấy biến thể + color + size
-    $variants = $product->variants()->with(['color', 'size'])->get();
+    // Lấy biến thể + color + size (CHỈ LẤY BIẾN THỂ ĐANG HOẠT ĐỘNG - status = 1)
+    $variants = $product->variants()
+        ->where('status', 1)
+        ->with(['color', 'size'])
+        ->get();
 
     // Giữ nguyên: album ảnh, review, category, color
     $albums = $product->photoAlbums;
@@ -185,14 +188,16 @@ class ProductController extends Controller
     $categories = Category::all();
     $colors = Color::all();
 
-    // Giữ nguyên: tạo variantMap
+    // Giữ nguyên: tạo variantMap (THÊM SALE)
     $variantMap = [];
     foreach ($variants as $variant) {
         $key = $variant->color_id . '-' . $variant->size_id;
         $variantMap[$key] = [
             'id'    => $variant->id,
             'price' => $variant->price,
-            'stock' => (int) $variant->quantity, // dùng quantity như bạn đã sửa
+            'sale'  => $variant->sale, // Thêm giá sale
+            'stock' => (int) $variant->quantity,
+            'image' => $variant->image, // Thêm ảnh biến thể
         ];
     }
 

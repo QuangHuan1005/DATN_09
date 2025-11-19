@@ -1,26 +1,25 @@
-@extends('master')
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <body
     class="wp-singular product-template-default single single-product postid-164 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-383 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
     <div class="site-wrapper">
 
         <div class="kitify-site-wrapper elementor-459kitify">
-            @include('layouts.header')
+            <?php echo $__env->make('layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
             <div class="container py-5">
 
 
 
     <div class="row align-items-start">
     <!-- Hình ảnh sản phẩm -->
-    <div class="col-md-6 text-center pe-md-5"> {{-- thêm pe-md-5 để tạo khoảng cách bên phải --}}
-        {{-- Ảnh chính --}}
+    <div class="col-md-6 text-center pe-md-5"> 
+        
 
      <div class="main-image mb-4">
     <img
-        src="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"
-        data-default="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"
-        alt="{{ $product->name }}"
+        src="<?php echo e(asset('storage/' . $product->photoAlbums->first()->image)); ?>"
+        data-default="<?php echo e(asset('storage/' . $product->photoAlbums->first()->image)); ?>"
+        alt="<?php echo e($product->name); ?>"
         class="img-fluid rounded shadow"
         style="max-height: 500px; object-fit: cover;">
 </div>
@@ -28,42 +27,42 @@
 
 
 
-        {{-- Album ảnh nhỏ phía dưới --}}
-        @if(isset($albums) && $albums->count())
+        
+        <?php if(isset($albums) && $albums->count()): ?>
         <div class="album-images d-flex justify-content-center gap-3 flex-wrap mt-3">
-            @foreach($albums as $img)
+            <?php $__currentLoopData = $albums; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <img
-                src="{{ Storage::disk('public')->url('product_images/'.$img->image) }}"
+                src="<?php echo e(Storage::disk('public')->url('product_images/'.$img->image)); ?>"
                 alt=""
                 width="100" height="100"
                 class="img-thumbnail border border-secondary"
                 style="object-fit: cover; border-radius: 6px;">
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-        @endif
+        <?php endif; ?>
     </div>
 
     <!-- Thông tin sản phẩm -->
-    <div class="col-md-6 ps-md-5"> {{-- thêm ps-md-5 để tạo khoảng cách bên trái --}}
-        <h2 class="mb-3">{{ $product->name }}</h2>
-        <p class="text-muted">{{ $product->material }}</p>
-        <p>{{ $product->description }}</p>
+    <div class="col-md-6 ps-md-5"> 
+        <h2 class="mb-3"><?php echo e($product->name); ?></h2>
+        <p class="text-muted"><?php echo e($product->material); ?></p>
+        <p><?php echo e($product->description); ?></p>
 
-        @if(isset($variants) && $variants->count() > 0)
+        <?php if(isset($variants) && $variants->count() > 0): ?>
             <h4 class="mt-4 mb-2">Chọn thuộc tính</h4>
 
-{{-- Form thêm giỏ --}}
-<form method="POST" action="{{ route('cart.add') }}" id="addToCartForm" class="border p-3 rounded">
-    @csrf
-    <input type="hidden" name="product_id" value="{{ $product->id }}">
-    {{-- sẽ set động theo lựa chọn --}}
+
+<form method="POST" action="<?php echo e(route('cart.add')); ?>" id="addToCartForm" class="border p-3 rounded">
+    <?php echo csrf_field(); ?>
+    <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
+    
     <input type="hidden" name="product_variant_id" id="variantId" value="">
 
-    {{-- Màu --}}
+    
     <div class="mb-3">
         <label for="selectColor" class="form-label fw-semibold">Màu sắc</label>
 
-        @php
+        <?php
             // Lấy các color_id còn hàng từ $variants của chính product này
             $inStockColorIds = $variants
                 ->filter(fn($v) => ($v->quantity ?? 0) > 0 && !empty($v->color_id))
@@ -71,22 +70,22 @@
                 ->unique()
                 ->values()
                 ->all();
-        @endphp
+        ?>
 
         <select id="selectColor" class="form-select">
             <option value="" selected>— Chọn màu —</option>
-            @foreach($colors->whereIn('id', $inStockColorIds) as $c)
-                <option value="{{ $c->id }}">{{ $c->name }}</option>
-            @endforeach
+            <?php $__currentLoopData = $colors->whereIn('id', $inStockColorIds); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <option value="<?php echo e($c->id); ?>"><?php echo e($c->name); ?></option>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </select>
 
-        {{-- Trường hợp không còn màu nào còn hàng --}}
-        @if(empty($inStockColorIds))
+        
+        <?php if(empty($inStockColorIds)): ?>
             <small class="text-danger d-block mt-1">Sản phẩm tạm hết hàng.</small>
-        @endif
+        <?php endif; ?>
     </div>
 
-    {{-- Size (tuỳ theo màu đã chọn sẽ lọc) --}}
+    
     <div class="mb-3">
         <label for="selectSize" class="form-label fw-semibold">Kích cỡ</label>
         <select id="selectSize" class="form-select" disabled>
@@ -94,11 +93,11 @@
         </select>
     </div>
 
-    {{-- Giá hiển thị theo biến thể đã chọn --}}
+    
     <div class="mb-3">
     <label class="form-label fw-semibold">Giá Tiền</label>
     <div id="priceBox">
-    @php
+    <?php
         // Lấy giá gốc và giá sale
         $allVariants = collect($variants ?? []);
         
@@ -114,30 +113,30 @@
         
         // Kiểm tra có sale không
         $hasSale = $allVariants->some(fn($v) => $v->sale > 0 && $v->sale < $v->price);
-    @endphp
+    ?>
 
-    @if(!is_null($minDisplay))
+    <?php if(!is_null($minDisplay)): ?>
         <div class="price">
-            @if($hasSale)
-                {{-- Hiển thị giá gốc gạch ngang --}}
+            <?php if($hasSale): ?>
+                
                 <span class="text-muted text-decoration-line-through me-2">
-                    {{ number_format($minOriginal, 0, ',', '.') }}₫
-                    @if($maxOriginal > $minOriginal)
-                        – {{ number_format($maxOriginal, 0, ',', '.') }}₫
-                    @endif
+                    <?php echo e(number_format($minOriginal, 0, ',', '.')); ?>₫
+                    <?php if($maxOriginal > $minOriginal): ?>
+                        – <?php echo e(number_format($maxOriginal, 0, ',', '.')); ?>₫
+                    <?php endif; ?>
                 </span>
-            @endif
-            {{-- Giá sale hoặc giá hiện tại --}}
-            <span class="price--normal" style="color: {{ $hasSale ? '#e74c3c' : 'inherit' }}; font-weight: bold;">
-                {{ number_format($minDisplay, 0, ',', '.') }}₫
-                @if($maxDisplay > $minDisplay)
-                    – {{ number_format($maxDisplay, 0, ',', '.') }}₫
-                @endif
+            <?php endif; ?>
+            
+            <span class="price--normal" style="color: <?php echo e($hasSale ? '#e74c3c' : 'inherit'); ?>; font-weight: bold;">
+                <?php echo e(number_format($minDisplay, 0, ',', '.')); ?>₫
+                <?php if($maxDisplay > $minDisplay): ?>
+                    – <?php echo e(number_format($maxDisplay, 0, ',', '.')); ?>₫
+                <?php endif; ?>
             </span>
         </div>
-    @else
+    <?php else: ?>
         <div class="price"><span class="price--normal">Đang cập nhật</span></div>
-    @endif
+    <?php endif; ?>
     </div>
     </div>
 
@@ -147,7 +146,7 @@
     <span id="stockBox" class="text-muted">Vui lòng chọn màu & size</span>
     </div>
 
-    {{-- Số lượng --}}
+    
 
         <div class="mb-3">
         <label for="quantity" class="form-label fw-semibold m-0">Số lượng</label>
@@ -158,7 +157,7 @@
         </div>
         </div>
 
-        {{-- Nút thêm giỏ hàng đưa xuống dưới ô số lượng --}}
+        
         <button type="submit"
                 class="btn btn-dark d-inline-block"
                 style="margin-top:8px; display:block"
@@ -170,12 +169,12 @@
                 class="btn btn-primary"
                 id="btnBuyNow"
                 style="margin-top:8px"
-                formaction="{{ route('checkout.buy_now') }}">
+                formaction="<?php echo e(route('checkout.buy_now')); ?>">
         Mua Ngay
         </button>
 </form>
 
-{{-- Dữ liệu variants cho JS --}}
+
 <script>
     // Popup dạng modal trung tâm
 function showWarnModal(message, title = 'Thông báo') {
@@ -201,19 +200,19 @@ function showWarnToast(message) {
   });
 }
     // map "colorId-sizeId" -> data
-    const VARIANTS = @json($variantMap);
+    const VARIANTS = <?php echo json_encode($variantMap, 15, 512) ?>;
 
     // xây index: colorId -> [{size_id, size_name}]
     const COLOR_SIZES = {};
-    @foreach($variants as $v)
-        @if($v->color_id && $v->size_id && ($v->quantity ?? 0) > 0)
-            COLOR_SIZES[{{ $v->color_id }}] = COLOR_SIZES[{{ $v->color_id }}] || [];
-            COLOR_SIZES[{{ $v->color_id }}].push({
-                id: {{ $v->size_id }},
-                name: "{{ $v->size?->name }}"
+    <?php $__currentLoopData = $variants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php if($v->color_id && $v->size_id && ($v->quantity ?? 0) > 0): ?>
+            COLOR_SIZES[<?php echo e($v->color_id); ?>] = COLOR_SIZES[<?php echo e($v->color_id); ?>] || [];
+            COLOR_SIZES[<?php echo e($v->color_id); ?>].push({
+                id: <?php echo e($v->size_id); ?>,
+                name: "<?php echo e($v->size?->name); ?>"
             });
-        @endif
-    @endforeach
+        <?php endif; ?>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
     const fmt = (n) => new Intl.NumberFormat('vi-VN').format(n) + '₫';
 
@@ -229,9 +228,9 @@ function showWarnToast(message) {
     // === ẢNH: luôn lấy được ảnh gốc & chuẩn bị base URL ===
     const mainImg          = document.querySelector('.main-image img');
     const DEFAULT_SRC      = mainImg ? (mainImg.getAttribute('data-default') || mainImg.src) : null;
-    const urlProductImages = `{{ Storage::disk('public')->url('product_images') }}`;
-    const urlProducts      = `{{ Storage::disk('public')->url('products') }}`;
-    const storageBase      = `{{ asset('storage') }}`; // => /storage
+    const urlProductImages = `<?php echo e(Storage::disk('public')->url('product_images')); ?>`;
+    const urlProducts      = `<?php echo e(Storage::disk('public')->url('products')); ?>`;
+    const storageBase      = `<?php echo e(asset('storage')); ?>`; // => /storage
 
     // helper: thử tải 1 url, resolve(true/false)
     function canLoad(url) {
@@ -320,7 +319,7 @@ list.push(`${urlProductImages}/${trimmed}`);
         }
     });
 
-    const BASE_STORAGE_URL = "{{ asset('storage') }}";
+    const BASE_STORAGE_URL = "<?php echo e(asset('storage')); ?>";
     // khi chọn size -> tìm biến thể, hiện giá, ĐỔI ẢNH CÓ KIỂM TRA TẢI
     selectSize.addEventListener('change', async () => {
         const colorId = selectColor.value || '0';
@@ -507,17 +506,9 @@ list.push(`${urlProductImages}/${trimmed}`);
 </script>
 
 
-        @endif
+        <?php endif; ?>
 
-        {{-- <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-4">
-            @csrf
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
-            </button>
-            <a href="{{ route('products.index') }}" class="btn btn-secondary ms-2">
-                <i class="bi bi-arrow-left"></i> Quay lại
-            </a>
-        </form> --}}
+        
     </div>
 </div>
 
@@ -525,82 +516,83 @@ list.push(`${urlProductImages}/${trimmed}`);
     <div class="row mt-5">
         <div class="col-md-12">
             <h3>Đánh giá sản phẩm</h3>
-            @if(isset($reviews) && $reviews->count() > 0)
-                @foreach($reviews as $r)
+            <?php if(isset($reviews) && $reviews->count() > 0): ?>
+                <?php $__currentLoopData = $reviews; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="border-bottom py-3">
-                        <strong>⭐ {{ $r->rating }}/5</strong>
-                        <p class="mb-0">{{ $r->content }}</p>
+                        <strong>⭐ <?php echo e($r->rating); ?>/5</strong>
+                        <p class="mb-0"><?php echo e($r->content); ?></p>
                     </div>
-                @endforeach
-            @else
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php else: ?>
                 <p>Chưa có đánh giá nào cho sản phẩm này.</p>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 
-    {{-- Sản phẩm cùng danh mục --}}
-    @if(isset($relatedProducts) && $relatedProducts->count())
+    
+    <?php if(isset($relatedProducts) && $relatedProducts->count()): ?>
         <div class="row mt-5">
             <div class="col-12">
                 <h3 class="mb-4">Sản phẩm cùng danh mục</h3>
             </div>
 
-            @foreach($relatedProducts as $item)
+            <?php $__currentLoopData = $relatedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="col-6 col-md-3 mb-4">
-                    <a href="{{ route('products.show', $item->id) }}"
+                    <a href="<?php echo e(route('products.show', $item->id)); ?>"
                        class="text-decoration-none text-dark">
                         <div class="card h-100 border-0 shadow-sm">
-                            {{-- Ảnh sản phẩm --}}
-                            @php
+                            
+                            <?php
                                 $thumb = optional($item->photoAlbums->first())->image;
-                            @endphp
+                            ?>
                             <div class="ratio ratio-4x3">
                                 <img
-                                    src="{{ $thumb
+                                    src="<?php echo e($thumb
                                             ? asset('storage/' . $thumb)
-                                            : 'https://via.placeholder.com/400x400?text=No+Image' }}"
-                                    alt="{{ $item->name }}"
+                                            : 'https://via.placeholder.com/400x400?text=No+Image'); ?>"
+                                    alt="<?php echo e($item->name); ?>"
                                     class="card-img-top"
                                     style="object-fit: cover; border-radius: 8px 8px 0 0;">
                             </div>
 
                             <div class="card-body p-2">
-                                {{-- Tên sản phẩm --}}
-                                <div class="fw-semibold text-truncate" title="{{ $item->name }}">
-                                    {{ $item->name }}
+                                
+                                <div class="fw-semibold text-truncate" title="<?php echo e($item->name); ?>">
+                                    <?php echo e($item->name); ?>
+
                                 </div>
 
-                                {{-- Hiển thị khoảng giá từ variants --}}
-                                @php
+                                
+                                <?php
                                     $prices = $item->variants->map(function ($v) {
                                         return (float)($v->sale ?? $v->price);
                                     })->filter(fn($p) => $p > 0);
 
                                     $min = $prices->min();
                                     $max = $prices->max();
-                                @endphp
+                                ?>
 
-                                @if($min)
+                                <?php if($min): ?>
                                     <div class="text-danger fw-bold small mt-1">
-                                        {{ number_format($min, 0, ',', '.') }}₫
-                                        @if($max && $max > $min)
-                                            - {{ number_format($max, 0, ',', '.') }}₫
-                                        @endif
+                                        <?php echo e(number_format($min, 0, ',', '.')); ?>₫
+                                        <?php if($max && $max > $min): ?>
+                                            - <?php echo e(number_format($max, 0, ',', '.')); ?>₫
+                                        <?php endif; ?>
                                     </div>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </div>
                     </a>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-    @endif
-</div> {{-- đóng .container --}}
-@include('layouts.footer')
+    <?php endif; ?>
+</div> 
+<?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
                 <div class="nova-overlay-global"></div>
             </div><!-- .kitify-site-wrapper -->
-            @include('layouts.js')
+            <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
             <!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 06:58:27 -->
@@ -716,7 +708,7 @@ list.push(`${urlProductImages}/${trimmed}`);
             <script>
                 (function () {
                 // —— Cấu hình tối thiểu ——
-                const BASE_STORAGE_URL = "{{ asset('storage') }}"; // /storage
+                const BASE_STORAGE_URL = "<?php echo e(asset('storage')); ?>"; // /storage
                 const imgEl      = document.getElementById('productMainImg');
                 const sizeSel    = document.getElementById('selectSize');
                 const colorSel   = document.getElementById('selectColor'); // nếu không có thì vẫn OK
@@ -924,4 +916,6 @@ list.push(`${urlProductImages}/${trimmed}`);
 
 
 <!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 07:13:29 -->
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09-main\resources\views/products/show.blade.php ENDPATH**/ ?>

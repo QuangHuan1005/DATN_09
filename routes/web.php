@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\AdminVoucherController;
 // use App\Http\Controllers\Admin\AdminNewsController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\AdminAttributeController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VNPayController;
 use App\Http\Controllers\Staff\StaffController;
@@ -233,7 +234,8 @@ Route::prefix('admin')
         Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
         Route::get('products/{productId}/variants', [AdminProductController::class, 'productVariants'])->name('products.variants.product');
         Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('products.variants.type');
-        Route::post('product-variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
+        Route::post('products/{productId}/variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
+        Route::post('products/{productId}/variants/bulk', [AdminProductController::class, 'bulkStoreVariants'])->name('products.variants.bulk-store');
         Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
         Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
         Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
@@ -265,4 +267,24 @@ Route::prefix('admin')
         Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
         Route::patch('inventory/{variant}', [InventoryController::class, 'updateQuantity'])->name('inventory.update');
         Route::patch('inventory/bulk', [InventoryController::class, 'bulkUpdate'])->name('inventory.bulk');
+
+        // 🎨 Quản lý thuộc tính - Màu sắc
+        Route::prefix('attributes/colors')->name('attributes.colors.')->group(function () {
+            Route::get('/', [AdminAttributeController::class, 'colorsIndex'])->name('index');
+            Route::get('/create', [AdminAttributeController::class, 'colorsCreate'])->name('create');
+            Route::post('/', [AdminAttributeController::class, 'colorsStore'])->name('store');
+            Route::get('/{color}/edit', [AdminAttributeController::class, 'colorsEdit'])->name('edit');
+            Route::put('/{color}', [AdminAttributeController::class, 'colorsUpdate'])->name('update');
+            Route::delete('/{color}', [AdminAttributeController::class, 'colorsDestroy'])->name('destroy');
+        });
+
+        // 📏 Quản lý thuộc tính - Kích thước
+        Route::prefix('attributes/sizes')->name('attributes.sizes.')->group(function () {
+            Route::get('/', [AdminAttributeController::class, 'sizesIndex'])->name('index');
+            Route::get('/create', [AdminAttributeController::class, 'sizesCreate'])->name('create');
+            Route::post('/', [AdminAttributeController::class, 'sizesStore'])->name('store');
+            Route::get('/{size}/edit', [AdminAttributeController::class, 'sizesEdit'])->name('edit');
+            Route::put('/{size}', [AdminAttributeController::class, 'sizesUpdate'])->name('update');
+            Route::delete('/{size}', [AdminAttributeController::class, 'sizesDestroy'])->name('destroy');
+        });
     });

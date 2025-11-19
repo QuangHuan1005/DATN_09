@@ -17,9 +17,10 @@ class ProductVariant extends Model
         'size_id',
         'price',
         'sale',
+        'sale_price',
         'image',
         'quantity',
-        'status',  // trạng thái: 1 = active, 0 = inactive
+        'status',  // trạng thái: active, inactive
     ];
 
     /**

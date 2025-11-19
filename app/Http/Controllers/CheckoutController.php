@@ -32,9 +32,8 @@ class CheckoutController extends Controller
             }
 
             $qty = max(1, (int) $buyNow['quantity']);
-            // Nếu bạn muốn tính theo giá sale, đổi dòng dưới thành:
-            // $price = $variant->sale > 0 ? $variant->sale : $variant->price;
-            $price = $variant->price;
+            // Ưu tiên giá sale
+            $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
             $itemTotal   = $price * $qty;
             $totalAmount = $itemTotal;
 
@@ -71,7 +70,9 @@ class CheckoutController extends Controller
         foreach ($cart as $variantId => $item) {
             $variant = ProductVariant::with(['product', 'color', 'size'])->find($variantId);
             if ($variant) {
-                $itemTotal    = $variant->price * $item['quantity']; // muốn ưu tiên sale thì đổi giống trên
+                // Ưu tiên giá sale
+                $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
+                $itemTotal    = $price * $item['quantity'];
                 $totalAmount += $itemTotal;
                 $cartItems[]  = [
                     'variant'  => $variant,
@@ -127,7 +128,9 @@ class CheckoutController extends Controller
             return back()->with('error', 'Sản phẩm không đủ tồn kho.');
         }
 
-        $totalAmount = $variant->price * $qty; // giữ nguyên logic giá như bạn đang dùng
+        // Ưu tiên giá sale
+        $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
+        $totalAmount = $price * $qty;
 
     } else {
         // === Luồng cũ: tính từ giỏ hàng ===
@@ -135,7 +138,9 @@ class CheckoutController extends Controller
         foreach ($cart as $variantId => $item) {
             $variant = ProductVariant::find($variantId);
             if ($variant) {
-                $totalAmount += $variant->price * $item['quantity'];
+                // Ưu tiên giá sale
+                $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
+                $totalAmount += $price * $item['quantity'];
             }
         }
     }
@@ -181,21 +186,27 @@ class CheckoutController extends Controller
             if ($buyNow) {
                 $variant = ProductVariant::with('product')->find($buyNow['variant_id']);
                 $qty = max(1, (int) $buyNow['quantity']);
+                
+                // Ưu tiên giá sale
+                $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
 
                 $order->details()->create([
                     'product_variant_id' => $variant->id,
                     'quantity' => $qty,
-                    'price' => $variant->price,
+                    'price' => $price,
                 ]);
             } else {
                 $cart = Session::get('cart', []);
                 foreach ($cart as $variantId => $item) {
                     $variant = ProductVariant::with('product')->find($variantId);
                     if ($variant) {
+                        // Ưu tiên giá sale
+                        $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
+                        
                         $order->details()->create([
                             'product_variant_id' => $variant->id,
                             'quantity' => $item['quantity'],
-                            'price' => $variant->price,
+                            'price' => $price,
                         ]);
                     }
                 }
