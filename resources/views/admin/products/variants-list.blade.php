@@ -1,4 +1,5 @@
-@extends('layouts.admin.app')
+@extends('admin.master')
+
 
 @section('title', 'Quản lý ' . $typeName)
 

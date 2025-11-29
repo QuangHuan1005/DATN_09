@@ -8,7 +8,7 @@
                                 icon="iconamoon:heart-duotone"
                                 class="fs-18 align-middle text-danger"></iconify-icon> <a
                                 href="https://1.envato.market/techzaa" class="fw-bold footer-text"
-                                target="_blank">HoangHung04</a>
+                                target="_blank">DATN_09</a>
                         </div>
                     </div>
                 </div>

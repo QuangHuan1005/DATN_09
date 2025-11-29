@@ -135,8 +135,8 @@
 
                                                 <ul class='mega-menu-main'>
                                                     @php
-                                                        use App\Models\Category;
-                                                        $categories = Category::with('children')->get();
+use App\Models\Category;
+$categories = Category::with('children')->get();
                                                     @endphp
 
                                                     @foreach ($categories->whereNull('parent_id') as $parent)
@@ -149,7 +149,7 @@
                                                             </a>
 
                                                             @php
-                                                                $childs = $categories->where('parent_id', $parent->id);
+    $childs = $categories->where('parent_id', $parent->id);
                                                             @endphp
 
                                                             @if ($childs->count() > 0)
@@ -240,32 +240,7 @@
             </div>
             <div class="elementor-element elementor-element-40341a82 e-con-full kitify-col-width-auto-mobile kitify-col-align-right e-flex ignore-docs-style-no kitify-disable-relative-no e-con e-child"
                 data-id="40341a82" data-element_type="container">
-                <div class="elementor-element elementor-element-789c1abd elementor-widget kitify elementor-kitify-search"
-                    data-id="789c1abd" data-element_type="widget" data-widget_type="kitify-search.default">
-                    <div class="elementor-widget-container">
-                        <div class="kitify-search">
-                            <div class="kitify-search__popup-trigger">
-                                <div class="kitify-search__popup-trigger-container">
-                                    <a id="js_header_search_modal" href="#headerSearchModal"><span
-                                            class="kitify-search__popup-trigger-icon kitify-blocks-icon">
 
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21"
-                                                viewBox="0 0 20 21" fill="none">
-                                                <path d="M18.4375 18.9376L13.2988 13.7988" stroke="currentColor"
-                                                    stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-                                                </path>
-                                                <path
-                                                    d="M8.4375 15.8125C12.2345 15.8125 15.3125 12.7345 15.3125 8.9375C15.3125 5.14054 12.2345 2.0625 8.4375 2.0625C4.64054 2.0625 1.5625 5.14054 1.5625 8.9375C1.5625 12.7345 4.64054 15.8125 8.4375 15.8125Z"
-                                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
-                                                    stroke-linejoin="round"></path>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 {{-- ✅ ICON NGƯỜI DÙNG CÓ XỬ LÝ LOGIN / LOGOUT --}}
                 <div class="elementor-element elementor-element-18b9cccf elementor-widget kitify elementor-kitify-menu-account"
@@ -293,18 +268,16 @@
                                                 </g>
                                             </svg>
                                         </span>
+                                        <ul class="sub-menu">
+                                            <li class="menu-item">
+                                                <a href="{{ route('login') }}">Đăng Nhập</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="{{ route('register') }}">Đăng Ký</a>
+                                            </li>
 
-                                        <div class="user-dropdown"
-                                            style="display:none; position:absolute; top:35px; right:0; background:#fff; border:1px solid #ddd; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1); min-width:180px; z-index:999;">
-                                            <a href="{{ route('login') }}"
-                                                style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
-                                                🔑 Đăng nhập
-                                            </a>
-                                            <a href="{{ route('register') }}"
-                                                style="display:block; padding:10px 15px; color:#333; text-decoration:none;">
-                                                🧾 Đăng ký
-                                            </a>
-                                        </div>
+                                        </ul>
+                                        
                                     </div>
                                 @endguest
 
@@ -478,7 +451,32 @@
                         updateWishlistCount();
                     });
                 </script>
+                <div class="elementor-element elementor-element-789c1abd elementor-widget kitify elementor-kitify-search"
+                    data-id="789c1abd" data-element_type="widget" data-widget_type="kitify-search.default">
+                    <div class="elementor-widget-container">
+                        <div class="kitify-search">
+                            <div class="kitify-search__popup-trigger">
+                                <div class="kitify-search__popup-trigger-container">
+                                    <a id="js_header_search_modal" href="#headerSearchModal"><span
+                                            class="kitify-search__popup-trigger-icon kitify-blocks-icon">
 
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21"
+                                                viewBox="0 0 20 21" fill="none">
+                                                <path d="M18.4375 18.9376L13.2988 13.7988" stroke="currentColor"
+                                                    stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                                                </path>
+                                                <path
+                                                    d="M8.4375 15.8125C12.2345 15.8125 15.3125 12.7345 15.3125 8.9375C15.3125 5.14054 12.2345 2.0625 8.4375 2.0625C4.64054 2.0625 1.5625 5.14054 1.5625 8.9375C1.5625 12.7345 4.64054 15.8125 8.4375 15.8125Z"
+                                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                                    stroke-linejoin="round"></path>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {{-- phần wishlist và cart giữ nguyên --}}
                 <div class="elementor-element elementor-element-16239ba6 elementor-hidden-mobile elementor-view-default elementor-widget elementor-widget-icon"
                     data-id="16239ba6" data-element_type="widget" data-widget_type="icon.default">

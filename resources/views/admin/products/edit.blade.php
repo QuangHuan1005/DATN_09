@@ -71,7 +71,7 @@
                                                 {{ is_array(old('sizes', $productSizes)) && in_array($size->id, old('sizes', $productSizes)) ? 'checked' : '' }}>
                                             <label for="{{ $id }}"
                                                 class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center">
-                                                {{ $size->name }}
+                                                {{ $size->size_code }}
                                             </label>
                                         @endforeach
                                     </div>
