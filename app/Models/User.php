@@ -107,11 +107,13 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserAddress::class)->where('is_default', true);
     }
+
     // User.php
     public function favorites()
     {
         return $this->belongsToMany(Product::class, 'product_favorites');
     }
+
   // Gán đơn hàng cho staff
     public function assignedOrders()
 {

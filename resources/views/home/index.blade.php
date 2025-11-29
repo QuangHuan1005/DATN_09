@@ -172,13 +172,13 @@
                                                                                     class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
                                                                                     alt="{{ $item->name }}"
                                                                                     srcset="{{ $mainImage }} 700w,
-                                                                                                                                                                     {{ $mainImage }} 300w,
-                                                                                                                                                                      {{ $mainImage }} 150w,
-                                                                                                                                                                       {{ $mainImage }} 768w,
-                                                                                                                                                                        {{ $mainImage }} 250w,
-                                                                                                                                                                         {{ $mainImage }} 50w,
-                                                                                                                                                                          {{ $mainImage }} 100w,
-                                                                                                                                                                           {{ $mainImage }} 1000w"
+                                                                                                                                                                             {{ $mainImage }} 300w,
+                                                                                                                                                                              {{ $mainImage }} 150w,
+                                                                                                                                                                               {{ $mainImage }} 768w,
+                                                                                                                                                                                {{ $mainImage }} 250w,
+                                                                                                                                                                                 {{ $mainImage }} 50w,
+                                                                                                                                                                                  {{ $mainImage }} 100w,
+                                                                                                                                                                                   {{ $mainImage }} 1000w"
                                                                                     sizes="(max-width: 700px) 100vw, 700px" /><span
                                                                                     class="product_second_image"
                                                                                     style="background-image: url('{{ $hoverImage }}')"></span>
@@ -308,31 +308,33 @@
                                                     <div class="kitify-bannerlist__list swiper-wrapper">
                                                         @foreach ($categories as $item)
                                                             <div
-                                                            class="elementor-repeater-item-54e10a7 kitify-bannerlist__item swiper-slide col-desk-6 col-mob-2 col-tab-4 col-lap-6 col-tabp-4">
-                                                            <div class="kitify-bannerlist__inner">
-                                                                <a href="../shop/index.html"
-                                                                    class="kitify-bannerlist__link">
-                                                                    <div class="kitify-bannerlist__image"><img
-                                                                            loading="lazy" decoding="async"
-                                                                            src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m4_cat_01.jpg"
-                                                                            alt="" loading="lazy"
-                                                                            class="kitify-bannerlist__image-instance"
-                                                                            width="446" height="446"
-                                                                            style="--img-height:446px"> </div>
-                                                                    <div class="kitify-bannerlist__content">
-                                                                        <div class="kitify-bannerlist__content-inner">
-                                                                            <div class="kitify-bannerlist__title">{{ $item->name }}
-                                                                            </div>
-                                                                            <div class="kitify-bannerlist__desc">{{ $item->products_count }} Sản Phẩm
+                                                                class="elementor-repeater-item-54e10a7 kitify-bannerlist__item swiper-slide col-desk-6 col-mob-2 col-tab-4 col-lap-6 col-tabp-4">
+                                                                <div class="kitify-bannerlist__inner">
+                                                                    <a href="{{ route('products.index', ['category' => $item->id]) }}"
+                                                                        class="kitify-bannerlist__link">
+                                                                        <div class="kitify-bannerlist__image"><img
+                                                                                loading="lazy" decoding="async"
+                                                                                src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m4_cat_01.jpg"
+                                                                                alt="" loading="lazy"
+                                                                                class="kitify-bannerlist__image-instance"
+                                                                                width="446" height="446"
+                                                                                style="--img-height:446px"> </div>
+                                                                        <div class="kitify-bannerlist__content">
+                                                                            <div class="kitify-bannerlist__content-inner">
+                                                                                <div class="kitify-bannerlist__title">
+                                                                                    {{ $item->name }}
+                                                                                </div>
+                                                                                <div class="kitify-bannerlist__desc">
+                                                                                    {{ $item->products_count }} Sản Phẩm
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                </a>
+                                                                    </a>
+                                                                </div>
                                                             </div>
-                                                        </div>
                                                         @endforeach
-                                                        
-                                                        
+
+
                                                     </div>
                                                 </div>
                                             </div>

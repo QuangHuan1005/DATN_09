@@ -38,10 +38,7 @@ class AdminProductController extends Controller
             ->withCount('reviews as reviews_count')
             ->orderByDesc('id')
             ->paginate(10);
-
-        if ($request->filled('keyword')) {
-            $products->appends(['keyword' => $request->keyword]);
-        }
+        
         return view(
             'admin.products.index',
             compact('products'),

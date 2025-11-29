@@ -6,6 +6,50 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
+<<<<<<< HEAD
+<<<<<<< HEAD
+                        <!-- Crossfade -->
+                        <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                            <div class="carousel-inner" role="listbox">
+                                @forelse($images as $index => $image)
+                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}"
+                                            class="img-fluid bg-light rounded">
+                                    </div>
+                                @empty
+                                    <div class="carousel-item active">
+                                        <img src="{{ asset('assets/images/no-image.png') }}" alt="No image"
+                                            class="img-fluid bg-light rounded">
+                                    </div>
+                                @endforelse
+                                {{-- <a class="carousel-control-prev rounded" href="#carouselExampleFade" role="button"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </a>
+                                <a class="carousel-control-next rounded" href="#carouselExampleFade" role="button"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </a> --}}
+                            </div>
+                            @if (count($images) > 0)
+                                <div class="carousel-indicators m-0 mt-2 d-lg-flex d-none position-static h-100">
+                                    @foreach ($images as $index => $image)
+                                        <button type="button" data-bs-target="#carouselExampleFade"
+                                            data-bs-slide-to="{{ $index }}" aria-label="Ảnh {{ $index + 1 }}"
+                                            class="w-auto h-auto rounded bg-light {{ $index === 0 ? 'active' : '' }}"
+                                            {{ $index === 0 ? 'aria-current=true' : '' }}>
+                                            <img src="{{ asset('storage/' . $image) }}" class="d-block avatar-xl"
+                                                alt="thumb-{{ $index }}">
+                                        </button>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+=======
+=======
+>>>>>>> 1ea612044f762eac50024ed5aed08c063ecd52f1
                         <!-- Crossfade hình ảnh -->
                      <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner" role="listbox">
@@ -44,6 +88,10 @@
     </div>
 </div>
 
+<<<<<<< HEAD
+>>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
+=======
+>>>>>>> 1ea612044f762eac50024ed5aed08c063ecd52f1
                     </div>
                 </div>
             </div>

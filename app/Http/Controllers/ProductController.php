@@ -219,7 +219,7 @@ class ProductController extends Controller
         $reviews = $product->reviews()
             ->with('order.user')
             ->where('status', 1)
-            ->latest('id', 'desc')
+            ->latest('id')
             ->take(8)
             ->paginate(4);
         $canReview   = false;
@@ -313,49 +313,8 @@ class ProductController extends Controller
             'relatedProducts',
 
         ));
-    }
-    public function store(Request $request)
-    {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'variant_id' => 'required|exists:product_variants,id',
-            'quantity'   => 'required|integer|min:1',
-            'action_type' => 'nullable|in:add_to_cart,buy_now',
-        ]);
-
-        $action = $request->input('action_type', 'add_to_cart');
-
-        // TODO: logic thêm vào giỏ, ví dụ:
-        // CartService::add($request->variant_id, $request->quantity);
-
-        if ($action === 'buy_now') {
-            // chuyển luôn sang trang checkout
-            return redirect()->route('checkout.index');
-        }
-
-        // add_to_cart: quay lại sản phẩm hoặc giỏ
-        return redirect()->back()->with('success', 'Đã thêm sản phẩm vào giỏ hàng.');
-    }
-
-    // 👉 THÊM MỚI: Lấy sản phẩm cùng danh mục (không đụng vào logic cũ)
-    $relatedProducts = Product::with(['photoAlbums', 'variants'])
-        ->where('category_id', $product->category_id) // cùng danh mục
-        ->where('id', '!=', $product->id)             // loại trừ sản phẩm hiện tại
-        ->take(8)                                     // giới hạn số lượng (tùy bạn chỉnh)
-        ->get();
-
-    // Giữ nguyên + truyền thêm relatedProducts xuống view
-    return view('products.show', compact(
-        'product',
-        'variants',
-        'albums',
-        'reviews',
-        'categories',
-        'colors',
-        'variantMap',
-        'relatedProducts'
-    ));
-}
+ }
+    
 
 
     public function showByCategory($slug)
