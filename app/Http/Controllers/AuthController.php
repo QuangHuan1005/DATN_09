@@ -69,42 +69,48 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|string|max:255',
-            'password' => 'required|string|min:6',
-        ], [
-            'email.required' => 'Vui lòng nhập địa chỉ email',
-            'email.email' => 'Địa chỉ email không đúng định dạng',
-            'password.required' => 'Vui lòng nhập mật khẩu',
-            'password.min' => 'Mật khẩu tối thiểu 6 ký tự',
-        ]);
+ public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email|string|max:255',
+        'password' => 'required|string|min:6',
+    ], [
+        'email.required' => 'Vui lòng nhập địa chỉ email',
+        'email.email' => 'Địa chỉ email không đúng định dạng',
+        'password.required' => 'Vui lòng nhập mật khẩu',
+        'password.min' => 'Mật khẩu tối thiểu 6 ký tự',
+    ]);
 
-        $user = User::where('email', $request->email)->first();
+    $user = User::where('email', $request->email)->first();
 
-        // Kiểm tra user tồn tại và mật khẩu đúng
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])->withInput();
-        }
-
-        // Kiểm tra tài khoản có bị khóa không
-        if ($user->is_locked) {
-            return back()->with('error', 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.');
-        }
-
-        // Đăng nhập thành công
-        Auth::login($user, $request->boolean('remember'));
-        $request->session()->regenerate();
-
-        // Nếu là admin thì chuyển đến trang admin
-        if ($user->role_id == 1) {
-            return redirect()->intended(route('admin.dashboard'))
-                ->with('success', 'Chào mừng quản trị viên!');
-        }
-
-         return redirect('/')->with('success', 'Đăng nhập thành công!');
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])->withInput();
     }
+
+    if ($user->is_locked) {
+        return back()->with('error', 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.');
+    }
+
+    // Đăng nhập theo guard riêng
+    if ($user->role_id == 1) {
+        Auth::guard('admin')->login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
+        return redirect()->intended(route('admin.dashboard'))
+            ->with('success', 'Chào mừng quản trị viên!');
+    }
+
+    if ($user->role_id == 3) {
+        Auth::guard('staff')->login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
+        return redirect()->intended(route('staff.dashboard'))
+            ->with('success', 'Chào mừng nhân viên!');
+    }
+
+    // User bình thường
+    Auth::guard('web')->login($user, $request->boolean('remember'));
+    $request->session()->regenerate();
+    return redirect('/')->with('success', 'Đăng nhập thành công!');
+}
 
     public function logout(Request $request)
     {

@@ -1,178 +1,184 @@
 <?php $__env->startSection('content'); ?>
-<div class="container mt-4">
-    <h3 class="mb-4">Quản lý đơn hàng</h3>
+<div class="container-xxl">
 
     
-    <?php if(session('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?php echo e(session('success')); ?>
+    <?php $__currentLoopData = ['success', 'error']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $msg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php if(session($msg)): ?>
+            <div class="alert alert-<?php echo e($msg == 'success' ? 'success' : 'danger'); ?> alert-dismissible fade show" role="alert">
+                <?php echo e(session($msg)); ?>
 
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+    
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form method="GET" action="<?php echo e(route('admin.orders.index')); ?>" class="d-flex">
+                <input type="search" name="keyword" class="form-control me-2" placeholder="Tìm mã đơn / tên KH"
+                    value="<?php echo e(request('keyword')); ?>">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </form>
         </div>
-    <?php endif; ?>
-    <?php if(session('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?php echo e(session('error')); ?>
+        <div class="col-md-6 text-end">
+            <div class="dropdown">
+                <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                    <?php echo e(match (request('status')) {
+                        '1' => 'Chờ xác nhận',
+                        '2' => 'Xác nhận',
+                        '3' => 'Đang giao hàng',
+                        '4' => 'Đã giao hàng',
+                        '5' => 'Hoàn thành',
+                        '6' => 'Hủy',
+                        '7' => 'Hoàn hàng',
+                        default => 'Tất cả trạng thái',
+                    }); ?>
 
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a href="<?php echo e(route('admin.orders.index')); ?>" class="dropdown-item">Tất cả trạng thái</a>
+                    <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <a href="<?php echo e(route('admin.orders.index', ['status' => $status->id])); ?>" class="dropdown-item">
+                            <?php echo e($status->name); ?>
+
+                        </a>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+            </div>
         </div>
-    <?php endif; ?>
-
-    
-    <form method="GET" action="<?php echo e(route('admin.orders.index')); ?>" class="mb-3 d-flex align-items-center gap-2">
-        <select name="status" class="form-select w-auto">
-            <option value="">-- Tất cả trạng thái --</option>
-            <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <option value="<?php echo e($status->id); ?>" <?php echo e(request('status') == $status->id ? 'selected' : ''); ?>>
-                    <?php echo e($status->name); ?>
-
-                </option>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </select>
-
-        <input type="text" name="keyword" value="<?php echo e(request('keyword')); ?>" class="form-control w-25"
-               placeholder="Tìm theo mã đơn hoặc tên KH">
-
-        <button class="btn btn-primary">Lọc</button>
-    </form>
-
-    
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped align-middle text-center">
-            <thead class="table-light">
-                <tr>
-                    <th>Mã đơn</th>
-                    <th>Tên KH</th>
-                    <th>Điện thoại</th>
-                    <th>Địa chỉ</th>
-                    <th>Tổng tiền</th>
-                    <th>Trạng thái đơn</th>
-                     <th>Phương thức thanh toán</th>
-                    <th>Trạng thái thanh toán</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $__empty_1 = true; $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <?php
-                        $currentStatus = collect($statuses)->firstWhere('id', $order->order_status_id);
-                        $colorClass = $currentStatus ? $currentStatus->color_class : '';
-                    ?>
-                    <tr>
-                        <td><?php echo e($order->order_code); ?></td>
-                        <td><?php echo e($order->name); ?></td>
-                        <td><?php echo e($order->phone); ?></td>
-                        <td><?php echo e($order->address); ?></td>
-                        <td><?php echo e(number_format($order->total_amount, 0, ',', '.')); ?> đ</td>
-
-                        
-                        <td>
-                            <form action="<?php echo e(route('admin.orders.status', $order->id)); ?>" method="POST" class="status-form">
-                                <?php echo csrf_field(); ?>
-                                <select name="order_status_id" 
-                                        class="form-select form-select-sm w-auto <?php echo e($colorClass); ?>" 
-                                        onchange="changeStatusColor(this); this.form.submit()">
-                                    <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($status->id); ?>" 
-                                                data-color="<?php echo e($status->color_class); ?>"
-                                                <?php echo e($order->order_status_id == $status->id ? 'selected' : ''); ?>
-
-                                                <?php echo e(in_array($status->id, [5,6,7]) ? 'disabled' : ''); ?>>
-                                            <?php echo e($status->name); ?>
-
-                                        </option>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                </select>
-                            </form>
-                        </td>
-
-                         
-                        <td>
-                            <?php if($order->paymentMethod): ?>
-                                <?php
-                                    $method = $order->paymentMethod->name;
-                                    $type = $order->paymentMethod->type;
-                                    $badgeColor = $type === 'online' ? 'info' : 'secondary';
-                                    $icon = $type === 'online' ? 'bi-wifi' : 'bi-cash';
-                                ?>
-                                <span class="badge bg-<?php echo e($badgeColor); ?>">
-                                    <i class="bi <?php echo e($icon); ?>"></i> <?php echo e($method); ?>
-
-                                </span>
-                            <?php else: ?>
-                                <span class="badge bg-secondary">Chưa chọn</span>
-                            <?php endif; ?>
-                        </td>
-
-                        
-                        <td>
-                            <?php if($order->paymentStatus): ?>
-                                <?php
-                                    $paymentColor = match($order->paymentStatus->id) {
-                                        1 => 'bg-warning',
-                                        2 => 'bg-success',
-                                        3 => 'bg-danger',
-                                        default => 'bg-secondary',
-                                    };
-                                ?>
-                                <span class="badge <?php echo e($paymentColor); ?>">
-                                    <?php echo e($order->paymentStatus->name); ?>
-
-                                </span>
-                            <?php else: ?>
-                                <span class="badge bg-secondary">Chưa chọn</span>
-                            <?php endif; ?>
-                        </td>
-
-                        
-                        <td>
-                            <a href="<?php echo e(route('admin.orders.show', $order->id)); ?>" class="btn btn-info btn-sm">
-                                Xem chi tiết
-                            </a>
-                        </td>
-                    </tr>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                    <tr>
-                        <td colspan="9" class="text-center text-muted">Không có đơn hàng nào</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
     </div>
 
     
-    <div class="mt-3">
-        <?php echo e($orders->links('pagination::bootstrap-5')); ?>
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-centered mb-0 align-middle">
+                    <thead class="bg-light-subtle">
+                        <tr>
+                            <th>Mã Đơn Hàng</th>
+                            <th>Ngày Tạo</th>
+                            <th>Khách Hàng</th>
+                            <th>Tổng Tiền</th>
+                            <th>Thanh Toán</th>
+                            <th>Sản Phẩm</th>
+                            <th>Trạng Thái</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $__empty_1 = true; $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <?php
+                                $currentStatus = collect($statuses)->firstWhere('id', $order->order_status_id);
+                                $colorClass = $currentStatus->color_class ?? 'border-secondary text-secondary';
+                                $paymentColors = [
+                                    1 => 'badge border border-primary text-primary',
+                                    2 => 'badge border border-warning text-warning',
+                                    3 => 'badge border border-success text-success',
+                                    4 => 'badge border border-danger text-danger',
+                                    5 => 'badge border border-secondary text-secondary',
+                                ];
+                                $paymentColor = $paymentColors[$order->payment_status_id] ?? 'bg-light text-dark';
+                                $paymentName = $order->paymentStatus->name ?? 'Không xác định';
+                            ?>
+                            <tr>
+                                <td><?php echo e($order->order_code); ?></td>
+                                <td><?php echo e($order->created_at?->format('d/m/Y H:i') ?? '-'); ?></td>
+                                <td>
+                                    <a href="<?php echo e(route('admin.users.show', $order->user_id ?? 0)); ?>" class="link-primary">
+                                        <?php echo e($order->name ?? 'Khách lẻ'); ?>
 
+                                    </a>
+                                </td>
+                                <td><?php echo e(number_format($order->total_amount,0,',','.')); ?>₫</td>
+                                <td>
+                                    <span class="badge <?php echo e($paymentColor); ?> px-2 py-1 fs-13"><?php echo e($paymentName); ?></span>
+                                </td>
+                                <td><?php echo e($order->details_sum_quantity ?? 0); ?> sản phẩm</td>
+
+                                
+                                <td>
+                                    <form action="<?php echo e(route('admin.orders.status', $order->id)); ?>" method="POST" class="status-form">
+                                        <?php echo csrf_field(); ?>
+                                        <select name="order_status_id" class="form-select form-select-sm w-auto <?php echo e($colorClass); ?>"
+        onchange="confirmStatusChange(this)">
+    <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <option value="<?php echo e($status->id); ?>"
+                data-color="<?php echo e($status->color_class); ?>"
+                <?php echo e($order->order_status_id == $status->id ? 'selected' : ''); ?>
+
+                <?php echo e(in_array($status->id, [5,6,7]) ? 'disabled' : ''); ?>>
+            <?php echo e($status->name); ?>
+
+        </option>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+</select>
+
+                                    </form>
+                                </td>
+
+                                
+                                <td>
+                                    <a href="<?php echo e(route('admin.orders.show', $order->id)); ?>" class="btn btn-soft-info btn-sm" title="Xem chi tiết">
+                                        <iconify-icon icon="solar:eye-broken" class="fs-18"></iconify-icon>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                            <tr>
+                                <td colspan="9" class="text-center py-4 text-muted">Không có đơn hàng nào.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <?php echo e($orders->withQueryString()->links()); ?>
+
+        </div>
     </div>
 </div>
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Tự ẩn alert sau 3s
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            alert.classList.remove('show');
-            alert.classList.add('hide');
-        }, 3000);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ẩn alert sau 3s
+        document.querySelectorAll('.alert').forEach(alert => {
+            setTimeout(() => alert.classList.add('d-none'), 3000);
+        });
+
+        // Set màu select trạng thái khi load
+        document.querySelectorAll('select[name="order_status_id"]').forEach(select => {
+            const selectedOption = select.selectedOptions[0];
+            if(selectedOption && selectedOption.dataset.color){
+                select.className = 'form-select form-select-sm w-auto ' + selectedOption.dataset.color;
+            }
+        });
     });
 
-    // Set màu ban đầu cho tất cả select
-    document.querySelectorAll('select[name="order_status_id"]').forEach(select => {
-        const selectedOption = select.selectedOptions[0];
-        if (selectedOption && selectedOption.dataset.color) {
-            select.className = 'form-select form-select-sm w-auto ' + selectedOption.dataset.color;
+    function changeStatusColor(select){
+        const color = select.selectedOptions[0].dataset.color || '';
+        select.className = 'form-select form-select-sm w-auto ' + color;
+    }
+
+     function confirmStatusChange(select) {
+        const newStatusText = select.selectedOptions[0].text;
+        const form = select.form;
+
+        if(confirm(`Bạn có chắc chắn muốn đổi trạng thái sang "${newStatusText}" không?`)) {
+            // Nếu đồng ý, đổi màu và submit
+            const color = select.selectedOptions[0].dataset.color || '';
+            select.className = 'form-select form-select-sm w-auto ' + color;
+            select.dataset.current = select.value; // cập nhật giá trị hiện tại
+            form.submit();
+        } else {
+            // Nếu cancel, trả về trạng thái cũ
+            select.value = select.dataset.current;
         }
-    });
-});
-
-// Hàm thay đổi màu khi đổi select
-function changeStatusColor(select) {
-    const colorClass = select.selectedOptions[0].dataset.color || '';
-    select.className = 'form-select form-select-sm w-auto ' + colorClass;
-}
+    }
 </script>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layouts.admin.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09\resources\views/admin/orders/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN_09\resources\views/admin/orders/index.blade.php ENDPATH**/ ?>

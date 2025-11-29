@@ -430,7 +430,9 @@ a.btn-checkout:hover{ opacity:.92; }
                                 value="<?php echo e((int)($row['quantity'] ?? 1)); ?>"
                                 class="js-qty"
                                 data-variant="<?php echo e($row['variant_id']); ?>"
+                                <?php if(!empty($row['max_qty'])): ?> max="<?php echo e((int)$row['max_qty']); ?>" <?php endif; ?>
                                 oninput="/* để JS bắt sự kiện */">
+
 
                             <button type="button"
                             onclick="const i=this.previousElementSibling;i.stepUp();i.dispatchEvent(new Event('input',{bubbles:true}));">+</button>
@@ -501,8 +503,66 @@ a.btn-checkout:hover{ opacity:.92; }
 
           </div>
         </div>
+        </div>
+    </main>
 
-      </div>
+    <script>
+        function checkCartBeforeCheckout(hasItem) {
+            if (!hasItem) {
+                alert('Hiện không có sản phẩm trong giỏ hàng, vui lòng thêm sản phẩm');
+                window.location.href = "<?php echo e(route('products.index')); ?>";
+                return false;
+            }
+            return true;
+        }
+
+        document.querySelectorAll('form[id^="qty-form-"] input[name="quantity"]').forEach(inp => {
+            inp.addEventListener('input', function() {
+                this.closest('form').dataset.dirty = '1';
+            });
+        });
+
+        document.getElementById('btnUpdateCart')?.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Đang cập nhật...';
+
+            const forms = Array.from(document.querySelectorAll('form[id^="qty-form-"][data-dirty="1"]'));
+
+            if (forms.length === 0) {
+                window.location.replace(window.location.pathname + '?t=' + Date.now());
+                return;
+            }
+
+            try {
+                for (const form of forms) {
+                    const fd = new FormData(form); // _token, quantity, variant_id
+                    const res = await fetch(form.action, {
+                        method: 'POST', // KHỚP route POST /cart/update/{id}
+                        headers: {
+                            'X-CSRF-TOKEN': fd.get('_token'),
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        },
+                        body: fd,
+                        credentials: 'same-origin'
+                    });
+
+                    if (!res.ok) {
+                        const text = await res.text();
+                        console.error('Update failed for variant', form.dataset.variant, res.status, text);
+                    }
+                }
+            } catch (err) {
+                console.error('Update error:', err);
+            } finally {
+                window.location.replace(window.location.pathname + '?t=' + Date.now());
+            }
+        });
+    </script>
+    <div id="custom-footer-wrapper">
+        <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     </div>
   </div>
 </main>
@@ -712,6 +772,40 @@ document.querySelectorAll('a.btn-checkout').forEach(a => {
     this.href = this.href.split('?')[0] + '?items=' + encodeURIComponent(chosen.join(','));
   });
 });
+
+// Lắng nghe thay đổi số lượng + chặn vượt tồn kho ngay khi gõ (dùng SweetAlert2)
+document.querySelectorAll('.js-qty').forEach(function (inp) {
+  inp.addEventListener('input', function () {
+    let v = parseInt(this.value || '1', 10);
+    if (!Number.isFinite(v) || v < 1) {
+      v = 1;
+    }
+
+    const max = parseInt(this.getAttribute('max') || '0', 10);
+
+    if (max > 0 && v > max) {
+      v = max;
+      this.value = max;
+
+      // Popup đẹp giống phần xoá sản phẩm
+      Swal.fire({
+        icon: 'warning',
+        title: 'Vượt số lượng tồn kho',
+        text: 'Chỉ còn ' + max + ' sản phẩm trong kho.',
+        confirmButtonText: 'Đã hiểu',
+        confirmButtonColor: '#000000', // cùng tông với theme xoá sản phẩm
+      });
+    } else {
+      this.value = v;
+    }
+
+    const variantId = this.dataset.variant;
+    // debounce để không spam request lên server
+    debounce('v' + variantId, () => updateLine(variantId, v));
+  });
+});
+
+
 </script>
 <div id="custom-footer-wrapper">
   <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>

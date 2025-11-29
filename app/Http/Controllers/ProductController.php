@@ -175,6 +175,7 @@ class ProductController extends Controller
     }
 
 
+<<<<<<< HEAD
     public function show($id)
     {
         $product = Product::findOrFail($id);
@@ -313,6 +314,31 @@ class ProductController extends Controller
             'relatedProducts',
 
         ));
+=======
+ public function show($id)
+{
+    // Giữ nguyên: lấy sản phẩm + category
+    $product = Product::with('category')->findOrFail($id);
+
+    // Giữ nguyên: lấy biến thể + color + size
+    $variants = $product->variants()->with(['color', 'size'])->get();
+
+    // Giữ nguyên: album ảnh, review, category, color
+    $albums = $product->photoAlbums;
+    $reviews = $product->reviews()->latest()->get();
+    $categories = Category::all();
+    $colors = Color::all();
+
+    // Giữ nguyên: tạo variantMap
+    $variantMap = [];
+    foreach ($variants as $variant) {
+        $key = $variant->color_id . '-' . $variant->size_id;
+        $variantMap[$key] = [
+            'id'    => $variant->id,
+            'price' => $variant->price,
+            'stock' => (int) $variant->quantity, // dùng quantity như bạn đã sửa
+        ];
+>>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
     }
     public function store(Request $request)
     {
@@ -338,9 +364,25 @@ class ProductController extends Controller
     }
 
 
+    // 👉 THÊM MỚI: Lấy sản phẩm cùng danh mục (không đụng vào logic cũ)
+    $relatedProducts = Product::with(['photoAlbums', 'variants'])
+        ->where('category_id', $product->category_id) // cùng danh mục
+        ->where('id', '!=', $product->id)             // loại trừ sản phẩm hiện tại
+        ->take(8)                                     // giới hạn số lượng (tùy bạn chỉnh)
+        ->get();
 
-
-
+    // Giữ nguyên + truyền thêm relatedProducts xuống view
+    return view('products.show', compact(
+        'product',
+        'variants',
+        'albums',
+        'reviews',
+        'categories',
+        'colors',
+        'variantMap',
+        'relatedProducts'
+    ));
+}
 
     public function showByCategory($slug)
     {

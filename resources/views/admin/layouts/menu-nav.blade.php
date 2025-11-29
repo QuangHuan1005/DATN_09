@@ -21,6 +21,19 @@
         <ul class="navbar-nav" id="navbar-nav">
 
             <li class="menu-title">Tổng quan</li>
+            {{-- ... Kết thúc khối Invoices ở trên --}}
+            </li>
+
+            {{-- Nút quay về trang web (đặt ngay sau Invoices) --}}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('home') }}" target="_blank" rel="noopener">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:home-2-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Quay về trang web </span>
+                </a>
+            </li>
+
 
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.dashboard') }}">
@@ -52,13 +65,15 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#sidebarInventory" role="button" aria-expanded="false"
-                    aria-controls="sidebarInventory">
+               <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}"
+                href="{{ route('admin.inventory.index') }}">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Quản Lý Kho </span>
                 </a>
+            </li>
                 <div class="collapse" id="sidebarInventory">
                     <ul class="nav sub-navbar-nav">
 
@@ -79,6 +94,16 @@
                         <iconify-icon icon="solar:bag-smile-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Quản Lý Đơn Hàng </span>
+                </a>
+            </li>
+
+             <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.vouchers.index') }}" role="button" aria-expanded="false"
+                    aria-controls="sidebarOrders">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:ticket-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Quản Lý Voucher </span>
                 </a>
             </li>
 

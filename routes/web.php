@@ -23,7 +23,7 @@ use App\Http\Controllers\Admin\AdminVoucherController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\WishlistController;
-
+use App\Http\Controllers\Staff\StaffController;
 /*
 |--------------------------------------------------------------------------
 | FRONTEND ROUTES
@@ -114,6 +114,7 @@ Route::prefix('orders')->middleware('auth')->group(function () {
 });
 
 // 👤 Tài khoản cá nhân
+ // 👤 Tài khoản cá nhân
 Route::middleware(['auth'])->group(function () {
     Route::get('/account', [AccountController::class, 'index'])->name('account.dashboard');
     Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders');
@@ -122,6 +123,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/account/update', [AccountController::class, 'update'])->name('account.update');
     Route::get('/account/change-password', [AccountController::class, 'changePassword'])->name('account.password');
     Route::post('/account/change-password', [AccountController::class, 'updatePassword'])->name('account.password.update');
+    Route::post('/account/reviews/{product}/{order}', [\App\Http\Controllers\ReviewController::class, 'store'])
+        ->name('account.reviews.store');
+});
 
     // Wishlist routes
     Route::prefix('wishlist')->group(function () {
@@ -130,7 +134,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
         Route::post('/check', [WishlistController::class, 'check'])->name('wishlist.check');
     });
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -173,8 +176,18 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 |--------------------------------------------------------------------------
 */
 
+Route::prefix('staff')->name('staff.')->group(function () {
+    Route::get('/dashboard', [StaffController::class, 'dashboard'])->name('dashboard');
+    Route::get('/orders', [StaffController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [StaffController::class, 'show'])->name('orders.show');
+   Route::post('orders/{id}/status', [StaffController::class, 'updateStatus'])->name('orders.status');
+});
+
+
+
+
 Route::prefix('admin')
-   // ->middleware(['auth:admin', 'is_admin'])
+   ->middleware(['auth:admin', 'is_admin'])
     ->name('admin.')
     ->group(function () {
 
@@ -207,6 +220,10 @@ Route::prefix('admin')
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
         Route::delete('orders/{id}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
         Route::post('orders/{id}/status', [AdminOrderController::class, 'update'])->name('orders.status');
+
+        Route::get('orders/{order}/assign', [AdminOrderController::class, 'assignForm'])->name('orders.assignForm');
+        Route::post('orders/{order}/assign', [AdminOrderController::class, 'assignStaff'])->name('orders.assignStaff');
+
 
         // Tin tức
         // Route::resource('news', AdminNewsController::class);
