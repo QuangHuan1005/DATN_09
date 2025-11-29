@@ -134,7 +134,7 @@ class HomeController extends Controller
         // Sản phẩm liên quan (ví dụ: cùng category, bỏ chính nó)
         $relatedProducts = Product::query()
             ->where('category_id', $product->category_id)
-            ->where('id', '<>', $product->id)
+            ->where('id', '<>', $product->id) 
             ->with([
                 'firstPhoto',
                 'variants' => function ($q) {

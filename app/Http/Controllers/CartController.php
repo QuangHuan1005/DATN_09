@@ -33,6 +33,7 @@ class CartController extends Controller
             'quantity'           => ['required', 'integer', 'min:1'],
             // Giữ lại nếu form có gửi kèm (không bắt buộc ở đây)
             'product_id'         => ['nullable', 'integer'],
+            'action_type'        => ['nullable','in:add_to_cart,buy_now'],
         ]);
 
         // Lấy variantId từ 1 trong 2 tên field
@@ -112,13 +113,28 @@ class CartController extends Controller
             ];
         }
 
-        Session::put('cart', $cart);
+    // Thêm vào giỏ (session / database tuỳ bạn)
+    // Ví dụ dùng session:
+    $cart = session()->get('cart', []);
 
-        // [EDIT] Trả JSON khi là AJAX để không chuyển trang
-        $cartCount = collect($cart)->sum(fn($row) => (int)($row['quantity'] ?? 0));
-        $subtotal  = collect($cart)->reduce(function($sum, $row){
-            return $sum + (float)($row['price'] ?? 0) * (int)($row['quantity'] ?? 0);
-        }, 0);
+    $key = $variant->id; // hoặc product_id + variant_id nếu cần
+
+    if (isset($cart[$key])) {
+        $cart[$key]['quantity'] += $data['quantity'];
+    } else {
+        $cart[$key] = [
+            'product_id'  => $variant->product_id,
+            'variant_id'  => $variant->id,
+            'name'        => $variant->product->name,
+            'price'       => $variant->sale && $variant->sale > 0
+                                ? $variant->sale
+                                : $variant->price,
+            'quantity'    => $data['quantity'],
+            'image'       => $variant->image ?? $variant->product->thumbnail ?? null,
+        ];
+    }
+
+    session()->put('cart', $cart);
 
         if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
            return response()->json([
@@ -138,7 +154,9 @@ class CartController extends Controller
         ], $limited ? 409 : 200);
         }
 
-        return back()->with('success', 'Đã thêm vào giỏ hàng.');
+    // Mặc định: chỉ thêm vào giỏ hàng
+    return redirect()->route('cart.index')
+        ->with('success', 'Sản phẩm đã được thêm vào giỏ hàng.');
     }
 
     /**

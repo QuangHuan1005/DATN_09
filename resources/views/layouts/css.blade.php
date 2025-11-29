@@ -6,14 +6,118 @@
     var dataLayer = dataLayer || [];
 </script>
 <!-- End Google Tag Manager for WordPress by gtm4wp.com -->
-<link rel='dns-prefetch' href='http://client.crisp.chat/' />
-<link rel='dns-prefetch' href='http://use.typekit.net/' />
-<link rel='dns-prefetch' href='http://fonts.googleapis.com/' />
-<link rel='preconnect' href='https://mixtas.b-cdn.net/' />
-<link rel="alternate" type="application/rss+xml" title="Mixtas &raquo; Feed" href="../feed/index.html" />
+<link rel="dns-prefetch" href="http://client.crisp.chat/" />
+<link rel="dns-prefetch" href="http://use.typekit.net/" />
+<link rel="dns-prefetch" href="http://fonts.googleapis.com/" />
+<link rel="preconnect" href="https://mixtas.b-cdn.net/" />
+<link rel="alternate" type="application/rss+xml" title="Friday &raquo; Feed" href="../feed/index.html" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/cart-frontend61e0.js?ver=27713dd06dd798d49233"
+    as="script" rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-cart-checkout-base-frontendeb98.js?ver=c805309b07586da6f60a"
+    as="script" rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/vendor/wp-polyfill.min2c7c.js?ver=3.15.0" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/i18n.minc33c.js?ver=5e580eb46a90c2b997e6" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/hooks.min4fdd.js?ver=4d63a3d491d11ffd8ac6" as="script"
+    rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-cart-checkout-vendors-frontend4254.js?ver=59277a6dafa851088bd0"
+    as="script" rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/vendor/react.mine1ab.js?ver=18.3.1.1" as="script"
+    rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/blocks-checkout8838.js?ver=8675f044a5a4e373bfec"
+    as="script" rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/vendor/react-dom.mine1ab.js?ver=18.3.1.1" as="script"
+    rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/blocks-components1792.js?ver=0c39bf995e247714a767"
+    as="script" rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks-data000f.js?ver=38d3da1666bedcf43575"
+    as="script" rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks-registry80f5.js?ver=cbfeee947018662b965a"
+    as="script" rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-settingsf8f9.js?ver=eb5ac71a827c4c81fed8"
+    as="script" rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/api-fetch.minc31c.js?ver=3623a576c78df404ff20" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/url.mind63a.js?ver=c2964167dfe2477c14ea" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/data.mindba4.js?ver=fe6c4835cd00e12493c3" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/vendor/react-jsx-runtime.mincb06.js?ver=18.3.1" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/compose.minb1f8.js?ver=84bcf832a5c99203f3db" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/deprecated.min0a8b.js?ver=e1f84915c5e8ae38964c" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/dom.minbe50.js?ver=80bd57c84b45cf04f4ce" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/element.minfa0f.js?ver=a4eeeadd23c0d7ab1d2d" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/escape-html.min3a9d.js?ver=6561a406d2d232a6fbd2" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/is-shallow-equal.mincb09.js?ver=e0f9f1d78d83f5196979"
+    as="script" rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/keycodes.min8cc0.js?ver=034ff647a54b018581d3" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/priority-queue.minc7db.js?ver=9c21c957c7e50ffdbf48"
+    as="script" rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/private-apis.mine8e0.js?ver=0f8478f1ba7e0eea562b" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/redux-routine.min29d8.js?ver=8bb92d45458b29590f53" as="script"
+    rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-typesee62.js?ver=bda84b1be3361607d04a"
+    as="script" rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/data-controls.min01e0.js?ver=49f5587e8b90f9e7cc7e" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/html-entities.min5b55.js?ver=2cd3358363e0675638fb" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/notices.minfe2f.js?ver=673a68a7ac2f556ed50b" as="script"
+    rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks-middleware6f77.js?ver=f3c3ad2e0f2ca96a11da"
+    as="script" rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/a11y.min3f73.js?ver=3156534cc54473497e14" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/dom-ready.min5346.js?ver=f77871ff7694fffea381" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/primitives.min4e94.js?ver=aef2543ab60c8c9bb609" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/warning.min85d7.js?ver=ed7c8b0940914f4fe44b" as="script"
+    rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks-shared-context65e9.js?ver=c30879d642ea05d65f5a"
+    as="script" rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks-shared-hocs7a35.js?ver=cba59eca47d9101980bf"
+    as="script" rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/price-format2a95.js?ver=a3e67bb0b09f566d5bdf"
+    as="script" rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/autop.min33af.js?ver=9fb50649848277dd318d" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/plugins.min8a16.js?ver=20303a2de19246c83e5a" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/style-engine.min2236.js?ver=08cc10e9532531e22456" as="script"
+    rel="prefetch" />
+<link href="../../../mixtas.b-cdn.net/wp-includes/js/dist/wordcount.min9ebf.js?ver=55d8c2bf3dc99e7ea5ec" as="script"
+    rel="prefetch" />
+<link
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/client/blocks/checkout-frontend1261.js?ver=5dd64761c5edaf06069b"
+    as="script" rel="prefetch" />
+<link rel="alternate" type="application/rss+xml" title="Mixtas &raquo; Feed" href="../../feed/index.html" />
 <link rel="alternate" type="application/rss+xml" title="Mixtas &raquo; Comments Feed"
-    href="../comments/feed/index.html" />
-<link rel="alternate" type="application/rss+xml" title="Mixtas &raquo; Products Feed" href="feed/index.html" />
+    href="../../comments/feed/index.html" />
+<link rel="alternate" type="application/rss+xml"
+    title="Mixtas &raquo; The North Face Denali Jacket, summit gold Comments Feed" href="feed/index.html" />
 <script type="text/javascript">
     /* <![CDATA[ */
     window._wpemojiSettings = {
@@ -26,27 +130,44 @@
         }
     };
     /*! This file is auto-generated */
-    ! function(s, n) {
+    ! function (s, n) {
         var o, i, e;
 
         function c(e) {
             try {
                 var t = {
                     supportTests: e,
-                    timestamp: (new Date).valueOf()
+                    timestamp: new Date().valueOf(),
                 };
-                sessionStorage.setItem(o, JSON.stringify(t))
-            } catch (e) {}
+                sessionStorage.setItem(o, JSON.stringify(t));
+            } catch (e) { }
         }
 
         function p(e, t, n) {
-            e.clearRect(0, 0, e.canvas.width, e.canvas.height), e.fillText(t, 0, 0);
-            var t = new Uint32Array(e.getImageData(0, 0, e.canvas.width, e.canvas.height).data),
-                a = (e.clearRect(0, 0, e.canvas.width, e.canvas.height), e.fillText(n, 0, 0), new Uint32Array(e
-                    .getImageData(0, 0, e.canvas.width, e.canvas.height).data));
-            return t.every(function(e, t) {
-                return e === a[t]
-            })
+            e.clearRect(0, 0, e.canvas.width, e.canvas.height),
+                e.fillText(t, 0, 0);
+            var t = new Uint32Array(
+                e.getImageData(
+                    0,
+                    0,
+                    e.canvas.width,
+                    e.canvas.height
+                ).data
+            ),
+                a =
+                    (e.clearRect(0, 0, e.canvas.width, e.canvas.height),
+                        e.fillText(n, 0, 0),
+                        new Uint32Array(
+                            e.getImageData(
+                                0,
+                                0,
+                                e.canvas.width,
+                                e.canvas.height
+                            ).data
+                        ));
+            return t.every(function (e, t) {
+                return e === a[t];
+            });
         }
 
         function u(e, t) {
@@ -72,12 +193,12 @@
 
         function g(e, t, n, a) {
             var r = "undefined" != typeof WorkerGlobalScope && self instanceof WorkerGlobalScope ? new OffscreenCanvas(
-                    300, 150) : s.createElement("canvas"),
+                300, 150) : s.createElement("canvas"),
                 o = r.getContext("2d", {
                     willReadFrequently: !0
                 }),
                 i = (o.textBaseline = "top", o.font = "600 32px Arial", {});
-            return e.forEach(function(e) {
+            return e.forEach(function (e) {
                 i[e] = t(o, e, n, a)
             }), i
         }
@@ -89,49 +210,49 @@
         "undefined" != typeof Promise && (o = "wpEmojiSettingsSupports", i = ["flag", "emoji"], n.supports = {
             everything: !0,
             everythingExceptFlag: !0
-        }, e = new Promise(function(e) {
+        }, e = new Promise(function (e) {
             s.addEventListener("DOMContentLoaded", e, {
                 once: !0
             })
-        }), new Promise(function(t) {
-            var n = function() {
+        }), new Promise(function (t) {
+            var n = function () {
                 try {
                     var e = JSON.parse(sessionStorage.getItem(o));
                     if ("object" == typeof e && "number" == typeof e.timestamp && (new Date).valueOf() <
                         e.timestamp + 604800 && "object" == typeof e.supportTests) return e.supportTests
-                } catch (e) {}
+                } catch (e) { }
                 return null
             }();
             if (!n) {
                 if ("undefined" != typeof Worker && "undefined" != typeof OffscreenCanvas && "undefined" !=
                     typeof URL && URL.createObjectURL && "undefined" != typeof Blob) try {
-                    var e = "postMessage(" + g.toString() + "(" + [JSON.stringify(i), f.toString(), p
+                        var e = "postMessage(" + g.toString() + "(" + [JSON.stringify(i), f.toString(), p
                             .toString(), u.toString()
                         ].join(",") + "));",
-                        a = new Blob([e], {
-                            type: "text/javascript"
-                        }),
-                        r = new Worker(URL.createObjectURL(a), {
-                            name: "wpTestEmojiSupports"
-                        });
-                    return void(r.onmessage = function(e) {
-                        c(n = e.data), r.terminate(), t(n)
-                    })
-                } catch (e) {}
+                            a = new Blob([e], {
+                                type: "text/javascript"
+                            }),
+                            r = new Worker(URL.createObjectURL(a), {
+                                name: "wpTestEmojiSupports"
+                            });
+                        return void (r.onmessage = function (e) {
+                            c(n = e.data), r.terminate(), t(n)
+                        })
+                    } catch (e) { }
                 c(n = g(i, f, p, u))
             }
             t(n)
-        }).then(function(e) {
+        }).then(function (e) {
             for (var t in e) n.supports[t] = e[t], n.supports.everything = n.supports.everything && n
                 .supports[t], "flag" !== t && (n.supports.everythingExceptFlag = n.supports
                     .everythingExceptFlag && n.supports[t]);
             n.supports.everythingExceptFlag = n.supports.everythingExceptFlag && !n.supports.flag, n
-                .DOMReady = !1, n.readyCallback = function() {
+                .DOMReady = !1, n.readyCallback = function () {
                     n.DOMReady = !0
                 }
-        }).then(function() {
+        }).then(function () {
             return e
-        }).then(function() {
+        }).then(function () {
             var e;
             n.supports.everything || (n.readyCallback(), (e = n.source || {}).concatemoji ? t(e
                 .concatemoji) : e.wpemoji && e.twemoji && (t(e.twemoji), t(e.wpemoji)))
@@ -140,7 +261,7 @@
     /* ]]> */
 </script>
 <link rel='stylesheet' id='kitify-css-transform-css'
-    href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/css-transform40d7.css?ver=1759215509'
+    href='../../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/addons/css-transform0e3e.css?ver=1759216905'
     type='text/css' media='all' />
 <style id='wp-emoji-styles-inline-css' type='text/css'>
     img.wp-smiley,
@@ -189,18 +310,18 @@
     :root {
         --rounded-corners-radius: 16px;
         --add-to-cart-rounded-corners-radius: 16px;
-        --color-headers-background: #F4F4F4;
-        --feedback-duration: 3s
+        --color-headers-background: #f4f4f4;
+        --feedback-duration: 3s;
     }
 
     :root {
         --rounded-corners-radius: 16px;
         --add-to-cart-rounded-corners-radius: 16px;
-        --color-headers-background: #F4F4F4;
-        --feedback-duration: 3s
+        --color-headers-background: #f4f4f4;
+        --feedback-duration: 3s;
     }
 </style>
-<style id='global-styles-inline-css' type='text/css'>
+<style id="global-styles-inline-css" type="text/css">
     :root {
         --wp--preset--aspect-ratio--square: 1;
         --wp--preset--aspect-ratio--4-3: 4/3;
@@ -527,15 +648,21 @@
         line-height: 1.6;
     }
 </style>
-<link rel='stylesheet' id='contact-form-7-css'
-    href='../../mixtas.b-cdn.net/wp-content/plugins/contact-form-7/includes/css/styles52c7.css?ver=6.0.5'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='custom-typekit-css-css' href='../../use.typekit.net/ihj1qly40d7.css?ver=1759215509'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='novaworks_plugin_fontend-css'
-    href='../../mixtas.b-cdn.net/wp-content/plugins/mixtas-core/public/css/frontend8a54.css?ver=1.0.0' type='text/css'
-    media='all' />
-<style id='woocommerce-inline-inline-css' type='text/css'>
+<link rel="stylesheet" id="contact-form-7-css"
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/contact-form-7/includes/css/styles52c7.css?ver=6.0.5"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="custom-typekit-css-css" href="../../../use.typekit.net/ihj1qly7f2f.css?ver=1759236206"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="novaworks_plugin_fontend-css"
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/mixtas-core/public/css/frontend8a54.css?ver=1.0.0"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="photoswipe-css"
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/css/photoswipe/photoswipe.min04d4.css?ver=9.7.1"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="photoswipe-default-skin-css"
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/css/photoswipe/default-skin/default-skin.min04d4.css?ver=9.7.1"
+    type="text/css" media="all" />
+<style id="woocommerce-inline-inline-css" type="text/css">
     .woocommerce form .form-row .required {
         visibility: visible;
     }
@@ -553,43 +680,51 @@
         --wvs-single-product-item-font-size: 16px
     }
 </style>
-<link rel='stylesheet' id='brands-styles-css'
-    href='../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/css/brands04d4.css?ver=9.7.1' type='text/css'
-    media='all' />
-<link rel='stylesheet' id='novaworks-icons-css'
-    href='../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/icon-fonts/core/css/iconsc64e.css?ver=1.1.1'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='select2-css'
-    href='../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/css/select204d4.css?ver=9.7.1' type='text/css'
-    media='all' />
-<link rel='stylesheet' id='fontawesome-pro-css'
-    href='../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/fontawesome-pro/css/all0e7d.css?ver=5.1.0'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='normalize-css'
-    href='../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/animatedModal.js/css/normalize.min5b75.css?ver=3.0.2'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='animate-css'
-    href='../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/animatedModal.js/css/animate.min40d7.css?ver=1759215509'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='nova-mixtas-layout-css'
-    href='../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/css/layout40d7.css?ver=1759215509' type='text/css'
-    media='all' />
-<link rel='stylesheet' id='nova-mixtas-styles-css'
-    href='../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/css/app40d7.css?ver=1759215509' type='text/css'
-    media='all' />
-<link rel='stylesheet' id='typekit-css' href='../../use.typekit.net/ihj1qly40d7.css?ver=1759215509' type='text/css'
-    media='all' />
-<link rel='stylesheet' id='nova-google-fonts-css'
-    href='https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800&amp;display=swap'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='kitify-base-css'
-    href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/kitify-base40d7.css?ver=1759215509'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='elementor-frontend-css'
-    href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/custom-frontend.minbea4.css?ver=1743737085'
-    type='text/css' media='all' />
-<style id='elementor-frontend-inline-css' type='text/css'>
-    @media(min-width:768px) {
+<link rel="stylesheet" id="gateway-css"
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce-paypal-payments/modules/ppcp-button/assets/css/gateway21bb.css?ver=2.5.4"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="brands-styles-css"
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/css/brands04d4.css?ver=9.7.1" type="text/css"
+    media="all" />
+<link rel="stylesheet" id="novaworks-icons-css"
+    href="../../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/icon-fonts/core/css/iconsc64e.css?ver=1.1.1"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="select2-css"
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/css/select204d4.css?ver=9.7.1" type="text/css"
+    media="all" />
+<link rel="stylesheet" id="fontawesome-pro-css"
+    href="../../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/fontawesome-pro/css/all0e7d.css?ver=5.1.0"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="normalize-css"
+    href="../../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/animatedModal.js/css/normalize.min5b75.css?ver=3.0.2"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="animate-css"
+    href="../../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/vendor/animatedModal.js/css/animate.min7f2f.css?ver=1759236206"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="nova-mixtas-layout-css"
+    href="../../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/css/layout7f2f.css?ver=1759236206" type="text/css"
+    media="all" />
+<style>
+    body {
+        background: white !important;
+    }
+</style>
+<link rel="stylesheet" id="nova-mixtas-styles-css"
+    href="../../../mixtas.b-cdn.net/wp-content/themes/mixtas/assets/css/app7f2f.css?ver=1759236206" type="text/css"
+    media="all" />
+<link rel="stylesheet" id="typekit-css" href="../../../use.typekit.net/ihj1qly7f2f.css?ver=1759236206" type="text/css"
+    media="all" />
+<link rel="stylesheet" id="nova-google-fonts-css"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800&amp;display=swap"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="kitify-base-css"
+    href="../../../mixtas.b-cdn.net/wp-content/plugins/kitify/assets/css/kitify-base7f2f.css?ver=1759236206"
+    type="text/css" media="all" />
+<link rel="stylesheet" id="elementor-frontend-css"
+    href="../../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/custom-frontend.minbea4.css?ver=1743737085"
+    type="text/css" media="all" />
+<style id="elementor-frontend-inline-css" type="text/css">
+    @media (min-width: 768px) {
         .kitify-vheader--hidemobile.kitify--is-vheader {
             position: relative
         }
@@ -1237,11 +1372,17 @@
 <link rel='stylesheet' id='elementor-post-1052-css'
     href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-1052ca92.css?ver=1743737312' type='text/css'
     media='all' />
+<link rel="stylesheet" id="elementor-post-383-css"
+    href="../../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-38366a8.css?ver=1743737462" type="text/css"
+    media="all" />
 <link rel='stylesheet' id='elementor-post-459-css'
     href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-45915a9.css?ver=1743737313' type='text/css'
     media='all' />
 <link rel='stylesheet' id='elementor-post-478-css'
     href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-47848bb.css?ver=1743737091' type='text/css'
+    media='all' />
+<link rel='stylesheet' id='elementor-post-422-css'
+    href='../../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-4228ee9.css?ver=1745112817' type='text/css'
     media='all' />
 <link rel='stylesheet' id='elementor-post-342-css'
     href='../../mixtas.b-cdn.net/wp-content/uploads/elementor/css/post-342cdb4.css?ver=1745076735' type='text/css'
@@ -1255,7 +1396,8 @@
 <link rel='stylesheet' id='elementor-icons-dlicon-css'
     href='../../mixtas.b-cdn.net/wp-content/plugins/kitify/inc/extensions/elementor/assets/css/nucleo8a54.css?ver=1.0.0'
     type='text/css' media='all' />
-{{-- <script type="text/template" id="tmpl-variation-template">
+{{--
+<script type="text/template" id="tmpl-variation-template">
     <div class="woocommerce-variation-description">{{{ data.variation.variation_description }}}</div>
 	<div class="woocommerce-variation-price">{{{ data.variation.price_html }}}</div>
 	<div class="woocommerce-variation-availability">{{{ data.variation.availability_html }}}</div>
@@ -1288,6 +1430,64 @@
 <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min73a9.js?ver=2.1.4-wc.9.7.1"
     id="js-cookie-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript"
+    src="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/flexslider/jquery.flexslider.mind207.js?ver=2.7.2-wc.9.7.1"
+    id="flexslider-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript"
+    src="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/photoswipe/photoswipe.min9799.js?ver=4.1.1-wc.9.7.1"
+    id="photoswipe-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript"
+    src="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/photoswipe/photoswipe-ui-default.min9799.js?ver=4.1.1-wc.9.7.1"
+    id="photoswipe-ui-default-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript" id="wc-single-product-js-extra">
+    /* <![CDATA[ */
+    var wc_single_product_params = {
+        "i18n_required_rating_text": "Please select a rating",
+        "i18n_rating_options": ["1 of 5 stars", "2 of 5 stars", "3 of 5 stars", "4 of 5 stars", "5 of 5 stars"],
+        "i18n_product_gallery_trigger_text": "View full-screen image gallery",
+        "review_rating_required": "yes",
+        "flexslider": {
+            "rtl": false,
+            "animation": "slide",
+            "smoothHeight": true,
+            "directionNav": false,
+            "controlNav": "thumbnails",
+            "slideshow": false,
+            "animationSpeed": 300,
+            "animationLoop": false
+        },
+        "zoom_enabled": "",
+        "zoom_options": [],
+        "photoswipe_enabled": "1",
+        "photoswipe_options": {
+            "shareEl": false,
+            "closeOnScroll": false,
+            "history": false,
+            "hideAnimationDuration": 400,
+            "showAnimationDuration": 400,
+            "captionEl": false,
+            "showHideOpacity": true
+        },
+        "flexslider_enabled": "1"
+    };
+    /* ]]> */
+</script>
+<script type="text/javascript" id="wc-single-product-js-before">
+    /* <![CDATA[ */
+    try {
+        wc_single_product_params.flexslider.directionNav = true;
+        wc_single_product_params.flexslider.before = function (slider) {
+            jQuery(document).trigger('kitify/woocommerce/single/init_product_slider', [slider]);
+        }
+    } catch (ex) { }
+    /* ]]> */
+</script>
+<script type="text/javascript"
+    src="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/single-product.min04d4.js?ver=9.7.1"
+    id="wc-single-product-js" defer="defer" data-wp-strategy="defer"></script>
+<script type="text/javascript"
+    src="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min73a9.js?ver=2.1.4-wc.9.7.1"
+    id="js-cookie-js" defer="defer" data-wp-strategy="defer"></script>
 <script type="text/javascript" id="woocommerce-js-extra">
     /* <![CDATA[ */
     var woocommerce_params = {
@@ -1299,9 +1499,9 @@
     /* ]]> */
 </script>
 <script type="text/javascript"
-    src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min04d4.js?ver=9.7.1"
+    src="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min04d4.js?ver=9.7.1"
     id="woocommerce-js" defer="defer" data-wp-strategy="defer"></script>
-<script type="text/javascript" src="../../mixtas.b-cdn.net/wp-includes/js/underscore.min3ab8.js?ver=1.13.7"
+<script type="text/javascript" src="../../../mixtas.b-cdn.net/wp-includes/js/underscore.min3ab8.js?ver=1.13.7"
     id="underscore-js"></script>
 <script type="text/javascript" id="wp-util-js-extra">
     /* <![CDATA[ */
@@ -1312,13 +1512,13 @@
     };
     /* ]]> */
 </script>
-<script type="text/javascript" src="../../mixtas.b-cdn.net/wp-includes/js/wp-util.min6c2d.js?ver=6.8.2" id="wp-util-js">
-</script>
+<script type="text/javascript" src="../../../mixtas.b-cdn.net/wp-includes/js/wp-util.min6c2d.js?ver=6.8.2"
+    id="wp-util-js"></script>
 <script type="text/javascript" id="wp-statistics-tracker-js-extra">
     /* <![CDATA[ */
     var WP_Statistics_Tracker_Object = {
-        "hitRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/hit?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=1052&search_query&page_uri=L2hvbWUtdjMv",
-        "keepOnlineRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/online?wp_statistics_hit_rest=yes&track_all=1&current_page_type=page&current_page_id=1052&search_query&page_uri=L2hvbWUtdjMv",
+        "hitRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/hit?wp_statistics_hit_rest=yes&track_all=1&current_page_type=product&current_page_id=164&search_query&page_uri=L3Byb2R1Y3QvY2FyaGFydHQtYW1lcmljYW4tc2NyaXB0LXN3ZWF0LXRvYmFjY28vP3RoZW1lX3RlbXBsYXRlX2lkPTQyMiZhZGRfdG9fd2lzaGxpc3Q9MTU5",
+        "keepOnlineRequestUrl": "https:\/\/mixtas.novaworks.net\/wp-json\/wp-statistics\/v2\/online?wp_statistics_hit_rest=yes&track_all=1&current_page_type=product&current_page_id=164&search_query&page_uri=L3Byb2R1Y3QvY2FyaGFydHQtYW1lcmljYW4tc2NyaXB0LXN3ZWF0LXRvYmFjY28vP3RoZW1lX3RlbXBsYXRlX2lkPTQyMiZhZGRfdG9fd2lzaGxpc3Q9MTU5",
         "option": {
             "dntEnabled": "1",
             "cacheCompatibility": "1"
@@ -1327,10 +1527,10 @@
     /* ]]> */
 </script>
 <script type="text/javascript"
-    src="../../mixtas.b-cdn.net/wp-content/plugins/wp-statistics/assets/js/tracker6c2d.js?ver=6.8.2"
+    src="../../../mixtas.b-cdn.net/wp-content/plugins/wp-statistics/assets/js/tracker6c2d.js?ver=6.8.2"
     id="wp-statistics-tracker-js"></script>
 <script type="text/javascript"
-    src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/select2/select2.full.minab30.js?ver=4.0.3-wc.9.7.1"
+    src="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/select2/select2.full.minab30.js?ver=4.0.3-wc.9.7.1"
     id="select2-js" defer="defer" data-wp-strategy="defer"></script>
 <script type="text/javascript"
     src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/flexslider/jquery.flexslider.mind207.js?ver=2.7.2-wc.9.7.1"
@@ -1372,10 +1572,10 @@
     /* <![CDATA[ */
     try {
         wc_single_product_params.flexslider.directionNav = true;
-        wc_single_product_params.flexslider.before = function(slider) {
+        wc_single_product_params.flexslider.before = function (slider) {
             jQuery(document).trigger('kitify/woocommerce/single/init_product_slider', [slider]);
         }
-    } catch (ex) {}
+    } catch (ex) { }
     /* ]]> */
 </script>
 <script type="text/javascript"
@@ -1388,37 +1588,40 @@
         "i18n_no_matching_variations_text": "Sorry, no products matched your selection. Please choose a different combination.",
         "i18n_make_a_selection_text": "Please select some product options before adding this product to your cart.",
         "i18n_unavailable_text": "Sorry, this product is unavailable. Please choose a different combination.",
-        "i18n_reset_alert_text": "Your selection has been reset. Please select some product options before adding this product to your cart."
+        "i18n_reset_alert_text": "Your selection has been reset. Please select some product options before adding this product to your cart.",
+        "woo_variation_swatches_ajax_variation_threshold_min": "30",
+        "woo_variation_swatches_ajax_variation_threshold_max": "100",
+        "woo_variation_swatches_total_children": {},
     };
     /* ]]> */
 </script>
 <script type="text/javascript"
-    src="../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart-variation.min04d4.js?ver=9.7.1"
+    src="../../../mixtas.b-cdn.net/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart-variation.min04d4.js?ver=9.7.1"
     id="wc-add-to-cart-variation-js" defer="defer" data-wp-strategy="defer"></script>
-<link rel="https://api.w.org/" href="../wp-json/index.html" />
-<link rel="alternate" title="JSON" type="application/json" href="../wp-json/wp/v2/pages/1052.json" />
-<link rel="EditURI" type="application/rsd+xml" title="RSD" href="../xmlrpc0db0.php?rsd" />
+<link rel="https://api.w.org/" href="../../wp-json/index.html" />
+<link rel="alternate" title="JSON" type="application/json" href="../../wp-json/wp/v2/product/164.json" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../xmlrpc0db0.php?rsd" />
 <meta name="generator" content="WordPress 6.8.2" />
 <meta name="generator" content="WooCommerce 9.7.1" />
 <link rel="canonical" href="index.html" />
-<link rel='shortlink' href='../index3674.html?p=1052' />
+<link rel='shortlink' href='../../index7760.html?p=164' />
 <link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed"
-    href="../wp-json/oembed/1.0/embedf4af.json?url=https%3A%2F%2Fmixtas.novaworks.net%2Fhome-v3%2F" />
+    href="../../wp-json/oembed/1.0/embed8413.json?url=https%3A%2F%2Fmixtas.novaworks.net%2Fproduct%2Fcarhartt-american-script-sweat-tobacco%2F" />
 <link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed"
-    href="../wp-json/oembed/1.0/embed7737?url=https%3A%2F%2Fmixtas.novaworks.net%2Fhome-v3%2F&amp;format=xml" />
+    href="../../wp-json/oembed/1.0/embedc6e0?url=https%3A%2F%2Fmixtas.novaworks.net%2Fproduct%2Fcarhartt-american-script-sweat-tobacco%2F&amp;format=xml" />
 
 <!-- Google Tag Manager for WordPress by gtm4wp.com -->
 <!-- GTM Container placement set to footer -->
 <script data-cfasync="false" data-pagespeed-no-defer type="text/javascript">
     var dataLayer_content = {
-        "pagePostType": "page",
-        "pagePostType2": "single-page",
+        "pagePostType": "product",
+        "pagePostType2": "single-product",
         "pagePostAuthor": "admin"
     };
     dataLayer.push(dataLayer_content);
 </script>
 <script data-cfasync="false">
-    (function(w, d, s, l, i) {
+    (function (w, d, s, l, i) {
         w[l] = w[l] || [];
         w[l].push({
             'gtm.start': new Date().getTime(),
@@ -1429,14 +1632,14 @@
             dl = l != 'dataLayer' ? '&l=' + l : '';
         j.async = true;
         j.src =
-            '../../www.googletagmanager.com/gtm5445.html?id=' + i + dl;
+            '../../../www.googletagmanager.com/gtm5445.html?id=' + i + dl;
         f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-TH4WGRG');
 </script>
 <!-- End Google Tag Manager for WordPress by gtm4wp.com -->
 <!-- Analytics by WP Statistics v14.5.1 - https://wp-statistics.com/ -->
 <script>
-    var nova_ajax_url = '../wp-admin/admin-ajax.html';
+    var nova_ajax_url = '../../wp-admin/admin-ajax.html';
 </script>
 <noscript>
     <style>
@@ -1574,6 +1777,24 @@
         --kitify-border-color: #EEEEEE;
     }
 
+    .price {
+        position: relative;
+        /* để badge bám theo khối price */
+    }
+
+    .price-discount-badge {
+        position: absolute;
+        top: -8px;
+        /* đẩy lên một chút để nằm ở mép trên */
+        right: 1;
+        /* góc trên bên phải */
+        font-size: 15px;
+        padding: 2px 6px;
+        /* border-radius: 999px; nhìn gọn, bo tròn */
+        line-height: 1.1;
+    }
+
+
     .isPageSpeed .nova-image-loading,
     body>div.pace {
         display: none;
@@ -1602,10 +1823,9 @@
     /* Shop *************************************************************/
     /********************************************************************/
 </style>
-<link rel="icon" href="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-32x32.png" sizes="32x32" />
-<link rel="icon" href="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-192x192.png"
-    sizes="192x192" />
-<link rel="apple-touch-icon" href="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-180x180.png" />
+<link rel="icon" href="../../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-32x32.png" sizes="32x32" />
+<link rel="icon" href="../../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="../../../mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-180x180.png" />
 <meta name="msapplication-TileImage"
     content="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/cropped-fav-270x270.png" />
 <script>
@@ -1963,16 +2183,32 @@
         color: #7f1d1d
     }
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&subset=vietnamese" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap&subset=vietnamese" rel="stylesheet">
-<style>/* Thân bài */
-body, button, input, textarea, select {
-  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important;
-}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&subset=vietnamese"
+    rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap&subset=vietnamese"
+    rel="stylesheet">
+<style>
+    /* Thân bài */
+    body,
+    button,
+    input,
+    textarea,
+    select {
+        font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important;
+    }
 
-/* Tiêu đề */
-h1, h2, h3, .entry-title, .site-title, .product_title {
-  font-family: 'Outfit', 'Inter', sans-serif !important;
-}
+    /* Tiêu đề */
+    h1,
+    h2,
+    h3,
+    .entry-title,
+    .site-title,
+    .product_title {
+        font-family: 'Outfit', 'Inter', sans-serif !important;
+    }
+
+    .variable-item.is-disabled {
+        opacity: 0.4;
+        pointer-events: none;
+    }
 </style>
- 

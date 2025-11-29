@@ -21,17 +21,17 @@ class OrderController extends Controller
         $statuses = OrderStatus::orderBy('id')->get(['id','name']);
 
         // Đếm số đơn theo trạng thái (để hiện số trên tab)
-        $counts = \App\Models\Order::query()
+        $counts = Order::query()
             ->where('user_id', Auth::id())
             ->selectRaw('order_status_id, COUNT(*) as c')
             ->groupBy('order_status_id')
             ->pluck('c', 'order_status_id'); // [status_id => count]
 
-        $orders = \App\Models\Order::query()
-            ->with(['status','paymentStatus','payment.method','details']) // eager để tính SL
+        $orders = Order::query()
+            ->with(['status','paymentStatus','payment.paymentMethod','details']) // eager để tính SL
             ->where('user_id', Auth::id())
             ->when($statusId > 0, fn($q) => $q->where('order_status_id', $statusId))
-            ->latest('created_at')                 // mới nhất lên đầu
+            ->latest('created_at', 'desc')                 // mới nhất lên đầu
             ->paginate(5)                          // <= chỉ 5 đơn mỗi trang
             ->withQueryString();                   // giữ ?status_id khi next page
 

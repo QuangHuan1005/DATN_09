@@ -58,6 +58,7 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 
 // 🛒 Giỏ hàng (chỉ cho user đã đăng nhập)
 Route::middleware('auth')->prefix('cart')->group(function () {
+    
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
     Route::post('/add/{id?}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/update/{id}', [CartController::class, 'update'])->name('cart.update');
@@ -73,7 +74,18 @@ Route::middleware('auth')->group(function () {
 
      // ➕ THÊM MỚI: Mua ngay (chuyển thẳng sang checkout với 1 biến thể & số lượng)
     Route::post('/checkout/buy-now', [CheckoutController::class, 'buyNow'])->name('checkout.buy_now');
+    
 });
+Route::middleware('auth')->group(function () {
+    Route::post('/checkout/vnpay', [VnPayController::class, 'createPayment'])
+        ->name('payment.vnpay.create');
+});
+
+Route::get('/payment/vnpay/return', [VnPayController::class, 'return'])
+    ->name('payment.vnpay.return');
+
+Route::post('/payment/vnpay/ipn', [VnPayController::class, 'ipn'])
+    ->name('payment.vnpay.ipn');
 
 
 // 💰 Thanh toán Momo
