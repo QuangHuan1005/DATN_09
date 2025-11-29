@@ -53,7 +53,7 @@ class HomeController extends Controller
                 'variants.color',
                 'variants.size',
             ])
-            ->take(4)
+            ->take(8)
             ->get();
 
         // 4. Sản phẩm thịnh hành (trending) theo lượt xem

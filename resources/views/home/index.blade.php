@@ -61,53 +61,53 @@
 
                                                         @foreach ($newProducts as $item)
                                                             @php
-                                                                // Lấy biến thể rẻ nhất để tính giá hiển thị
-                                                                $sortedVariants = $item->variants->sortBy(function ($v, ) {
-                                                                    // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
-                                                                    $effectivePrice =
-                                                                        $v->sale !== null && $v->sale < $v->price
-                                                                        ? $v->sale
-                                                                        : $v->price;
-                                                                    return $effectivePrice;
-                                                                });
+    // Lấy biến thể rẻ nhất để tính giá hiển thị
+    $sortedVariants = $item->variants->sortBy(function ($v, ) {
+        // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
+        $effectivePrice =
+            $v->sale !== null && $v->sale < $v->price
+            ? $v->sale
+            : $v->price;
+        return $effectivePrice;
+    });
 
-                                                                $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
+    $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
 
-                                                                // Chuẩn bị giá
-                                                                $hasSale =
-                                                                    $bestVariant &&
-                                                                    $bestVariant->sale !== null &&
-                                                                    $bestVariant->sale < $bestVariant->price;
+    // Chuẩn bị giá
+    $hasSale =
+        $bestVariant &&
+        $bestVariant->sale !== null &&
+        $bestVariant->sale < $bestVariant->price;
 
-                                                                $originalPrice = $bestVariant->price ?? null;
-                                                                $salePrice = $hasSale ? $bestVariant->sale : null;
-                                                                $finalPrice = $hasSale
-                                                                    ? $bestVariant->sale
-                                                                    : $bestVariant->price ?? null;
+    $originalPrice = $bestVariant->price ?? null;
+    $salePrice = $hasSale ? $bestVariant->sale : null;
+    $finalPrice = $hasSale
+        ? $bestVariant->sale
+        : $bestVariant->price ?? null;
 
-                                                                // Tính % giảm
-                                                                $discountPercent = null;
-                                                                if ($hasSale && $originalPrice > 0) {
-                                                                    $discountPercent = round(
-                                                                        (($originalPrice - $salePrice) /
-                                                                            $originalPrice) *
-                                                                        100,
-                                                                    );
-                                                                }
+    // Tính % giảm
+    $discountPercent = null;
+    if ($hasSale && $originalPrice > 0) {
+        $discountPercent = round(
+            (($originalPrice - $salePrice) /
+                $originalPrice) *
+            100,
+        );
+    }
 
-                                                                // Ảnh chính
-                                                                $mainImage = $item->firstPhoto?->image
-                                                                    ? asset('storage/' . $item->firstPhoto->image)
-                                                                    : 'https://via.placeholder.com/700x700?text=No+Image';
+    // Ảnh chính
+    $mainImage = $item->firstPhoto?->image
+        ? asset('storage/' . $item->firstPhoto->image)
+        : 'https://via.placeholder.com/700x700?text=No+Image';
 
-                                                                // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
-                                                                $secondPhoto = $item->photoAlbums
-                                                                    ->skip(1) // bỏ ảnh đầu tiên
-                                                                    ->first();
+    // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
+    $secondPhoto = $item->photoAlbums
+        ->skip(1) // bỏ ảnh đầu tiên
+        ->first();
 
-                                                                $hoverImage = $secondPhoto?->image
-                                                                    ? asset('storage/' . $secondPhoto->image)
-                                                                    : $mainImage; // fallback chính nó
+    $hoverImage = $secondPhoto?->image
+        ? asset('storage/' . $secondPhoto->image)
+        : $mainImage; // fallback chính nó
                                                             @endphp
                                                             <li
                                                                 class="product_item product-grid-item product type-product post-960 status-publish first instock product_cat-hoodies product_cat-tshirts product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m41 product_tag-products product_tag-women has-post-thumbnail sale shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
@@ -172,13 +172,13 @@
                                                                                     class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
                                                                                     alt="{{ $item->name }}"
                                                                                     srcset="{{ $mainImage }} 700w,
-                                                                                                                                                                             {{ $mainImage }} 300w,
-                                                                                                                                                                              {{ $mainImage }} 150w,
-                                                                                                                                                                               {{ $mainImage }} 768w,
-                                                                                                                                                                                {{ $mainImage }} 250w,
-                                                                                                                                                                                 {{ $mainImage }} 50w,
-                                                                                                                                                                                  {{ $mainImage }} 100w,
-                                                                                                                                                                                   {{ $mainImage }} 1000w"
+                                                                                                                                                                                     {{ $mainImage }} 300w,
+                                                                                                                                                                                      {{ $mainImage }} 150w,
+                                                                                                                                                                                       {{ $mainImage }} 768w,
+                                                                                                                                                                                        {{ $mainImage }} 250w,
+                                                                                                                                                                                         {{ $mainImage }} 50w,
+                                                                                                                                                                                          {{ $mainImage }} 100w,
+                                                                                                                                                                                           {{ $mainImage }} 1000w"
                                                                                     sizes="(max-width: 700px) 100vw, 700px" /><span
                                                                                     class="product_second_image"
                                                                                     style="background-image: url('{{ $hoverImage }}')"></span>
@@ -347,6 +347,249 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="elementor-element elementor-element-0515f8d e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                            data-id="0515f8d" data-element_type="container">
+                            <div class="e-con-inner">
+                                <div class="elementor-element elementor-element-b96983c e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no elementor-invisible kitify-has-entrance-animation e-con e-child"
+                                    data-id="b96983c" data-element_type="container"
+                                    data-settings="{&quot;animation&quot;:&quot;kitifyShortFadeInUp&quot;}">
+                                    <div class="elementor-element elementor-element-b2bacd0 elementor-widget elementor-widget-heading"
+                                        data-id="b2bacd0" data-element_type="widget" data-widget_type="heading.default">
+                                        <div class="elementor-widget-container">
+                                            <span class="elementor-heading-title elementor-size-default">top
+                                                Products</span>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-840db58 elementor-widget elementor-widget-heading"
+                                        data-id="840db58" data-element_type="widget" data-widget_type="heading.default">
+                                        <div class="elementor-widget-container">
+                                            <h2 class="elementor-heading-title elementor-size-default">Đang Giảm Giá</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-520bb32 custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-invisible kitify-has-entrance-animation elementor-widget kitify elementor-kitify-wooproducts"
+                                    data-id="520bb32" data-element_type="widget"
+                                    data-settings="{&quot;_animation&quot;:&quot;kitifyShortFadeInUp&quot;,&quot;_animation_delay&quot;:500}"
+                                    data-widget_type="kitify-wooproducts.default">
+                                    <div class="elementor-widget-container">
+                                        <div class="woocommerce  kitify_wc_widget_520bb32_0">
+                                            <div class="kitify-products">
+                                                <div class="kitify-products__list_wrapper">
+                                                    <ul
+                                                        class="products ul_products kitify-products__list products-grid products-grid-1 col-row columns-4">
+
+                                                        @foreach ($saleProducts as $item)
+                                                            @php
+    // Lấy biến thể rẻ nhất để tính giá hiển thị
+    $sortedVariants = $item->variants->sortBy(function ($v, ) {
+        // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
+        $effectivePrice =
+            $v->sale !== null && $v->sale < $v->price
+            ? $v->sale
+            : $v->price;
+        return $effectivePrice;
+    });
+
+    $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
+
+    // Chuẩn bị giá
+    $hasSale =
+        $bestVariant &&
+        $bestVariant->sale !== null &&
+        $bestVariant->sale < $bestVariant->price;
+
+    $originalPrice = $bestVariant->price ?? null;
+    $salePrice = $hasSale ? $bestVariant->sale : null;
+    $finalPrice = $hasSale
+        ? $bestVariant->sale
+        : $bestVariant->price ?? null;
+
+    // Tính % giảm
+    $discountPercent = null;
+    if ($hasSale && $originalPrice > 0) {
+        $discountPercent = round(
+            (($originalPrice - $salePrice) /
+                $originalPrice) *
+            100,
+        );
+    }
+
+    // Ảnh chính
+    $mainImage = $item->firstPhoto?->image
+        ? asset('storage/' . $item->firstPhoto->image)
+        : 'https://via.placeholder.com/700x700?text=No+Image';
+
+    // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
+    $secondPhoto = $item->photoAlbums
+        ->skip(1) // bỏ ảnh đầu tiên
+        ->first();
+
+    $hoverImage = $secondPhoto?->image
+        ? asset('storage/' . $secondPhoto->image)
+        : $mainImage; // fallback chính nó
+                                                            @endphp
+                                                            <li
+                                                                class="product_item product-grid-item product type-product post-960 status-publish first instock product_cat-hoodies product_cat-tshirts product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m41 product_tag-products product_tag-women has-post-thumbnail sale shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
+
+
+                                                                <div class="product-item">
+                                                                    <div class="product-item__badges">
+
+                                                                        @if ($discountPercent)
+                                                                            <span class="onsale">{{ $discountPercent }}%</span>
+                                                                        @endif
+                                                                    </div>
+                                                                    <div class="product-item__thumbnail">
+                                                                        <div class="product-item__thumbnail_overlay">
+                                                                        </div>
+                                                                        <a class="product-item-link"
+                                                                            href="{{ route('products.show', ['id' => $item->id]) }}"></a>
+                                                                        <div class="product-item__description--top-actions">
+
+                                                                            <a href="{{ route('products.show', ['id' => $item->id]) }}"
+                                                                                data-product-id="{{ $item->id }}"
+                                                                                data-product-type="variable"
+                                                                                data-browse-wishlist-text="Browse wishlist"
+                                                                                class="nova_product_wishlist_btn add_to_wishlist"
+                                                                                rel="nofollow">
+                                                                                <i class="inova ic-favorite"></i>
+                                                                                <span class="hidden add-text">Add to
+                                                                                    wishlist</span>
+                                                                                <span class="hidden added-text">Browse
+                                                                                    wishlist</span>
+                                                                            </a>
+
+                                                                            <a href="#" class="nova_product_quick_view_btn"
+                                                                                data-product-id="{{ $item->id }}"
+                                                                                data-product-type="variable rel=" nofollow"><i
+                                                                                    class="inova ic-zoom"></i></a><a
+                                                                                href="{{ route('products.show', ['id' => $item->id]) }}"
+                                                                                data-quantity="1"
+                                                                                class="button product_type_variable add_to_cart_button"
+                                                                                data-product_id="{{ $item->id }}"
+                                                                                data-product_sku=""
+                                                                                aria-label="Select options for {{ $item->name }}"
+                                                                                rel="nofollow"><svg class="mixtas-addtocart">
+                                                                                    <use xlink:href="#mixtas-addtocart"
+                                                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                                                    </use>
+                                                                                </svg><span class="text">Select
+                                                                                    options</span></a> <span
+                                                                                id="woocommerce_loop_add_to_cart_link_describedby_960"
+                                                                                class="screen-reader-text">
+                                                                                This product has multiple variants. The options
+                                                                                may be chosen on the product page </span>
+                                                                        </div>
+
+
+                                                                        <div
+                                                                            class="product-item__thumbnail-placeholder second_image_enabled">
+                                                                            <a
+                                                                                href="{{ route('products.show', ['id' => $item->id]) }}">
+                                                                                <img loading="lazy" decoding="async" width="700"
+                                                                                    height="700" src="{{ $mainImage }}"
+                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
+                                                                                    alt="{{ $item->name }}"
+                                                                                    srcset="{{ $mainImage }} 700w,
+                                                                                                                                                                                     {{ $mainImage }} 300w,
+                                                                                                                                                                                      {{ $mainImage }} 150w,
+                                                                                                                                                                                       {{ $mainImage }} 768w,
+                                                                                                                                                                                        {{ $mainImage }} 250w,
+                                                                                                                                                                                         {{ $mainImage }} 50w,
+                                                                                                                                                                                          {{ $mainImage }} 100w,
+                                                                                                                                                                                           {{ $mainImage }} 1000w"
+                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
+                                                                                    class="product_second_image"
+                                                                                    style="background-image: url('{{ $hoverImage }}')"></span>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="product-item__description">
+
+                                                                        <div class="product-item__description--info">
+                                                                            <div class="info-left">
+                                                                                @if ($item->category)
+                                                                                    <div class="product-item__category"><a
+                                                                                            class="content-product-cat"
+                                                                                            href="../product-category/hoodies/index.html"
+                                                                                            rel="tag">{{ $item->category->name }}</a>
+                                                                                    </div>
+                                                                                @endif
+                                                                                <a href="{{ route('products.show', ['id' => $item->id]) }}"
+                                                                                    class="title">
+                                                                                    <h3 class="woocommerce-loop-product__title">
+                                                                                        {{ $item->name }}
+                                                                                    </h3>
+                                                                                </a>
+                                                                            </div>
+                                                                            {{-- Giá --}}
+                                                                            <div class="info-right">
+                                                                                @if ($bestVariant)
+                                                                                    @if ($hasSale)
+                                                                                        {{-- Có khuyến mãi --}}
+                                                                                        <span class="price">
+                                                                                            <del aria-hidden="true">
+                                                                                                <span
+                                                                                                    class="woocommerce-Price-amount amount">
+                                                                                                    <bdi>
+                                                                                                        {{ number_format($originalPrice, 0, ',', '.') }}₫
+                                                                                                    </bdi>
+                                                                                                </span>
+                                                                                            </del>
+                                                                                            <ins aria-hidden="true">
+                                                                                                <span
+                                                                                                    class="woocommerce-Price-amount amount m-2">
+                                                                                                    <bdi>
+                                                                                                        {{ number_format($salePrice, 0, ',', '.') }}₫
+                                                                                                    </bdi>
+                                                                                                </span>
+                                                                                            </ins>
+                                                                                        </span>
+                                                                                    @else
+                                                                                        {{-- Không khuyến mãi --}}
+                                                                                        <span class="price">
+                                                                                            <ins aria-hidden="true">
+                                                                                                <span
+                                                                                                    class="woocommerce-Price-amount amount">
+                                                                                                    <bdi>
+                                                                                                        {{ number_format($finalPrice ?? 0, 0, ',', '.') }}₫
+                                                                                                    </bdi>
+                                                                                                </span>
+                                                                                            </ins>
+                                                                                        </span>
+                                                                                    @endif
+                                                                                @else
+                                                                                    {{-- Không có biến thể nào (trường hợp hiếm
+                                                                                    / dữ liệu chưa nhập variant) --}}
+                                                                                    <span class="price">
+                                                                                        <ins aria-hidden="true">
+                                                                                            <span
+                                                                                                class="woocommerce-Price-amount amount">
+                                                                                                <bdi>
+                                                                                                    {{-- fallback 0₫ vì bảng
+                                                                                                    products hiện không có cột
+                                                                                                    price --}}
+                                                                                                    0₫
+                                                                                                </bdi>
+                                                                                            </span>
+                                                                                        </ins>
+                                                                                    </span>
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="elementor-element elementor-element-3363627 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
                             data-id="3363627" data-element_type="container">
                             <div class="e-con-inner">
@@ -363,7 +606,7 @@
                                     <div class="elementor-element elementor-element-ae5e3e5 elementor-widget elementor-widget-heading"
                                         data-id="ae5e3e5" data-element_type="widget" data-widget_type="heading.default">
                                         <div class="elementor-widget-container">
-                                            <h2 class="elementor-heading-title elementor-size-default">New Arrivals</h2>
+                                            <h2 class="elementor-heading-title elementor-size-default">Thịnh Hành</h2>
                                         </div>
                                     </div>
                                 </div>
@@ -382,789 +625,215 @@
                                                             class="products ul_products kitify-products__list products-grid products-grid-1 swiper-wrapper columns-4">
 
 
-                                                            <li
-                                                                class="product_item product-grid-item product type-product post-836 status-publish first instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
+                                                            @foreach ($trending as $item)
+                                                                @php
+    // Lấy biến thể rẻ nhất để tính giá hiển thị
+    $sortedVariants = $item->variants->sortBy(function ($v, ) {
+        // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
+        $effectivePrice =
+            $v->sale !== null && $v->sale < $v->price
+            ? $v->sale
+            : $v->price;
+        return $effectivePrice;
+    });
+
+    $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
+
+    // Chuẩn bị giá
+    $hasSale =
+        $bestVariant &&
+        $bestVariant->sale !== null &&
+        $bestVariant->sale < $bestVariant->price;
+
+    $originalPrice = $bestVariant->price ?? null;
+    $salePrice = $hasSale ? $bestVariant->sale : null;
+    $finalPrice = $hasSale
+        ? $bestVariant->sale
+        : $bestVariant->price ?? null;
+
+    // Tính % giảm
+    $discountPercent = null;
+    if ($hasSale && $originalPrice > 0) {
+        $discountPercent = round(
+            (($originalPrice - $salePrice) /
+                $originalPrice) *
+            100,
+        );
+    }
+
+    // Ảnh chính
+    $mainImage = $item->firstPhoto?->image
+        ? asset('storage/' . $item->firstPhoto->image)
+        : 'https://via.placeholder.com/700x700?text=No+Image';
+
+    // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
+    $secondPhoto = $item->photoAlbums
+        ->skip(1) // bỏ ảnh đầu tiên
+        ->first();
+
+    $hoverImage = $secondPhoto?->image
+        ? asset('storage/' . $secondPhoto->image)
+        : $mainImage; // fallback chính nó
+                                                                @endphp
+                                                                <li
+                                                                    class="product_item product-grid-item product type-product post-836 status-publish first instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
 
 
-                                                                <div class="product-item">
-                                                                    <div class="product-item__badges">
-                                                                    </div>
-                                                                    <div class="product-item__thumbnail">
-                                                                        <div class="product-item__thumbnail_overlay">
+                                                                    <div class="product-item">
+                                                                        <div class="product-item__badges">
+
+                                                                            @if ($discountPercent)
+                                                                                <span class="onsale">{{ $discountPercent }}%</span>
+                                                                            @endif
                                                                         </div>
-                                                                        <a class="product-item-link"
-                                                                            href="../product/shoulder-bag-with-buckle/index.html"></a>
-                                                                        <div class="product-item__description--top-actions">
+                                                                        <div class="product-item__thumbnail">
+                                                                            <div class="product-item__thumbnail_overlay">
+                                                                            </div>
+                                                                            <a class="product-item-link"
+                                                                                href="{{ route('products.show', ['id' => $item->id]) }}"></a>
+                                                                            <div class="product-item__description--top-actions">
 
-                                                                            <a href="index5dab.html?add_to_wishlist=836"
-                                                                                data-product-id="836"
-                                                                                data-product-type="variable"
-                                                                                data-wishlist-url="../wishlist/index.html"
-                                                                                data-browse-wishlist-text="Browse wishlist"
-                                                                                class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                rel="nofollow">
-                                                                                <i class="inova ic-favorite"></i>
-                                                                                <span class="hidden add-text">Add to
-                                                                                    wishlist</span>
-                                                                                <span class="hidden added-text">Browse
-                                                                                    wishlist</span>
-                                                                            </a>
+                                                                                <a href="{{ route('products.show', ['id' => $item->id]) }}"
+                                                                                    data-product-id="{{ $item->id }}"
+                                                                                    data-product-type="variable"
+                                                                                    data-browse-wishlist-text="Browse wishlist"
+                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
+                                                                                    rel="nofollow">
+                                                                                    <i class="inova ic-favorite"></i>
+                                                                                    <span class="hidden add-text">Add to
+                                                                                        wishlist</span>
+                                                                                    <span class="hidden added-text">Browse
+                                                                                        wishlist</span>
+                                                                                </a>
 
-                                                                            <a href="#" class="nova_product_quick_view_btn"
-                                                                                data-product-id="836" rel="nofollow"><i
-                                                                                    class="inova ic-zoom"></i></a><a
-                                                                                href="../product/shoulder-bag-with-buckle/index.html"
-                                                                                data-quantity="1"
-                                                                                class="button product_type_variable add_to_cart_button"
-                                                                                data-product_id="836" data-product_sku=""
-                                                                                aria-label="Select options for &ldquo;Shoulder bag with buckle&rdquo;"
-                                                                                rel="nofollow"><svg
-                                                                                    class="mixtas-addtocart">
-                                                                                    <use xlink:href="#mixtas-addtocart"
-                                                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                    </use>
-                                                                                </svg><span class="text">Select
-                                                                                    options</span></a> <span
-                                                                                id="woocommerce_loop_add_to_cart_link_describedby_836"
-                                                                                class="screen-reader-text">
-                                                                                This product has multiple variants. The
-                                                                                options may be chosen on the product page
-                                                                            </span>
-                                                                        </div>
+                                                                                <a href="#" class="nova_product_quick_view_btn"
+                                                                                    data-product-id="{{ $item->id }}"
+                                                                                    data-product-type="variable rel="
+                                                                                    nofollow"><i
+                                                                                        class="inova ic-zoom"></i></a><a
+                                                                                    href="{{ route('products.show', ['id' => $item->id]) }}"
+                                                                                    data-quantity="1"
+                                                                                    class="button product_type_variable add_to_cart_button"
+                                                                                    data-product_id="{{ $item->id }}"
+                                                                                    data-product_sku=""
+                                                                                    aria-label="Select options for {{ $item->name }}"
+                                                                                    rel="nofollow"><svg
+                                                                                        class="mixtas-addtocart">
+                                                                                        <use xlink:href="#mixtas-addtocart"
+                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                                                        </use>
+                                                                                    </svg><span class="text">Select
+                                                                                        options</span></a> <span
+                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_960"
+                                                                                    class="screen-reader-text">
+                                                                                    This product has multiple variants. The
+                                                                                    options
+                                                                                    may be chosen on the product page </span>
+                                                                            </div>
 
 
-                                                                        <div
-                                                                            class="product-item__thumbnail-placeholder second_image_enabled">
-                                                                            <a
-                                                                                href="../product/shoulder-bag-with-buckle/index.html">
-                                                                                <img loading="lazy" decoding="async"
-                                                                                    width="700" height="700"
-                                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_1-700x700.jpg"
-                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                    alt=""
-                                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_1.jpg 1000w"
-                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
-                                                                                    class="product_second_image"
-                                                                                    style="background-image: url('../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_12_2-700x700.jpg')"></span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="product-item__description">
-
-                                                                        <div class="product-item__description--info">
-                                                                            <div class="info-left">
-                                                                                <div class="product-item__category"><a
-                                                                                        class="content-product-cat"
-                                                                                        href="../product-category/jackets/index.html"
-                                                                                        rel="tag">Jackets</a></div>
-                                                                                <a href="../product/shoulder-bag-with-buckle/index.html"
-                                                                                    class="title">
-                                                                                    <h3
-                                                                                        class="woocommerce-loop-product__title">
-                                                                                        Shoulder bag with buckle</h3>
+                                                                            <div
+                                                                                class="product-item__thumbnail-placeholder second_image_enabled">
+                                                                                <a
+                                                                                    href="{{ route('products.show', ['id' => $item->id]) }}">
+                                                                                    <img loading="lazy" decoding="async"
+                                                                                        width="700" height="700"
+                                                                                        src="{{ $mainImage }}"
+                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
+                                                                                        alt="{{ $item->name }}"
+                                                                                        srcset="{{ $mainImage }} 700w,
+                                                                                                                                                                                                                                                 {{ $mainImage }} 300w,
+                                                                                                                                                                                                                                                  {{ $mainImage }} 150w,
+                                                                                                                                                                                                                                                   {{ $mainImage }} 768w,
+                                                                                                                                                                                                                                                    {{ $mainImage }} 250w,
+                                                                                                                                                                                                                                                     {{ $mainImage }} 50w,
+                                                                                                                                                                                                                                                      {{ $mainImage }} 100w,
+                                                                                                                                                                                                                                                       {{ $mainImage }} 1000w"
+                                                                                        sizes="(max-width: 700px) 100vw, 700px" /><span
+                                                                                        class="product_second_image"
+                                                                                        style="background-image: url('{{ $hoverImage }}')"></span>
                                                                                 </a>
                                                                             </div>
-                                                                            <div class="info-right">
+                                                                        </div>
 
-                                                                                <span class="price"><span
-                                                                                        class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                class="woocommerce-Price-currencySymbol">&#36;</span>35.90</bdi></span></span>
+                                                                        <div class="product-item__description">
+
+                                                                            <div class="product-item__description--info">
+                                                                                <div class="info-left">
+                                                                                    @if ($item->category)
+                                                                                        <div class="product-item__category"><a
+                                                                                                class="content-product-cat"
+                                                                                                href="../product-category/hoodies/index.html"
+                                                                                                rel="tag">{{ $item->category->name }}</a>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                    <a href="{{ route('products.show', ['id' => $item->id]) }}"
+                                                                                        class="title">
+                                                                                        <h3
+                                                                                            class="woocommerce-loop-product__title">
+                                                                                            {{ $item->name }}
+                                                                                        </h3>
+                                                                                    </a>
+                                                                                </div>
+                                                                                {{-- Giá --}}
+                                                                                <div class="info-right">
+                                                                                    @if ($bestVariant)
+                                                                                        @if ($hasSale)
+                                                                                            {{-- Có khuyến mãi --}}
+                                                                                            <span class="price">
+                                                                                                <del aria-hidden="true">
+                                                                                                    <span
+                                                                                                        class="woocommerce-Price-amount amount">
+                                                                                                        <bdi>
+                                                                                                            {{ number_format($originalPrice, 0, ',', '.') }}₫
+                                                                                                        </bdi>
+                                                                                                    </span>
+                                                                                                </del>
+                                                                                                <ins aria-hidden="true">
+                                                                                                    <span
+                                                                                                        class="woocommerce-Price-amount amount m-2">
+                                                                                                        <bdi>
+                                                                                                            {{ number_format($salePrice, 0, ',', '.') }}₫
+                                                                                                        </bdi>
+                                                                                                    </span>
+                                                                                                </ins>
+                                                                                            </span>
+                                                                                        @else
+                                                                                            {{-- Không khuyến mãi --}}
+                                                                                            <span class="price">
+                                                                                                <ins aria-hidden="true">
+                                                                                                    <span
+                                                                                                        class="woocommerce-Price-amount amount">
+                                                                                                        <bdi>
+                                                                                                            {{ number_format($finalPrice ?? 0, 0, ',', '.') }}₫
+                                                                                                        </bdi>
+                                                                                                    </span>
+                                                                                                </ins>
+                                                                                            </span>
+                                                                                        @endif
+                                                                                    @else
+                                                                                        {{-- Không có biến thể nào (trường hợp hiếm
+                                                                                        / dữ liệu chưa nhập variant) --}}
+                                                                                        <span class="price">
+                                                                                            <ins aria-hidden="true">
+                                                                                                <span
+                                                                                                    class="woocommerce-Price-amount amount">
+                                                                                                    <bdi>
+                                                                                                        {{-- fallback 0₫ vì bảng
+                                                                                                        products hiện không có cột
+                                                                                                        price --}}
+                                                                                                        0₫
+                                                                                                    </bdi>
+                                                                                                </span>
+                                                                                            </ins>
+                                                                                        </span>
+                                                                                    @endif
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
-                                                                </div>
-
-
-                                                            </li>
-
-
-                                                            <li
-                                                                class="product_item product-grid-item product type-product post-834 status-publish instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
-
-
-                                                                <div class="product-item">
-                                                                    <div class="product-item__badges">
-                                                                    </div>
-                                                                    <div class="product-item__thumbnail">
-                                                                        <div class="product-item__thumbnail_overlay">
-                                                                        </div>
-                                                                        <a class="product-item-link"
-                                                                            href="../product/t-shirt-with-contrasting-slogan/index.html"></a>
-                                                                        <div class="product-item__description--top-actions">
-
-                                                                            <a href="index6f11.html?add_to_wishlist=834"
-                                                                                data-product-id="834"
-                                                                                data-product-type="variable"
-                                                                                data-wishlist-url="../wishlist/index.html"
-                                                                                data-browse-wishlist-text="Browse wishlist"
-                                                                                class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                rel="nofollow">
-                                                                                <i class="inova ic-favorite"></i>
-                                                                                <span class="hidden add-text">Add to
-                                                                                    wishlist</span>
-                                                                                <span class="hidden added-text">Browse
-                                                                                    wishlist</span>
-                                                                            </a>
-
-                                                                            <a href="#" class="nova_product_quick_view_btn"
-                                                                                data-product-id="834" rel="nofollow"><i
-                                                                                    class="inova ic-zoom"></i></a><a
-                                                                                href="../product/t-shirt-with-contrasting-slogan/index.html"
-                                                                                data-quantity="1"
-                                                                                class="button product_type_variable add_to_cart_button"
-                                                                                data-product_id="834" data-product_sku=""
-                                                                                aria-label="Select options for &ldquo;T-shirt with contrasting slogan&rdquo;"
-                                                                                rel="nofollow"><svg
-                                                                                    class="mixtas-addtocart">
-                                                                                    <use xlink:href="#mixtas-addtocart"
-                                                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                    </use>
-                                                                                </svg><span class="text">Select
-                                                                                    options</span></a> <span
-                                                                                id="woocommerce_loop_add_to_cart_link_describedby_834"
-                                                                                class="screen-reader-text">
-                                                                                This product has multiple variants. The
-                                                                                options may be chosen on the product page
-                                                                            </span>
-                                                                        </div>
-
-
-                                                                        <div
-                                                                            class="product-item__thumbnail-placeholder second_image_enabled">
-                                                                            <a
-                                                                                href="../product/t-shirt-with-contrasting-slogan/index.html">
-                                                                                <img loading="lazy" decoding="async"
-                                                                                    width="700" height="700"
-                                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_1-700x700.jpg"
-                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                    alt=""
-                                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_1.jpg 1000w"
-                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
-                                                                                    class="product_second_image"
-                                                                                    style="background-image: url('../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_11_2-700x700.jpg')"></span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="product-item__description">
-
-                                                                        <div class="product-item__description--info">
-                                                                            <div class="info-left">
-                                                                                <div class="product-item__category"><a
-                                                                                        class="content-product-cat"
-                                                                                        href="../product-category/jackets/index.html"
-                                                                                        rel="tag">Jackets</a></div>
-                                                                                <a href="../product/t-shirt-with-contrasting-slogan/index.html"
-                                                                                    class="title">
-                                                                                    <h3
-                                                                                        class="woocommerce-loop-product__title">
-                                                                                        T-shirt with contrasting slogan</h3>
-                                                                                </a>
-                                                                            </div>
-                                                                            <div class="info-right">
-
-                                                                                <span class="price"><span
-                                                                                        class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                class="woocommerce-Price-currencySymbol">&#36;</span>27.90</bdi></span></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-
-                                                            </li>
-
-
-                                                            <li
-                                                                class="product_item product-grid-item product type-product post-832 status-publish instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
-
-
-                                                                <div class="product-item">
-                                                                    <div class="product-item__badges">
-                                                                    </div>
-                                                                    <div class="product-item__thumbnail">
-                                                                        <div class="product-item__thumbnail_overlay">
-                                                                        </div>
-                                                                        <a class="product-item-link"
-                                                                            href="../product/retro-sneakers/index.html"></a>
-                                                                        <div class="product-item__description--top-actions">
-
-                                                                            <a href="indexee36.html?add_to_wishlist=832"
-                                                                                data-product-id="832"
-                                                                                data-product-type="variable"
-                                                                                data-wishlist-url="../wishlist/index.html"
-                                                                                data-browse-wishlist-text="Browse wishlist"
-                                                                                class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                rel="nofollow">
-                                                                                <i class="inova ic-favorite"></i>
-                                                                                <span class="hidden add-text">Add to
-                                                                                    wishlist</span>
-                                                                                <span class="hidden added-text">Browse
-                                                                                    wishlist</span>
-                                                                            </a>
-
-                                                                            <a href="#" class="nova_product_quick_view_btn"
-                                                                                data-product-id="832" rel="nofollow"><i
-                                                                                    class="inova ic-zoom"></i></a><a
-                                                                                href="../product/retro-sneakers/index.html"
-                                                                                data-quantity="1"
-                                                                                class="button product_type_variable add_to_cart_button"
-                                                                                data-product_id="832" data-product_sku=""
-                                                                                aria-label="Select options for &ldquo;Retro sneakers&rdquo;"
-                                                                                rel="nofollow"><svg
-                                                                                    class="mixtas-addtocart">
-                                                                                    <use xlink:href="#mixtas-addtocart"
-                                                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                    </use>
-                                                                                </svg><span class="text">Select
-                                                                                    options</span></a> <span
-                                                                                id="woocommerce_loop_add_to_cart_link_describedby_832"
-                                                                                class="screen-reader-text">
-                                                                                This product has multiple variants. The
-                                                                                options may be chosen on the product page
-                                                                            </span>
-                                                                        </div>
-
-
-                                                                        <div
-                                                                            class="product-item__thumbnail-placeholder second_image_enabled">
-                                                                            <a href="../product/retro-sneakers/index.html">
-                                                                                <img loading="lazy" decoding="async"
-                                                                                    width="700" height="700"
-                                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_1-700x700.jpg"
-                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                    alt=""
-                                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_1.jpg 1000w"
-                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
-                                                                                    class="product_second_image"
-                                                                                    style="background-image: url('../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_10_2-700x700.jpg')"></span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="product-item__description">
-
-                                                                        <div class="product-item__description--info">
-                                                                            <div class="info-left">
-                                                                                <div class="product-item__category"><a
-                                                                                        class="content-product-cat"
-                                                                                        href="../product-category/jackets/index.html"
-                                                                                        rel="tag">Jackets</a></div>
-                                                                                <a href="../product/retro-sneakers/index.html"
-                                                                                    class="title">
-                                                                                    <h3
-                                                                                        class="woocommerce-loop-product__title">
-                                                                                        Retro sneakers</h3>
-                                                                                </a>
-                                                                            </div>
-                                                                            <div class="info-right">
-
-                                                                                <span class="price"><span
-                                                                                        class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                class="woocommerce-Price-currencySymbol">&#36;</span>45.90</bdi></span></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-
-                                                            </li>
-
-
-                                                            <li
-                                                                class="product_item product-grid-item product type-product post-830 status-publish last instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
-
-
-                                                                <div class="product-item">
-                                                                    <div class="product-item__badges">
-                                                                    </div>
-                                                                    <div class="product-item__thumbnail">
-                                                                        <div class="product-item__thumbnail_overlay">
-                                                                        </div>
-                                                                        <a class="product-item-link"
-                                                                            href="../product/bear-graphic-t-shirt/index.html"></a>
-                                                                        <div class="product-item__description--top-actions">
-
-                                                                            <a href="index4a13.html?add_to_wishlist=830"
-                                                                                data-product-id="830"
-                                                                                data-product-type="variable"
-                                                                                data-wishlist-url="../wishlist/index.html"
-                                                                                data-browse-wishlist-text="Browse wishlist"
-                                                                                class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                rel="nofollow">
-                                                                                <i class="inova ic-favorite"></i>
-                                                                                <span class="hidden add-text">Add to
-                                                                                    wishlist</span>
-                                                                                <span class="hidden added-text">Browse
-                                                                                    wishlist</span>
-                                                                            </a>
-
-                                                                            <a href="#" class="nova_product_quick_view_btn"
-                                                                                data-product-id="830" rel="nofollow"><i
-                                                                                    class="inova ic-zoom"></i></a><a
-                                                                                href="../product/bear-graphic-t-shirt/index.html"
-                                                                                data-quantity="1"
-                                                                                class="button product_type_variable add_to_cart_button"
-                                                                                data-product_id="830" data-product_sku=""
-                                                                                aria-label="Select options for &ldquo;Bear graphic T-shirt&rdquo;"
-                                                                                rel="nofollow"><svg
-                                                                                    class="mixtas-addtocart">
-                                                                                    <use xlink:href="#mixtas-addtocart"
-                                                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                    </use>
-                                                                                </svg><span class="text">Select
-                                                                                    options</span></a> <span
-                                                                                id="woocommerce_loop_add_to_cart_link_describedby_830"
-                                                                                class="screen-reader-text">
-                                                                                This product has multiple variants. The
-                                                                                options may be chosen on the product page
-                                                                            </span>
-                                                                        </div>
-
-
-                                                                        <div
-                                                                            class="product-item__thumbnail-placeholder second_image_enabled">
-                                                                            <a
-                                                                                href="../product/bear-graphic-t-shirt/index.html">
-                                                                                <img loading="lazy" decoding="async"
-                                                                                    width="700" height="700"
-                                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_1-700x700.jpg"
-                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                    alt=""
-                                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_1.jpg 1000w"
-                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
-                                                                                    class="product_second_image"
-                                                                                    style="background-image: url('../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_09_2-700x700.jpg')"></span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="product-item__description">
-
-                                                                        <div class="product-item__description--info">
-                                                                            <div class="info-left">
-                                                                                <div class="product-item__category"><a
-                                                                                        class="content-product-cat"
-                                                                                        href="../product-category/jackets/index.html"
-                                                                                        rel="tag">Jackets</a></div>
-                                                                                <a href="../product/bear-graphic-t-shirt/index.html"
-                                                                                    class="title">
-                                                                                    <h3
-                                                                                        class="woocommerce-loop-product__title">
-                                                                                        Bear graphic T-shirt</h3>
-                                                                                </a>
-                                                                            </div>
-                                                                            <div class="info-right">
-
-                                                                                <span class="price"><span
-                                                                                        class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                class="woocommerce-Price-currencySymbol">&#36;</span>29.90</bdi></span></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-
-                                                            </li>
-
-
-                                                            <li
-                                                                class="product_item product-grid-item product type-product post-828 status-publish first instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
-
-
-                                                                <div class="product-item">
-                                                                    <div class="product-item__badges">
-                                                                    </div>
-                                                                    <div class="product-item__thumbnail">
-                                                                        <div class="product-item__thumbnail_overlay">
-                                                                        </div>
-                                                                        <a class="product-item-link"
-                                                                            href="../product/plaid-box-pleat-mini-skirt/index.html"></a>
-                                                                        <div class="product-item__description--top-actions">
-
-                                                                            <a href="index11ad.html?add_to_wishlist=828"
-                                                                                data-product-id="828"
-                                                                                data-product-type="variable"
-                                                                                data-wishlist-url="../wishlist/index.html"
-                                                                                data-browse-wishlist-text="Browse wishlist"
-                                                                                class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                rel="nofollow">
-                                                                                <i class="inova ic-favorite"></i>
-                                                                                <span class="hidden add-text">Add to
-                                                                                    wishlist</span>
-                                                                                <span class="hidden added-text">Browse
-                                                                                    wishlist</span>
-                                                                            </a>
-
-                                                                            <a href="#" class="nova_product_quick_view_btn"
-                                                                                data-product-id="828" rel="nofollow"><i
-                                                                                    class="inova ic-zoom"></i></a><a
-                                                                                href="../product/plaid-box-pleat-mini-skirt/index.html"
-                                                                                data-quantity="1"
-                                                                                class="button product_type_variable add_to_cart_button"
-                                                                                data-product_id="828" data-product_sku=""
-                                                                                aria-label="Select options for &ldquo;Plaid box pleat mini skirt&rdquo;"
-                                                                                rel="nofollow"><svg
-                                                                                    class="mixtas-addtocart">
-                                                                                    <use xlink:href="#mixtas-addtocart"
-                                                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                    </use>
-                                                                                </svg><span class="text">Select
-                                                                                    options</span></a> <span
-                                                                                id="woocommerce_loop_add_to_cart_link_describedby_828"
-                                                                                class="screen-reader-text">
-                                                                                This product has multiple variants. The
-                                                                                options may be chosen on the product page
-                                                                            </span>
-                                                                        </div>
-
-
-                                                                        <div
-                                                                            class="product-item__thumbnail-placeholder second_image_enabled">
-                                                                            <a
-                                                                                href="../product/plaid-box-pleat-mini-skirt/index.html">
-                                                                                <img loading="lazy" decoding="async"
-                                                                                    width="700" height="700"
-                                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_1-700x700.jpg"
-                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                    alt=""
-                                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_1.jpg 1000w"
-                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
-                                                                                    class="product_second_image"
-                                                                                    style="background-image: url('../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_08_2-700x700.jpg')"></span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="product-item__description">
-
-                                                                        <div class="product-item__description--info">
-                                                                            <div class="info-left">
-                                                                                <div class="product-item__category"><a
-                                                                                        class="content-product-cat"
-                                                                                        href="../product-category/jackets/index.html"
-                                                                                        rel="tag">Jackets</a></div>
-                                                                                <a href="../product/plaid-box-pleat-mini-skirt/index.html"
-                                                                                    class="title">
-                                                                                    <h3
-                                                                                        class="woocommerce-loop-product__title">
-                                                                                        Plaid box pleat mini skirt</h3>
-                                                                                </a>
-                                                                            </div>
-                                                                            <div class="info-right">
-
-                                                                                <span class="price"><span
-                                                                                        class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                class="woocommerce-Price-currencySymbol">&#36;</span>39.90</bdi></span></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-
-                                                            </li>
-
-
-                                                            <li
-                                                                class="product_item product-grid-item product type-product post-826 status-publish instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
-
-
-                                                                <div class="product-item">
-                                                                    <div class="product-item__badges">
-                                                                    </div>
-                                                                    <div class="product-item__thumbnail">
-                                                                        <div class="product-item__thumbnail_overlay">
-                                                                        </div>
-                                                                        <a class="product-item-link"
-                                                                            href="../product/dirty-effect-denim-overshirt/index.html"></a>
-                                                                        <div class="product-item__description--top-actions">
-
-                                                                            <a href="indexfc92.html?add_to_wishlist=826"
-                                                                                data-product-id="826"
-                                                                                data-product-type="variable"
-                                                                                data-wishlist-url="../wishlist/index.html"
-                                                                                data-browse-wishlist-text="Browse wishlist"
-                                                                                class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                rel="nofollow">
-                                                                                <i class="inova ic-favorite"></i>
-                                                                                <span class="hidden add-text">Add to
-                                                                                    wishlist</span>
-                                                                                <span class="hidden added-text">Browse
-                                                                                    wishlist</span>
-                                                                            </a>
-
-                                                                            <a href="#" class="nova_product_quick_view_btn"
-                                                                                data-product-id="826" rel="nofollow"><i
-                                                                                    class="inova ic-zoom"></i></a><a
-                                                                                href="../product/dirty-effect-denim-overshirt/index.html"
-                                                                                data-quantity="1"
-                                                                                class="button product_type_variable add_to_cart_button"
-                                                                                data-product_id="826" data-product_sku=""
-                                                                                aria-label="Select options for &ldquo;Dirty-effect denim overshirt&rdquo;"
-                                                                                rel="nofollow"><svg
-                                                                                    class="mixtas-addtocart">
-                                                                                    <use xlink:href="#mixtas-addtocart"
-                                                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                    </use>
-                                                                                </svg><span class="text">Select
-                                                                                    options</span></a> <span
-                                                                                id="woocommerce_loop_add_to_cart_link_describedby_826"
-                                                                                class="screen-reader-text">
-                                                                                This product has multiple variants. The
-                                                                                options may be chosen on the product page
-                                                                            </span>
-                                                                        </div>
-
-
-                                                                        <div
-                                                                            class="product-item__thumbnail-placeholder second_image_enabled">
-                                                                            <a
-                                                                                href="../product/dirty-effect-denim-overshirt/index.html">
-                                                                                <img loading="lazy" decoding="async"
-                                                                                    width="700" height="700"
-                                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_1-700x700.jpg"
-                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                    alt=""
-                                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_1.jpg 1000w"
-                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
-                                                                                    class="product_second_image"
-                                                                                    style="background-image: url('../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_07_2-700x700.jpg')"></span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="product-item__description">
-
-                                                                        <div class="product-item__description--info">
-                                                                            <div class="info-left">
-                                                                                <div class="product-item__category"><a
-                                                                                        class="content-product-cat"
-                                                                                        href="../product-category/jackets/index.html"
-                                                                                        rel="tag">Jackets</a></div>
-                                                                                <a href="../product/dirty-effect-denim-overshirt/index.html"
-                                                                                    class="title">
-                                                                                    <h3
-                                                                                        class="woocommerce-loop-product__title">
-                                                                                        Dirty-effect denim overshirt</h3>
-                                                                                </a>
-                                                                            </div>
-                                                                            <div class="info-right">
-
-                                                                                <span class="price"><span
-                                                                                        class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                class="woocommerce-Price-currencySymbol">&#36;</span>39.90</bdi></span></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-
-                                                            </li>
-
-
-                                                            <li
-                                                                class="product_item product-grid-item product type-product post-824 status-publish instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
-
-
-                                                                <div class="product-item">
-                                                                    <div class="product-item__badges">
-                                                                    </div>
-                                                                    <div class="product-item__thumbnail">
-                                                                        <div class="product-item__thumbnail_overlay">
-                                                                        </div>
-                                                                        <a class="product-item-link"
-                                                                            href="../product/halter-waistcoat-with-a-tie-at-the-back/index.html"></a>
-                                                                        <div class="product-item__description--top-actions">
-
-                                                                            <a href="index2e69.html?add_to_wishlist=824"
-                                                                                data-product-id="824"
-                                                                                data-product-type="variable"
-                                                                                data-wishlist-url="../wishlist/index.html"
-                                                                                data-browse-wishlist-text="Browse wishlist"
-                                                                                class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                rel="nofollow">
-                                                                                <i class="inova ic-favorite"></i>
-                                                                                <span class="hidden add-text">Add to
-                                                                                    wishlist</span>
-                                                                                <span class="hidden added-text">Browse
-                                                                                    wishlist</span>
-                                                                            </a>
-
-                                                                            <a href="#" class="nova_product_quick_view_btn"
-                                                                                data-product-id="824" rel="nofollow"><i
-                                                                                    class="inova ic-zoom"></i></a><a
-                                                                                href="../product/halter-waistcoat-with-a-tie-at-the-back/index.html"
-                                                                                data-quantity="1"
-                                                                                class="button product_type_variable add_to_cart_button"
-                                                                                data-product_id="824" data-product_sku=""
-                                                                                aria-label="Select options for &ldquo;Halter waistcoat with a tie at the back&rdquo;"
-                                                                                rel="nofollow"><svg
-                                                                                    class="mixtas-addtocart">
-                                                                                    <use xlink:href="#mixtas-addtocart"
-                                                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                    </use>
-                                                                                </svg><span class="text">Select
-                                                                                    options</span></a> <span
-                                                                                id="woocommerce_loop_add_to_cart_link_describedby_824"
-                                                                                class="screen-reader-text">
-                                                                                This product has multiple variants. The
-                                                                                options may be chosen on the product page
-                                                                            </span>
-                                                                        </div>
-
-
-                                                                        <div
-                                                                            class="product-item__thumbnail-placeholder second_image_enabled">
-                                                                            <a
-                                                                                href="../product/halter-waistcoat-with-a-tie-at-the-back/index.html">
-                                                                                <img loading="lazy" decoding="async"
-                                                                                    width="700" height="700"
-                                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_1-700x700.jpg"
-                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                    alt=""
-                                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_1.jpg 1000w"
-                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
-                                                                                    class="product_second_image"
-                                                                                    style="background-image: url('../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_06_2-700x700.jpg')"></span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="product-item__description">
-
-                                                                        <div class="product-item__description--info">
-                                                                            <div class="info-left">
-                                                                                <div class="product-item__category"><a
-                                                                                        class="content-product-cat"
-                                                                                        href="../product-category/jackets/index.html"
-                                                                                        rel="tag">Jackets</a></div>
-                                                                                <a href="../product/halter-waistcoat-with-a-tie-at-the-back/index.html"
-                                                                                    class="title">
-                                                                                    <h3
-                                                                                        class="woocommerce-loop-product__title">
-                                                                                        Halter waistcoat with a tie at the
-                                                                                        back</h3>
-                                                                                </a>
-                                                                            </div>
-                                                                            <div class="info-right">
-
-                                                                                <span class="price"><span
-                                                                                        class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                class="woocommerce-Price-currencySymbol">&#36;</span>39.90</bdi></span></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-
-                                                            </li>
-
-
-                                                            <li
-                                                                class="product_item product-grid-item product type-product post-822 status-publish last instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
-
-
-                                                                <div class="product-item">
-                                                                    <div class="product-item__badges">
-                                                                    </div>
-                                                                    <div class="product-item__thumbnail">
-                                                                        <div class="product-item__thumbnail_overlay">
-                                                                        </div>
-                                                                        <a class="product-item-link"
-                                                                            href="../product/striped-poplin-shirt-with-pocket-detail/index.html"></a>
-                                                                        <div class="product-item__description--top-actions">
-
-                                                                            <a href="index46dd.html?add_to_wishlist=822"
-                                                                                data-product-id="822"
-                                                                                data-product-type="variable"
-                                                                                data-wishlist-url="../wishlist/index.html"
-                                                                                data-browse-wishlist-text="Browse wishlist"
-                                                                                class="nova_product_wishlist_btn add_to_wishlist"
-                                                                                rel="nofollow">
-                                                                                <i class="inova ic-favorite"></i>
-                                                                                <span class="hidden add-text">Add to
-                                                                                    wishlist</span>
-                                                                                <span class="hidden added-text">Browse
-                                                                                    wishlist</span>
-                                                                            </a>
-
-                                                                            <a href="#" class="nova_product_quick_view_btn"
-                                                                                data-product-id="822" rel="nofollow"><i
-                                                                                    class="inova ic-zoom"></i></a><a
-                                                                                href="../product/striped-poplin-shirt-with-pocket-detail/index.html"
-                                                                                data-quantity="1"
-                                                                                class="button product_type_variable add_to_cart_button"
-                                                                                data-product_id="822" data-product_sku=""
-                                                                                aria-label="Select options for &ldquo;Striped poplin shirt with pocket detail&rdquo;"
-                                                                                rel="nofollow"><svg
-                                                                                    class="mixtas-addtocart">
-                                                                                    <use xlink:href="#mixtas-addtocart"
-                                                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                                                    </use>
-                                                                                </svg><span class="text">Select
-                                                                                    options</span></a> <span
-                                                                                id="woocommerce_loop_add_to_cart_link_describedby_822"
-                                                                                class="screen-reader-text">
-                                                                                This product has multiple variants. The
-                                                                                options may be chosen on the product page
-                                                                            </span>
-                                                                        </div>
-
-
-                                                                        <div
-                                                                            class="product-item__thumbnail-placeholder second_image_enabled">
-                                                                            <a
-                                                                                href="../product/striped-poplin-shirt-with-pocket-detail/index.html">
-                                                                                <img loading="lazy" decoding="async"
-                                                                                    width="700" height="700"
-                                                                                    src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_1-700x700.jpg"
-                                                                                    class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                    alt=""
-                                                                                    srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_1-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_1-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_1-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_1-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_1-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_1-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_1-100x100.jpg 100w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_1.jpg 1000w"
-                                                                                    sizes="(max-width: 700px) 100vw, 700px" /><span
-                                                                                    class="product_second_image"
-                                                                                    style="background-image: url('../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m3_05_2-700x700.jpg')"></span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="product-item__description">
-
-                                                                        <div class="product-item__description--info">
-                                                                            <div class="info-left">
-                                                                                <div class="product-item__category"><a
-                                                                                        class="content-product-cat"
-                                                                                        href="../product-category/jackets/index.html"
-                                                                                        rel="tag">Jackets</a></div>
-                                                                                <a href="../product/striped-poplin-shirt-with-pocket-detail/index.html"
-                                                                                    class="title">
-                                                                                    <h3
-                                                                                        class="woocommerce-loop-product__title">
-                                                                                        Striped poplin shirt with pocket
-                                                                                        detail</h3>
-                                                                                </a>
-                                                                            </div>
-                                                                            <div class="info-right">
-
-                                                                                <span class="price"><span
-                                                                                        class="woocommerce-Price-amount amount"><bdi><span
-                                                                                                class="woocommerce-Price-currencySymbol">&#36;</span>35.90</bdi></span></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-
-                                                            </li>
+                                                                </li>
+                                                            @endforeach
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -1188,7 +857,7 @@
                                                 class="elementor-button-link elementor-button elementor-btn-align-icon- elementor-size-sm"
                                                 role="button">
                                                 <span class="elementor-button-content-wrapper">
-                                                    <span class="elementor-button-text">Show more products</span>
+                                                    <span class="elementor-button-text">Xem Thêm</span>
                                                 </span>
                                             </a>
                                         </div>
@@ -1205,8 +874,7 @@
                                     <div class="elementor-element elementor-element-4b68a54 elementor-widget elementor-widget-heading"
                                         data-id="4b68a54" data-element_type="widget" data-widget_type="heading.default">
                                         <div class="elementor-widget-container">
-                                            <h2 class="elementor-heading-title elementor-size-default">Outdoor Women's
-                                                Jackets for Every Expedition</h2>
+                                            <h2 class="elementor-heading-title elementor-size-default"></h2>
                                         </div>
                                     </div>
                                     <div class="elementor-element elementor-element-9312f93 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
@@ -1242,7 +910,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="elementor-element elementor-element-3bc8728 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        {{-- <div class="elementor-element elementor-element-3bc8728 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
                             data-id="3bc8728" data-element_type="container">
                             <div class="e-con-inner">
                                 <div class="elementor-element elementor-element-2a4b333 custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-invisible kitify-has-entrance-animation elementor-widget kitify elementor-kitify-advanced-carousel"
@@ -1371,8 +1039,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="elementor-element elementor-element-e8253e1 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                        </div> --}}
+                        {{-- <div class="elementor-element elementor-element-e8253e1 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
                             data-id="e8253e1" data-element_type="container">
                             <div class="elementor-element elementor-element-57cae08 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
                                 data-id="57cae08" data-element_type="container">
@@ -1809,7 +1477,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="elementor-element elementor-element-800a4c8 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
                             data-id="800a4c8" data-element_type="container">
                             <div class="e-con-inner">
@@ -1854,11 +1522,11 @@
 
                                                     <h3 class="elementor-icon-box-title">
                                                         <span>
-                                                            Free Shipping </span>
+                                                            Miễn Phí Vận Chuyển </span>
                                                     </h3>
 
                                                     <p class="elementor-icon-box-description">
-                                                        Free Shipping for orders over £130 </p>
+                                                        Miễn phí vận chuyển cho đơn hàng trên 300.000đ. </p>
 
                                                 </div>
 
@@ -1894,11 +1562,11 @@
 
                                                     <h3 class="elementor-icon-box-title">
                                                         <span>
-                                                            Money Guarantee </span>
+                                                            Bảo Đảm Tiền </span>
                                                     </h3>
 
                                                     <p class="elementor-icon-box-description">
-                                                        Within 30 days for an exchange. </p>
+                                                        Trong vòng 30 ngày để đổi hàng. </p>
 
                                                 </div>
 
@@ -1940,11 +1608,11 @@
 
                                                     <h3 class="elementor-icon-box-title">
                                                         <span>
-                                                            Flexible Payment </span>
+                                                            Thanh Toán Linh Hoạt </span>
                                                     </h3>
 
                                                     <p class="elementor-icon-box-description">
-                                                        Pay with Multiple Credit Cards </p>
+                                                        Thanh toán bằng nhiều thẻ tín dụng. </p>
 
                                                 </div>
 
@@ -2001,11 +1669,11 @@
 
                                                     <h3 class="elementor-icon-box-title">
                                                         <span>
-                                                            Online Support </span>
+                                                            Hỗ Trợ Trực Tuyến </span>
                                                     </h3>
 
                                                     <p class="elementor-icon-box-description">
-                                                        24 hours a day, 7 days a week </p>
+                                                        24 giờ một ngày, 7 ngày một tuần. </p>
 
                                                 </div>
 
@@ -2032,7 +1700,7 @@
                                     <div class="elementor-element elementor-element-a7cb16c elementor-widget elementor-widget-heading"
                                         data-id="a7cb16c" data-element_type="widget" data-widget_type="heading.default">
                                         <div class="elementor-widget-container">
-                                            <h2 class="elementor-heading-title elementor-size-default">Instagram Shop</h2>
+                                            <h2 class="elementor-heading-title elementor-size-default">Instagram</h2>
                                         </div>
                                     </div>
                                 </div>
