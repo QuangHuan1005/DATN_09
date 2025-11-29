@@ -92,7 +92,7 @@
                                                 <label
                                                     class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
                                                     for="{{ $inputId }}">
-                                                    {{ $size->name }}
+                                                    {{ $size->size_code }}
                                                 </label>
                                             @endforeach
                                         </div>

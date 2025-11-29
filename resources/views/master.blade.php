@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html lang="en-US" prefix="og: http://ogp.me/ns#" class="no-js">
+<html lang="vi-VN" prefix="og: http://ogp.me/ns#" class="no-js">
+
 
 
 <!-- Mirrored from mixtas.novaworks.net/home-v3/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Sep 2025 12:52:17 GMT -->
