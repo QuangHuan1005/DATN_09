@@ -28,7 +28,6 @@ class AdminProductController extends Controller
                     ->orWhere('product_code', 'like', '%' . $keyword . '%');
             });
         }
-<<<<<<< HEAD
 
         $products = Product::with(['category', 'variants'])
             ->withTrashed()->withSum('variants as total_stock', 'quantity')
@@ -39,19 +38,7 @@ class AdminProductController extends Controller
             ->withCount('reviews as reviews_count')
             ->orderByDesc('id')
             ->paginate(10);
-=======
-        $products = $query->paginate(5);
->>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
-
-        if ($request->filled('keyword')) {
-            $products->appends(['keyword' => $request->keyword]);
-        }
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
+        
         return view(
             'admin.products.index',
             compact('products'),

@@ -67,13 +67,9 @@ class AdminOrderController extends Controller
             'details.productVariant.color',
             'status',
             'user',
-<<<<<<< HEAD
-            'payment.paymentMethod',
-=======
             'payment.method',
             'staff',
->>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
-        ])->findOrFail($id);
+            ])->findOrFail($id);
 
         $lines = $order->details->map(function ($d) {
             $v = $d->productVariant;

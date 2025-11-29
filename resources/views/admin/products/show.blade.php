@@ -7,6 +7,7 @@
                 <div class="card">
                     <div class="card-body">
 <<<<<<< HEAD
+<<<<<<< HEAD
                         <!-- Crossfade -->
                         <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
                             <div class="carousel-inner" role="listbox">
@@ -47,6 +48,8 @@
                             @endif
                         </div>
 =======
+=======
+>>>>>>> 1ea612044f762eac50024ed5aed08c063ecd52f1
                         <!-- Crossfade hình ảnh -->
                      <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner" role="listbox">
@@ -85,7 +88,10 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 >>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
+=======
+>>>>>>> 1ea612044f762eac50024ed5aed08c063ecd52f1
                     </div>
                 </div>
             </div>

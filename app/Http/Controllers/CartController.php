@@ -36,41 +36,40 @@ class CartController extends Controller
             'action_type'        => ['nullable','in:add_to_cart,buy_now'],
         ]);
 
-        // // Lấy variantId từ 1 trong 2 tên field
-        // $variantId = $data['variant_id'] ?? $data['product_variant_id'] ?? null;
-        // if (empty($variantId)) {
-        //     return back()->with('error', 'Thiếu biến thể sản phẩm (variant).');
-        // }
+        // Lấy variantId từ 1 trong 2 tên field
+        $variantId = $data['variant_id'] ?? $data['product_variant_id'] ?? null;
+        if (empty($variantId)) {
+            return back()->with('error', 'Thiếu biến thể sản phẩm (variant).');
+        }
 
-        // // Tìm biến thể kèm quan hệ để lấy đủ thông tin
-        // $variant = ProductVariant::with(['product', 'color', 'size'])->find($variantId);
-        // if (!$variant) {
-        //     return back()->with('error', 'Biến thể sản phẩm không tồn tại.');
-        // }
+        // Tìm biến thể kèm quan hệ để lấy đủ thông tin
+        $variant = ProductVariant::with(['product', 'color', 'size'])->find($variantId);
+        if (!$variant) {
+            return back()->with('error', 'Biến thể sản phẩm không tồn tại.');
+        }
 
-        // // Lấy thông tin hiển thị
-        // $product    = $variant->product;
-        // $name       = $product->name ?? ('SP #' . $product->id ?? '');
-        // $colorName  = optional($variant->color)->name;
-        // $sizeName   = optional($variant->size)->name;
+        // Lấy thông tin hiển thị
+        $product    = $variant->product;
+        $name       = $product->name ?? ('SP #' . $product->id ?? '');
+        $colorName  = optional($variant->color)->name;
+        $sizeName   = optional($variant->size)->name;
 
-        // // Giá: ưu tiên sale nếu > 0, else lấy price của variant
-        // $price = (float) ($variant->sale ?? 0) > 0
-        //     ? (float) $variant->sale
-        //     : (float) ($variant->price ?? 0);
+        // Giá: ưu tiên sale nếu > 0, else lấy price của variant
+        $price = (float) ($variant->sale ?? 0) > 0
+            ? (float) $variant->sale
+            : (float) ($variant->price ?? 0);
 
-        // // Ảnh: nếu dự án của bạn có cột image cho variant thì dùng, không thì dùng ảnh product
-        // $imageUrl = $this->normalizeImageUrl($product, $variant);
+        // Ảnh: nếu dự án của bạn có cột image cho variant thì dùng, không thì dùng ảnh product
+        $imageUrl = $this->normalizeImageUrl($product, $variant);
 
-        // $qty = (int) $data['quantity'];
+        $qty = (int) $data['quantity'];
 
-        // // Lấy giỏ hiện tại
-        // $cart = Session::get('cart', []);
+        // Lấy giỏ hiện tại
+        $cart = Session::get('cart', []);
 
-        // // Key giỏ HAI LÀ GIỮ NGUYÊN: (string)$variantId
-        // $key = (string) $variant->id;
+        // Key giỏ HAI LÀ GIỮ NGUYÊN: (string)$variantId
+        $key = (string) $variant->id;
 
-<<<<<<< HEAD
         // if (isset($cart[$key])) {
         //     // Cộng dồn số lượng nếu item đã tồn tại
         //     $cart[$key]['quantity'] += $qty;
@@ -89,7 +88,6 @@ class CartController extends Controller
         //     ];
 
         // }
-=======
       // == GIỚI HẠN THEO TỒN KHO ==
         $stock    = max(0, (int) ($variant->quantity ?? 0)); // tồn kho của biến thể
         $existing = isset($cart[$key]) ? (int) ($cart[$key]['quantity'] ?? 0) : 0;
@@ -132,33 +130,15 @@ class CartController extends Controller
                 'slug'       => $product->slug ?? null,
             ];
         }
->>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
 
-        // Session::put('cart', $cart);
+        Session::put('cart', $cart);
 
-        // // [EDIT] Trả JSON khi là AJAX để không chuyển trang
-        // $cartCount = collect($cart)->sum(fn($row) => (int)($row['quantity'] ?? 0));
-        // $subtotal  = collect($cart)->reduce(function($sum, $row){
-        //     return $sum + (float)($row['price'] ?? 0) * (int)($row['quantity'] ?? 0);
-        // }, 0);
+        // [EDIT] Trả JSON khi là AJAX để không chuyển trang
+        $cartCount = collect($cart)->sum(fn($row) => (int)($row['quantity'] ?? 0));
+        $subtotal  = collect($cart)->reduce(function($sum, $row){
+            return $sum + (float)($row['price'] ?? 0) * (int)($row['quantity'] ?? 0);
+        }, 0);
 
-<<<<<<< HEAD
-        // if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
-        //     return response()->json([
-        //         'ok'         => true,
-        //         'message'    => 'Đã thêm vào giỏ hàng.',
-        //         'cart_count' => $cartCount,
-        //         'subtotal'   => $subtotal,
-        //         'item'       => [
-        //             'variant_id' => (int) $variant->id,
-        //             'quantity'   => (int) $cart[$key]['quantity'],
-        //             'price'      => (float) $cart[$key]['price'],
-        //             'name'       => $cart[$key]['name'] ?? ($product->name ?? 'Sản phẩm'),
-        //             'image'      => $cart[$key]['image'] ?? null,
-        //         ]
-        //     ]);
-        // }
-=======
         if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
            return response()->json([
             'ok'         => !$limited,
@@ -176,7 +156,6 @@ class CartController extends Controller
             ]
         ], $limited ? 409 : 200);
         }
->>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
 
         // return back()->with('success', 'Đã thêm vào giỏ hàng.');
         $variant = ProductVariant::with('product')->findOrFail($data['product_variant_id']);
@@ -187,7 +166,6 @@ class CartController extends Controller
             'quantity' => 'Số lượng vượt quá tồn kho hiện tại.',
         ])->withInput();
     }
-
     // Thêm vào giỏ (session / database tuỳ bạn)
     // Ví dụ dùng session:
     $cart = session()->get('cart', []);
@@ -211,12 +189,23 @@ class CartController extends Controller
 
     session()->put('cart', $cart);
 
-    // Điều hướng theo action_type
-    if ($data['action_type'] === 'buy_now') {
-        // Ví dụ chuyển thẳng sang trang checkout
-        return redirect()->route('checkout.index')
-            ->with('success', 'Đã thêm sản phẩm, vui lòng hoàn tất thanh toán.');
-    }
+        if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
+           return response()->json([
+            'ok'         => !$limited,
+            'message'    => $limited
+                ? ('Chỉ thêm tối đa do giới hạn tồn kho (còn ' . $stock . ').')
+                : 'Đã thêm vào giỏ hàng.',
+            'cart_count' => $cartCount,
+            'subtotal'   => $subtotal,
+            'item'       => [
+                'variant_id' => (int) $variant->id,
+                'quantity'   => (int) $cart[$key]['quantity'],
+                'price'      => (float) $cart[$key]['price'],
+                'name'       => $cart[$key]['name'] ?? ($product->name ?? 'Sản phẩm'),
+                'image'      => $cart[$key]['image'] ?? null,
+            ]
+        ], $limited ? 409 : 200);
+        }
 
     // Mặc định: chỉ thêm vào giỏ hàng
     return redirect()->route('cart.index')
@@ -239,7 +228,7 @@ class CartController extends Controller
         // LẤY DỮ LIỆU CHO LAYOUT (an toàn)
         // Category: phải dùng FQCN có dấu "\" đầu
         try {
-            $categories = class_exists(\App\Models\Category::class)
+            $categories = class_exists(Category::class)
                 ? Category::orderBy('name')->get()
                 : collect();
         } catch (\Throwable $e) {
@@ -247,7 +236,7 @@ class CartController extends Controller
         }
 
         try {
-            $colors = class_exists(\App\Models\Color::class)
+            $colors = class_exists(Color::class)
                 ? Color::orderBy('name')->get()
                 : collect();
         } catch (\Throwable $e) {
@@ -255,7 +244,7 @@ class CartController extends Controller
         }
 
         try {
-            $sizes = class_exists(\App\Models\Size::class)
+            $sizes = class_exists(Size::class)
                 ? Size::orderBy('name')->get()
                 : collect();
         } catch (\Throwable $e) {
@@ -264,7 +253,7 @@ class CartController extends Controller
 
         // Nếu layout cần $products (gợi ý/slider)
         try {
-            $products = class_exists(\App\Models\Product::class)
+            $products = class_exists(Product::class)
                 ? Product::latest()->take(8)->get()
                 : collect();
         } catch (\Throwable $e) {
@@ -405,8 +394,8 @@ return back()->with('error', 'Sản phẩm không tồn tại trong giỏ');
         }
 
         // 3) Bóc 'storage/' nếu có để làm việc với public disk
-        $rel = \Illuminate\Support\Str::startsWith($raw, 'storage/')
-            ? \Illuminate\Support\Str::after($raw, 'storage/')
+        $rel = Str::startsWith($raw, 'storage/')
+            ? Str::after($raw, 'storage/')
             : $raw;
 
         // 4) Lấy basename và ưu tiên thư mục 'products/'
@@ -422,7 +411,7 @@ $file = basename($rel);
 
         // 5) Tìm trên storage/app/public
         foreach ($candidates as $relPath) {
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($relPath)) {
+            if (Storage::disk('public')->exists($relPath)) {
                 return asset('storage/'.$relPath);   // => /storage/products/<file>
             }
         }

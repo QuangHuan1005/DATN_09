@@ -112,6 +112,7 @@
                                                         <a href="{{ route('admin.products.show', $product->id) }}"
                                                             class="text-dark fw-medium fs-15">{{ $product->name }}</a>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                         <p class="text-muted mb-0 mt-1 fs-13">Size :
                                                             </span>{{ $sizes ?: 'N/A' }}
 =======
@@ -121,6 +122,10 @@
                                                                 {{ $sizeName }},
                                                             @endforeach
 >>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
+=======
+                                                        <p class="text-muted mb-0 mt-1 fs-13">Size :
+                                                            </span>{{ $sizes ?: 'N/A' }}
+>>>>>>> 1ea612044f762eac50024ed5aed08c063ecd52f1
                                                         </p>
                                                     </div>
                                                 </div>
@@ -128,6 +133,9 @@
                                             </td>
                                             <td>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1ea612044f762eac50024ed5aed08c063ecd52f1
                                                 @if ($displayPrice)
                                                     {{ number_format($displayPrice, 0, ',', '.') }}₫
                                                 @else
@@ -138,6 +146,7 @@
                                                 <p class="mb-1 text-muted">Còn lại: <span
                                                         class="text-dark fw-medium">{{ $stock }}</span> SP</p>
                                                 <p class="mb-0 text-muted">Đã bán: {{ $sold }} SP</p>
+<<<<<<< HEAD
 =======
                                                 @php
                                                     $variant = $product->variants->sortBy('sale')->first();
@@ -162,6 +171,8 @@
                                                     <span class="text-dark fw-medium">{{ $totalQty }} Item</span>
                                                 </p>
 >>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
+=======
+>>>>>>> 1ea612044f762eac50024ed5aed08c063ecd52f1
                                             </td>
                                             <td> {{ $product->category->name ?? 'Chưa phân loại' }}</td>
                                             <td> <span class="badge p-1 bg-light text-dark fs-12 me-1"><i

@@ -31,7 +31,7 @@ class OrderController extends Controller
             ->with(['status','paymentStatus','payment.paymentMethod','details']) // eager để tính SL
             ->where('user_id', Auth::id())
             ->when($statusId > 0, fn($q) => $q->where('order_status_id', $statusId))
-            ->latest('created_at', 'desc')                 // mới nhất lên đầu
+            ->latest('created_at')                 // mới nhất lên đầu
             ->paginate(5)                          // <= chỉ 5 đơn mỗi trang
             ->withQueryString();                   // giữ ?status_id khi next page
 
@@ -41,19 +41,6 @@ class OrderController extends Controller
     // Chi tiết đơn hàng
     public function show($id)
     {
-<<<<<<< HEAD
-        $order = Order::query()
-            ->with([
-                'status','paymentStatus','payment.paymentMethod','invoice','voucher',
-                'user:id,name,email',
-                'details.productVariant.product:id,name',
-                'details.productVariant.color:id,name,color_code',
-                'details.productVariant.size:id,name,size_code',
-            ])
-            ->where('id', $id)
-            ->where('user_id', Auth::id())
-            ->first();
-=======
        $order = Order::query()
         ->with([
             'status','paymentStatus','payment.method','invoice','voucher',
@@ -66,8 +53,6 @@ class OrderController extends Controller
         ->where('id', $id)
         ->where('user_id', Auth::id())
         ->first();
->>>>>>> 067d11aa1ee70cf6b384050e89f5b2daf2e504e8
-
         if (!$order) {
             return redirect()->route('orders.index')->with('error', 'Không tìm thấy đơn hàng.');
         }
