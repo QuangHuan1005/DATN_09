@@ -14,7 +14,6 @@ class Product extends Model
 
     protected $fillable = [
         'category_id',
-        'role_id',
         'product_code',
         'name',
         'description',
@@ -33,10 +32,10 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function variants()
-    {
-        return $this->hasMany(ProductVariant::class);
-    }
+public function variants()
+{
+    return $this->hasMany(ProductVariant::class, 'product_id');
+}
 
     public function photoAlbums()
     {

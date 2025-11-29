@@ -337,9 +337,25 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Đã thêm sản phẩm vào giỏ hàng.');
     }
 
+    // 👉 THÊM MỚI: Lấy sản phẩm cùng danh mục (không đụng vào logic cũ)
+    $relatedProducts = Product::with(['photoAlbums', 'variants'])
+        ->where('category_id', $product->category_id) // cùng danh mục
+        ->where('id', '!=', $product->id)             // loại trừ sản phẩm hiện tại
+        ->take(8)                                     // giới hạn số lượng (tùy bạn chỉnh)
+        ->get();
 
-
-
+    // Giữ nguyên + truyền thêm relatedProducts xuống view
+    return view('products.show', compact(
+        'product',
+        'variants',
+        'albums',
+        'reviews',
+        'categories',
+        'colors',
+        'variantMap',
+        'relatedProducts'
+    ));
+}
 
 
     public function showByCategory($slug)

@@ -112,4 +112,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Product::class, 'product_favorites');
     }
+  // Gán đơn hàng cho staff
+    public function assignedOrders()
+{
+    return $this->hasMany(Order::class, 'staff_id');
+}
+
 }

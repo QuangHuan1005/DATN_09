@@ -55,80 +55,46 @@
                                 </div>
                             </div>
 
-                            {{-- Size / Màu sắc (demo UI, chưa map dữ liệu biến thể) --}}
-                            <div class="row mb-4">
-                                <div class="col-lg-4">
-                                    <div class="mt-3">
-                                        <h5 class="text-dark fw-medium">Size :</h5>
-                                        <div class="d-flex flex-wrap gap-2" role="group" aria-label="Chọn size">
-                                            @php
-                                                $sizesDemo = ['XS', 'S', 'M', 'XL', 'XXL', '3XL'];
-                                            @endphp
-                                            @foreach ($sizesDemo as $s)
-                                                @php
-                                                    // name="sizes[]" để gửi mảng size[]
-                                                    $id = 'size-' . strtolower($s);
-                                                @endphp
-                                                <input type="checkbox" class="btn-check" id="{{ $id }}"
-                                                    name="sizes[]" value="{{ $s }}"
-                                                    {{ is_array(old('sizes')) && in_array($s, old('sizes')) ? 'checked' : '' }}>
-                                                <label
-                                                    class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                                    for="{{ $id }}">{{ $s }}</label>
-                                            @endforeach
-                                        </div>
-                                        <small class="text-muted d-block mt-1" style="font-size:12px">
-                                            (Tạm thời lưu size dạng mảng sizes[]. Sau này map vào bảng product_variants.)
-                                        </small>
+                            {{-- Size --}}
+                            <div class="row mb-3">
+                                <div class="col-lg-6">
+                                    <h5 class="text-dark fw-medium">Size:</h5>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @php
+                                            $allSizes = \App\Models\Size::where('status', 1)->get();
+                                            $productSizes = $product->variants->pluck('size_id')->toArray();
+                                        @endphp
+                                        @foreach ($allSizes as $size)
+                                            @php $id = 'size-' . $size->id; @endphp
+                                            <input type="checkbox" class="btn-check" id="{{ $id }}" name="sizes[]"
+                                                value="{{ $size->id }}"
+                                                {{ is_array(old('sizes', $productSizes)) && in_array($size->id, old('sizes', $productSizes)) ? 'checked' : '' }}>
+                                            <label for="{{ $id }}"
+                                                class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center">
+                                                {{ $size->name }}
+                                            </label>
+                                        @endforeach
                                     </div>
                                 </div>
 
-                                <div class="col-lg-5">
-                                    <div class="mt-3">
-                                        <h5 class="text-dark fw-medium">Màu sắc :</h5>
-                                        <div class="d-flex flex-wrap gap-2" role="group" aria-label="Chọn màu">
-                                            @php
-                                                $colorsDemo = [
-                                                    ['id' => 'dark', 'labelClass' => 'text-dark', 'name' => 'Đen'],
-                                                    [
-                                                        'id' => 'yellow',
-                                                        'labelClass' => 'text-warning',
-                                                        'name' => 'Vàng',
-                                                    ],
-                                                    ['id' => 'white', 'labelClass' => 'text-white', 'name' => 'Trắng'],
-                                                    [
-                                                        'id' => 'blue',
-                                                        'labelClass' => 'text-primary',
-                                                        'name' => 'Xanh dương',
-                                                    ],
-                                                    [
-                                                        'id' => 'green',
-                                                        'labelClass' => 'text-success',
-                                                        'name' => 'Xanh lá',
-                                                    ],
-                                                    ['id' => 'red', 'labelClass' => 'text-danger', 'name' => 'Đỏ'],
-                                                    ['id' => 'sky', 'labelClass' => 'text-info', 'name' => 'Xanh nhạt'],
-                                                    ['id' => 'gray', 'labelClass' => 'text-secondary', 'name' => 'Xám'],
-                                                ];
-                                            @endphp
-
-                                            @foreach ($colorsDemo as $c)
-                                                @php
-                                                    $colorInputId = 'color-' . $c['id'];
-                                                @endphp
-                                                <input type="checkbox" class="btn-check" id="{{ $colorInputId }}"
-                                                    name="colors[]" value="{{ $c['name'] }}"
-                                                    {{ is_array(old('colors')) && in_array($c['name'], old('colors')) ? 'checked' : '' }}>
-                                                <label
-                                                    class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                                    for="{{ $colorInputId }}">
-                                                    <i class="bx bxs-circle fs-18 {{ $c['labelClass'] }}"></i>
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                        <small class="text-muted d-block mt-1" style="font-size:12px">
-                                            (Cũng lưu dạng mảng colors[]. Sau này đưa vào bảng màu/variants thật.)
-                                        </small>
+                                {{-- Color --}}
+                                <div class="col-lg-6">
+                                    <h5 class="text-dark fw-medium">Màu sắc:</h5>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @php
+                                            $allColors = \App\Models\Color::where('status', 1)->get();
+                                            $productColors = $product->variants->pluck('color_id')->toArray();
+                                        @endphp
+                                        @foreach ($allColors as $color)
+                                            @php $colorInputId = 'color-' . $color->id; @endphp
+                                            <input type="checkbox" class="btn-check" id="{{ $colorInputId }}"
+                                                name="colors[]" value="{{ $color->id }}"
+                                                {{ is_array(old('colors', $productColors)) && in_array($color->id, old('colors', $productColors)) ? 'checked' : '' }}>
+                                            <label for="{{ $colorInputId }}"
+                                                class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center">
+                                                <i class="bx bxs-circle fs-18" style="color: {{ $color->color_code }}"></i>
+                                            </label>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -146,6 +112,7 @@
 
                             {{-- Mã SP / Tồn kho / Chất liệu --}}
                             <div class="row">
+                                {{-- Mã sản phẩm --}}
                                 <div class="col-lg-4">
                                     <div class="mb-3">
                                         <label for="product_code" class="form-label">Mã Sản Phẩm</label>
@@ -155,14 +122,22 @@
                                     </div>
                                 </div>
 
+                                {{-- Số lượng --}}
                                 <div class="col-lg-4">
                                     <div class="mb-3">
-                                        <label for="product-stock" class="form-label">Số Lượng</label>
-                                        <input type="number" id="product-stock" name="quantity" class="form-control"
-                                            value="{{ old('quantity') }}" placeholder="0" min="0">
+                                        <label class="form-label">Số Lượng</label>
+                                        @foreach ($product->variants as $variant)
+                                            <input type="hidden" name="variants[{{ $variant->id }}][id]"
+                                                value="{{ $variant->id }}">
+                                            <input type="number" name="variants[{{ $variant->id }}][quantity]"
+                                                class="form-control mb-2"
+                                                value="{{ old('variants.' . $variant->id . '.quantity', $variant->quantity) }}"
+                                                min="0" placeholder="Số lượng biến thể {{ $variant->id }}">
+                                        @endforeach
                                     </div>
                                 </div>
 
+                                {{-- Chất liệu --}}
                                 <div class="col-lg-4">
                                     <div class="mb-3">
                                         <label for="product-material" class="form-label">Chất Liệu</label>
@@ -172,6 +147,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div> {{-- end card-body Thông tin sản phẩm --}}
 
                         {{-- KHỐI GIÁ --}}

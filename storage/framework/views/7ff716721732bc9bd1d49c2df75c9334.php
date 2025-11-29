@@ -95,10 +95,32 @@
 
     
     <div class="mb-3">
-        <label class="form-label fw-semibold">Giá Tiền</label>
-        <div id="priceBox">
-            <span class="text-muted">Vui lòng chọn màu & size</span>
+    <label class="form-label fw-semibold">Giá Tiền</label>
+    <div id="priceBox">
+    <?php
+        // Lấy "giá hiệu lực" cho mỗi biến thể: ưu tiên sale nếu có, ngược lại price
+        // Nếu muốn chỉ tính biến thể còn hàng, bỏ comment dòng filter(...) bên dưới.
+        $effPrices = collect($variants ?? [])
+            // ->filter(fn($v) => ($v->quantity ?? 0) > 0) // chỉ tính biến thể còn tồn
+            ->map(fn($v) => (float)($v->sale ?? $v->price));
+
+        $minPrice = $effPrices->min();
+        $maxPrice = $effPrices->max();
+    ?>
+
+    <?php if(!is_null($minPrice)): ?>
+        <div class="price">
+        <span class="price--normal">
+            <?php echo e(number_format($minPrice, 0, ',', '.')); ?>₫
+            <?php if(!is_null($maxPrice) && $maxPrice > $minPrice): ?>
+            – <?php echo e(number_format($maxPrice, 0, ',', '.')); ?>₫
+            <?php endif; ?>
+        </span>
         </div>
+    <?php else: ?>
+        <div class="price"><span class="price--normal">Đang cập nhật</span></div>
+    <?php endif; ?>
+    </div>
     </div>
 
     <!-- Tồn kho -->
@@ -473,25 +495,86 @@ list.push(`${urlProductImages}/${trimmed}`);
     </div>
 </div>
 
-
     <!-- Đánh giá sản phẩm -->
     <div class="row mt-5">
         <div class="col-md-12">
             <h3>Đánh giá sản phẩm</h3>
             <?php if(isset($reviews) && $reviews->count() > 0): ?>
                 <?php $__currentLoopData = $reviews; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <div class="border-bottom py-3">
-                        <strong>⭐ <?php echo e($r->rating); ?>/5</strong>
-                        <p class="mb-0"><?php echo e($r->content); ?></p>
-                    </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    <div class="border-bottom py-3">
+        <strong>⭐ <?php echo e($r->rating); ?>/5</strong>
+        <span class="text-muted ms-2">— <?php echo e($r->user->name ?? 'Khách hàng ẩn danh'); ?></span>
+        <p class="mb-0"><?php echo e($r->content); ?></p>
+    </div>
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
             <?php else: ?>
                 <p>Chưa có đánh giá nào cho sản phẩm này.</p>
             <?php endif; ?>
         </div>
     </div>
-</div>
-               <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+    
+    <?php if(isset($relatedProducts) && $relatedProducts->count()): ?>
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="mb-4">Sản phẩm cùng danh mục</h3>
+            </div>
+
+            <?php $__currentLoopData = $relatedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="col-6 col-md-3 mb-4">
+                    <a href="<?php echo e(route('products.show', $item->id)); ?>"
+                       class="text-decoration-none text-dark">
+                        <div class="card h-100 border-0 shadow-sm">
+                            
+                            <?php
+                                $thumb = optional($item->photoAlbums->first())->image;
+                            ?>
+                            <div class="ratio ratio-4x3">
+                                <img
+                                    src="<?php echo e($thumb
+                                            ? asset('storage/' . $thumb)
+                                            : 'https://via.placeholder.com/400x400?text=No+Image'); ?>"
+                                    alt="<?php echo e($item->name); ?>"
+                                    class="card-img-top"
+                                    style="object-fit: cover; border-radius: 8px 8px 0 0;">
+                            </div>
+
+                            <div class="card-body p-2">
+                                
+                                <div class="fw-semibold text-truncate" title="<?php echo e($item->name); ?>">
+                                    <?php echo e($item->name); ?>
+
+                                </div>
+
+                                
+                                <?php
+                                    $prices = $item->variants->map(function ($v) {
+                                        return (float)($v->sale ?? $v->price);
+                                    })->filter(fn($p) => $p > 0);
+
+                                    $min = $prices->min();
+                                    $max = $prices->max();
+                                ?>
+
+                                <?php if($min): ?>
+                                    <div class="text-danger fw-bold small mt-1">
+                                        <?php echo e(number_format($min, 0, ',', '.')); ?>₫
+                                        <?php if($max && $max > $min): ?>
+                                            - <?php echo e(number_format($max, 0, ',', '.')); ?>₫
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </div>
+    <?php endif; ?>
+</div> 
+<?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
                 <div class="nova-overlay-global"></div>
             </div><!-- .kitify-site-wrapper -->
             <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>

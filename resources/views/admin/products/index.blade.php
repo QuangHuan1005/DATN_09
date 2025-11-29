@@ -169,11 +169,11 @@
                                                         method="POST" style="display:inline-block;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-soft-secondary btn-sm"
+                                                        {{-- <button type="submit" class="btn btn-soft-secondary btn-sm"
                                                             onclick="return confirm('Xóa vĩnh viễn, không thể hoàn tác. Tiếp tục?')">
                                                             <iconify-icon
                                                                 icon="solar:trash-bin-minimalistic-broken"class="align-middle fs-18"></iconify-icon>
-                                                        </button>
+                                                        </button> --}}
                                                     </form>
                                                 @endif
                                             </td>

@@ -6,45 +6,44 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
-                        <!-- Crossfade -->
-                        <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
-                            <div class="carousel-inner" role="listbox">
-                                @forelse($images as $index => $image)
-                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}"
-                                            class="img-fluid bg-light rounded">
-                                    </div>
-                                @empty
-                                    <div class="carousel-item active">
-                                        <img src="{{ asset('assets/images/no-image.png') }}" alt="No image"
-                                            class="img-fluid bg-light rounded">
-                                    </div>
-                                @endforelse
-                                {{-- <a class="carousel-control-prev rounded" href="#carouselExampleFade" role="button"
-                                    data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </a>
-                                <a class="carousel-control-next rounded" href="#carouselExampleFade" role="button"
-                                    data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </a> --}}
-                            </div>
-                            @if (count($images) > 0)
-                                <div class="carousel-indicators m-0 mt-2 d-lg-flex d-none position-static h-100">
-                                    @foreach ($images as $index => $image)
-                                        <button type="button" data-bs-target="#carouselExampleFade"
-                                            data-bs-slide-to="{{ $index }}" aria-label="Ảnh {{ $index + 1 }}"
-                                            class="w-auto h-auto rounded bg-light {{ $index === 0 ? 'active' : '' }}"
-                                            {{ $index === 0 ? 'aria-current=true' : '' }}>
-                                            <img src="{{ asset('storage/' . $image) }}" class="d-block avatar-xl"
-                                                alt="thumb-{{ $index }}">
-                                        </button>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
+                        <!-- Crossfade hình ảnh -->
+                     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-inner" role="listbox">
+        @php
+            // Gộp ảnh từ photoAlbums và variants
+            $images = $product->photoAlbums->pluck('image')->toArray();
+            $variantImages = $product->variants->pluck('image')->filter()->toArray();
+            $allImages = array_merge($images, $variantImages);
+        @endphp
+
+        @foreach ($allImages as $key => $image)
+            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}" class="img-fluid bg-light rounded">
+            </div>
+        @endforeach
+    </div>
+
+    @if(count($allImages) > 1)
+        <a class="carousel-control-prev" href="#carouselExampleFade" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="visually-hidden">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleFade" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="visually-hidden">Next</span>
+        </a>
+    @endif
+
+    <div class="carousel-indicators m-0 mt-2 d-lg-flex d-none position-static h-100">
+        @foreach ($allImages as $key => $image)
+            <button type="button" data-bs-target="#carouselExampleFade" data-bs-slide-to="{{ $key }}"
+                class="w-auto h-auto rounded bg-light {{ $key == 0 ? 'active' : '' }}">
+                <img src="{{ asset('storage/' . $image) }}" class="d-block avatar-xl" alt="thumb">
+            </button>
+        @endforeach
+    </div>
+</div>
+
                     </div>
                 </div>
             </div>

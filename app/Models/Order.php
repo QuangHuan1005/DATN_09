@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\OrderStatusLog;
 
 class Order extends Model
 {
@@ -13,6 +14,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+          'staff_id', 
         'payment_status_id',
         'order_status_id',
         'voucher_id',
@@ -56,6 +58,13 @@ class Order extends Model
         return $this->hasMany(Review::class);
     }
 
+    // Nhân viên phụ trách đơn hàng
+public function staff()
+{
+    return $this->belongsTo(User::class, 'staff_id');
+}
+
+
     // Trạng thái đơn hàng
     public function status()
     {
@@ -85,6 +94,10 @@ class Order extends Model
     public function details()
     {
         return $this->hasMany(OrderDetail::class, 'order_id');
+    }
+    public function statusLogs()
+    {
+        return $this->hasMany(OrderStatusLog::class)->orderBy('created_at');
     }
 
     // Thông tin thanh toán
