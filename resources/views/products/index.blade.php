@@ -3,7 +3,6 @@
 @section('title', 'Danh sách sản phẩm')
 
 @section('content')
-
     <body
         class="archive post-type-archive post-type-archive-product wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-shop woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-mobile wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-342 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  shop-pagination-infinite_scroll shop-sidebar-active shop-sidebar-left blog-pagination-default kitify--enabled">
         <div class="site-wrapper">
@@ -14,25 +13,32 @@
                     <div data-elementor-type="product-archive" data-elementor-id="342"
                         class="elementor elementor-342 elementor-location-archive product">
                         <div class="elementor-element elementor-element-154c7994 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                            data-id="154c7994" data-element_type="container">
+                            data-id="154c7994" data-element_type="container"
+                            style="background-image: url('assets/images/background/shop-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 80px 0;">
                             <div class="e-con-inner">
                                 <div class="elementor-element elementor-element-48a016be kitify-breadcrumbs-page-title-yes kitify-breadcrumbs-align-center elementor-widget kitify elementor-kitify-breadcrumbs"
                                     data-id="48a016be" data-element_type="widget"
                                     data-widget_type="kitify-breadcrumbs.default">
                                     <div class="elementor-widget-container">
-
                                         <div class="kitify-breadcrumbs">
                                             <h3 class="kitify-breadcrumbs__title">Shop</h3>
                                             <div class="kitify-breadcrumbs__content">
                                                 <div class="kitify-breadcrumbs__wrap">
-                                                    <div class="kitify-breadcrumbs__item"><a href="../index.html"
+                                                    <div class="kitify-breadcrumbs__item">
+                                                        <a href="../index.html"
                                                             class="kitify-breadcrumbs__item-link is-home" rel="home"
-                                                            title="Home">Home</a></div>
+                                                            title="Home">Home</a>
+                                                    </div>
                                                     <div class="kitify-breadcrumbs__item">
                                                         <div class="kitify-breadcrumbs__item-sep"><span>/</span></div>
                                                     </div>
-                                                    <div class="kitify-breadcrumbs__item"><span
-                                                            class="kitify-breadcrumbs__item-target">Shop</span></div>
+                                                    <div class="kitify-breadcrumbs__item">
+                                                        <span class="kitify-breadcrumbs__item-target">Shop</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -40,6 +46,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="elementor-element elementor-element-62eaf656 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
                             data-id="62eaf656" data-element_type="container">
                             <div class="e-con-inner">
@@ -304,3 +311,253 @@
 
             <!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 06:58:52 -->
         @endsection
+
+
+
+
+
+
+        <script>
+    const variantMap = @json($variantMap);
+
+    let selectedColorId = null;
+    let selectedSizeId  = null;
+
+    const priceEl    = document.getElementById('js-product-price');
+    const originalEl = document.getElementById('js-product-original-price');
+    const discountEl = document.getElementById('js-product-discount');
+
+    const colorSelect = document.getElementById('pa_color');
+    const sizeSelect  = document.getElementById('pa_size');
+
+    const colorItems = document.querySelectorAll('.js-color-item');
+    const sizeItems  = document.querySelectorAll('.js-size-item');
+
+    // Nếu bạn có nút thêm giỏ / mua ngay
+    const btnAddToCart = document.querySelector('.js-submit-cartcart');
+    const btnBuyNow    = document.querySelector('.js-submit-cart');
+
+    const defaultPrice       = {{ (float) $displayPrice }};
+    const defaultOriginal    = {{ (float) $originalPrice }};
+    const defaultHasDiscount = {{ $discountPercent ? 'true' : 'false' }};
+    const defaultDiscount    = {{ (int) ($discountPercent ?? 0) }};
+
+    function formatCurrency(value) {
+        if (!value) return '0₫';
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            maximumFractionDigits: 0
+        }).format(value);
+    }
+
+    function disableAddToCartButtons() {
+        if (!btnAddToCart || !btnBuyNow) return;
+        btnAddToCart.classList.add('woocommerce-variation-add-to-cart-disabled');
+        btnBuyNow.classList.add('woocommerce-variation-add-to-cart-disabled');
+        btnAddToCart.disabled = true;
+        btnBuyNow.disabled    = true;
+    }
+
+    function enableAddToCartButtons() {
+        if (!btnAddToCart || !btnBuyNow) return;
+        btnAddToCart.classList.remove('woocommerce-variation-add-to-cart-disabled');
+        btnBuyNow.classList.remove('woocommerce-variation-add-to-cart-disabled');
+        btnAddToCart.disabled = false;
+        btnBuyNow.disabled    = false;
+    }
+
+    // ===== CẬP NHẬT GIÁ THEO BIẾN THỂ =====
+    function updatePriceByVariant() {
+        if (!selectedColorId || !selectedSizeId) {
+            disableAddToCartButtons();
+            return;
+        }
+
+        const key = `${selectedColorId}_${selectedSizeId}`;
+        const variant = variantMap[key];
+
+        if (!variant || variant.stock <= 0) {
+            disableAddToCartButtons();
+            return;
+        }
+
+        enableAddToCartButtons();
+
+        const originalPrice = Number(variant.price);
+        const salePrice     = variant.sale && variant.sale > 0 ? Number(variant.sale) : null;
+
+        if (salePrice && salePrice < originalPrice) {
+            priceEl.textContent    = formatCurrency(salePrice);
+            originalEl.textContent = formatCurrency(originalPrice);
+
+            const percent = Math.round((originalPrice - salePrice) / originalPrice * 100);
+            originalEl.classList.remove('d-none');
+            discountEl.classList.remove('d-none');
+            discountEl.textContent = `-${percent}%`;
+        } else {
+            priceEl.textContent = formatCurrency(originalPrice);
+            originalEl.classList.add('d-none');
+            discountEl.classList.add('d-none');
+        }
+    }
+
+    // ===== DISABLE SIZE THEO MÀU =====
+    function updateAvailableSizes() {
+        sizeItems.forEach(item => {
+            const sizeId = item.dataset.sizeId;
+
+            // Mặc định enable tất cả nếu chưa chọn màu
+            if (!selectedColorId) {
+                item.classList.remove('is-disabled');
+                item.setAttribute('aria-disabled', 'false');
+                return;
+            }
+
+            const key = `${selectedColorId}_${sizeId}`;
+            const variant = variantMap[key];
+
+            // Không tồn tại variant hoặc hết hàng => disable
+            if (!variant || variant.stock <= 0) {
+                item.classList.add('is-disabled');
+                item.setAttribute('aria-disabled', 'true');
+
+                // Nếu đang được chọn thì bỏ chọn
+                if (item.classList.contains('selected')) {
+                    item.classList.remove('selected');
+                    item.setAttribute('aria-checked', 'false');
+                    selectedSizeId = null;
+                    if (sizeSelect) sizeSelect.value = '';
+                }
+            } else {
+                item.classList.remove('is-disabled');
+                item.setAttribute('aria-disabled', 'false');
+            }
+        });
+    }
+
+    // ===== DISABLE MÀU THEO SIZE =====
+    function updateAvailableColors() {
+        colorItems.forEach(item => {
+            const colorId = item.dataset.colorId;
+
+            if (!selectedSizeId) {
+                item.classList.remove('is-disabled');
+                item.setAttribute('aria-disabled', 'false');
+                return;
+            }
+
+            const key = `${colorId}_${selectedSizeId}`;
+            const variant = variantMap[key];
+
+            if (!variant || variant.stock <= 0) {
+                item.classList.add('is-disabled');
+                item.setAttribute('aria-disabled', 'true');
+
+                if (item.classList.contains('selected')) {
+                    item.classList.remove('selected');
+                    item.setAttribute('aria-checked', 'false');
+                    selectedColorId = null;
+                    if (colorSelect) colorSelect.value = '';
+                }
+            } else {
+                item.classList.remove('is-disabled');
+                item.setAttribute('aria-disabled', 'false');
+            }
+        });
+    }
+
+    // ===== RESET =====
+    function clearSelection() {
+        selectedColorId = null;
+        selectedSizeId  = null;
+
+        if (colorSelect) colorSelect.value = '';
+        if (sizeSelect) sizeSelect.value  = '';
+
+        colorItems.forEach(i => {
+            i.classList.remove('selected', 'is-disabled');
+            i.setAttribute('aria-checked', 'false');
+            i.setAttribute('aria-disabled', 'false');
+        });
+
+        sizeItems.forEach(i => {
+            i.classList.remove('selected', 'is-disabled');
+            i.setAttribute('aria-checked', 'false');
+            i.setAttribute('aria-disabled', 'false');
+        });
+
+        // Reset giá
+        priceEl.textContent = formatCurrency(defaultPrice);
+
+        if (defaultHasDiscount === true || defaultHasDiscount === 'true') {
+            originalEl.textContent = formatCurrency(defaultOriginal);
+            originalEl.classList.remove('d-none');
+            discountEl.textContent = `-${defaultDiscount}%`;
+            discountEl.classList.remove('d-none');
+        } else {
+            originalEl.classList.add('d-none');
+            discountEl.classList.add('d-none');
+        }
+
+        disableAddToCartButtons();
+    }
+
+    // ===== EVENT: CHỌN MÀU =====
+    colorItems.forEach(item => {
+        item.addEventListener('click', function () {
+            if (this.classList.contains('is-disabled')) return;
+
+            const colorId = this.dataset.colorId;
+            selectedColorId = colorId;
+
+            if (colorSelect) colorSelect.value = colorId;
+
+            colorItems.forEach(i => {
+                i.classList.remove('selected');
+                i.setAttribute('aria-checked', 'false');
+            });
+            this.classList.add('selected');
+            this.setAttribute('aria-checked', 'true');
+
+            // Cập nhật size theo màu
+            updateAvailableSizes();
+            updatePriceByVariant();
+        });
+    });
+
+    // ===== EVENT: CHỌN SIZE =====
+    sizeItems.forEach(item => {
+        item.addEventListener('click', function () {
+            if (this.classList.contains('is-disabled')) return;
+
+            const sizeId = this.dataset.sizeId;
+            selectedSizeId = sizeId;
+
+            if (sizeSelect) sizeSelect.value = sizeId;
+
+            sizeItems.forEach(i => {
+                i.classList.remove('selected');
+                i.setAttribute('aria-checked', 'false');
+            });
+            this.classList.add('selected');
+            this.setAttribute('aria-checked', 'true');
+
+            // Cập nhật màu theo size
+            updateAvailableColors();
+            updatePriceByVariant();
+        });
+    });
+
+    // ===== NÚT CLEAR (nếu có) =====
+    const resetBtn = document.getElementById('js-reset-variations');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            clearSelection();
+        });
+    }
+
+    // Mặc định disable nút mua khi chưa chọn biến thể
+    disableAddToCartButtons();
+</script>

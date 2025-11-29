@@ -106,7 +106,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#sidebarAttributes" role="button" aria-expanded="false"
+                <a class="nav-link" href="{{ route('admin.products.variants') }}" role="button" aria-expanded="false"
                     aria-controls="sidebarAttributes">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:confetti-minimalistic-bold-duotone"></iconify-icon>
@@ -116,7 +116,7 @@
                 <div class="collapse" id="sidebarAttributes">
                     <ul class="nav sub-navbar-nav">
                         <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="attributes-list.html">List</a>
+                            <a class="sub-nav-link" href="{{ route('admin.products.variants') }}">List</a>
                         </li>
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="attributes-edit.html">Edit</a>

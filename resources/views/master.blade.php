@@ -35,13 +35,22 @@
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://mixtas.novaworks.net/home-v3/" />
     <meta property="og:site_name" content="Mixtas" />
+    <meta property="article:published_time" content="2024-01-02T03:47:20+00:00" />
+    <meta property="article:modified_time" content="2024-01-19T04:58:44+00:00" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:description"
         content="Urban Muse City Chic with a Feminine Twist Shop now Travel bags Shop now Urban Muse Classic Beauties for Modern Women Shop now You are innew arrivalsbest sellertrending Add to wishlist Browse wishlist Add to cart Hoodies Dime Classic Remastered Hoodie, black &#036;140.00 Add to wishlist Browse wishlist Select options Men Dime Sunny Tee, forest green &#036;55.00 Add to wishlist…" />
     <meta name="twitter:title" content="Home v3 - Mixtas" />
     <meta name="twitter:image" content="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo.svg" />
-    <!-- End Novaworks Meta Tags -->
 
+    <!-- End Novaworks Meta Tags -->
+    <style>
+        .woocommerce-variation-add-to-cart-disabled {
+            opacity: .5;
+            pointer-events: none;
+        }
+        
+    </style>
     @include('layouts.css')
 </head>
 

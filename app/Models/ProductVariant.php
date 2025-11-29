@@ -49,6 +49,10 @@ class ProductVariant extends Model
     /**
      * Scope: Lấy biến thể đang hoạt động (status = 1)
      */
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
     public function scopeActive($query)
     {
         return $query->where('status', 1);

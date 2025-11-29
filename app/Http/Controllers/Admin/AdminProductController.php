@@ -30,14 +30,20 @@ class AdminProductController extends Controller
         }
 
         $products = Product::with(['category', 'variants'])
-            ->withTrashed()->orderBy('id', 'desc')
-            ->paginate(5);
+            ->withTrashed()->withSum('variants as total_stock', 'quantity')
+            // tổng đã bán = sum(quantity) trên order_details
+            ->withSum('orderDetails as total_sold', 'quantity')
+            // rating
+            ->withAvg('reviews as avg_rating', 'rating')
+            ->withCount('reviews as reviews_count')
+            ->orderByDesc('id')
+            ->paginate(10);
 
         if ($request->filled('keyword')) {
             $products = $query->paginate(5);
             $products->appends(['keyword' => $request->keyword]);
         }
-        
+
 
 
         return view(
@@ -46,6 +52,26 @@ class AdminProductController extends Controller
             ['pageTitle' => 'Danh sách sản phẩm']
         );
     }
+    // public function index()
+    // {
+    //     $products = Product::query()
+    //         ->with([
+    //             'category:id,name',
+    //             'variants.size:id,size_code',
+    //             'variants',           // để lấy image, quantity
+    //         ])
+    //         // tổng tồn kho = sum(quantity) trên variants
+    //         ->withSum('variants as total_stock', 'quantity')
+    //         // tổng đã bán = sum(quantity) trên order_details
+    //         ->withSum('orderDetails as total_sold', 'quantity')
+    //         // rating
+    //         ->withAvg('reviews as avg_rating', 'rating')
+    //         ->withCount('reviews as reviews_count')
+    //         ->orderByDesc('id')
+    //         ->paginate(10);
+
+    //     return view('admin.products.index', compact('products'));
+    // }
 
     // Form tạo sản phẩm mới
     public function create()
@@ -89,14 +115,81 @@ class AdminProductController extends Controller
     }
 
     // Xem chi tiết sản phẩm
-    public function show($id)
+    public function show(Product $product)
     {
-        $product = Product::with(['photoAlbums', 'variants.color', 'variants.size'])->findOrFail($id);
-        return view(
-            'admin.products.show',
-            compact('product'),
-            ['pageTitle' => 'Chi tiết sản phẩm']
-        );
+        // Load đầy đủ quan hệ cần cho trang chi tiết
+        $product->load([
+            'category:id,name',
+            'variants.color:id,name,color_code',
+            'variants.size:id,name,size_code',
+            'photoAlbums',
+        ])->withSum('variants as total_stock', 'quantity')
+            // tổng đã bán = sum(quantity) trên order_details
+            ->withSum('orderDetails as total_sold', 'quantity');
+
+
+        // Tính giá min / sale
+        $minPrice = $product->variants->min('price');
+        $minSale  = $product->variants
+            ->filter(fn($v) => $v->sale && $v->sale > 0)
+            ->min('sale');
+
+        $displayPrice    = $minSale ?: $minPrice;
+        $originalPrice   = $minPrice;     // để gạch ngang
+        $discountPercent = null;
+
+        if ($minSale && $minPrice && $minSale < $minPrice) {
+            $discountPercent = round((($minPrice - $minSale) / $minPrice) * 100);
+        }
+
+        // Rating chung
+        $avgRating    = round($product->reviews->avg('rating') ?? 0, 1);
+        $ratingCount  = $product->reviews->count();
+
+        // 2 review nổi bật (mới nhất)
+        $topReviews = $product->reviews()
+            ->with('order.user')
+            ->where('status', 1)          // nếu có cột status publish
+            ->latest()
+            ->take(8)
+            ->get();
+        // Màu & size duy nhất
+        $colors = $product->variants
+            ->pluck('color')
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        $sizes  = $product->variants
+            ->pluck('size')
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        // Ảnh cho carousel: ưu tiên album, nếu không có lấy từ variant
+        $images = $product->photoAlbums->pluck('image')->toArray();
+
+        if (empty($images)) {
+            $images = $product->variants
+                ->pluck('image')
+                ->filter()
+                ->unique()
+                ->values()
+                ->toArray();
+        }
+
+        return view('admin.products.show', compact(
+            'product',
+            'displayPrice',
+            'originalPrice',
+            'discountPercent',
+            'avgRating',
+            'ratingCount',
+            'topReviews',
+            'colors',
+            'sizes',
+            'images'
+        ), ['pageTitle' => 'Chi Tiết Sản Phẩm']);
     }
 
 
@@ -196,7 +289,11 @@ class AdminProductController extends Controller
             ->orderBy('id', 'asc')
             ->get();
 
-        return view('admin.products.variants-index', compact('variants'));
+        return view(
+            'admin.products.variants-index',
+            compact('variants'),
+            ['pageTitle' => 'Danh Sách Biến Thể']
+        );
     }
 
     // Danh sách biến thể của 1 sản phẩm cụ thể
@@ -254,7 +351,7 @@ class AdminProductController extends Controller
         // Kiểm tra xem đây là Size hay Color dựa trên route
         $request = request();
         $type = null;
-        
+
         // Lấy type từ referer URL
         if ($request->header('referer')) {
             $referer = $request->header('referer');
@@ -264,7 +361,7 @@ class AdminProductController extends Controller
                 $type = 'color';
             }
         }
-        
+
         if ($type === 'size') {
             $variant = Size::findOrFail($variantId);
             $typeName = 'Kích thước';
@@ -284,12 +381,12 @@ class AdminProductController extends Controller
     {
         // Xác định loại biến thể và tên hiển thị
         $typeName = $type === 'size' ? 'Kích thước' : 'Màu sắc';
-        
+
         // Lấy dữ liệu từ bảng colors hoặc sizes
         if ($type === 'size') {
-            $variants = \App\Models\Size::query();
+            $variants = Size::query();
         } elseif ($type === 'color') {
-            $variants = \App\Models\Color::query();
+            $variants = Color::query();
         } else {
             return redirect()->route('admin.products.variants')
                 ->with('error', 'Loại biến thể không hợp lệ');
@@ -301,8 +398,8 @@ class AdminProductController extends Controller
         }
 
         $variants = $variants->orderBy('created_at', 'desc')
-                            ->orderBy('id')
-                            ->get();
+            ->orderBy('id')
+            ->get();
 
         // Trả về view danh sách biến thể
         return view('admin.products.variants-list', [
@@ -317,7 +414,7 @@ class AdminProductController extends Controller
     public function updateVariant(Request $request, $variantId)
     {
         $type = $request->input('type');
-        
+
         if ($type === 'size') {
             $variant = Size::findOrFail($variantId);
             $validated = $request->validate([
@@ -352,7 +449,7 @@ class AdminProductController extends Controller
         // Kiểm tra xem đây là Size hay Color dựa trên referer
         $request = request();
         $type = null;
-        
+
         if ($request->header('referer')) {
             $referer = $request->header('referer');
             if (strpos($referer, '/size') !== false) {
@@ -361,7 +458,7 @@ class AdminProductController extends Controller
                 $type = 'color';
             }
         }
-        
+
         if ($type === 'size') {
             $variant = Size::findOrFail($variantId);
             $typeName = 'kích thước';

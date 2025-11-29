@@ -11,10 +11,21 @@ class Review extends Model
 
     protected $table = 'reviews';
 
-    protected $fillable = ['order_id', 'product_id', 'rating', 'content', 'status'];
+    protected $fillable = [
+        'order_id',
+        'product_id',
+        'rating',
+        'content',
+        'status'
+    ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(Product::class);
     }
 }

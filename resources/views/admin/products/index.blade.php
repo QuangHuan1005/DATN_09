@@ -4,6 +4,15 @@
 
         <div class="row">
             <div class="col-xl-12">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center gap-1">
                         <h4 class="card-title flex-grow-1">Tất Cả Sản Phẩm</h4>
@@ -52,6 +61,33 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($products as $product)
+                                        @php
+                                            $sizes = $product->variants
+                                                ->loadMissing('size')
+                                                ->pluck('size.size_code')
+                                                ->filter()
+                                                ->unique()
+                                                ->implode(' , ');
+                                            // Giá hiển thị ưu tiên
+                                            $minPrice = $product->variants->min('price');
+                                            $minSale = $product->variants
+                                                ->filter(fn($v) => $v->sale && $v->sale > 0)
+                                                ->min('sale');
+                                            $displayPrice = $minSale ?: $minPrice;
+                                            // Tồn kho + đã bán
+                                            $stock =
+                                                (int) ($product->total_stock ?? 0) - (int) ($product->total_sold ?? 0);
+                                            if ($stock < 0) {
+                                                $stock = 0;
+                                            }
+                                            $sold = (int) ($product->total_sold ?? 0);
+                                            // Đánh giá
+                                            $avgRating = $product->avg_rating ? round($product->avg_rating, 1) : 0;
+                                            $reviewsCount = $product->reviews_count ?? 0;
+                                            $thumb =
+                                                optional($product->variants->first())->image ??
+                                                (optional($product->photoAlbums->first())->image ?? null);
+                                        @endphp
                                         <tr @if ($product->trashed()) class="table-danger" @endif>
                                             <td>
                                                 <div class="form-check ms-1">
@@ -63,40 +99,41 @@
                                                 <div class="d-flex align-items-center gap-2">
                                                     <div
                                                         class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                        @if ($product->photoAlbums->isNotEmpty())
-                                                            <img src="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"
-                                                                alt="" class="avatar-md">
-                                                        @else
-                                                            <img src="{{ asset('images/no-image.png') }}" alt=""
+                                                        @if ($thumb)
+                                                            <img src="{{ asset('storage/' . $thumb) }}" alt=""
                                                                 class="avatar-md">
+                                                        @else
+                                                            <img src="{{ asset('assets/images/product/p-1.png') }}"
+                                                                alt="" class="avatar-md">
                                                         @endif
 
                                                     </div>
                                                     <div>
                                                         <a href="{{ route('admin.products.show', $product->id) }}"
                                                             class="text-dark fw-medium fs-15">{{ $product->name }}</a>
-                                                        <p class="text-muted mb-0 mt-1 fs-13"><span>Size : </span>S , M , L
-                                                            , Xl
+                                                        <p class="text-muted mb-0 mt-1 fs-13">Size :
+                                                            </span>{{ $sizes ?: 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
 
                                             </td>
                                             <td>
-                                                {{ number_format($product->variants->min('sale'), 0, ',', '.') }}₫
-                                                {{-- {{ number_format($product->variants->max('price'), 0, ',', '.') }}₫ --}}
+                                                @if ($displayPrice)
+                                                    {{ number_format($displayPrice, 0, ',', '.') }}₫
+                                                @else
+                                                    N/A
+                                                @endif
                                             </td>
-
-
                                             <td>
-                                                <p class="mb-1 text-muted"><span class="text-dark fw-medium">486 Item</span>
-                                                    Left</p>
-                                                <p class="mb-0 text-muted">155 Sold</p>
+                                                <p class="mb-1 text-muted">Còn lại: <span
+                                                        class="text-dark fw-medium">{{ $stock }}</span> SP</p>
+                                                <p class="mb-0 text-muted">Đã bán: {{ $sold }} SP</p>
                                             </td>
                                             <td> {{ $product->category->name ?? 'Chưa phân loại' }}</td>
                                             <td> <span class="badge p-1 bg-light text-dark fs-12 me-1"><i
                                                         class="bx bxs-star align-text-top fs-14 text-warning me-1"></i>
-                                                    4.5</span> 55 Review</td>
+                                                    {{ $avgRating }}</span> {{ $reviewsCount }} Đánh giá</td>
                                             <td>
                                                 @if (!$product->trashed())
                                                     <a href="{{ route('admin.products.show', $product->id) }}"

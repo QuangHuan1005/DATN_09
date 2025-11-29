@@ -82,7 +82,7 @@ class AdminOrderController extends Controller
             'details.productVariant.color',
             'status',
             'user',
-            'payment.method',
+            'payment.paymentMethod',
         ])->findOrFail($id);
 
         // Chuẩn hóa dữ liệu dòng sản phẩm
