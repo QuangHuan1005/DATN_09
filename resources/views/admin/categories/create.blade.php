@@ -45,12 +45,12 @@
                     <div class="p-3 bg-light mb-3 rounded">
                         <div class="row justify-content-end g-2">
                             <div class="col-lg-2">
-                                <button type="submit" class="btn btn-outline-secondary w-100">
+                                <button type="submit" class="btn btn-outline-primary w-100">
                                     Thêm Mới
                                 </button>
                             </div>
                             <div class="col-lg-2">
-                                <a href="{{ route('admin.categories.index') }}" class="btn btn-primary w-100">
+                                <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary w-100">
                                     Hủy
                                 </a>
                             </div>

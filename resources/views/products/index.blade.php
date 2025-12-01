@@ -3,7 +3,6 @@
 @section('title', 'Danh sách sản phẩm')
 
 @section('content')
-
     <body
         class="archive post-type-archive post-type-archive-product wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-shop woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-mobile wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-342 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  shop-pagination-infinite_scroll shop-sidebar-active shop-sidebar-left blog-pagination-default kitify--enabled">
         <div class="site-wrapper">
@@ -14,25 +13,32 @@
                     <div data-elementor-type="product-archive" data-elementor-id="342"
                         class="elementor elementor-342 elementor-location-archive product">
                         <div class="elementor-element elementor-element-154c7994 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
-                            data-id="154c7994" data-element_type="container">
+                            data-id="154c7994" data-element_type="container"
+                            style="background-image: url('assets/images/background/shop-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 80px 0;">
                             <div class="e-con-inner">
                                 <div class="elementor-element elementor-element-48a016be kitify-breadcrumbs-page-title-yes kitify-breadcrumbs-align-center elementor-widget kitify elementor-kitify-breadcrumbs"
                                     data-id="48a016be" data-element_type="widget"
                                     data-widget_type="kitify-breadcrumbs.default">
                                     <div class="elementor-widget-container">
-
                                         <div class="kitify-breadcrumbs">
                                             <h3 class="kitify-breadcrumbs__title">Shop</h3>
                                             <div class="kitify-breadcrumbs__content">
                                                 <div class="kitify-breadcrumbs__wrap">
-                                                    <div class="kitify-breadcrumbs__item"><a href="../index.html"
+                                                    <div class="kitify-breadcrumbs__item">
+                                                        <a href="../index.html"
                                                             class="kitify-breadcrumbs__item-link is-home" rel="home"
-                                                            title="Home">Home</a></div>
+                                                            title="Home">Home</a>
+                                                    </div>
                                                     <div class="kitify-breadcrumbs__item">
                                                         <div class="kitify-breadcrumbs__item-sep"><span>/</span></div>
                                                     </div>
-                                                    <div class="kitify-breadcrumbs__item"><span
-                                                            class="kitify-breadcrumbs__item-target">Shop</span></div>
+                                                    <div class="kitify-breadcrumbs__item">
+                                                        <span class="kitify-breadcrumbs__item-target">Shop</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -40,6 +46,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="elementor-element elementor-element-62eaf656 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
                             data-id="62eaf656" data-element_type="container">
                             <div class="e-con-inner">
@@ -304,3 +311,10 @@
 
             <!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 06:58:52 -->
         @endsection
+
+
+
+
+
+
+        

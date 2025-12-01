@@ -36,7 +36,7 @@ class AdminUserController extends Controller
         }
 
         // 📄 Phân trang
-        $users = $query->orderByDesc('created_at')->paginate(5)->withQueryString();
+        $users = $query->orderByDesc('created_at')->paginate(6)->withQueryString();
 
         $roles = Role::all();
 
@@ -48,26 +48,46 @@ class AdminUserController extends Controller
     }
     public function show($id)
     {
-        $user = User::findOrFail($id);
-        $orders = Order::where('user_id', $user->id)->with([
-            'details.productVariant.product',
-            'details.productVariant.size',
-            'details.productVariant.color',
-            'status',
-            'user',
-            'payment.method',
-        ])->latest('id','desc')->paginate(5);
-        $latestOrder = $orders->first();
+        // 1. Lấy user
+        $users = User::findOrFail($id);
 
+        // 2. Query đơn hàng của user (dùng lại nhiều lần nên tách riêng)
+        $ordersQuery = Order::with([
+            'payment.paymentMethod', // payments + payment_methods
+            'status',           // order_statuses
+            // 'invoices',              // invoices
+        ])->where('user_id', $users->id)->latest('created_at');
 
+        // 3. Danh sách đơn hàng phân trang (hiển thị trong Transaction History)
+        $orders = (clone $ordersQuery)->latest('id', 'desc')->paginate(5);
 
-        return view('admin.users.show', compact('orders'), [
-            'users' => $user,
-            'orders' => $orders,
-            'latestOrder' => $latestOrder,
-            'invoiceCount' => $orders->count(),
-            'orderCount' => $orders->count(),
-            'totalExpense' => $orders->sum('total_price'),
+        // 4. Tổng số đơn
+        $totalOrders = (clone $ordersQuery)->count();
+
+        // 5. Tổng chi tiêu (có thể lọc theo trạng thái đã thanh toán nếu sau này cần)
+        $totalExpense = (clone $ordersQuery)->sum('total_amount');
+
+        // 6. Hóa đơn (invoice) gần nhất của user
+        // $invoiceBaseQuery = Invoice::whereHas('order', function ($q) use ($users) {
+        //     $q->where('user_id', $users->id);
+        // });
+
+        // $totalInvoices  = (clone $invoiceBaseQuery)->count();
+        // $latestInvoices = (clone $invoiceBaseQuery)
+        //     ->latest('issue_date')
+        //     ->take(4)
+        //     ->get();
+
+        // 7. Trả ra view
+        return view('admin.users.show', compact(
+            'users',
+            'orders',
+            'totalOrders',
+            'totalExpense',
+            // 'totalInvoices',
+            // 'latestInvoices'
+        ), [
+            'pageTitle' => 'Chi Tiết Người Dùng'
         ]);
     }
 

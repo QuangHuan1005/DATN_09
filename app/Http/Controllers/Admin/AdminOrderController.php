@@ -69,7 +69,7 @@ class AdminOrderController extends Controller
             'user',
             'payment.method',
             'staff',
-        ])->findOrFail($id);
+            ])->findOrFail($id);
 
         $lines = $order->details->map(function ($d) {
             $v = $d->productVariant;

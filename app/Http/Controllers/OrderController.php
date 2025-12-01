@@ -21,14 +21,14 @@ class OrderController extends Controller
         $statuses = OrderStatus::orderBy('id')->get(['id','name']);
 
         // Đếm số đơn theo trạng thái (để hiện số trên tab)
-        $counts = \App\Models\Order::query()
+        $counts = Order::query()
             ->where('user_id', Auth::id())
             ->selectRaw('order_status_id, COUNT(*) as c')
             ->groupBy('order_status_id')
             ->pluck('c', 'order_status_id'); // [status_id => count]
 
-        $orders = \App\Models\Order::query()
-            ->with(['status','paymentStatus','payment.method','details']) // eager để tính SL
+        $orders = Order::query()
+            ->with(['status','paymentStatus','payment.paymentMethod','details']) // eager để tính SL
             ->where('user_id', Auth::id())
             ->when($statusId > 0, fn($q) => $q->where('order_status_id', $statusId))
             ->latest('created_at')                 // mới nhất lên đầu
@@ -53,27 +53,31 @@ class OrderController extends Controller
         ->where('id', $id)
         ->where('user_id', Auth::id())
         ->first();
-
         if (!$order) {
             return redirect()->route('orders.index')->with('error', 'Không tìm thấy đơn hàng.');
         }
 
         // Chuẩn hóa dữ liệu hiển thị dòng SP
-        $lines = $order->details->map(function ($d) {
-            $v = $d->productVariant;
-            $variantText = [];
-            if ($v?->size?->name)  $variantText[] = "Size: {$v->size->name}";
-            if ($v?->color?->name) $variantText[] = "Màu: {$v->color->name}";
-            return (object)[
-                'product_name' => $v?->product?->name ?? 'Sản phẩm',
-                'variant_text' => $variantText ? implode(' · ', $variantText) : null,
-                'image'        => $v?->image, // chuỗi path lưu trong DB (vd: shirt1-red.jpg)
-                'unit_price'   => (int)$d->price,
-                'qty'          => (int)$d->quantity,
-                'line_total'   => (int)($d->price * $d->quantity),
-                'eta'          => $d->estimated_delivery,
-            ];
-        });
+    $lines = $order->details->map(function ($d) {
+    $v = $d->productVariant;
+
+    $variantText = [];
+    if ($v?->size?->name)  $variantText[] = "Size: {$v->size->name}";
+    if ($v?->color?->name) $variantText[] = "Màu: {$v->color->name}";
+
+    return (object)[
+        'product_id'   => $v?->product?->id,
+        'product_name' => $v?->product?->name ?? 'Sản phẩm',
+        'variant_text' => $variantText ? implode(' · ', $variantText) : null,
+        'image' => $v?->image ? 'product_images/' . $v->image : null,
+        'unit_price'   => (int)$d->price,
+        'qty'          => (int)$d->quantity,
+        'line_total'   => (int)($d->price * $d->quantity),
+        'eta'          => $d->estimated_delivery,
+    ];
+});
+
+
 
         // Tính tạm tính/tổng (nếu muốn dựa hoàn toàn DB thì dùng cột đã có)
         $calc_subtotal = $lines->sum('line_total');

@@ -1,27 +1,25 @@
 @extends('admin.master')
 @section('content')
-    <!-- Start Container Fluid -->
     <div class="container-xxl">
 
         <div class="row">
-
             <div class="col-lg-4">
-                {{-- <div class="col-lg-4">
-                    <a href="{{ route('admin.products.index') }}"
-                        class="btn btn-primary d-flex align-items-center justify-content-center w-100"><i
-                            class="bx bx-chevron-left fs-18"></i> Quay lại</a>
-                </div> --}}
                 <div class="card">
                     <div class="card-body">
-                        <!-- Crossfade hình ảnh -->
+                        <!-- Crossfade -->
                         <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
                             <div class="carousel-inner" role="listbox">
-                                @foreach ($product->photoAlbums as $key => $photo)
-                                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                        <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $product->name }}"
+                                @forelse($images as $index => $image)
+                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}"
                                             class="img-fluid bg-light rounded">
                                     </div>
-                                @endforeach
+                                @empty
+                                    <div class="carousel-item active">
+                                        <img src="{{ asset('assets/images/no-image.png') }}" alt="No image"
+                                            class="img-fluid bg-light rounded">
+                                    </div>
+                                @endforelse
                                 {{-- <a class="carousel-control-prev rounded" href="#carouselExampleFade" role="button"
                                     data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -33,19 +31,25 @@
                                     <span class="visually-hidden">Next</span>
                                 </a> --}}
                             </div>
-                            <div class="carousel-indicators m-0 mt-2 d-lg-flex d-none position-static h-100">
-                                @foreach ($product->photoAlbums as $key => $photo)
-                                    <button type="button" data-bs-target="#productGallery"
-                                        data-bs-slide-to="{{ $key }}"
-                                        class="w-auto h-auto rounded bg-light {{ $key == 0 ? 'active' : '' }}">
-                                        <img src="{{ asset('storage/' . $photo->image) }}" class="d-block avatar-xl"
-                                            alt="thumb">
-                                    </button>
-                                @endforeach
-                            </div>
+                            @if (count($images) > 0)
+                                <div class="carousel-indicators m-0 mt-2 d-lg-flex d-none position-static h-100">
+                                    @foreach ($images as $index => $image)
+                                        <button type="button" data-bs-target="#carouselExampleFade"
+                                            data-bs-slide-to="{{ $index }}" aria-label="Ảnh {{ $index + 1 }}"
+                                            class="w-auto h-auto rounded bg-light {{ $index === 0 ? 'active' : '' }}"
+                                            {{ $index === 0 ? 'aria-current=true' : '' }}>
+                                            <img src="{{ asset('storage/' . $image) }}" class="d-block avatar-xl"
+                                                alt="thumb-{{ $index }}">
+                                        </button>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
+                        <!-- Crossfade hình ảnh -->
+                     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                        
+                     </div>
                     </div>
-
                 </div>
             </div>
             <div class="col-lg-8">
@@ -54,120 +58,148 @@
                         @if ($product->created_at >= now()->subDays(2))
                             <h4 class="badge bg-success text-light fs-14 py-1 px-2">Sản phẩm mới</h4>
                         @endif
-
                         <p class="mb-1">
                             <a href="#!" class="fs-24 text-dark fw-medium">{{ $product->name }}</a>
                         </p>
                         <div class="d-flex gap-2 align-items-center">
                             <ul class="d-flex text-warning m-0 fs-20  list-unstyled">
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star-half"></i>
-                                </li>
-                            </ul>
-                            <p class="mb-0 fw-medium fs-18 text-dark">4.5 <span class="text-muted fs-13">(55
-                                    Review)</span></p>
-                        </div>
-                        @php
-                            $variant = $product->variants->first();
-                            $price = $variant ? $variant->price : 0;
-                            $sale = $variant && $variant->sale ? $variant->sale : null;
-                        @endphp
-                        <h2 class="fw-medium my-3">
-                            @if ($sale)
-                                {{ number_format($sale, 0, ',', '.') }}₫ 
-                                <span class="fs-16 text-decoration-line-through text-muted">
-                                    {{ number_format($price, 0, ',', '.') }}₫ 
-                                </span>
-                                <small class="text-danger ms-2">
-                                    (Giảm giá {{ round((1 - $sale / $price) * 100) }}%)
-                                </small>
-                            @else
-                                {{ number_format($price, 0, ',', '.') }}₫ 
-                            @endif
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @php
+                                        $starValue = $i;
+                                    @endphp
+                                    @if ($avgRating >= $starValue)
+                                        <li>
+                                            <i class="bx bxs-star"></i>
+                                        </li>
+                                    @elseif($avgRating >= $starValue - 0.5)
+                                        <li>
+                                            <i class="bx bxs-star-half"></i>
+                                        </li>
+                                    @else
+                                        <li>
+                                            <i class="bx bx-star"></i>
+                                        </li>
+                                    @endif
+                                @endfor
 
-                            <div class="row align-items-center g-2 mt-3">
-                                <div class="col-lg-3">
-                                    <div class="">
-                                        <h5 class="text-dark fw-medium">Màu sắc:</h5>
-                                        <div class="d-flex flex-wrap gap-2" role="group"
-                                            aria-label="Basic checkbox toggle button group">
-                                            @foreach ($product->variants->unique('color_id') as $variant)
-                                                <div class="d-flex flex-wrap gap-2" role="group"
-                                                    aria-label="Chọn màu sản phẩm">
-                                                    @foreach ($product->variants->unique('color_id') as $variant)
-                                                        <label
-                                                            class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                                            title="{{ $variant->color->name }}">
-                                                            <i class="bx bxs-circle fs-18"
-                                                                style="color: {{ $variant->color->color_code }}"></i>
-                                                        </label>
-                                                    @endforeach
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="">
-                                        <h5 class="text-dark fw-medium">Size:</h5>
-                                        <div class="d-flex flex-wrap gap-2" role="group"
-                                            aria-label="Basic checkbox toggle button group">
-                                            @foreach ($product->variants->unique('size_id') as $variant)
+                            </ul>
+                            <p class="mb-0 fw-medium fs-18 text-dark">{{ $avgRating }} <span
+                                    class="text-muted fs-13">({{ $ratingCount }}
+                                    Đánh giá)</span></p>
+                        </div>
+                        <h2 class="fw-medium my-3">
+                            @if ($displayPrice)
+                                {{ number_format($displayPrice, 0, ',', '.') }} đ
+                            @else
+                                Giá đang cập nhật
+                            @endif
+                            @if ($originalPrice && $originalPrice > $displayPrice)
+                                <span class="fs-16 text-decoration-line-through ms-2">
+                                    {{ number_format($originalPrice, 0, ',', '.') }} đ
+                                </span>
+                            @endif
+                            @if ($discountPercent)
+                                <small class="text-danger ms-2">(Giảm {{ $discountPercent }}%)</small>
+                            @endif
+                        </h2>
+
+                        <div class="row align-items-center g-2 mt-3">
+                            <div class="col-lg-5">
+                                <div class="">
+                                    <h5 class="text-dark fw-medium">Màu sắc:
+                                        {{-- <span class="text-muted">
+                                                    {{ $colors->first()->name ?? 'Đang cập nhật' }}
+                                                </span> --}}
+                                    </h5>
+                                    <div class="d-flex flex-wrap gap-2" role="group"
+                                        aria-label="Basic checkbox toggle button group">
+                                        @foreach ($colors as $idx => $color)
+                                            <div class="d-flex flex-wrap gap-2" role="group"
+                                                aria-label="Chọn màu sản phẩm">
                                                 <label
                                                     class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                                    for="size-s2">{{ $variant->size->size_code }}</label>
-                                            @endforeach
-                                        </div>
+                                                    title="{{ $color->name }}">
+                                                    <i class="bx bxs-circle fs-18"
+                                                        style="color: {{ $color->color_code ?? null }}"></i>
+                                                </label>
+                                                {{-- <h6>{{ $color }}</h6> --}}
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
-                            <div class="quantity mt-4">
-                                <h4 class="text-dark fw-medium mt-3">Số lượng tồn kho :</h4>
-                                <div
-                                    class="input-step border bg-body-secondary p-1 mt-1 rounded d-inline-flex overflow-visible">
-                                    Còn {{ $product->variants->sum('quantity') }} sản phẩm
+                            <div class="col-lg-5">
+                                <div class="">
+                                    <h5 class="text-dark fw-medium">Size:
+                                        {{-- <span class="text-muted">
+                                                {{ $sizes->first()->name ?? 'Đang cập nhật' }}
+                                            </span> --}}
+                                    </h5>
+                                    <div class="d-flex flex-wrap gap-2" role="group"
+                                        aria-label="Basic checkbox toggle button group">
+                                        @foreach ($sizes as $idx => $size)
+                                            <label
+                                                class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center">{{ $size->size_code ?? null }}</label>
+                                            {{-- <h6>{{$size}}</h6> --}}
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
-                            <ul class="d-flex flex-column gap-2 list-unstyled fs-15 my-3">
-                                <li>
-                                    <i class='bx bx-check text-success'></i> Còn hàng
-                                </li>
-                                <li>
-                                    <i class='bx bx-check text-success'></i> Miễn phí giao hàng.
+                        </div>
+                        @php
 
-                                </li>
-                                <li>
-                                    <i class='bx bx-check text-success'></i> Giảm giá 10% - Khi sử dụng mã: <span
-                                        class="text-dark fw-medium">CODE123</span>
-                                </li>
-                            </ul>
-                            <h4 class="text-dark fw-medium">Mô tả chi tiết :</h4>
-                            <p class="text-muted">{{ $product->description ?? 'Chưa có mô tả.' }}
-                                {{-- <a href="#!" class="link-primary">Read more</a> --}}
-                            </p>
-                            <h4 class="text-dark fw-medium mt-3">Các ưu đãi hiện có :</h4>
-                            <div class="d-flex align-items-center mt-2">
-                                <i class="bx bxs-bookmarks text-success me-3 fs-20 mt-1"></i>
-                                <p class="mb-0"><span class="fw-medium text-dark">Bank Offer</span> 10% instant discount
-                                    on Bank Debit Cards, up to $30 on orders of $50 and above</p>
+                            $total_stock = $product->variants->sum('quantity');
+                            $total_sold = $product->orderDetails->sum('quantity');
+
+                            $stock = (int) ($total_stock ?? 0) - (int) ($total_sold ?? 0);
+                            if ($stock < 0) {
+                                $stock = 0;
+                            }
+                            $sold = (int) ($total_sold ?? 0);
+                        @endphp
+                        <div class="quantity mt-4">
+                            <h4 class="text-dark fw-medium mt-3">Tồn kho :
+                                {{ $stock }} sản phẩm</h4>
+                            {{-- <pre>{{ json_encode($product->variants, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre> --}}
+
+                            <div
+                                class="input-step border bg-body-secondary p-1 mt-1 rounded d-inline-flex overflow-visible">
+                                Đã bán : {{ $sold }} sản phẩm
                             </div>
-                            <div class="d-flex align-items-center mt-2">
-                                <i class="bx bxs-bookmarks text-success me-3 fs-20 mt-1"></i>
-                                <p class="mb-0"><span class="fw-medium text-dark">Bank Offer</span> Grab our exclusive
-                                    offer now and save 20% on your next purchase! Don't miss out, shop today!</p>
-                            </div>
+                        </div>
+                        <ul class="d-flex flex-column gap-2 list-unstyled fs-15 my-3">
+                            <li>
+                                @if ($sold == $total_stock)
+                                    <i class='bx bx-check text-danger'></i> Hết hàng
+                                @else
+                                    <i class='bx bx-check text-success'></i> Còn hàng
+                                @endif
+
+                            </li>
+                            <li>
+                                <i class='bx bx-check text-success'></i> Miễn phí giao hàng.
+
+                            </li>
+                            <li>
+                                <i class='bx bx-check text-success'></i> Giảm giá 10% - Khi sử dụng mã: <span
+                                    class="text-dark fw-medium">CODE123</span>
+                            </li>
+                        </ul>
+                        <h4 class="text-dark fw-medium">Mô tả chi tiết :</h4>
+                        <p class="text-muted">{{ $product->description ?? 'Chưa có mô tả.' }}
+                            {{-- <a href="#!" class="link-primary">Read more</a> --}}
+                        </p>
+                        {{-- <h4 class="text-dark fw-medium mt-3">Các ưu đãi hiện có :</h4>
+                        <div class="d-flex align-items-center mt-2">
+                            <i class="bx bxs-bookmarks text-success me-3 fs-20 mt-1"></i>
+                            <p class="mb-0"><span class="fw-medium text-dark">Bank Offer</span> 10% instant discount
+                                on Bank Debit Cards, up to $30 on orders of $50 and above</p>
+                        </div>
+                        <div class="d-flex align-items-center mt-2">
+                            <i class="bx bxs-bookmarks text-success me-3 fs-20 mt-1"></i>
+                            <p class="mb-0"><span class="fw-medium text-dark">Bank Offer</span> Grab our exclusive
+                                offer now and save 20% on your next purchase! Don't miss out, shop today!</p>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -236,138 +268,137 @@
             </div>
         </div>
         <div class="row">
-            {{-- <div class="col-lg-6">
+            {{-- Chi tiết mặt hàng --}}
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Items Detail</h4>
+                        <h4 class="card-title">Chi tiết mặt hàng</h4>
                     </div>
                     <div class="card-body">
-                        <div class="">
-                            <ul class="d-flex flex-column gap-2 list-unstyled fs-14 text-muted mb-0">
-                                <li><span class="fw-medium text-dark">Product Dimensions</span><span
-                                        class="mx-2">:</span>53.3 x 40.6 x 6.4 cm; 500 Grams</li>
-                                <li><span class="fw-medium text-dark">Date First Available</span><span
-                                        class="mx-2">:</span>22 September 2023</li>
-                                <li><span class="fw-medium text-dark">Department</span><span class="mx-2">:</span>Men
-                                </li>
-                                <li><span class="fw-medium text-dark">Manufacturer </span><span
-                                        class="mx-2">:</span>Greensboro, NC 27401 Prospa-Pal</li>
-                                <li><span class="fw-medium text-dark">ASIN</span><span class="mx-2">:</span>B0CJMML118
-                                </li>
-                                <li><span class="fw-medium text-dark">Item model number</span><span
-                                        class="mx-2">:</span> 1137AZ</li>
-                                <li><span class="fw-medium text-dark">Country of Origin</span><span
-                                        class="mx-2">:</span>U.S.A</li>
-                                <li><span class="fw-medium text-dark">Manufacturer </span><span
-                                        class="mx-2">:</span>Suite 941 89157 Baumbach Views, Gilbertmouth, TX
-                                    31542-2135</li>
-                                <li><span class="fw-medium text-dark">Packer </span><span class="mx-2">:</span>Apt.
-                                    726 80915 Hung Stream, Rowetown, WV 44364</li>
-                                <li><span class="fw-medium text-dark">Importer</span><span class="mx-2">:</span>Apt.
-                                    726 80915 Hung Stream, Rowetown, WV 44364</li>
-                                <li><span class="fw-medium text-dark">Item Weight</span><span class="mx-2">:</span>500 g
-                                </li>
-                                <li><span class="fw-medium text-dark">Item Dimensions LxWxH</span><span
-                                        class="mx-2">:</span>53.3 x 40.6 x 6.4 Centimeters</li>
-                                <li><span class="fw-medium text-dark">Generic Name</span><span
-                                        class="mx-2">:</span>T-Shirt</li>
-                                <li><span class="fw-medium text-dark">Best Sellers Rank</span><span
-                                        class="mx-2">:</span>#13 in Clothing & Accessories</li>
-                            </ul>
-                        </div>
+                        <ul class="d-flex flex-column gap-2 list-unstyled fs-14 text-muted mb-0">
+                            <li>
+                                <span class="fw-medium text-dark">Mã sản phẩm</span>
+                                <span class="mx-2">:</span>
+                                {{ $product->product_code }}
+                            </li>
+                            <li>
+                                <span class="fw-medium text-dark">Danh mục</span>
+                                <span class="mx-2">:</span>
+                                {{ $product->category->name ?? 'Đang cập nhật' }}
+                            </li>
+                            <li>
+                                <span class="fw-medium text-dark">Chất liệu</span>
+                                <span class="mx-2">:</span>
+                                {{ $product->material ?? 'Đang cập nhật' }}
+                            </li>
+                            <li>
+                                <span class="fw-medium text-dark">Ngày thêm</span>
+                                <span class="mx-2">:</span>
+                                {{ $product->created_at ? $product->created_at->format('d/m/Y') : '—' }}
+                            </li>
+                            <li>
+                                <span class="fw-medium text-dark">Trọng lượng tham khảo</span>
+                                <span class="mx-2">:</span>
+                                500 g
+                            </li>
+                            <li>
+                                <span class="fw-medium text-dark">Loại</span>
+                                <span class="mx-2">:</span>
+                                Áo phông
+                            </li>
+                        </ul>
+
                         <div class="mt-3">
-                            <a href="#!" class="link-primary text-decoration-underline link-offset-2">View More
-                                Details <i class="bx bx-arrow-to-right align-middle fs-16"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Đánh Giá SẢn Phẩm</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="assets/images/users/avatar-6.jpg" alt="" class="avatar-md rounded-circle">
-                            <div>
-                                <h5 class="mb-0">Henny K. Mark</h5>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center gap-2 mt-3 mb-1">
-                            <ul class="d-flex text-warning m-0 fs-20 list-unstyled">
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star-half"></i>
-                                </li>
-                            </ul>
-                            <p class="fw-medium mb-0 text-dark fs-15">Excellent Quality</p>
-                        </div>
-
-                        <p class="mb-0 text-dark fw-medium fs-15">Reviewed in Canada on 16 November 2023</p>
-                        <p class="text-muted">Medium thickness. Did not shrink after wash. Good elasticity . XL size
-                            Perfectly fit for 5.10 height and heavy body. Did not fade after wash. Only for maroon
-                            colour t-shirt colour lightly gone in first wash but not faded. I bought 5 tshirt of
-                            different colours. Highly recommended in so low price.</p>
-                        <div class="mt-2">
-                            <a href="#!" class="fs-14 me-3 text-muted"><i class='bx bx-like'></i> Helpful</a>
-                            <a href="#!" class="fs-14 text-muted">Report</a>
-                        </div>
-
-                        <hr class="my-3">
-
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="assets/images/users/avatar-4.jpg" alt="" class="avatar-md rounded-circle">
-                            <div>
-                                <h5 class="mb-0">Jorge Herry</h5>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center gap-2 mt-3 mb-1">
-                            <ul class="d-flex text-warning m-0 fs-20 list-unstyled">
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star"></i>
-                                </li>
-                                <li>
-                                    <i class="bx bxs-star-half"></i>
-                                </li>
-                            </ul>
-                            <p class="fw-medium mb-0 text-dark fs-15">Good Quality</p>
-                        </div>
-
-                        <p class="mb-0 text-dark fw-medium fs-15">Reviewed in U.S.A on 21 December 2023
-
-                        </p>
-                        <p class="text-muted mb-0">I liked the tshirt, it's pure cotton &amp; skin friendly, but the
-                            size is smaller to compare standard size.</p>
-                        <p class="text-muted mb-0">best rated</p>
-
-                        <div class="mt-2">
-                            <a href="#!" class="fs-14 me-3 text-muted"><i class='bx bx-like'></i> Helpful</a>
-                            <a href="#!" class="fs-14 text-muted">Report</a>
+                            <a href="javascript:void(0)" class="link-primary text-decoration-underline link-offset-2">
+                                Xem thêm chi tiết
+                                <i class="bx bx-arrow-to-right align-middle fs-16"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {{-- Đánh giá hàng đầu --}}
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Đánh giá hàng đầu</h4>
+                    </div>
+                   <div class="card-body">
+    @forelse($topReviews as $index => $review)
+        @php
+            $user     = $review->order->user ?? null;
+            $userName = $user->name ?? 'Khách ẩn danh';
+
+            $avatar = $user && $user->image
+                ? asset('storage/' . $user->image)
+                : asset('assets/images/users/avatar-' . ($index + 4) . '.jpg');
+        @endphp
+
+        <div class="py-3">
+            <div class="d-flex">
+                {{-- Avatar --}}
+                <div class="flex-shrink-0">
+                    <img src="{{ $avatar }}" alt="avatar"
+                         class="rounded-circle border bg-light"
+                         style="width:48px;height:48px;object-fit:cover;">
+                </div>
+
+                <div class="flex-grow-1 ms-3">
+                    {{-- Hàng trên: tên + ngày + sao --}}
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-0 fw-semibold">{{ $userName }}</h6>
+                            <small class="text-muted">
+                                {{ optional($review->created_at)->format('F d, Y') }}
+                                @if ($review->order_id)
+                                    · <span class="text-success">Đã mua tại cửa hàng</span>
+                                @endif
+                            </small>
+                        </div>
+
+                        <ul class="d-flex text-warning m-0 fs-18 list-unstyled ms-3">
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if ($review->rating >= $i)
+                                    <li><i class="bx bxs-star"></i></li>
+                                @elseif ($review->rating >= $i - 0.5)
+                                    <li><i class="bx bxs-star-half"></i></li>
+                                @else
+                                    <li><i class="bx bx-star"></i></li>
+                                @endif
+                            @endfor
+                        </ul>
+                    </div>
+
+                    {{-- Nội dung --}}
+                    <p class="text-muted mt-2 mb-2">{{ $review->content }}</p>
+
+                    {{-- Hành động --}}
+                    <div class="d-flex align-items-center gap-3 small">
+                        <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center gap-1">
+                            <i class="bx bx-like"></i><span>Hữu ích</span>
+                        </a>
+                        <span class="text-muted">|</span>
+                        <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center gap-1">
+                            <i class="bx bx-flag"></i><span>Báo cáo</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        @if (! $loop->last)
+            <hr class="my-0">
+        @endif
+
+    @empty
+        <p class="text-muted mb-0">Chưa có đánh giá nào cho sản phẩm này.</p>
+    @endforelse
+</div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection

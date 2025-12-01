@@ -53,6 +53,10 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 
     // Nhân viên phụ trách đơn hàng
 public function staff()
@@ -73,11 +77,11 @@ public function staff()
         return $this->belongsTo(PaymentStatus::class, 'payment_status_id');
     }
 
-     // Phương thức thanh toán
+    // Phương thức thanh toán
     public function paymentMethod()
-{
-    return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
-}
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
 
 
     // Mã giảm giá

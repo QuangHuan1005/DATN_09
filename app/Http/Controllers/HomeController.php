@@ -53,7 +53,7 @@ class HomeController extends Controller
                 'variants.color',
                 'variants.size',
             ])
-            ->take(4)
+            ->take(8)
             ->get();
 
         // 4. Sản phẩm thịnh hành (trending) theo lượt xem
@@ -134,7 +134,7 @@ class HomeController extends Controller
         // Sản phẩm liên quan (ví dụ: cùng category, bỏ chính nó)
         $relatedProducts = Product::query()
             ->where('category_id', $product->category_id)
-            ->where('id', '<>', $product->id)
+            ->where('id', '<>', $product->id) 
             ->with([
                 'firstPhoto',
                 'variants' => function ($q) {

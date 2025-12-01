@@ -65,7 +65,7 @@ class User extends Authenticatable
      */
     public function ranking()
     {
-     //   return $this->belongsTo(Ranking::class, 'ranking_id');
+        //   return $this->belongsTo(Ranking::class, 'ranking_id');
     }
 
     /**
@@ -107,6 +107,13 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserAddress::class)->where('is_default', true);
     }
+
+    // User.php
+    public function favorites()
+    {
+        return $this->belongsToMany(Product::class, 'product_favorites');
+    }
+
   // Gán đơn hàng cho staff
     public function assignedOrders()
 {

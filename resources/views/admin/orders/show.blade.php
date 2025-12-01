@@ -185,6 +185,8 @@
                                         <tbody>
                                             @foreach ($lines as $line)
                                                 <tr>
+                                                <pre><code class="language-php">{{ $lines }}</code></pre>
+
                                                     <td>
                                                         <div class="d-flex align-items-center gap-2">
                                                             <div
@@ -461,7 +463,6 @@
                                 {{-- <a href="#!"><i class='bx bx-edit-alt fs-18'></i></a> --}}
                             </div>
                         </div>
-
                         <p class="mb-1">Giống với địa chỉ giao hàng</p>
                     </div>
                 </div>

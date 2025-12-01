@@ -33,6 +33,7 @@ class CartController extends Controller
             'quantity'           => ['required', 'integer', 'min:1'],
             // Giữ lại nếu form có gửi kèm (không bắt buộc ở đây)
             'product_id'         => ['nullable', 'integer'],
+            'action_type'        => ['nullable','in:add_to_cart,buy_now'],
         ]);
 
         // Lấy variantId từ 1 trong 2 tên field
@@ -69,6 +70,24 @@ class CartController extends Controller
         // Key giỏ HAI LÀ GIỮ NGUYÊN: (string)$variantId
         $key = (string) $variant->id;
 
+        // if (isset($cart[$key])) {
+        //     // Cộng dồn số lượng nếu item đã tồn tại
+        //     $cart[$key]['quantity'] += $qty;
+        // } else {
+        //     $cart[$key] = [
+        //         'variant_id' => (int) $variant->id,     // để remove/update theo id cũ không đổi
+        //         'product_id' => (int) ($product->id ?? 0),
+        //         'name'       => $name,
+        //         'color'      => $colorName,
+        //         'size'       => $sizeName,
+        //         'price'      => $price,
+        //         'quantity'   => $qty,
+        //         'image'      => $this->normalizeImageUrl($product, $variant),
+        //         'slug'       => $product->slug ?? null, // nếu view cart có link về trang chi tiết
+
+        //     ];
+
+        // }
       // == GIỚI HẠN THEO TỒN KHO ==
         $stock    = max(0, (int) ($variant->quantity ?? 0)); // tồn kho của biến thể
         $existing = isset($cart[$key]) ? (int) ($cart[$key]['quantity'] ?? 0) : 0;
@@ -138,7 +157,59 @@ class CartController extends Controller
         ], $limited ? 409 : 200);
         }
 
-        return back()->with('success', 'Đã thêm vào giỏ hàng.');
+        // return back()->with('success', 'Đã thêm vào giỏ hàng.');
+        $variant = ProductVariant::with('product')->findOrFail($data['product_variant_id']);
+
+    // Kiểm tra tồn kho
+    if ($data['quantity'] > $variant->quantity) {
+        return back()->withErrors([
+            'quantity' => 'Số lượng vượt quá tồn kho hiện tại.',
+        ])->withInput();
+    }
+    // Thêm vào giỏ (session / database tuỳ bạn)
+    // Ví dụ dùng session:
+    $cart = session()->get('cart', []);
+
+    $key = $variant->id; // hoặc product_id + variant_id nếu cần
+
+    if (isset($cart[$key])) {
+        $cart[$key]['quantity'] += $data['quantity'];
+    } else {
+        $cart[$key] = [
+            'product_id'  => $variant->product_id,
+            'variant_id'  => $variant->id,
+            'name'        => $variant->product->name,
+            'price'       => $variant->sale && $variant->sale > 0
+                                ? $variant->sale
+                                : $variant->price,
+            'quantity'    => $data['quantity'],
+            'image'       => $variant->image ?? $variant->product->thumbnail ?? null,
+        ];
+    }
+
+    session()->put('cart', $cart);
+
+        if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
+           return response()->json([
+            'ok'         => !$limited,
+            'message'    => $limited
+                ? ('Chỉ thêm tối đa do giới hạn tồn kho (còn ' . $stock . ').')
+                : 'Đã thêm vào giỏ hàng.',
+            'cart_count' => $cartCount,
+            'subtotal'   => $subtotal,
+            'item'       => [
+                'variant_id' => (int) $variant->id,
+                'quantity'   => (int) $cart[$key]['quantity'],
+                'price'      => (float) $cart[$key]['price'],
+                'name'       => $cart[$key]['name'] ?? ($product->name ?? 'Sản phẩm'),
+                'image'      => $cart[$key]['image'] ?? null,
+            ]
+        ], $limited ? 409 : 200);
+        }
+
+    // Mặc định: chỉ thêm vào giỏ hàng
+    return redirect()->route('cart.index')
+        ->with('success', 'Sản phẩm đã được thêm vào giỏ hàng.');
     }
 
     /**
@@ -157,7 +228,7 @@ class CartController extends Controller
         // LẤY DỮ LIỆU CHO LAYOUT (an toàn)
         // Category: phải dùng FQCN có dấu "\" đầu
         try {
-            $categories = class_exists(\App\Models\Category::class)
+            $categories = class_exists(Category::class)
                 ? Category::orderBy('name')->get()
                 : collect();
         } catch (\Throwable $e) {
@@ -165,7 +236,7 @@ class CartController extends Controller
         }
 
         try {
-            $colors = class_exists(\App\Models\Color::class)
+            $colors = class_exists(Color::class)
                 ? Color::orderBy('name')->get()
                 : collect();
         } catch (\Throwable $e) {
@@ -173,7 +244,7 @@ class CartController extends Controller
         }
 
         try {
-            $sizes = class_exists(\App\Models\Size::class)
+            $sizes = class_exists(Size::class)
                 ? Size::orderBy('name')->get()
                 : collect();
         } catch (\Throwable $e) {
@@ -182,7 +253,7 @@ class CartController extends Controller
 
         // Nếu layout cần $products (gợi ý/slider)
         try {
-            $products = class_exists(\App\Models\Product::class)
+            $products = class_exists(Product::class)
                 ? Product::latest()->take(8)->get()
                 : collect();
         } catch (\Throwable $e) {
@@ -323,8 +394,8 @@ return back()->with('error', 'Sản phẩm không tồn tại trong giỏ');
         }
 
         // 3) Bóc 'storage/' nếu có để làm việc với public disk
-        $rel = \Illuminate\Support\Str::startsWith($raw, 'storage/')
-            ? \Illuminate\Support\Str::after($raw, 'storage/')
+        $rel = Str::startsWith($raw, 'storage/')
+            ? Str::after($raw, 'storage/')
             : $raw;
 
         // 4) Lấy basename và ưu tiên thư mục 'products/'
@@ -340,7 +411,7 @@ $file = basename($rel);
 
         // 5) Tìm trên storage/app/public
         foreach ($candidates as $relPath) {
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($relPath)) {
+            if (Storage::disk('public')->exists($relPath)) {
                 return asset('storage/'.$relPath);   // => /storage/products/<file>
             }
         }
