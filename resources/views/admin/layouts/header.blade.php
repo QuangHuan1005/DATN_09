@@ -161,13 +161,16 @@
                      <a type="button" class="topbar-button" id="page-header-user-dropdown"
                          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                          <span class="d-flex align-items-center">
-                            @php
-    $user = Auth::guard('admin')->check() ? Auth::guard('admin')->user() :
-            (Auth::guard('staff')->check() ? Auth::guard('staff')->user() : Auth::user());
-@endphp
-                            <img class="rounded-circle" width="32" height="32"
-     src="{{ $user && $user->image ? asset('storage/' . $user->image) : asset('assets/images/users/default-avatar.jpg') }}"
-     alt="avatar">
+                             @php
+                                 $user = Auth::guard('admin')->check()
+                                     ? Auth::guard('admin')->user()
+                                     : (Auth::guard('staff')->check()
+                                         ? Auth::guard('staff')->user()
+                                         : Auth::user());
+                             @endphp
+                             <img class="rounded-circle" width="32" height="32"
+                                 src="{{ $user && $user->image ? asset('storage/' . $user->image) : asset('assets/images/users/default-avatar.jpg') }}"
+                                 alt="avatar">
 
                          </span>
                      </a>

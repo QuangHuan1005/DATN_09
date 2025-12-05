@@ -61,53 +61,55 @@
 
                                                         @foreach ($newProducts as $item)
                                                             @php
-    // Lấy biến thể rẻ nhất để tính giá hiển thị
-    $sortedVariants = $item->variants->sortBy(function ($v, ) {
-        // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
-        $effectivePrice =
-            $v->sale !== null && $v->sale < $v->price
-            ? $v->sale
-            : $v->price;
-        return $effectivePrice;
-    });
+                                                                // Lấy biến thể rẻ nhất để tính giá hiển thị
+                                                                $sortedVariants = $item->variants->sortBy(function (
+                                                                    $v,
+                                                                ) {
+                                                                    // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
+                                                                    $effectivePrice =
+                                                                        $v->sale !== null && $v->sale < $v->price
+                                                                            ? $v->sale
+                                                                            : $v->price;
+                                                                    return $effectivePrice;
+                                                                });
 
-    $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
+                                                                $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
 
-    // Chuẩn bị giá
-    $hasSale =
-        $bestVariant &&
-        $bestVariant->sale !== null &&
-        $bestVariant->sale < $bestVariant->price;
+                                                                // Chuẩn bị giá
+                                                                $hasSale =
+                                                                    $bestVariant &&
+                                                                    $bestVariant->sale !== null &&
+                                                                    $bestVariant->sale < $bestVariant->price;
 
-    $originalPrice = $bestVariant->price ?? null;
-    $salePrice = $hasSale ? $bestVariant->sale : null;
-    $finalPrice = $hasSale
-        ? $bestVariant->sale
-        : $bestVariant->price ?? null;
+                                                                $originalPrice = $bestVariant->price ?? null;
+                                                                $salePrice = $hasSale ? $bestVariant->sale : null;
+                                                                $finalPrice = $hasSale
+                                                                    ? $bestVariant->sale
+                                                                    : $bestVariant->price ?? null;
 
-    // Tính % giảm
-    $discountPercent = null;
-    if ($hasSale && $originalPrice > 0) {
-        $discountPercent = round(
-            (($originalPrice - $salePrice) /
-                $originalPrice) *
-            100,
-        );
-    }
+                                                                // Tính % giảm
+                                                                $discountPercent = null;
+                                                                if ($hasSale && $originalPrice > 0) {
+                                                                    $discountPercent = round(
+                                                                        (($originalPrice - $salePrice) /
+                                                                            $originalPrice) *
+                                                                            100,
+                                                                    );
+                                                                }
 
-    // Ảnh chính
-    $mainImage = $item->firstPhoto?->image
-        ? asset('storage/' . $item->firstPhoto->image)
-        : 'https://via.placeholder.com/700x700?text=No+Image';
+                                                                // Ảnh chính
+                                                                $mainImage = $item->firstPhoto?->image
+                                                                    ? asset('storage/' . $item->firstPhoto->image)
+                                                                    : 'https://via.placeholder.com/700x700?text=No+Image';
 
-    // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
-    $secondPhoto = $item->photoAlbums
-        ->skip(1) // bỏ ảnh đầu tiên
-        ->first();
+                                                                // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
+                                                                $secondPhoto = $item->photoAlbums
+                                                                    ->skip(1) // bỏ ảnh đầu tiên
+                                                                    ->first();
 
-    $hoverImage = $secondPhoto?->image
-        ? asset('storage/' . $secondPhoto->image)
-        : $mainImage; // fallback chính nó
+                                                                $hoverImage = $secondPhoto?->image
+                                                                    ? asset('storage/' . $secondPhoto->image)
+                                                                    : $mainImage; // fallback chính nó
                                                             @endphp
                                                             <li
                                                                 class="product_item product-grid-item product type-product post-960 status-publish first instock product_cat-hoodies product_cat-tshirts product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m41 product_tag-products product_tag-women has-post-thumbnail sale shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
@@ -117,7 +119,8 @@
                                                                     <div class="product-item__badges">
 
                                                                         @if ($discountPercent)
-                                                                            <span class="onsale">{{ $discountPercent }}%</span>
+                                                                            <span
+                                                                                class="onsale">{{ $discountPercent }}%</span>
                                                                         @endif
                                                                     </div>
                                                                     <div class="product-item__thumbnail">
@@ -140,9 +143,11 @@
                                                                                     wishlist</span>
                                                                             </a>
 
-                                                                            <a href="#" class="nova_product_quick_view_btn"
+                                                                            <a href="#"
+                                                                                class="nova_product_quick_view_btn"
                                                                                 data-product-id="{{ $item->id }}"
-                                                                                data-product-type="variable rel=" nofollow"><i
+                                                                                data-product-type="variable rel="
+                                                                                nofollow"><i
                                                                                     class="inova ic-zoom"></i></a><a
                                                                                 href="{{ route('products.show', ['id' => $item->id]) }}"
                                                                                 data-quantity="1"
@@ -150,7 +155,8 @@
                                                                                 data-product_id="{{ $item->id }}"
                                                                                 data-product_sku=""
                                                                                 aria-label="Select options for {{ $item->name }}"
-                                                                                rel="nofollow"><svg class="mixtas-addtocart">
+                                                                                rel="nofollow"><svg
+                                                                                    class="mixtas-addtocart">
                                                                                     <use xlink:href="#mixtas-addtocart"
                                                                                         xmlns:xlink="http://www.w3.org/1999/xlink">
                                                                                     </use>
@@ -158,7 +164,8 @@
                                                                                     options</span></a> <span
                                                                                 id="woocommerce_loop_add_to_cart_link_describedby_960"
                                                                                 class="screen-reader-text">
-                                                                                This product has multiple variants. The options
+                                                                                This product has multiple variants. The
+                                                                                options
                                                                                 may be chosen on the product page </span>
                                                                         </div>
 
@@ -167,8 +174,9 @@
                                                                             class="product-item__thumbnail-placeholder second_image_enabled">
                                                                             <a
                                                                                 href="{{ route('products.show', ['id' => $item->id]) }}">
-                                                                                <img loading="lazy" decoding="async" width="700"
-                                                                                    height="700" src="{{ $mainImage }}"
+                                                                                <img loading="lazy" decoding="async"
+                                                                                    width="700" height="700"
+                                                                                    src="{{ $mainImage }}"
                                                                                     class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
                                                                                     alt="{{ $item->name }}"
                                                                                     srcset="{{ $mainImage }} 700w,
@@ -199,7 +207,8 @@
                                                                                 @endif
                                                                                 <a href="{{ route('products.show', ['id' => $item->id]) }}"
                                                                                     class="title">
-                                                                                    <h3 class="woocommerce-loop-product__title">
+                                                                                    <h3
+                                                                                        class="woocommerce-loop-product__title">
                                                                                         {{ $item->name }}
                                                                                     </h3>
                                                                                 </a>
@@ -380,53 +389,55 @@
 
                                                         @foreach ($saleProducts as $item)
                                                             @php
-    // Lấy biến thể rẻ nhất để tính giá hiển thị
-    $sortedVariants = $item->variants->sortBy(function ($v, ) {
-        // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
-        $effectivePrice =
-            $v->sale !== null && $v->sale < $v->price
-            ? $v->sale
-            : $v->price;
-        return $effectivePrice;
-    });
+                                                                // Lấy biến thể rẻ nhất để tính giá hiển thị
+                                                                $sortedVariants = $item->variants->sortBy(function (
+                                                                    $v,
+                                                                ) {
+                                                                    // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
+                                                                    $effectivePrice =
+                                                                        $v->sale !== null && $v->sale < $v->price
+                                                                            ? $v->sale
+                                                                            : $v->price;
+                                                                    return $effectivePrice;
+                                                                });
 
-    $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
+                                                                $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
 
-    // Chuẩn bị giá
-    $hasSale =
-        $bestVariant &&
-        $bestVariant->sale !== null &&
-        $bestVariant->sale < $bestVariant->price;
+                                                                // Chuẩn bị giá
+                                                                $hasSale =
+                                                                    $bestVariant &&
+                                                                    $bestVariant->sale !== null &&
+                                                                    $bestVariant->sale < $bestVariant->price;
 
-    $originalPrice = $bestVariant->price ?? null;
-    $salePrice = $hasSale ? $bestVariant->sale : null;
-    $finalPrice = $hasSale
-        ? $bestVariant->sale
-        : $bestVariant->price ?? null;
+                                                                $originalPrice = $bestVariant->price ?? null;
+                                                                $salePrice = $hasSale ? $bestVariant->sale : null;
+                                                                $finalPrice = $hasSale
+                                                                    ? $bestVariant->sale
+                                                                    : $bestVariant->price ?? null;
 
-    // Tính % giảm
-    $discountPercent = null;
-    if ($hasSale && $originalPrice > 0) {
-        $discountPercent = round(
-            (($originalPrice - $salePrice) /
-                $originalPrice) *
-            100,
-        );
-    }
+                                                                // Tính % giảm
+                                                                $discountPercent = null;
+                                                                if ($hasSale && $originalPrice > 0) {
+                                                                    $discountPercent = round(
+                                                                        (($originalPrice - $salePrice) /
+                                                                            $originalPrice) *
+                                                                            100,
+                                                                    );
+                                                                }
 
-    // Ảnh chính
-    $mainImage = $item->firstPhoto?->image
-        ? asset('storage/' . $item->firstPhoto->image)
-        : 'https://via.placeholder.com/700x700?text=No+Image';
+                                                                // Ảnh chính
+                                                                $mainImage = $item->firstPhoto?->image
+                                                                    ? asset('storage/' . $item->firstPhoto->image)
+                                                                    : 'https://via.placeholder.com/700x700?text=No+Image';
 
-    // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
-    $secondPhoto = $item->photoAlbums
-        ->skip(1) // bỏ ảnh đầu tiên
-        ->first();
+                                                                // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
+                                                                $secondPhoto = $item->photoAlbums
+                                                                    ->skip(1) // bỏ ảnh đầu tiên
+                                                                    ->first();
 
-    $hoverImage = $secondPhoto?->image
-        ? asset('storage/' . $secondPhoto->image)
-        : $mainImage; // fallback chính nó
+                                                                $hoverImage = $secondPhoto?->image
+                                                                    ? asset('storage/' . $secondPhoto->image)
+                                                                    : $mainImage; // fallback chính nó
                                                             @endphp
                                                             <li
                                                                 class="product_item product-grid-item product type-product post-960 status-publish first instock product_cat-hoodies product_cat-tshirts product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m41 product_tag-products product_tag-women has-post-thumbnail sale shipping-taxable purchasable product-type-variable has-default-attributes kitify-product col-desk-4 col-tabp-2 col-tab-3 col-lap-4">
@@ -436,7 +447,8 @@
                                                                     <div class="product-item__badges">
 
                                                                         @if ($discountPercent)
-                                                                            <span class="onsale">{{ $discountPercent }}%</span>
+                                                                            <span
+                                                                                class="onsale">{{ $discountPercent }}%</span>
                                                                         @endif
                                                                     </div>
                                                                     <div class="product-item__thumbnail">
@@ -444,7 +456,8 @@
                                                                         </div>
                                                                         <a class="product-item-link"
                                                                             href="{{ route('products.show', ['id' => $item->id]) }}"></a>
-                                                                        <div class="product-item__description--top-actions">
+                                                                        <div
+                                                                            class="product-item__description--top-actions">
 
                                                                             <a href="{{ route('products.show', ['id' => $item->id]) }}"
                                                                                 data-product-id="{{ $item->id }}"
@@ -459,9 +472,11 @@
                                                                                     wishlist</span>
                                                                             </a>
 
-                                                                            <a href="#" class="nova_product_quick_view_btn"
+                                                                            <a href="#"
+                                                                                class="nova_product_quick_view_btn"
                                                                                 data-product-id="{{ $item->id }}"
-                                                                                data-product-type="variable rel=" nofollow"><i
+                                                                                data-product-type="variable rel="
+                                                                                nofollow"><i
                                                                                     class="inova ic-zoom"></i></a><a
                                                                                 href="{{ route('products.show', ['id' => $item->id]) }}"
                                                                                 data-quantity="1"
@@ -469,7 +484,8 @@
                                                                                 data-product_id="{{ $item->id }}"
                                                                                 data-product_sku=""
                                                                                 aria-label="Select options for {{ $item->name }}"
-                                                                                rel="nofollow"><svg class="mixtas-addtocart">
+                                                                                rel="nofollow"><svg
+                                                                                    class="mixtas-addtocart">
                                                                                     <use xlink:href="#mixtas-addtocart"
                                                                                         xmlns:xlink="http://www.w3.org/1999/xlink">
                                                                                     </use>
@@ -477,7 +493,8 @@
                                                                                     options</span></a> <span
                                                                                 id="woocommerce_loop_add_to_cart_link_describedby_960"
                                                                                 class="screen-reader-text">
-                                                                                This product has multiple variants. The options
+                                                                                This product has multiple variants. The
+                                                                                options
                                                                                 may be chosen on the product page </span>
                                                                         </div>
 
@@ -486,8 +503,9 @@
                                                                             class="product-item__thumbnail-placeholder second_image_enabled">
                                                                             <a
                                                                                 href="{{ route('products.show', ['id' => $item->id]) }}">
-                                                                                <img loading="lazy" decoding="async" width="700"
-                                                                                    height="700" src="{{ $mainImage }}"
+                                                                                <img loading="lazy" decoding="async"
+                                                                                    width="700" height="700"
+                                                                                    src="{{ $mainImage }}"
                                                                                     class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
                                                                                     alt="{{ $item->name }}"
                                                                                     srcset="{{ $mainImage }} 700w,
@@ -518,7 +536,8 @@
                                                                                 @endif
                                                                                 <a href="{{ route('products.show', ['id' => $item->id]) }}"
                                                                                     class="title">
-                                                                                    <h3 class="woocommerce-loop-product__title">
+                                                                                    <h3
+                                                                                        class="woocommerce-loop-product__title">
                                                                                         {{ $item->name }}
                                                                                     </h3>
                                                                                 </a>
@@ -627,53 +646,55 @@
 
                                                             @foreach ($trending as $item)
                                                                 @php
-    // Lấy biến thể rẻ nhất để tính giá hiển thị
-    $sortedVariants = $item->variants->sortBy(function ($v, ) {
-        // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
-        $effectivePrice =
-            $v->sale !== null && $v->sale < $v->price
-            ? $v->sale
-            : $v->price;
-        return $effectivePrice;
-    });
+                                                                    // Lấy biến thể rẻ nhất để tính giá hiển thị
+                                                                    $sortedVariants = $item->variants->sortBy(function (
+                                                                        $v,
+                                                                    ) {
+                                                                        // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
+                                                                        $effectivePrice =
+                                                                            $v->sale !== null && $v->sale < $v->price
+                                                                                ? $v->sale
+                                                                                : $v->price;
+                                                                        return $effectivePrice;
+                                                                    });
 
-    $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
+                                                                    $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
 
-    // Chuẩn bị giá
-    $hasSale =
-        $bestVariant &&
-        $bestVariant->sale !== null &&
-        $bestVariant->sale < $bestVariant->price;
+                                                                    // Chuẩn bị giá
+                                                                    $hasSale =
+                                                                        $bestVariant &&
+                                                                        $bestVariant->sale !== null &&
+                                                                        $bestVariant->sale < $bestVariant->price;
 
-    $originalPrice = $bestVariant->price ?? null;
-    $salePrice = $hasSale ? $bestVariant->sale : null;
-    $finalPrice = $hasSale
-        ? $bestVariant->sale
-        : $bestVariant->price ?? null;
+                                                                    $originalPrice = $bestVariant->price ?? null;
+                                                                    $salePrice = $hasSale ? $bestVariant->sale : null;
+                                                                    $finalPrice = $hasSale
+                                                                        ? $bestVariant->sale
+                                                                        : $bestVariant->price ?? null;
 
-    // Tính % giảm
-    $discountPercent = null;
-    if ($hasSale && $originalPrice > 0) {
-        $discountPercent = round(
-            (($originalPrice - $salePrice) /
-                $originalPrice) *
-            100,
-        );
-    }
+                                                                    // Tính % giảm
+                                                                    $discountPercent = null;
+                                                                    if ($hasSale && $originalPrice > 0) {
+                                                                        $discountPercent = round(
+                                                                            (($originalPrice - $salePrice) /
+                                                                                $originalPrice) *
+                                                                                100,
+                                                                        );
+                                                                    }
 
-    // Ảnh chính
-    $mainImage = $item->firstPhoto?->image
-        ? asset('storage/' . $item->firstPhoto->image)
-        : 'https://via.placeholder.com/700x700?text=No+Image';
+                                                                    // Ảnh chính
+                                                                    $mainImage = $item->firstPhoto?->image
+                                                                        ? asset('storage/' . $item->firstPhoto->image)
+                                                                        : 'https://via.placeholder.com/700x700?text=No+Image';
 
-    // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
-    $secondPhoto = $item->photoAlbums
-        ->skip(1) // bỏ ảnh đầu tiên
-        ->first();
+                                                                    // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
+                                                                    $secondPhoto = $item->photoAlbums
+                                                                        ->skip(1) // bỏ ảnh đầu tiên
+                                                                        ->first();
 
-    $hoverImage = $secondPhoto?->image
-        ? asset('storage/' . $secondPhoto->image)
-        : $mainImage; // fallback chính nó
+                                                                    $hoverImage = $secondPhoto?->image
+                                                                        ? asset('storage/' . $secondPhoto->image)
+                                                                        : $mainImage; // fallback chính nó
                                                                 @endphp
                                                                 <li
                                                                     class="product_item product-grid-item product type-product post-836 status-publish first instock product_cat-jackets product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m32 product_tag-products product_tag-women has-post-thumbnail shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
@@ -683,7 +704,8 @@
                                                                         <div class="product-item__badges">
 
                                                                             @if ($discountPercent)
-                                                                                <span class="onsale">{{ $discountPercent }}%</span>
+                                                                                <span
+                                                                                    class="onsale">{{ $discountPercent }}%</span>
                                                                             @endif
                                                                         </div>
                                                                         <div class="product-item__thumbnail">
@@ -691,7 +713,8 @@
                                                                             </div>
                                                                             <a class="product-item-link"
                                                                                 href="{{ route('products.show', ['id' => $item->id]) }}"></a>
-                                                                            <div class="product-item__description--top-actions">
+                                                                            <div
+                                                                                class="product-item__description--top-actions">
 
                                                                                 <a href="{{ route('products.show', ['id' => $item->id]) }}"
                                                                                     data-product-id="{{ $item->id }}"
@@ -706,7 +729,8 @@
                                                                                         wishlist</span>
                                                                                 </a>
 
-                                                                                <a href="#" class="nova_product_quick_view_btn"
+                                                                                <a href="#"
+                                                                                    class="nova_product_quick_view_btn"
                                                                                     data-product-id="{{ $item->id }}"
                                                                                     data-product-type="variable rel="
                                                                                     nofollow"><i
@@ -728,7 +752,8 @@
                                                                                     class="screen-reader-text">
                                                                                     This product has multiple variants. The
                                                                                     options
-                                                                                    may be chosen on the product page </span>
+                                                                                    may be chosen on the product page
+                                                                                </span>
                                                                             </div>
 
 
@@ -761,8 +786,9 @@
                                                                             <div class="product-item__description--info">
                                                                                 <div class="info-left">
                                                                                     @if ($item->category)
-                                                                                        <div class="product-item__category"><a
-                                                                                                class="content-product-cat"
+                                                                                        <div
+                                                                                            class="product-item__category">
+                                                                                            <a class="content-product-cat"
                                                                                                 href="../product-category/hoodies/index.html"
                                                                                                 rel="tag">{{ $item->category->name }}</a>
                                                                                         </div>
@@ -1491,8 +1517,8 @@
 
                                                 <div class="elementor-icon-box-icon">
                                                     <span class="elementor-icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                                            viewBox="0 0 32 32" fill="none">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="32"
+                                                            height="32" viewBox="0 0 32 32" fill="none">
                                                             <path d="M8 16H4" stroke="black" stroke-width="1.5"
                                                                 stroke-linecap="round" stroke-linejoin="round"></path>
                                                             <path d="M7.99984 22.6667H6.6665" stroke="black"
@@ -1544,8 +1570,8 @@
 
                                                 <div class="elementor-icon-box-icon">
                                                     <span class="elementor-icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
-                                                            viewBox="0 0 36 36" fill="none">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="36"
+                                                            height="36" viewBox="0 0 36 36" fill="none">
                                                             <path
                                                                 d="M33.6677 7.11781L27.2392 4.54638C27.0857 4.48487 26.9144 4.48487 26.7609 4.54638L20.3323 7.11781C20.2131 7.16557 20.111 7.24791 20.039 7.35424C19.9671 7.46056 19.9286 7.586 19.9286 7.71438V14.359C19.9319 15.5798 20.2496 16.7793 20.8511 17.8418C21.4526 18.9042 22.3176 19.7939 23.3627 20.425L26.6696 22.4088C26.7694 22.4686 26.8836 22.5002 27 22.5002C27.1164 22.5002 27.2306 22.4686 27.3304 22.4088L30.2143 20.6782V27.8782C30.214 28.1577 30.1028 28.4257 29.9051 28.6234C29.7075 28.821 29.4395 28.9322 29.16 28.9325H4.26859C3.98908 28.9322 3.72112 28.821 3.52347 28.6234C3.32583 28.4257 3.21464 28.1577 3.2143 27.8782V13.5001H18C18.1705 13.5001 18.334 13.4324 18.4546 13.3118C18.5751 13.1912 18.6429 13.0277 18.6429 12.8572C18.6429 12.6867 18.5751 12.5232 18.4546 12.4027C18.334 12.2821 18.1705 12.2144 18 12.2144H10.6072H3.2143V10.6972C3.21464 10.4177 3.32583 10.1498 3.52347 9.95212C3.72112 9.75448 3.98908 9.64329 4.26859 9.64295H18C18.1705 9.64295 18.334 9.57522 18.4546 9.45466C18.5751 9.3341 18.6429 9.17059 18.6429 9.00009C18.6429 8.8296 18.5751 8.66609 18.4546 8.54553C18.334 8.42497 18.1705 8.35724 18 8.35724H4.26859C3.64809 8.35758 3.0531 8.60422 2.61434 9.04298C2.17557 9.48175 1.92893 10.0767 1.92859 10.6972V27.8744C1.92893 28.4949 2.17557 29.0899 2.61434 29.5286C3.0531 29.9674 3.64809 30.214 4.26859 30.2144H29.16C29.7805 30.214 30.3755 29.9674 30.8143 29.5286C31.253 29.0899 31.4997 28.4949 31.5 27.8744V19.8001C32.3008 19.1361 32.9462 18.3045 33.3905 17.3639C33.8348 16.4233 34.0672 15.3966 34.0714 14.3564V7.71438C34.0714 7.586 34.033 7.46056 33.961 7.35424C33.889 7.24791 33.7869 7.16557 33.6677 7.11781ZM32.7857 14.359C32.7831 15.3579 32.5231 16.3394 32.0308 17.2087C31.5385 18.078 30.8305 18.8057 29.9752 19.3218L27 21.1077L24.0249 19.3218C23.1695 18.8057 22.4615 18.078 21.9692 17.2087C21.4769 16.3394 21.2169 15.3579 21.2143 14.359V8.14895L27 5.83467L32.7857 8.14895V14.359Z"
                                                                 fill="#000000"></path>
@@ -1584,23 +1610,23 @@
 
                                                 <div class="elementor-icon-box-icon">
                                                     <span class="elementor-icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="33" height="32"
-                                                            viewBox="0 0 33 32" fill="none">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="33"
+                                                            height="32" viewBox="0 0 33 32" fill="none">
                                                             <path
                                                                 d="M8.50004 4H4.50004C3.02671 4 1.83337 5.19333 1.83337 6.66667C1.83337 8.14 3.02671 9.33333 4.50004 9.33333"
-                                                                stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                                stroke-linejoin="round"></path>
+                                                                stroke="#000000" stroke-width="1.5"
+                                                                stroke-linecap="round" stroke-linejoin="round"></path>
                                                             <path d="M8.5 9.33325V1.33325H27.1667V9.33325" stroke="#000000"
                                                                 stroke-width="1.5" stroke-linecap="round"
                                                                 stroke-linejoin="round"></path>
                                                             <path
                                                                 d="M31.1667 9.33317H4.50004C3.02671 9.33317 1.83337 8.13984 1.83337 6.6665V26.6665C1.83337 28.8758 3.62404 30.6665 5.83337 30.6665H31.1667V9.33317Z"
-                                                                stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                                stroke-linejoin="round"></path>
+                                                                stroke="#000000" stroke-width="1.5"
+                                                                stroke-linecap="round" stroke-linejoin="round"></path>
                                                             <path
                                                                 d="M23.1667 22.6666C24.6394 22.6666 25.8333 21.4727 25.8333 19.9999C25.8333 18.5272 24.6394 17.3333 23.1667 17.3333C21.6939 17.3333 20.5 18.5272 20.5 19.9999C20.5 21.4727 21.6939 22.6666 23.1667 22.6666Z"
-                                                                stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                                stroke-linejoin="round"></path>
+                                                                stroke="#000000" stroke-width="1.5"
+                                                                stroke-linecap="round" stroke-linejoin="round"></path>
                                                         </svg> </span>
                                                 </div>
 
@@ -1630,8 +1656,8 @@
 
                                                 <div class="elementor-icon-box-icon">
                                                     <span class="elementor-icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="37" height="36"
-                                                            viewBox="0 0 37 36" fill="none">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="37"
+                                                            height="36" viewBox="0 0 37 36" fill="none">
                                                             <g clip-path="url(#clip0_174_981)">
                                                                 <path d="M30.167 6.33301L23.804 12.696" stroke="black"
                                                                     stroke-width="1.5" stroke-linecap="round"
@@ -1647,13 +1673,13 @@
                                                                     stroke-linejoin="round"></path>
                                                                 <path
                                                                     d="M30.1669 29.6671C36.6104 23.2236 36.6104 12.7764 30.1669 6.33285C23.7233 -0.110738 13.2761 -0.110738 6.83255 6.33285C0.388966 12.7764 0.388966 23.2236 6.83255 29.6671C13.2761 36.1107 23.7233 36.1107 30.1669 29.6671Z"
-                                                                    stroke="black" stroke-width="1.5" stroke-linecap="round"
-                                                                    stroke-linejoin="round">
+                                                                    stroke="black" stroke-width="1.5"
+                                                                    stroke-linecap="round" stroke-linejoin="round">
                                                                 </path>
                                                                 <path
                                                                     d="M23.8029 23.3032C26.7318 20.3743 26.7318 15.6257 23.8029 12.6968C20.874 9.76785 16.1253 9.76785 13.1964 12.6968C10.2675 15.6257 10.2675 20.3743 13.1964 23.3032C16.1253 26.2322 20.874 26.2322 23.8029 23.3032Z"
-                                                                    stroke="black" stroke-width="1.5" stroke-linecap="round"
-                                                                    stroke-linejoin="round">
+                                                                    stroke="black" stroke-width="1.5"
+                                                                    stroke-linecap="round" stroke-linejoin="round">
                                                                 </path>
                                                             </g>
                                                             <defs>
@@ -1723,8 +1749,8 @@
                                                                         data-elementor-open-lightbox="yes"
                                                                         data-elementor-lightbox-slideshow="4fd5129">
                                                                         <div class="kitify-banner__overlay"></div><img
-                                                                            loading="lazy" decoding="async" width="940"
-                                                                            height="941"
+                                                                            loading="lazy" decoding="async"
+                                                                            width="940" height="941"
                                                                             src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m4_ins_01.jpg"
                                                                             class="kitify-banner__img attachment-full size-full wp-image-929"
                                                                             alt=""
@@ -1752,8 +1778,8 @@
                                                                         data-elementor-open-lightbox="yes"
                                                                         data-elementor-lightbox-slideshow="4fd5129">
                                                                         <div class="kitify-banner__overlay"></div><img
-                                                                            loading="lazy" decoding="async" width="940"
-                                                                            height="941"
+                                                                            loading="lazy" decoding="async"
+                                                                            width="940" height="941"
                                                                             src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m4_ins_02.jpg"
                                                                             class="kitify-banner__img attachment-full size-full wp-image-930"
                                                                             alt=""
@@ -1781,8 +1807,8 @@
                                                                         data-elementor-open-lightbox="yes"
                                                                         data-elementor-lightbox-slideshow="4fd5129">
                                                                         <div class="kitify-banner__overlay"></div><img
-                                                                            loading="lazy" decoding="async" width="940"
-                                                                            height="941"
+                                                                            loading="lazy" decoding="async"
+                                                                            width="940" height="941"
                                                                             src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m4_ins_03.jpg"
                                                                             class="kitify-banner__img attachment-full size-full wp-image-931"
                                                                             alt=""
@@ -1810,8 +1836,8 @@
                                                                         data-elementor-open-lightbox="yes"
                                                                         data-elementor-lightbox-slideshow="4fd5129">
                                                                         <div class="kitify-banner__overlay"></div><img
-                                                                            loading="lazy" decoding="async" width="940"
-                                                                            height="941"
+                                                                            loading="lazy" decoding="async"
+                                                                            width="940" height="941"
                                                                             src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m4_ins_04.jpg"
                                                                             class="kitify-banner__img attachment-full size-full wp-image-932"
                                                                             alt=""
@@ -1839,8 +1865,8 @@
                                                                         data-elementor-open-lightbox="yes"
                                                                         data-elementor-lightbox-slideshow="4fd5129">
                                                                         <div class="kitify-banner__overlay"></div><img
-                                                                            loading="lazy" decoding="async" width="940"
-                                                                            height="941"
+                                                                            loading="lazy" decoding="async"
+                                                                            width="940" height="941"
                                                                             src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m4_ins_05.jpg"
                                                                             class="kitify-banner__img attachment-full size-full wp-image-933"
                                                                             alt=""
@@ -1868,8 +1894,8 @@
                                                                         data-elementor-open-lightbox="yes"
                                                                         data-elementor-lightbox-slideshow="4fd5129">
                                                                         <div class="kitify-banner__overlay"></div><img
-                                                                            loading="lazy" decoding="async" width="940"
-                                                                            height="941"
+                                                                            loading="lazy" decoding="async"
+                                                                            width="940" height="941"
                                                                             src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m4_ins_06.jpg"
                                                                             class="kitify-banner__img attachment-full size-full wp-image-934"
                                                                             alt=""
@@ -1903,4 +1929,4 @@
                 <div class="nova-overlay-global"></div>
             </div><!-- .kitify-site-wrapper -->
             @include('layouts.js')
-@endsection
+        @endsection

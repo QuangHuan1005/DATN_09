@@ -10,7 +10,7 @@ class InventoryService
     /** Không cho vượt tồn khi thêm/cập nhật giỏ */
     public function allowedQty(int $variantId, int $requested, int $currentInCart = 0): array
     {
-        $variant   = ProductVariant::select('id','quantity')->findOrFail($variantId);
+        $variant   = ProductVariant::select('id', 'quantity')->findOrFail($variantId);
         $available = max(0, (int) $variant->quantity);
         $maxAllow  = $available; // đơn giản: chưa giữ chỗ theo giỏ khác
 
@@ -32,7 +32,8 @@ class InventoryService
 
         foreach ($order->details as $d) {
             if ((int)$d->status !== 1) continue; // chỉ xử lý dòng mới (status mặc định = 1)
-            $v = $d->productVariant; if (!$v) continue;
+            $v = $d->productVariant;
+            if (!$v) continue;
 
             $v->update(['quantity' => max(0, (int)$v->quantity - (int)$d->quantity)]);
             $d->update(['status' => 2]); // đánh dấu đã trừ
@@ -46,7 +47,8 @@ class InventoryService
 
         foreach ($order->details as $d) {
             if ((int)$d->status !== 2) continue; // chỉ hoàn cho dòng đã trừ
-            $v = $d->productVariant; if (!$v) continue;
+            $v = $d->productVariant;
+            if (!$v) continue;
 
             $v->update(['quantity' => (int)$v->quantity + (int)$d->quantity]);
             $d->update(['status' => 3]); // đánh dấu đã hoàn

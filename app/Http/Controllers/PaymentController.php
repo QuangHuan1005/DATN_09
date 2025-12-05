@@ -39,7 +39,7 @@ class PaymentController extends Controller
 
         // Kiểm tra xem có phải demo mode không
         $isDemo = config('momo.environment') === 'demo' || !config('momo.partner_code') || config('momo.partner_code') === 'MOMO_PARTNER_CODE';
-        
+
         if ($isDemo) {
             $result = $this->demoService->createPayment($orderId, $amount, $orderInfo);
         } else {
@@ -110,7 +110,7 @@ class PaymentController extends Controller
     public function momoNotify(Request $request)
     {
         $data = $request->all();
-        
+
         // Xác thực chữ ký
         if (!$this->momoService->verifyCallback($data)) {
             return response()->json(['error' => 'Invalid signature'], 400);
@@ -146,7 +146,7 @@ class PaymentController extends Controller
 
         // Kiểm tra xem có phải demo mode không
         $isDemo = config('momo.environment') === 'demo' || !config('momo.partner_code') || config('momo.partner_code') === 'MOMO_PARTNER_CODE';
-        
+
         if ($isDemo) {
             // Demo mode - luôn trả về chưa thanh toán để test
             return response()->json([
@@ -159,7 +159,7 @@ class PaymentController extends Controller
             if (!$requestId) {
                 return response()->json(['error' => 'Missing request_id parameter'], 400);
             }
-            
+
             $status = $this->momoService->checkPaymentStatus($orderId, $requestId);
             return response()->json($status);
         }
@@ -171,7 +171,7 @@ class PaymentController extends Controller
     public function showATM(Request $request)
     {
         $orderId = $request->get('order_id');
-        
+
         if (!$orderId) {
             return redirect()->route('checkout.index')->with('error', 'Thông tin đơn hàng không hợp lệ');
         }
@@ -200,10 +200,10 @@ class PaymentController extends Controller
 
         // TODO: Tích hợp với payment gateway thật (VNPay, OnePay, etc.)
         // Hiện tại chỉ là demo
-        
+
         // Simulate payment processing
         $success = true; // Trong thực tế, đây sẽ là kết quả từ payment gateway
-        
+
         if ($success) {
             // Thanh toán thành công
             return response()->json([
@@ -255,11 +255,11 @@ class PaymentController extends Controller
         if ($vnp_ResponseCode == '00' && $vnp_TransactionStatus == '00') {
             // Lấy thông tin đơn hàng từ session
             $pendingOrder = Session::get('pending_order');
-            
+
             if ($pendingOrder && $pendingOrder['orderId'] == $vnp_TxnRef) {
                 // TODO: Tạo đơn hàng trong database
                 // TODO: Cập nhật trạng thái thanh toán
-                
+
                 // Xóa giỏ hàng và pending order
                 Session::forget('cart');
                 Session::forget('pending_order');
@@ -273,7 +273,7 @@ class PaymentController extends Controller
         } else {
             // Thanh toán thất bại
             $errorMessage = $this->getVNPayErrorMessage($vnp_ResponseCode);
-            
+
             return redirect()->route('checkout.index')
                 ->with('error', 'Thanh toán thất bại: ' . $errorMessage);
         }
@@ -315,7 +315,7 @@ class PaymentController extends Controller
         if ($vnp_ResponseCode == '00' && $vnp_TransactionStatus == '00') {
             // TODO: Cập nhật đơn hàng trong database
             // TODO: Gửi email xác nhận cho khách hàng
-            
+
             return response()->json([
                 'RspCode' => '00',
                 'Message' => 'Success'
