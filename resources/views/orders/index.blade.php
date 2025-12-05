@@ -39,25 +39,33 @@
                                                     };
                                                 };
                                                 // map trạng thái THANH TOÁN -> class badge
+                                                // map trạng thái THANH TOÁN -> class badge
                                                 $payBadgeClass = function ($pid) {
                                                     return match ((int) $pid) {
                                                         1 => 'badge-on-hold', // Chưa thanh toán
-                                                        2 => 'badge-completed', // Đã thanh toán
-                                                        3 => 'badge-refunded', // Hoàn tiền
+                                                        2 => 'badge-processing', // Đang xử lý
+                                                        3 => 'badge-completed', // Đã thanh toán
+                                                        4 => 'badge-cancelled', // Thanh toán thất bại
+                                                        5 => 'badge-refunded', // Hoàn tiền
                                                         default => 'badge-default',
                                                     };
                                                 };
+
                                                 // fallback label nếu chưa eager-load quan hệ
                                                 $paymentStatusMap = [
                                                     1 => 'Chưa thanh toán',
-                                                    2 => 'Đã thanh toán',
-                                                    3 => 'Hoàn tiền',
+                                                    2 => 'Đang xử lý',
+                                                    3 => 'Đã thanh toán',
+                                                    4 => 'Thanh toán thất bại',
+                                                    5 => 'Hoàn tiền',
                                                 ];
+
                                                 $paymentMethodMap = [
                                                     1 => 'Thanh toán khi nhận hàng',
                                                     2 => 'VNPAY',
                                                     3 => 'MoMo',
                                                 ];
+
                                             @endphp
 
                                             <style>
@@ -356,6 +364,9 @@
                                                             </thead>
                                                             <tbody>
                                                                 @foreach ($orders as $order)
+                                                                    {{-- DEBUG TẠM --}}
+                                                                    {{-- {{ $order->payment_status_id }} - {{ optional($order->paymentStatus)->name }} --}}
+
                                                                     @php
                                                                         $itemsCount =
                                                                             optional($order->details)->sum(
@@ -386,15 +397,14 @@
                                                                         <th class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number"
                                                                             data-title="Order" scope="row">
                                                                             @php
-                                                                                $code =
-                                                                                    $order->order_code;
+                                                                                $code = $order->order_code;
                                                                                 $short =
                                                                                     substr($code, 0, 4) .
                                                                                     '****' .
                                                                                     substr($code, -5);
                                                                             @endphp
 
-                                                                            
+
 
                                                                             <a href="{{ route('orders.show', $order->id) }}"
                                                                                 aria-label="View order {{ $order->order_code }}">

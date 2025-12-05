@@ -76,8 +76,8 @@
                                                 <div class="elementor-widget-container">
                                                     <div class="kitify-product-images layout-type-1">
                                                         <div class="woocommerce-product-gallery
-                                                                                                                            woocommerce-product-gallery--with-images
-                                                                                                                            woocommerce-product-gallery--columns-6 images"
+                                                                    woocommerce-product-gallery--with-images
+                                                                    woocommerce-product-gallery--columns-6 images"
                                                             data-columns="{{ min(6, max($images ?? [], 6)) ?? null }}"
                                                             style="opacity: 0; transition: opacity .25s ease-in-out;">
                                                             <div class="woocommerce-product-gallery__wrapper">
@@ -1375,10 +1375,6 @@
                                 }
                             });
                         }
-
-
-
-
 
                         function validateQuantity() {
                             if (!quantityInput) return;

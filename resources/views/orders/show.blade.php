@@ -583,6 +583,58 @@
                                                         </div>
                                                     </div>
 
+                                                    {{-- ======= 2 BOX: ĐƠN HÀNG & THÔNG TIN NGƯỜI NHẬN ======= --}}
+                                                    <div class="order-info-grid">
+                                                        {{-- Box Đơn hàng --}}
+                                                        <div class="card">
+                                                            <div class="card-hd">Đơn hàng</div>
+                                                            <div class="card-bd">
+                                                                <div class="sum-row">
+                                                                    <span>Mã đơn</span>
+                                                                    <span>#{{ $order->order_code }}</span>
+                                                                </div>
+                                                                <div class="sum-row">
+                                                                    <span>Trạng thái đơn</span>
+                                                                    <span>{{ $statusName }}</span>
+                                                                </div>
+                                                                <div class="sum-row">
+                                                                    <span>Trạng thái thanh toán</span>
+                                                                    <span>{{ $order->paymentStatus?->name }}</span>
+                                                                </div>
+
+                                                                <div class="sum-row">
+                                                                    <span>Phương thức thanh toán</span>
+                                                                    <span>{{ $order->payment?->paymentMethod?->name ?? '—' }}</span>
+                                                                </div>
+
+                                                                <div class="sum-row">
+                                                                    <span>Thời gian đặt</span>
+                                                                    <span>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i') }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- Box Thông tin người nhận --}}
+                                                        <div class="card">
+                                                            <div class="card-hd">Thông tin người nhận</div>
+                                                            <div class="card-bd">
+                                                                <address style="margin:0">
+                                                                    <strong>{{ $order->name }}</strong><br>
+                                                                    {{ $order->phone }}<br>
+                                                                    {{ $order->address }}<br>
+                                                                    @if ($order->user?->email)
+                                                                        <a
+                                                                            href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a>
+                                                                    @endif
+                                                                </address>
+                                                                @if ($order->note)
+                                                                    <div style="margin-top:8px;color:#6b7280">Ghi chú:
+                                                                        {{ $order->note }}</div>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                     {{-- ======= CHI TIẾT ĐƠN HÀNG (BẢNG SẢN PHẨM) ======= --}}
                                                     <section class="woocommerce-order-details card" style="margin-top:18px">
                                                         <div class="card-hd">Chi tiết đơn hàng</div>
@@ -592,257 +644,214 @@
                                                                 style="margin:0">
                                                                 <thead>
                                                                     <tr>
-                                                                        <td style="width:100px">Hình ảnh</td>
-                                                                        <td class="product-name">Sản phẩm</td>
-                                                                        <td class="product-price">Giá</td>
-                                                                        <td class="product-quatity">Số lượng</td>
-                                                                        <td class="product-total">Thành tiền</td>
+                                                                        <th style="width:60px">STT</th>
+                                                                        <th class="product-name">Sản phẩm</th>
+                                                                        <th class="product-quantity" style="width:90px">SL
+                                                                        </th>
+                                                                        <th class="product-total" style="width:150px">Thành
+                                                                            tiền</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr>
-                                                                        @foreach ($lines as $line)
-                                                                            <td>
-                                                                                @if ($line->image)
-                                                                                    <img src="{{ $line->image }}"
-                                                                                        alt="{{ $line->product_name }}"
-                                                                                        class="img-fluid"
-                                                                                        style="width: 80px;">
-                                                                                @endif
-                                                                            </td>
+                                                                    @foreach ($lines as $it)
+                                                                        <tr class="order_item">
+                                                                            <td style="text-align:center">
+                                                                                {{ $loop->iteration }}</td>
                                                                             <td class="product-name">
-                                                                                <strong>{{ $line->product_name }}</strong>
-                                                                                <div class="meta">
-                                                                                    @if ($line->variant_text)
-                                                                                        {{ $line->variant_text }} ·
+                                                                                <div
+                                                                                    style="display:flex;gap:12px;align-items:center">
+                                                                                    @if ($it->image)
+                                                                                        <img class="thumb"
+                                                                                            src="{{ asset($it->image) }}"
+                                                                                            alt="">
                                                                                     @endif
-
-
+                                                                                    <div>
+                                                                                        <a
+                                                                                            href="{{ route('products.show', ['id' => $it->product_id]) }}">
+                                                                                            <strong>{{ $it->product_name }}</strong>
+                                                                                        </a>
+                                                                                        <div class="meta">
+                                                                                            @if ($it->variant_text)
+                                                                                                {{ $it->variant_text }} ·
+                                                                                            @endif
+                                                                                            Đơn giá:
+                                                                                            ₫{{ number_format($it->unit_price) }}
+                                                                                            @if ($it->eta)
+                                                                                                · Dự kiến:
+                                                                                                {{ \Carbon\Carbon::parse($it->eta)->format('d/m') }}
+                                                                                            @endif
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </td>
-
-                                                                            <td class="product-price">
-                                                                                {{ number_format($line->unit_price) }}₫
+                                                                            <td class="product-quantity"
+                                                                                style="text-align:center">
+                                                                                {{ $it->qty }}</td>
+                                                                            <td class="product-total"
+                                                                                style="text-align:right">
+                                                                                <span
+                                                                                    class="woocommerce-Price-amount amount">
+                                                                                    <span
+                                                                                        class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($it->line_total) }}
+                                                                                </span>
                                                                             </td>
-                                                                            <td class="product-quatity">{{ $line->qty }}
-                                                                            </td>
-
-                                                                            <td class="product-total">
-                                                                                {{ number_format($line->line_total) }}₫
-                                                                            </td>
-                                                                        @endforeach
-
-                                                                    </tr>
-
+                                                                        </tr>
+                                                                    @endforeach
                                                                 </tbody>
                                                             </table>
                                                         </div>
                                                     </section>
 
-                                                    {{-- @if ($order->order_status_id == 5)
-                                                        <section class="card" style="margin-top:16px;padding:14px">
-                                                            <h4>Viết đánh giá sản phẩm</h4>
+                                                    {{-- ======= FOOTER: THÔNG ĐIỆP + TỔNG TIỀN GÓc PHẢI ======= --}}
+                                                    <div class="order-bottom">
+                                                        <div class="order-bottom-left">
+                                                            @if ($order->order_status_id == 5)
+                                                                <div class="woocommerce-message" style="margin-top:14px">
+                                                                    Đơn hàng đã hoàn thành.
+                                                                    <a class="button" href="#">Viết đánh giá</a>
+                                                                </div>
+                                                            @endif
+                                                        </div>
 
-                                                            <a href="#" id="btnShowReviews" class="button"
-                                                                style="margin-bottom:10px;">Viết đánh giá</a>
-
-                                                            <div id="reviewForms" style="display:none">
-                                                                @foreach ($lines as $item)
-                                                                    @php
-                                                                        $reviewed = \App\Models\Review::where(
-                                                                            'order_id',
-                                                                            $order->id,
-                                                                        )
-                                                                            ->where('product_id', $item->product_id)
-                                                                            ->whereHas('order', function ($q) {
-                                                                                $q->where('user_id', auth()->id());
-                                                                            })
-                                                                            ->exists();
-                                                                    @endphp
-
-
-                                                                    <div class="mb-3">
-                                                                        <strong>{{ $item->product_name }}</strong>
-                                                                        @if (!$reviewed)
-                                                                            <form
-                                                                                action="{{ route('account.reviews.store', [$item->product_id, $order->id]) }}"
-                                                                                method="POST">
-                                                                                @csrf
-                                                                                <select name="rating"
-                                                                                    class="form-select w-25 mb-1">
-                                                                                    <option value="5">⭐ 5</option>
-                                                                                    <option value="4">⭐ 4</option>
-                                                                                    <option value="3">⭐ 3</option>
-                                                                                    <option value="2">⭐ 2</option>
-                                                                                    <option value="1">⭐ 1</option>
-                                                                                </select>
-                                                                                <textarea name="content" class="form-control mb-1" placeholder="Nhận xét của bạn"></textarea>
-                                                                                <button type="submit"
-                                                                                    class="btn btn-primary btn-sm">Gửi đánh
-                                                                                    giá</button>
-                                                                            </form>
-                                                                        @else
-                                                                            <span style="color:green">Đã đánh giá ✅</span>
-                                                                        @endif
+                                                        <div class="order-total-card card">
+                                                            <div class="card-hd">Tổng thanh toán</div>
+                                                            <div class="card-bd">
+                                                                <div class="sum-row">
+                                                                    <span>Tạm tính</span>
+                                                                    <span>₫{{ number_format($calc_subtotal) }}</span>
+                                                                </div>
+                                                                @if ($calc_shipping_fee > 0)
+                                                                    <div class="sum-row">
+                                                                        <span>Phí vận chuyển</span>
+                                                                        <span>₫{{ number_format($calc_shipping_fee) }}</span>
                                                                     </div>
-                                                                @endforeach
-                                                            </div>
-                                                        </section>
-                                                    @endif --}}
-
-
-
-                                                    <div class="order-total-card card">
-                                                        <div class="card-hd">Tổng thanh toán</div>
-                                                        <div class="card-bd">
-                                                            <div class="sum-row">
-                                                                <span>Tạm tính</span>
-                                                                <span>₫{{ number_format($calc_subtotal) }}</span>
-                                                            </div>
-                                                            @if ($calc_shipping_fee > 0)
+                                                                @endif
+                                                                @if ($calc_discount > 0)
+                                                                    <div class="sum-row">
+                                                                        <span>Giảm giá</span>
+                                                                        <span>-₫{{ number_format($calc_discount) }}</span>
+                                                                    </div>
+                                                                @endif
+                                                                @if ($order->voucher)
+                                                                    <div class="sum-row" style="color:#6b7280">
+                                                                        <span>Voucher</span>
+                                                                        <span>{{ $order->voucher->voucher_code }}</span>
+                                                                    </div>
+                                                                @endif
                                                                 <div class="sum-row">
-                                                                    <span>Phí vận chuyển</span>
-                                                                    <span>₫{{ number_format($calc_shipping_fee) }}</span>
+                                                                    <span>TT thanh toán</span>
+                                                                    <span>{{ $order->paymentStatus?->name }}</span>
                                                                 </div>
-                                                            @endif
-                                                            @if ($calc_discount > 0)
-                                                                <div class="sum-row">
-                                                                    <span>Giảm giá</span>
-                                                                    <span>-₫{{ number_format($calc_discount) }}</span>
+                                                                <div class="sum-row total">
+                                                                    <span>Tổng thanh toán</span>
+                                                                    <span>₫{{ number_format($calc_total) }}</span>
                                                                 </div>
-                                                            @endif
-                                                            @if ($order->voucher)
-                                                                <div class="sum-row" style="color:#6b7280">
-                                                                    <span>Voucher</span>
-                                                                    <span>{{ $order->voucher->voucher_code }}</span>
-                                                                </div>
-                                                            @endif
-                                                            <div class="sum-row">
-                                                                <span>TT thanh toán</span>
-                                                                <span>{{ $order->paymentStatus?->name }}</span>
-                                                            </div>
-                                                            <div class="sum-row total">
-                                                                <span>Tổng thanh toán</span>
-                                                                <span>₫{{ number_format($calc_total) }}</span>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                {{-- ===== Modal xác nhận hủy đơn ===== --}}
-                                                <div class="cancel-order-overlay" id="cancelOrderOverlay">
-                                                    <div class="cancel-order-modal">
-                                                        <h3>Hủy đơn hàng</h3>
-                                                        <p>Bạn chắc chắn muốn hủy đơn này?</p>
-                                                        <div class="cancel-order-actions">
-                                                            <button type="button" class="btn-cancel-close"
-                                                                id="btnCancelClose">Không</button>
-                                                            <button type="button" class="btn-cancel-ok"
-                                                                id="btnCancelOk">Đồng ý</button>
+                                                    {{-- ===== Modal xác nhận hủy đơn ===== --}}
+                                                    <div class="cancel-order-overlay" id="cancelOrderOverlay">
+                                                        <div class="cancel-order-modal">
+                                                            <h3>Hủy đơn hàng</h3>
+                                                            <p>Bạn chắc chắn muốn hủy đơn này?</p>
+                                                            <div class="cancel-order-actions">
+                                                                <button type="button" class="btn-cancel-close"
+                                                                    id="btnCancelClose">Không</button>
+                                                                <button type="button" class="btn-cancel-ok"
+                                                                    id="btnCancelOk">Đồng ý</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                {{-- ===== Modal xác nhận ĐÃ NHẬN HÀNG ===== --}}
-                                                <div class="complete-order-overlay" id="completeOrderOverlay">
-                                                    <div class="cancel-order-modal">
-                                                        <h3>Đã nhận hàng</h3>
-                                                        <p>Bạn đã nhận đầy đủ hàng và muốn hoàn thành đơn này?</p>
-                                                        <div class="cancel-order-actions">
-                                                            <button type="button" class="btn-cancel-close"
-                                                                id="btnCompleteClose">Không</button>
-                                                            <button type="button" class="btn-cancel-ok"
-                                                                id="btnCompleteOk">Đồng ý</button>
+                                                    {{-- ===== Modal xác nhận ĐÃ NHẬN HÀNG ===== --}}
+                                                    <div class="complete-order-overlay" id="completeOrderOverlay">
+                                                        <div class="cancel-order-modal">
+                                                            <h3>Đã nhận hàng</h3>
+                                                            <p>Bạn đã nhận đầy đủ hàng và muốn hoàn thành đơn này?</p>
+                                                            <div class="cancel-order-actions">
+                                                                <button type="button" class="btn-cancel-close"
+                                                                    id="btnCompleteClose">Không</button>
+                                                                <button type="button" class="btn-cancel-ok"
+                                                                    id="btnCompleteOk">Đồng ý</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                            </div><!-- /.woocommerce-MyAccount-content -->
-                                        </div><!-- /.woocommerce -->
-                                </div><!-- .entry-content -->
-                                </article>
+                                                </div><!-- /.woocommerce-MyAccount-content -->
+                                            </div><!-- /.woocommerce -->
+                                        </div><!-- .entry-content -->
+                                    </article>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div><!-- .site-content-wrapper -->
+                </div><!-- .site-content-wrapper -->
 
-            @include('layouts.footer')
-            <div class="nova-overlay-global"></div>
-        </div><!-- .kitify-site-wrapper -->
+                @include('layouts.footer')
+                <div class="nova-overlay-global"></div>
+            </div><!-- .kitify-site-wrapper -->
 
-        {{-- JS điều khiển modal hủy đơn & đã nhận hàng --}}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // ===== HỦY ĐƠN =====
-                const openBtn = document.getElementById('btnOpenCancelModal');
-                const overlay = document.getElementById('cancelOrderOverlay');
-                const closeBtn = document.getElementById('btnCancelClose');
-                const okBtn = document.getElementById('btnCancelOk');
-                const form = document.getElementById('cancel-order-form');
+            {{-- JS điều khiển modal hủy đơn & đã nhận hàng --}}
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // ===== HỦY ĐƠN =====
+                    const openBtn = document.getElementById('btnOpenCancelModal');
+                    const overlay = document.getElementById('cancelOrderOverlay');
+                    const closeBtn = document.getElementById('btnCancelClose');
+                    const okBtn = document.getElementById('btnCancelOk');
+                    const form = document.getElementById('cancel-order-form');
 
-                if (openBtn && overlay && closeBtn && okBtn && form) {
-                    openBtn.addEventListener('click', function() {
-                        overlay.classList.add('is-open');
-                    });
+                    if (openBtn && overlay && closeBtn && okBtn && form) {
+                        openBtn.addEventListener('click', function() {
+                            overlay.classList.add('is-open');
+                        });
 
-                    closeBtn.addEventListener('click', function() {
-                        overlay.classList.remove('is-open');
-                    });
-
-                    overlay.addEventListener('click', function(e) {
-                        if (e.target === overlay) {
+                        closeBtn.addEventListener('click', function() {
                             overlay.classList.remove('is-open');
-                        }
-                    });
+                        });
 
-                    okBtn.addEventListener('click', function() {
-                        form.submit();
-                    });
-                }
+                        overlay.addEventListener('click', function(e) {
+                            if (e.target === overlay) {
+                                overlay.classList.remove('is-open');
+                            }
+                        });
 
-                // ===== ĐÃ NHẬN HÀNG (HOÀN THÀNH) =====
-                const completeOpen = document.getElementById('btnOpenCompleteModal');
-                const completeOverlay = document.getElementById('completeOrderOverlay');
-                const completeClose = document.getElementById('btnCompleteClose');
-                const completeOk = document.getElementById('btnCompleteOk');
-                const completeForm = document.getElementById('complete-order-form');
+                        okBtn.addEventListener('click', function() {
+                            form.submit();
+                        });
+                    }
 
-                if (completeOpen && completeOverlay && completeClose && completeOk && completeForm) {
-                    completeOpen.addEventListener('click', function() {
-                        completeOverlay.classList.add('is-open');
-                    });
+                    // ===== ĐÃ NHẬN HÀNG (HOÀN THÀNH) =====
+                    const completeOpen = document.getElementById('btnOpenCompleteModal');
+                    const completeOverlay = document.getElementById('completeOrderOverlay');
+                    const completeClose = document.getElementById('btnCompleteClose');
+                    const completeOk = document.getElementById('btnCompleteOk');
+                    const completeForm = document.getElementById('complete-order-form');
 
-                    completeClose.addEventListener('click', function() {
-                        completeOverlay.classList.remove('is-open');
-                    });
+                    if (completeOpen && completeOverlay && completeClose && completeOk && completeForm) {
+                        completeOpen.addEventListener('click', function() {
+                            completeOverlay.classList.add('is-open');
+                        });
 
-                    completeOverlay.addEventListener('click', function(e) {
-                        if (e.target === completeOverlay) {
+                        completeClose.addEventListener('click', function() {
                             completeOverlay.classList.remove('is-open');
-                        }
-                    });
+                        });
 
-                    completeOk.addEventListener('click', function() {
-                        // tại đây user đã xác nhận "Bạn đã nhận hàng..."
-                        completeForm.submit();
-                    });
-                }
-            });
-            document.addEventListener('DOMContentLoaded', function() {
-                const btnShow = document.getElementById('btnShowReviews');
-                const reviewForms = document.getElementById('reviewForms');
+                        completeOverlay.addEventListener('click', function(e) {
+                            if (e.target === completeOverlay) {
+                                completeOverlay.classList.remove('is-open');
+                            }
+                        });
 
-                if (btnShow && reviewForms) {
-                    btnShow.addEventListener('click', function(e) {
-                        e.preventDefault(); // ngăn link # reload trang
-                        reviewForms.style.display = 'block'; // hiển thị form
-                        btnShow.style.display = 'none'; // ẩn link sau khi click
-                    });
-                }
-            });
-        </script>
+                        completeOk.addEventListener('click', function() {
+                            // tại đây user đã xác nhận "Bạn đã nhận hàng..."
+                            completeForm.submit();
+                        });
+                    }
+                });
+            </script>
 
-        @include('layouts.js')
+            @include('layouts.js')
         </div>
     @endsection

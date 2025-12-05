@@ -55,15 +55,12 @@ class VNPayController extends Controller
             // Cập nhật trạng thái thanh toán
             if ($vnp_ResponseCode == '00') {
                 // Thanh toán thành công
-                $order->update([
-                    'order_status_id'   => 1, // ví dụ: 1 = "Chờ xác nhận" hoặc "Đã đặt hàng"
-                    'payment_status_id' => 3, // ví dụ: 5 = "Đã thanh toán"
-                ]);
+                $order->update(['order_status_id' => 5]); // Hoàn thành
 
                 // Tạo log trạng thái
                 OrderStatusLog::create([
                     'order_id' => $order->id,
-                    'order_status_id' => 1,
+                    'order_status_id' => 5,
                     'actor_type' => 'system',
                 ]);
 
@@ -82,10 +79,8 @@ class VNPayController extends Controller
                     ->with('success', 'Thanh toán VNPay thành công!');
             } else {
                 // Thanh toán thất bại
-                $order->update([
-                    'order_status_id'   => 6, //  6 = "Hủy đơn"
-                    'payment_status_id' => 4, //  4 = "Thanh toán thất bại"
-                ]);
+                $order->update(['order_status_id' => 6]); // Hủy đơn
+
                 Payment::create([
                     'order_id' => $order->id,
                     'payment_method_id' => 2, // VNPay
@@ -137,15 +132,12 @@ class VNPayController extends Controller
             if ($vnp_ResponseCode == '00') {
                 // Thanh toán thành công
                 if ($order->order_status_id != 5) { // Chỉ cập nhật nếu chưa được cập nhật
-                    $order->update([
-                        'order_status_id'   => 1,
-                        'payment_status_id' => 3,
-                    ]);
+                    $order->update(['order_status_id' => 5]); // Hoàn thành
 
                     // Tạo log trạng thái
                     OrderStatusLog::create([
                         'order_id' => $order->id,
-                        'order_status_id' => 1,
+                        'order_status_id' => 5,
                         'actor_type' => 'system',
                     ]);
 
@@ -162,10 +154,7 @@ class VNPayController extends Controller
                 return response()->json(['RspCode' => '00', 'Message' => 'Confirm Success']);
             } else {
                 // Thanh toán thất bại
-                $order->update([
-                    'order_status_id'   => 6, // Hủy đơn
-                    'payment_status_id' => 4, // Thanh toán thất bại / chưa thanh toán
-                ]);
+                $order->update(['order_status_id' => 6]); // Hủy đơn
 
                 Payment::create([
                     'order_id' => $order->id,

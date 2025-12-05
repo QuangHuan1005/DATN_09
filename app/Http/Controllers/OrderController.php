@@ -3,12 +3,13 @@
 // app/Http/Controllers/OrderController.php
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderStatus;
 use App\Models\OrderStatusLog;
-
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -21,14 +22,14 @@ class OrderController extends Controller
         $statuses = OrderStatus::orderBy('id')->get(['id', 'name']);
 
         // Đếm số đơn theo trạng thái (để hiện số trên tab)
-        $counts = Order::query()
+        $counts = \App\Models\Order::query()
             ->where('user_id', Auth::id())
             ->selectRaw('order_status_id, COUNT(*) as c')
             ->groupBy('order_status_id')
             ->pluck('c', 'order_status_id'); // [status_id => count]
 
-        $orders = Order::query()
-            ->with(['status', 'paymentStatus', 'paymentMethod', 'details']) // eager để tính SL
+        $orders = \App\Models\Order::query()
+            ->with(['status', 'paymentStatus', 'payment.paymentMethod', 'details']) // eager để tính SL
             ->where('user_id', Auth::id())
             ->when($statusId > 0, fn($q) => $q->where('order_status_id', $statusId))
             ->latest('created_at')                 // mới nhất lên đầu
@@ -62,6 +63,7 @@ class OrderController extends Controller
         if (!$order) {
             return redirect()->route('orders.index')->with('error', 'Không tìm thấy đơn hàng.');
         }
+        
 
         // Chuẩn hóa dữ liệu hiển thị dòng SP
         $lines = $order->details->map(function ($d) {
@@ -176,5 +178,31 @@ class OrderController extends Controller
         return redirect()
             ->route('orders.show', $order->id)
             ->with('success', 'Đơn hàng đã chuyển sang trạng thái Hoàn thành.');
+    }
+    public function updateStatus(Request $request, $id)
+    {
+        $order = Order::with('user')->findOrFail($id);
+
+        $oldStatus = $order->order_status_id;
+        $order->order_status_id = (int) $request->input('order_status_id');
+        $order->save();
+
+        // Nếu chuyển sang ĐÃ ĐẶT HÀNG => gửi mail
+        if ($order->order_status_id === Order::STATUS_PLACED && $oldStatus !== Order::STATUS_PLACED) {
+            if ($order->user && $order->user->email) {
+                Mail::to($order->user->email)
+                    ->queue(new OrderConfirmation($order, 'Đặt hàng thành công'));
+            }
+        }
+
+        // Nếu chuyển sang HOÀN THÀNH => gửi mail
+        if ($order->order_status_id === Order::STATUS_COMPLETED && $oldStatus !== Order::STATUS_COMPLETED) {
+            if ($order->user && $order->user->email) {
+                Mail::to($order->user->email)
+                    ->queue(new OrderConfirmation($order, 'Đơn hàng đã hoàn thành'));
+            }
+        }
+
+        return back()->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
     }
 }

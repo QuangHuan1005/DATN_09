@@ -185,7 +185,7 @@
                                         <tbody>
                                             @foreach ($lines as $line)
                                                 <tr>
-                                                <pre><code class="language-php">{{ $lines }}</code></pre>
+                                                    {{-- <pre><code class="language-php">{{ $lines }}</code></pre> --}}
 
                                                     <td>
                                                         <div class="d-flex align-items-center gap-2">
@@ -379,7 +379,11 @@
                                                     icon="solar:kick-scooter-broken" class="align-middle"></iconify-icon>
                                                 Phí giao hàng. : </p>
                                         </td>
-                                        <td class="text-end text-dark fw-medium px-0">30.000₫</td>
+                                        @if ($calc_subtotal < 300000)
+                                            <td class="text-end text-dark fw-medium px-0">30.000₫</td>
+                                        @else
+                                            <td class="text-end text-dark fw-medium px-0">Miễn phí</ @endif
+
                                     </tr>
 
                                 </tbody>
@@ -391,7 +395,7 @@
                             <p class="fw-medium text-dark mb-0">Tổng Số Tiền</p>
                         </div>
                         <div>
-                            <p class="fw-medium text-dark mb-0">{{ number_format($calc_total + 30000, 0, ',', '.') }}₫
+                            <p class="fw-medium text-dark mb-0">{{ number_format($calc_total, 0, ',', '.') }}₫
                             </p>
                         </div>
 
