@@ -24,6 +24,8 @@ use App\Http\Controllers\Admin\AdminVoucherController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\AdminAttributeController;
+use App\Http\Controllers\Admin\AdminChatController;
+use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VNPayController;
@@ -52,6 +54,13 @@ Route::middleware(['auth'])->group(function () {
 
 // 🗂️ Danh mục
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
+
+Route::middleware('auth')->group(function () {
+    Route::get('chat', [ChatsController::class, 'index'])->name('chat');
+});
+
+Route::get('/fetch-messages', [ChatsController::class, 'fetchMessagesFromUserToAdmin'])->name('fetch.messagesFromSellerToAdmin');
+Route::post('/send-message', [ChatsController::class, 'sendMessageFromUserToAdmin'])->name('send.Messageofsellertoadmin');
 
 // 📰 Blog / Tin tức
 Route::prefix('blog')->group(function () {
@@ -224,6 +233,11 @@ Route::prefix('admin')
         // Dashboard
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        Route::get('chat', [AdminChatController::class, 'index'])->name('chat');
+
+        Route::get('fetch-messages', [ChatsController::class, 'fetchMessages'])->name('fetchMessages');
+        Route::post('send-message', [ChatsController::class, 'sendMessage'])->name('sendMessage');
+
         // Danh mục
         Route::resource('categories', AdminCategoryController::class);
         Route::post('categories/{id}/restore', [AdminCategoryController::class, 'restore'])->name('categories.restore');
@@ -234,7 +248,7 @@ Route::prefix('admin')
         Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('products.restore');
         Route::delete('products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('products.forceDelete');
 
-    // Biến thể sản phẩm
+        // Biến thể sản phẩm
         Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
         Route::get('products/{productId}/variants', [AdminProductController::class, 'productVariants'])->name('products.variants.product');
         Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('products.variants.type');
