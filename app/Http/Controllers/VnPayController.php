@@ -96,7 +96,6 @@ class VNPayController extends Controller
 
                 return redirect('/checkout')->with('error', 'Thanh toán VNPay thất bại. Mã lỗi: ' . $vnp_ResponseCode);
             }
-
         } catch (\Exception $e) {
             Log::error('VNPay Return Exception: ' . $e->getMessage());
             return redirect('/checkout')->with('error', 'Có lỗi xảy ra khi xử lý thanh toán VNPay');
@@ -171,10 +170,10 @@ class VNPayController extends Controller
                 ]);
                 return response()->json(['RspCode' => '00', 'Message' => 'Confirm Failed']);
             }
-
         } catch (\Exception $e) {
             Log::error('VNPay IPN Exception: ' . $e->getMessage());
             return response()->json(['RspCode' => '99', 'Message' => 'Unknown error']);
         }
     }
 }
+
