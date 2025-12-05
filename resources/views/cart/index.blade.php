@@ -514,26 +514,53 @@
 
                                                         <td class="pro-thumbnail">
                                                             @php
-                                                                $raw = trim((string) ($row['image'] ?? ''));
-                                                                // Nếu CartController đã lưu URL đầy đủ -> dùng luôn
-                                                                // Nếu chỉ lưu đường dẫn tương đối -> gắn storage/
-                                                                if ($raw === '') {
-                                                                    $imgUrl = asset('images/placeholder.png');
-                                                                } elseif (preg_match('#^https?://#i', $raw)) {
-                                                                    $imgUrl = $raw;
-                                                                } else {
-                                                                    // trường hợp hiếm: bạn chỉ lưu 'products/abc.jpg'
-                                                                    $imgUrl = asset('storage/' . ltrim($raw, '/'));
+
+                                                                // Giá trị thô từ session (có thể là URL, có thể chỉ là tên file)
+                                                                $raw = (string) ($row['image'] ?? '');
+                                                                $raw = trim($raw);
+
+                                                                // Fallback nội bộ (không phụ thuộc internet)
+                                                                $imgUrl = asset('images/placeholder.png');
+
+                                                                if ($raw !== '') {
+                                                                    // 1) Nếu là URL tuyệt đối -> dùng luôn
+                                                                    if (preg_match('#^https?://#i', $raw)) {
+                                                                        $imgUrl = $raw;
+                                                                    } else {
+                                                                        // 2) Lấy ra tên file + đuôi (nếu $raw là 'products/xxx.jpg' thì vẫn OK)
+                                                                        $basename = basename($raw); // ví dụ: 'U6txA9zWHOA...jpg' (phải còn đuôi)
+                                                                        // Nếu DB lại lưu thiếu đuôi -> bạn phải sửa dữ liệu; code không đoán được .jpg/.png
+
+                                                                        // 3) Các ứng viên URL mà webserver có thể phục vụ
+                                                                        $candidates = [
+                                                                            'storage/' . ltrim($raw, '/'), // giữ nguyên nếu $raw đã là 'products/...'
+                                                                            'storage/products/' . $basename, // storage/app/public/products/<file>
+                                                                            'storage/product_images/' . $basename, // storage/app/public/product_images/<file>
+                                                                        ];
+
+                                                                        // 4) Chọn URL đầu tiên mà FILE THẬT sự tồn tại dưới public/
+                                                                        foreach ($candidates as $rel) {
+                                                                            $abs = public_path($rel); // -> public/<rel>
+                                                                            if (is_file($abs)) {
+                                                                                // kiểm tra có thật không
+                                                                                $imgUrl = asset($rel); // -> /storage/...
+                                                                                break;
+                                                                            }
+                                                                        }
+                                                                    }
                                                                 }
                                                             @endphp
 
                                                             <img src="{{ $imgUrl }}"
-                                                                alt="{{ $row['name'] ?? 'Sản phẩm' }}"
+                                                                alt="{{ $row['name'] ?? 'Product' }}"
                                                                 class="img-fluid rounded"
                                                                 style="width: 90px; height: 90px; object-fit: cover;"
-                                                                onerror="this.onerror=null;this.src='{{ asset('images/placeholder.png') }}';">
-                                                        </td>
+                                                                onerror="this.onerror=null;this.src='{{ asset('images/placeholder.png') }}';" />
 
+                                                            {{-- DEBUG (tạm thời, test xong xoá): hiển thị URL thực tế --}}
+                                                            {{-- <small style="color:#888">{{ $imgUrl }}</small> --}}
+
+                                                        </td>
                                                         <td class="pro-title">
                                                             <div class="name">{{ $row['name'] ?? 'Sản phẩm' }}</div>
                                                             <div class="meta small mt-1">
@@ -566,11 +593,12 @@
                                                                     <button type="button"
                                                                         onclick="const i=this.nextElementSibling;i.stepDown();i.dispatchEvent(new Event('input',{bubbles:true}));">−</button>
 
-                                                                    <input type="number" min="1" name="quantity"
+                                                                    <input type="number" min="1"
+                                                                        max="{{ $row['max_qty'] ?? 9999 }}" name="quantity"
                                                                         value="{{ (int) ($row['quantity'] ?? 1) }}"
                                                                         class="js-qty"
                                                                         data-variant="{{ $row['variant_id'] }}"
-                                                                        oninput="/* để JS bắt sự kiện */">
+                                                                        data-stock="{{ $row['max_qty'] ?? 9999 }}">
 
                                                                     <button type="button"
                                                                         onclick="const i=this.previousElementSibling;i.stepUp();i.dispatchEvent(new Event('input',{bubbles:true}));">+</button>
@@ -647,6 +675,14 @@
                 </div>
             </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const swalTheme = {
+            buttonsStyling: true,
+            confirmButtonColor: '#000000',
+            cancelButtonColor: '#6b7280',
+        };
+    </script>
 
     <script>
         function checkCartBeforeCheckout(hasItem) {
@@ -745,6 +781,7 @@
         }
 
         // Cập nhật 1 dòng + tổng khi đổi số lượng (KHÔNG xử lý phí ship)
+        // Cập nhật 1 dòng + tổng khi đổi số lượng (có validate tồn kho + SweetAlert2)
         async function updateLine(variantId, qty) {
             const form = document.querySelector(`form[id="qty-form-${variantId}"]`);
             if (!form) return;
@@ -752,59 +789,137 @@
             const fd = new FormData(form);
             fd.set('quantity', qty);
 
-            const res = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': fd.get('_token'),
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                },
-                body: fd,
-                credentials: 'same-origin'
-            });
+            let res;
+            try {
+                res = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': fd.get('_token'),
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    body: fd,
+                    credentials: 'same-origin'
+                });
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi kết nối',
+                    text: 'Không thể cập nhật giỏ hàng, vui lòng thử lại.',
+                    ...swalTheme
+                });
+                return;
+            }
 
             let data = {};
             try {
                 data = await res.json();
             } catch (e) {}
 
-            // fallback nếu server chưa trả JSON chuẩn
-            if (!data || !('line_total' in data)) {
-                const price = parseFloat(form.dataset.price || 0);
-                data = {
-                    ok: res.ok,
-                    line_total: price * qty
-                };
-            }
-
-            // cập nhật tiền dòng
+            const input = document.querySelector(`input[data-variant="${variantId}"]`);
             const lineEl = document.getElementById(`line-total-${variantId}`);
-            if (lineEl) {
-                lineEl.textContent = fmt(Math.max(0, data.line_total || 0));
+            const tblRow = document.querySelector(`tr[data-variant="${variantId}"]`);
+
+            // ==== HẾT HÀNG: 410 ====
+            if (res.status === 410) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Sản phẩm hết hàng',
+                    text: data.message || 'Sản phẩm này đã hết hàng và được xoá khỏi giỏ.',
+                    ...swalTheme
+                }).then(() => {
+                    // Xoá luôn dòng khỏi bảng hoặc reload lại trang
+                    if (tblRow) tblRow.remove();
+                    recomputeTotals();
+                });
+                return;
             }
 
-            // cập nhật tổng (grand = cart_total, không có shipping)
-            if ('cart_total' in data) {
+            // ==== VƯỢT TỒN KHO: 422 ====
+            if (res.status === 422) {
+                const input = document.querySelector(`input[data-variant="${variantId}"]`);
+                if (input && typeof data.quantity !== 'undefined') {
+                    // ở đây server đang nói "số đúng phải là data.quantity" -> chấp nhận cho trường hợp stock thay đổi
+                    input.value = data.quantity;
+                }
+                if (lineEl && typeof data.line_total !== 'undefined') {
+                    lineEl.textContent = fmt(data.line_total);
+                }
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Vượt số lượng tồn kho',
+                    text: data.message || 'Số lượng bạn chọn đã vượt quá số lượng còn lại.',
+                    ...swalTheme,
+                    timer: 2200
+                });
+
+                if (typeof data.cart_total !== 'undefined') {
+                    const sp = document.getElementById('sum-products');
+                    const g = document.getElementById('sum-grand');
+                    if (sp) sp.textContent = fmt(data.cart_total);
+                    if (g) g.textContent = fmt(data.cart_total);
+                }
+
+                recomputeTotals();
+                return;
+            }
+
+            // ==== THÀNH CÔNG (200) ====
+            if (lineEl && typeof data.line_total !== 'undefined') {
+                lineEl.textContent = fmt(data.line_total);
+            }
+            if (typeof data.cart_total !== 'undefined') {
                 const sp = document.getElementById('sum-products');
-                if (sp) sp.textContent = fmt(data.cart_total || 0);
-
                 const g = document.getElementById('sum-grand');
-                if (g) g.textContent = fmt(data.cart_total || 0); // grand = cart_total
+                if (sp) sp.textContent = fmt(data.cart_total);
+                if (g) g.textContent = fmt(data.cart_total);
             }
+
+            recomputeTotals();
         }
+
 
         // Lắng nghe thay đổi số lượng
         document.querySelectorAll('.js-qty').forEach(inp => {
             inp.addEventListener('input', function() {
-                let qty = parseInt(this.value, 10);
-                if (!Number.isFinite(qty) || qty < 1) {
-                    qty = 1;
-                    this.value = 1;
-                }
                 const variantId = this.dataset.variant;
+                const stock = parseInt(this.dataset.stock || this.max || '999999', 10);
+
+                let qty = parseInt(this.value, 10);
+
+                // Người dùng xoá hết -> cho phép trống tạm, không gửi request
+                if (isNaN(qty)) {
+                    return;
+                }
+
+                // Không cho < 1
+                if (qty < 1) {
+                    qty = 1;
+                }
+
+                // ===== CHỈ CHẶN KHI VƯỢT TỒN KHO =====
+                if (qty > stock) {
+                    qty = stock;
+                    this.value = stock; // hiển thị đúng max
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Vượt số lượng tồn kho',
+                        text: `Sản phẩm này chỉ còn lại ${stock} chiếc.`,
+                        ...swalTheme,
+                        timer: 1800
+                    });
+                } else {
+                    // nếu không vượt kho thì hiển thị đúng số người dùng nhập
+                    this.value = qty;
+                }
+
                 debounce('v' + variantId, () => updateLine(variantId, qty));
             });
         });
+
+
 
         (function() {
             // Màu/nút theo tông đen của site
@@ -887,13 +1002,6 @@
             if (sp) sp.textContent = fmt(sum);
             if (g) g.textContent = fmt(sum);
         }
-
-        // Khi đổi số lượng 1 dòng, sau khi update server -> cập nhật tổng theo lựa chọn
-        const _origUpdateLine = updateLine;
-        updateLine = async function(variantId, qty) {
-            await _origUpdateLine(variantId, qty);
-            recomputeTotals();
-        };
 
         // Tick / bỏ tick 1 dòng
         document.querySelectorAll('.js-check').forEach(cb => {
