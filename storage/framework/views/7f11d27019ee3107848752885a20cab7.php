@@ -1,5 +1,3 @@
-<?php $__env->startSection('title', 'Quản lý biến thể sản phẩm'); ?>
-
 <?php $__env->startSection('content'); ?>
 <div class="container mt-4">
             <!-- Title -->

@@ -238,37 +238,6 @@ unset($__errorArgs, $__bag); ?>
                                 </div>
                             </div>
 
-                            <div class="col-lg-4">
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Tình Trạng</label>
-                                    <select class="form-control <?php $__errorArgs = ['status'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>" name="status" id="status"
-                                        data-choices data-choices-groups
-                                        data-placeholder="Tình trạng sản phẩm">
-                                        <option value="1" <?php echo e(old('status') == '1' ? 'selected' : ''); ?>>Đang kinh doanh</option>
-                                        <option value="0" <?php echo e(old('status') == '0' ? 'selected' : ''); ?>>Ngừng kinh doanh</option>
-                                        <option value="2" <?php echo e(old('status') == '2' ? 'selected' : ''); ?>>Hết hàng</option>
-                                    </select>
-                                    <?php $__errorArgs = ['status'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                                        <div class="text-danger mt-1" style="font-size:13px">
-                                            <?php echo e($message); ?>
-
-                                        </div>
-                                    <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                                </div>
                             </div>
                         </div>
                     </div>

@@ -14,7 +14,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-          'staff_id', 
+        'staff_id', 
         'payment_status_id',
         'order_status_id',
         'voucher_id',
@@ -25,6 +25,12 @@ class Order extends Model
         'subtotal',
         'discount',
         'total_amount',
+        // THÊM CÁC TRƯỜNG BỊ THIẾU Ở ĐÂY
+        'shipping_fee',        // Cần thiết nếu có phí ship
+        'grand_total',         // Tổng tiền cuối cùng
+        'customer_email',      // Email khách hàng
+        'payment_method_id',   // BẮT BUỘC PHẢI CÓ
+        // KẾT THÚC CÁC TRƯỜNG THIẾU
         'note'
     ];
 
@@ -33,13 +39,13 @@ class Order extends Model
      * 🔗 Trạng thái đơn hàng
      * =====================
      */
-    const STATUS_PENDING   = 1; // Chờ xác nhận
+    const STATUS_PENDING 	 = 1; // Chờ xác nhận
     const STATUS_CONFIRMED = 2; // Đã xác nhận
-    const STATUS_SHIPPING  = 3; // Đang giao
+    const STATUS_SHIPPING 	= 3; // Đang giao
     const STATUS_DELIVERED = 4; // Đã giao
-    const STATUS_DONE      = 5; // Hoàn thành
-    const STATUS_CANCEL    = 6; // Hủy
-    const STATUS_RETURNED  = 7; // Trả hàng / Hoàn trả
+    const STATUS_DONE 	 	= 5; // Hoàn thành
+    const STATUS_CANCEL 	 = 6; // Hủy
+    const STATUS_RETURNED 	= 7; // Trả hàng / Hoàn trả
 
 
     /**
@@ -55,10 +61,10 @@ class Order extends Model
     }
 
     // Nhân viên phụ trách đơn hàng
-public function staff()
-{
-    return $this->belongsTo(User::class, 'staff_id');
-}
+    public function staff()
+    {
+        return $this->belongsTo(User::class, 'staff_id');
+    }
 
 
     // Trạng thái đơn hàng
@@ -73,11 +79,11 @@ public function staff()
         return $this->belongsTo(PaymentStatus::class, 'payment_status_id');
     }
 
-     // Phương thức thanh toán
+      // Phương thức thanh toán
     public function paymentMethod()
-{
-    return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
-}
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
 
 
     // Mã giảm giá
@@ -168,7 +174,8 @@ public function staff()
      */
     public function getCalcTotalAttribute(): int
     {
-        return $this->total_amount ?? $this->calc_subtotal - $this->discount;
+        // Sử dụng grand_total nếu có, hoặc tính toán từ subtotal và discount
+        return $this->grand_total ?? ($this->subtotal - $this->discount + $this->shipping_fee); 
     }
 
     /**

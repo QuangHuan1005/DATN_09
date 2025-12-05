@@ -633,11 +633,10 @@
                                   <tr class="order_item">
                                     <td style="text-align:center"><?php echo e($loop->iteration); ?></td>
                                     <td class="product-name">
-                                      <div style="display:flex;gap:12px;align-items:center">
-                                        <?php if($it->image): ?>
-                                          <img class="thumb" src="<?php echo e(asset($it->image)); ?>" alt="">
-                                        <?php endif; ?>
-                                        <div>
+                                      <div style="display:flex; gap:12px; align-items:center">
+
+
+
                                           <strong><?php echo e($it->product_name); ?></strong>
                                           <div class="meta">
                                             <?php if($it->variant_text): ?> <?php echo e($it->variant_text); ?> · <?php endif; ?>

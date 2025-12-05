@@ -13,7 +13,6 @@ use App\Models\UserAddress;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatusLog;
-use App\Services\MomoPaymentService;
 use App\Services\DemoPaymentService;
 use App\Services\VNPayService;
 
@@ -98,7 +97,7 @@ $discountAmount = $appliedVoucher ? ($appliedVoucher['discount_type'] === 'perce
         return view('checkout.index', compact('cartItems', 'totalAmount', 'user', 'defaultAddress', 'addresses', 'addressCount', 'appliedVoucher', 'shippingFee', 'grandTotal', 'discountAmount'));
     }
 
-    public function store(Request $request)
+  public function store(Request $request)
     {
         // Xử lý đặt hàng
         $validated = $request->validate([
@@ -112,45 +111,60 @@ $discountAmount = $appliedVoucher ? ($appliedVoucher['discount_type'] === 'perce
             'order_vat_note' => 'nullable|string',
         ]);
 
-        // ⚡ Ưu tiên mua ngay
-    $buyNow = Session::get('buy_now');
-    $totalAmount = 0;
+        // ⚡ Tính tổng tiền cho luồng Mua ngay hoặc Giỏ hàng
+        $buyNow = Session::get('buy_now');
+        $totalAmount = 0;
+        $variantsToOrder = []; // Dùng để lưu các biến thể cần tạo chi tiết đơn hàng
 
-    if ($buyNow) {
-        $variant = ProductVariant::with('product')->find($buyNow['variant_id']);
-        if (!$variant) {
-            return back()->with('error', 'Biến thể không tồn tại.');
-        }
+        if ($buyNow) {
+            $variant = ProductVariant::with('product')->find($buyNow['variant_id']);
+            if (!$variant) {
+                return back()->with('error', 'Biến thể không tồn tại.');
+            }
 
-        $qty = max(1, (int) $buyNow['quantity']);
+            $qty = max(1, (int) $buyNow['quantity']);
 
-        // Kiểm tra tồn kho (nếu có cột quantity)
-        if (isset($variant->quantity) && $qty > (int) $variant->quantity) {
-            return back()->with('error', 'Sản phẩm không đủ tồn kho.');
-        }
+            // Kiểm tra tồn kho (nếu có cột quantity)
+            if (isset($variant->quantity) && $qty > (int) $variant->quantity) {
+                return back()->with('error', 'Sản phẩm không đủ tồn kho.');
+            }
 
-        // Ưu tiên giá sale
-        $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
-        $totalAmount = $price * $qty;
+            // Ưu tiên giá sale
+            $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
+            $totalAmount = $price * $qty;
+            
+            // Thêm vào mảng variantsToOrder
+            $variantsToOrder[] = [
+                'variant' => $variant,
+                'quantity' => $qty,
+                'price' => $price,
+            ];
 
-    } else {
-        // === Luồng cũ: tính từ giỏ hàng ===
-        $cart = Session::get('cart', []);
-        foreach ($cart as $variantId => $item) {
-            $variant = ProductVariant::find($variantId);
-            if ($variant) {
-                // Ưu tiên giá sale
-                $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
-                $totalAmount += $price * $item['quantity'];
+        } else {
+            // === Luồng cũ: tính từ giỏ hàng ===
+            $cart = Session::get('cart', []);
+            foreach ($cart as $variantId => $item) {
+                $variant = ProductVariant::find($variantId);
+                if ($variant) {
+                    // Ưu tiên giá sale
+                    $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
+                    $totalAmount += $price * $item['quantity'];
+                    
+                    // Thêm vào mảng variantsToOrder
+                    $variantsToOrder[] = [
+                        'variant' => $variant,
+                        'quantity' => $item['quantity'],
+                        'price' => $price,
+                    ];
+                }
             }
         }
-    }
 
-    // Tạo order_code với timestamp nano + random - đảm bảo unique hoàn toàn
-    $nanoTime = hrtime(true); // High resolution timestamp
-    $randomPart = strtoupper(substr(md5(uniqid(mt_rand(), true) . microtime(true)), 0, 6));
-    $orderId = 'ORD_' . $nanoTime . '_' . $randomPart . '_' . Auth::id();
-    $orderInfo = 'Thanh toan don hang ' . $orderId;
+        // Tạo order_code với timestamp nano + random - đảm bảo unique hoàn toàn
+        $nanoTime = hrtime(true); // High resolution timestamp
+        $randomPart = strtoupper(substr(md5(uniqid(mt_rand(), true) . microtime(true)), 0, 6));
+        $orderId = 'ORD_' . $nanoTime . '_' . $randomPart . '_' . Auth::id();
+        $orderInfo = 'Thanh toan don hang ' . $orderId;
 
         // Lấy thông tin địa chỉ giao hàng
         $address = \App\Models\UserAddress::find($validated['address_id']);
@@ -159,12 +173,12 @@ $discountAmount = $appliedVoucher ? ($appliedVoucher['discount_type'] === 'perce
         }
 
         // Tạo đơn hàng trong transaction để đảm bảo atomicity
-        $order = \Illuminate\Support\Facades\DB::transaction(function () use ($orderId, $totalAmount, $address, $validated, $buyNow) {
+        $order = \Illuminate\Support\Facades\DB::transaction(function () use ($orderId, $totalAmount, $address, $validated, $variantsToOrder) {
             // Tạo đơn hàng trước
             $orderData = [
                 'user_id' => Auth::id(),
                 'order_code' => $orderId,
-                'order_status_id' => 1, // Chờ xác nhận (sẽ được trigger map sang payment_status_id = 1)
+                'order_status_id' => 1, // Chờ xác nhận
                 'total_amount' => $totalAmount,
                 'subtotal' => $totalAmount,
                 'discount' => 0,
@@ -183,49 +197,27 @@ $discountAmount = $appliedVoucher ? ($appliedVoucher['discount_type'] === 'perce
                 'actor_type' => 'system',
             ]);
 
-            // Tạo chi tiết đơn hàng
-            if ($buyNow) {
-                $variant = ProductVariant::with('product')->find($buyNow['variant_id']);
-                $qty = max(1, (int) $buyNow['quantity']);
-                
-                // Ưu tiên giá sale
-                $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
-
+            // TẠO CHI TIẾT ĐƠN HÀNG (CHỈ MỘT LẦN VỚI GIÁ ĐÃ TÍNH TOÁN)
+            foreach ($variantsToOrder as $item) {
                 $order->details()->create([
-                    'product_variant_id' => $variant->id,
-                    'quantity' => $qty,
-                    'price' => $price,
+                    'product_variant_id' => $item['variant']->id,
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'],
                 ]);
-            } else {
-                $cart = Session::get('cart', []);
-                foreach ($cart as $variantId => $item) {
-                    $variant = ProductVariant::with('product')->find($variantId);
-                    if ($variant) {
-                        // Ưu tiên giá sale
-                        $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
-                        
-                        $order->details()->create([
-                            'product_variant_id' => $variant->id,
-                            'quantity' => $item['quantity'],
-                            'price' => $price,
-                        ]);
-                    }
-                }
             }
+            // --- KẾT THÚC KHỐI TẠO CHI TIẾT ĐƠN HÀNG ---
 
             return $order;
         });
 
         // Xử lý theo phương thức thanh toán
-        if ($validated['payment_method'] == '2') { // VNPay
-            // Tạo thanh toán VNPay
+        if ($validated['payment_method'] == '2') { // 💳 Xử lý VNPay
+        try {
             $vnpayService = new VNPayService();
             $result = $vnpayService->createPayment($orderId, $totalAmount, $orderInfo);
 
             if ($result['success']) {
                 // Đơn hàng đã được tạo với trạng thái chờ xác nhận (order_status_id = 1)
-
-                // Lưu thông tin đơn hàng tạm thời
                 Session::put('pending_order', [
                     'order_id' => $order->id,
                     'order_code' => $orderId,
@@ -242,75 +234,26 @@ $discountAmount = $appliedVoucher ? ($appliedVoucher['discount_type'] === 'perce
                 $order->delete();
                 return redirect()->back()->with('error', 'Không thể tạo thanh toán VNPay: ' . $result['message']);
             }
-        } elseif ($validated['payment_method'] == '5') { // Momo
-            // Kiểm tra xem có phải demo mode không
-            $isDemo = config('momo.environment') === 'demo' || !config('momo.partner_code') || config('momo.partner_code') === 'MOMO_PARTNER_CODE';
-
-            if ($isDemo) {
-                // Sử dụng demo service
-                $demoService = new DemoPaymentService();
-                $result = $demoService->createPayment($orderId, $totalAmount, $orderInfo);
-            } else {
-                // Sử dụng Momo service thật
-                $momoService = new MomoPaymentService();
-                $result = $momoService->createPayment($orderId, $totalAmount, $orderInfo);
-            }
-
-            if ($result['success']) {
-                // Lưu thông tin đơn hàng tạm thời
-                Session::put('pending_order', [
-                    'order_id' => $order->id,
-                    'orderId' => $orderId,
-                    'totalAmount' => $totalAmount,
-                    'orderInfo' => $orderInfo,
-                    'payment_method' => 'momo',
-                    'momo_data' => $result,
-                    'isDemo' => $isDemo
-                ]);
-
-                // Chuyển đến trang QR code
-                return redirect()->route('payment.momo.qr', [
-                    'order_id' => $result['orderId'],
-                    'qr_code_url' => $result['qrCodeUrl'],
-                    'pay_url' => $result['payUrl']
-                ]);
-            } else {
-                // Xóa đơn hàng nếu tạo thanh toán thất bại
-                $order->delete();
-                return redirect()->back()->with('error', 'Không thể tạo thanh toán Momo: ' . $result['message']);
-            }
-        } else {
-            // Các phương thức thanh toán khác (COD, thẻ tín dụng, etc.)
-            if ($buyNow) {
-                $variant = ProductVariant::with('product')->find($buyNow['variant_id']);
-                $qty = max(1, (int) $buyNow['quantity']);
-
-                $order->details()->create([
-                    'product_variant_id' => $variant->id,
-                    'quantity' => $qty,
-                    'price' => $variant->price,
-                ]);
-            } else {
-                $cart = Session::get('cart', []);
-                foreach ($cart as $variantId => $item) {
-                    $variant = ProductVariant::with('product')->find($variantId);
-                    if ($variant) {
-                        $order->details()->create([
-                            'product_variant_id' => $variant->id,
-                            'quantity' => $item['quantity'],
-                            'price' => $variant->price,
-                        ]);
-                    }
-                }
-            }
-
-            // Xóa giỏ hàng sau khi đặt hàng thành công
-            Session::forget('cart');
-            Session::forget('buy_now');
-
-            return redirect()->route('checkout.success')->with('success', 'Đặt hàng thành công!');
+        } catch (\Exception $e) {
+            // Ghi lại lỗi và xóa đơn hàng đã tạo
+            \Log::error("VNPay Payment Creation Error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            $order->delete();
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi hệ thống khi chuyển đến cổng VNPay. Vui lòng thử lại sau.');
         }
+    } 
+    // KHỐI ELSEIF CHO MOMO ĐÃ BỊ XÓA BỎ
+    
+    else { 
+        // 📦 Xử lý các phương thức thanh toán khác (COD, Thẻ tín dụng offline, v.v.)
+        // Logic tạo chi tiết đơn hàng đã được thực hiện ở trên trong transaction.
+        
+        // Xóa giỏ hàng sau khi đặt hàng thành công
+        Session::forget('cart');
+        Session::forget('buy_now');
+
+        return redirect()->route('checkout.success')->with('success', 'Đặt hàng thành công!');
     }
+}
 
     public function success()
     {

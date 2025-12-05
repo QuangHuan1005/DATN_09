@@ -632,13 +632,13 @@
                                     <td style="text-align:center">{{ $loop->iteration }}</td>
                                     <td class="product-name">
                                       <div style="display:flex; gap:12px; align-items:center">
-    @php
-    $firstImage = $product->photoAlbums->first()?->image;
+{{-- @php
+$firstImage = $it->photoAlbums->first()?->image;
 @endphp
 
 <img src="{{ $firstImage ? asset('storage/products/' . $firstImage) : asset('images/no-image.png') }}"
-     alt="{{ $product->name ?? 'Sản phẩm' }}"
-     class="avatar-md">
+     alt="{{ $it->product_name ?? 'Sản phẩm' }}"
+     class="avatar-md"> --}}
 
 
                                           <strong>{{ $it->product_name }}</strong>

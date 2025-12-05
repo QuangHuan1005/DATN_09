@@ -67,13 +67,22 @@
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>
-                                                @if($variant->image)
-                                                    <img src="{{ Storage::url($variant->image) }}" alt="Variant Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
-                                                @else
-                                                    <div style="width: 50px; height: 50px; background: #f5f5f5; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-                                                        <i class="bx bx-image text-muted"></i>
-                                                    </div>
-                                                @endif
+                                              @if($variant->image)
+    {{-- DEBUG: KIỂM TRA ĐƯỜNG DẪN LƯU TRỮ --}}
+    @php
+        // Lấy đường dẫn ảnh hoàn chỉnh được tạo bởi Laravel
+        $imageUrl = Storage::url($variant->image);
+    @endphp
+    
+    <img src="{{ $imageUrl }}" 
+         alt="Variant Image" 
+         style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+@else
+    {{-- Hiển thị placeholder nếu không có ảnh --}}
+    <div style="width: 50px; height: 50px; background: #f5f5f5; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+        <i class="bx bx-image text-muted"></i>
+    </div>
+@endif
                                             </td>
                                             <td>
                                                 <span class="badge bg-info">{{ $variant->size->name ?? 'N/A' }} ({{ $variant->size->size_code ?? '' }})</span>

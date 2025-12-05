@@ -166,22 +166,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-4">
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Tình Trạng</label>
-                                    <select class="form-control @error('status') is-invalid @enderror" name="status" id="status"
-                                        data-choices data-choices-groups
-                                        data-placeholder="Tình trạng sản phẩm">
-                                        <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Đang kinh doanh</option>
-                                        <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Ngừng kinh doanh</option>
-                                        <option value="2" {{ old('status') == '2' ? 'selected' : '' }}>Hết hàng</option>
-                                    </select>
-                                    @error('status')
-                                        <div class="text-danger mt-1" style="font-size:13px">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
                             </div>
                         </div>
                     </div>

@@ -50,8 +50,8 @@
                                                 <div class="d-flex align-items-center gap-2">
                                                     <div
                                                         class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                        @if ($product->photoAlbums->isNotEmpty())
-                                                            <img src="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"
+                                                        @if ($product->variants->isNotEmpty())
+                                                            <img src="{{ asset('storage/' . $product->variants->first()->image) }}"
                                                                 alt="Ảnh Sản Phẩm" class="avatar-md">
                                                         @else
                                                             <img src="{{ asset('images/no-image.png') }}" alt="Không có ảnh"

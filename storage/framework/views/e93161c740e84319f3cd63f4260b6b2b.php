@@ -68,13 +68,22 @@
                                         <tr>
                                             <td><?php echo e($index + 1); ?></td>
                                             <td>
-                                                <?php if($variant->image): ?>
-                                                    <img src="<?php echo e(Storage::url($variant->image)); ?>" alt="Variant Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
-                                                <?php else: ?>
-                                                    <div style="width: 50px; height: 50px; background: #f5f5f5; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-                                                        <i class="bx bx-image text-muted"></i>
-                                                    </div>
-                                                <?php endif; ?>
+                                              <?php if($variant->image): ?>
+    
+    <?php
+        // Lấy đường dẫn ảnh hoàn chỉnh được tạo bởi Laravel
+        $imageUrl = Storage::url($variant->image);
+    ?>
+    
+    <img src="<?php echo e($imageUrl); ?>" 
+         alt="Variant Image" 
+         style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+<?php else: ?>
+    
+    <div style="width: 50px; height: 50px; background: #f5f5f5; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+        <i class="bx bx-image text-muted"></i>
+    </div>
+<?php endif; ?>
                                             </td>
                                             <td>
                                                 <span class="badge bg-info"><?php echo e($variant->size->name ?? 'N/A'); ?> (<?php echo e($variant->size->size_code ?? ''); ?>)</span>

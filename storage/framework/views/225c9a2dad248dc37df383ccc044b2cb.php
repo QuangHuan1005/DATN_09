@@ -48,8 +48,8 @@
                                                 <div class="d-flex align-items-center gap-2">
                                                     <div
                                                         class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                        <?php if($product->photoAlbums->isNotEmpty()): ?>
-                                                            <img src="<?php echo e(asset('storage/' . $product->photoAlbums->first()->image)); ?>"
+                                                        <?php if($product->variants->isNotEmpty()): ?>
+                                                            <img src="<?php echo e(asset('storage/' . $product->variants->first()->image)); ?>"
                                                                 alt="Ảnh Sản Phẩm" class="avatar-md">
                                                         <?php else: ?>
                                                             <img src="<?php echo e(asset('images/no-image.png')); ?>" alt="Không có ảnh"
