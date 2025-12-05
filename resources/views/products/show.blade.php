@@ -1,12 +1,29 @@
 @extends('master')
 @section('content')
- <body
+
+    <body
         class="wp-singular product-template-default single single-product postid-1558 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-383 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
         <div class="site-wrapper">
 
             <div class="kitify-site-wrapper elementor-459kitify">
                 @include('layouts.header')
                 <div id="site-content" class="site-content-wrapper">
+                    <div class="woocommerce-notices-wrapper">
+                        @if (session('cart_success'))
+                            @php
+                                $cartSuccess = session('cart_success');
+                                $addedName = $cartSuccess['product_name'] ?? ($product->name ?? 'Sản phẩm');
+                            @endphp
+                            <div class="woocommerce-message" role="alert" tabindex="-1">
+                                <p class="with-button">
+                                    “{{ $addedName }}” đã được thêm vào giỏ hàng.
+                                    <a href="{{ route('cart.index') }}" class="button wc-forward">
+                                        Xem giỏ hàng
+                                    </a>
+                                </p>
+                            </div>
+                        @endif
+                    </div>
                     <div class="woocommerce-notices-wrapper"></div>
                     <div data-elementor-type="product" data-elementor-id="383"
                         class="elementor elementor-383 elementor-location-single post-1558 product type-product status-publish has-post-thumbnail product_cat-jackets product_cat-men product_cat-tshirts product_tag-clothing product_tag-etc product_tag-fashion product_tag-m81 product_tag-men product_tag-products first instock shipping-taxable purchasable product-type-variable has-default-attributes product">
@@ -59,12 +76,11 @@
                                                 <div class="elementor-widget-container">
                                                     <div class="kitify-product-images layout-type-1">
                                                         <div class="woocommerce-product-gallery
-                                                            woocommerce-product-gallery--with-images
-                                                            woocommerce-product-gallery--columns-6 images"
+                                                                                                                            woocommerce-product-gallery--with-images
+                                                                                                                            woocommerce-product-gallery--columns-6 images"
                                                             data-columns="{{ min(6, max($images ?? [], 6)) ?? null }}"
                                                             style="opacity: 0; transition: opacity .25s ease-in-out;">
                                                             <div class="woocommerce-product-gallery__wrapper">
-
                                                                 @foreach ($images as $index => $img)
                                                                     @php
                                                                         $imgUrl = asset('storage/' . $img);
@@ -72,38 +88,40 @@
                                                                             $product->name . '- Image' . ($index + 1);
                                                                     @endphp
 
-                                                                    <div data-thumb="{{ $imgUrl }}" data-thumb-alt="{{ $alt }}"
+                                                                    <div data-thumb="{{ $imgUrl }}"
+                                                                        data-thumb-alt="{{ $alt }}"
                                                                         data-thumb-srcset="{{ $imgUrl }} 250w,
-                                                                                {{ $imgUrl }} 300w,
-                                                                                {{ $imgUrl }} 150w,
-                                                                                {{ $imgUrl }} 768w,
-                                                                                {{ $imgUrl }} 700w,
-                                                                                {{ $imgUrl }} 50w,
-                                                                                {{ $imgUrl }} 100w,
-                                                                                {{ $imgUrl }} 1000w"
+                                                                            {{ $imgUrl }} 300w,
+                                                                            {{ $imgUrl }} 150w,
+                                                                            {{ $imgUrl }} 768w,
+                                                                            {{ $imgUrl }} 700w,
+                                                                            {{ $imgUrl }} 50w,
+                                                                            {{ $imgUrl }} 100w,
+                                                                            {{ $imgUrl }} 1000w"
                                                                         data-thumb-sizes="(max-width: 250px) 100vw, 250px"
                                                                         class="woocommerce-product-gallery__image">
 
                                                                         <a href="{{ $imgUrl }}">
-                                                                            <img fetchpriority="high" width="1000" height="1000"
-                                                                                src="{{ $imgUrl }}"
+                                                                            <img fetchpriority="high" width="1000"
+                                                                                height="1000" src="{{ $imgUrl }}"
                                                                                 class="{{ $index == 0 ? 'wp-post-image' : '' }}"
                                                                                 alt="{{ $alt }}" data-caption=""
                                                                                 data-src="{{ $imgUrl }}"
                                                                                 data-large_image="{{ $imgUrl }}"
                                                                                 data-large_image_width="1000"
-                                                                                data-large_image_height="1000" decoding="async"
+                                                                                data-large_image_height="1000"
+                                                                                decoding="async"
                                                                                 srcset="{{ $imgUrl }} 1000w,
-                                                                                        {{ $imgUrl }} 300w,
-                                                                                        {{ $imgUrl }} 150w,
-                                                                                        {{ $imgUrl }} 768w,
-                                                                                        {{ $imgUrl }} 700w,
-                                                                                        {{ $imgUrl }} 250w,
-                                                                                        {{ $imgUrl }} 50w,
-                                                                                        {{ $imgUrl }} 100w"
-                                                                                sizes="(max-width: 1000px) 100vw, 1000px" @if ($index === 0) id="js-main-image"
-                                                                                    data-image-base="{{ asset('storage') }}"
-                                                                                @endif />
+                                                                            {{ $imgUrl }} 300w,
+                                                                            {{ $imgUrl }} 150w,
+                                                                            {{ $imgUrl }} 768w,
+                                                                            {{ $imgUrl }} 700w,
+                                                                            {{ $imgUrl }} 250w,
+                                                                            {{ $imgUrl }} 50w,
+                                                                            {{ $imgUrl }} 100w"
+                                                                                sizes="(max-width: 1000px) 100vw, 1000px"
+                                                                                @if ($index === 0) id="js-main-image"
+                                                                                        data-image-base="{{ asset('storage') }}" @endif />
                                                                         </a>
                                                                     </div>
                                                                 @endforeach
@@ -115,6 +133,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="elementor-element elementor-element-7c6682b4 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
                                     data-id="7c6682b4" data-element_type="container">
                                     <div class="elementor-element elementor-element-757ccde elementor-widget kitify elementor-kitify-wooproduct-title"
@@ -225,6 +244,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="elementor-element elementor-element-53d89609 elementor-widget kitify elementor-kitify-wooproduct-addtocart"
                                         data-id="53d89609" data-element_type="widget"
                                         data-widget_type="kitify-wooproduct-addtocart.default">
@@ -232,13 +252,15 @@
 
                                             <div class="elementor-add-to-cart elementor-product-variable">
 
+
                                                 @if (isset($variantMap) && $variantMap->count() > 0)
                                                     <form class="variations_form cart" action="{{ route('cart.add') }}"
-                                                        method="post" id="addToCartFrom" enctype='multipart/form-data'
+                                                        method="post" id="addToCartForm" enctype='multipart/form-data'
                                                         data-product_id="{{ $product->id }}">
                                                         @csrf
                                                         <div data-product_id="{{ $product->id }}">
-                                                            <table class="variations" cellspacing="0" role="presentation">
+                                                            <table class="variations" cellspacing="0"
+                                                                role="presentation">
                                                                 <tbody>
                                                                     <tr>
                                                                         <th class="label"><label for="pa_color">Màu
@@ -247,7 +269,8 @@
                                                                         <td class="value">
                                                                             <select style="display:none" id="pa_color"
                                                                                 class=" woo-variation-raw-select"
-                                                                                name="color_id" data-attribute_name="color_id"
+                                                                                name="color_id"
+                                                                                data-attribute_name="color_id"
                                                                                 data-show_option_none="yes">
                                                                                 <option value="">Choose an option
                                                                                 </option>
@@ -261,15 +284,18 @@
                                                                                 class="variable-items-wrapper color-variable-items-wrapper wvs-style-squared"
                                                                                 data-attribute_name="color_id">
                                                                                 @foreach ($colors as $color)
-                                                                                    <li aria-checked="false" tabindex="0"
+                                                                                    <li aria-checked="false"
+                                                                                        tabindex="0"
                                                                                         data-attribute_name="color_id"
                                                                                         data-wvstooltip="{{ $color->name }}"
                                                                                         class="variable-item color-variable-item js-color-item"
                                                                                         title="{{ $color->name }}"
                                                                                         data-title="{{ $color->name }}"
                                                                                         data-color-id="{{ $color->id }}"
-                                                                                        data-value="{{ $color->id }}" role="radio">
-                                                                                        <div class="variable-item-contents">
+                                                                                        data-value="{{ $color->id }}"
+                                                                                        role="radio">
+                                                                                        <div
+                                                                                            class="variable-item-contents">
                                                                                             <span
                                                                                                 class="variable-item-span variable-item-span-color"
                                                                                                 style="background-color:{{ $color->color_code ?? '#cccccc' }};"></span>
@@ -280,11 +306,13 @@
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th class="label"><label for="pa_size">Size</label>
+                                                                        <th class="label"><label
+                                                                                for="pa_size">Size</label>
                                                                         </th>
                                                                         <td class="value">
                                                                             <select style="display:none" id="pa_size"
-                                                                                class=" woo-variation-raw-select" name="size_id"
+                                                                                class=" woo-variation-raw-select"
+                                                                                name="size_id"
                                                                                 data-attribute_name="size_id"
                                                                                 data-show_option_none="yes">
                                                                                 <option value="">Choose an option
@@ -299,29 +327,32 @@
                                                                                 class="variable-items-wrapper button-variable-items-wrapper wvs-style-squared"
                                                                                 data-attribute_name="size_id">
                                                                                 @foreach ($sizes as $size)
-                                                                                    <li aria-checked="false" tabindex="0"
+                                                                                    <li aria-checked="false"
+                                                                                        tabindex="0"
                                                                                         data-attribute_name="size_id"
                                                                                         data-wvstooltip="{{ $size->name }}"
                                                                                         class="variable-item button-variable-item js-size-item"
                                                                                         title="{{ $size->name }}"
                                                                                         data-title="{{ $size->name }}"
                                                                                         data-size-id="{{ $size->id }}"
-                                                                                        data-value="{{ $size->id }}" role="radio">
-                                                                                        <div class="variable-item-contents">
+                                                                                        data-value="{{ $size->id }}"
+                                                                                        role="radio">
+                                                                                        <div
+                                                                                            class="variable-item-contents">
                                                                                             <span
                                                                                                 class="variable-item-span variable-item-span-button">{{ $size->size_code }}</span>
                                                                                         </div>
                                                                                     </li>
                                                                                 @endforeach
-                                                                            </ul><a class="reset_variations" href="#"
-                                                                                id="js-reset-variations"
+                                                                            </ul><a class="reset_variations"
+                                                                                href="#" id="js-reset-variations"
                                                                                 aria-label="Clear options">Clear</a>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-                                                            <div class="reset_variations_alert screen-reader-text" role="alert"
-                                                                aria-live="polite" aria-relevant="all">
+                                                            <div class="reset_variations_alert screen-reader-text"
+                                                                role="alert" aria-live="polite" aria-relevant="all">
                                                                 <div class="single_variation_wrap">
                                                                     <div class="woocommerce-variation single_variation">
                                                                         <div class="woocommerce-variation-description">
@@ -340,24 +371,35 @@
                                                                     class="woocommerce-variation-add-to-cart variations_button ">
                                                                     <div class="woocommerce-product-details__add-to-cart">
                                                                         <div class="quantity">
-                                                                            <span class="nova-minicart-qty-button decrease"><svg
-                                                                                    class="icon">
+                                                                            <span
+                                                                                class="nova-minicart-qty-button decrease">
+                                                                                <svg class="icon">
                                                                                     <use xlink:href="#mini-cart-delete">
                                                                                     </use>
-                                                                                </svg></span> <label class="screen-reader-text"
+                                                                                </svg>
+                                                                            </span>
+                                                                            <label class="screen-reader-text"
                                                                                 for="quantity_input_{{ $product->id }}">
-                                                                                Số lượng {{ $product->name }}</label>
+                                                                                Số lượng {{ $product->name }}
+                                                                            </label>
                                                                             <input type="number"
                                                                                 id="quantity_input_{{ $product->id }}"
-                                                                                class="input-text qty text" name="quantity"
-                                                                                value="1" aria-label="Product quantity" min="1"
-                                                                                max="" step="1" placeholder=""
+                                                                                class="input-text qty text"
+                                                                                name="quantity" value="1"
+                                                                                aria-label="Product quantity"
+                                                                                min="" max=""
+                                                                                step="1" placeholder=""
                                                                                 inputmode="numeric" autocomplete="off" />
-                                                                            <span class="nova-minicart-qty-button increase"><svg
-                                                                                    class="icon">
+                                                                            <span
+                                                                                class="nova-minicart-qty-button increase">
+                                                                                <svg class="icon">
                                                                                     <use xlink:href="#mini-cart-add"></use>
-                                                                                </svg></span>
+                                                                                </svg>
+                                                                            </span>
                                                                         </div>
+
+                                                                        {{-- FORM THÔNG BÁO LỖI SỐ LƯỢNG --}}
+
                                                                         <p class="mb-2">
                                                                             <span id="js-variant-stock"
                                                                                 class="fw-medium text-body-secondary">
@@ -419,34 +461,34 @@
                                                 <!-- ADD TO WISHLIST -->
 
                                                 {{-- <div class="yith-wcwl-add-button">
-                                                    <a href="index8633.html?add_to_wishlist=1558&amp;_wpnonce=54e378c625"
-                                                        class="add_to_wishlist single_add_to_wishlist"
-                                                        data-product-id="1558" data-product-type="variable"
-                                                        data-original-product-id="0" data-title="Add to wishlist"
-                                                        rel="nofollow">
-                                                        <svg id="yith-wcwl-icon-heart-outline" class="yith-wcwl-icon-svg"
-                                                            fill="none" stroke-width="1.5" stroke="currentColor"
-                                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z">
-                                                            </path>
-                                                        </svg> <span>Add to wishlist</span>
-                                                    </a>
-                                                </div> --}}
+                                                        <a href="index8633.html?add_to_wishlist=1558&amp;_wpnonce=54e378c625"
+                                                            class="add_to_wishlist single_add_to_wishlist"
+                                                            data-product-id="1558" data-product-type="variable"
+                                                            data-original-product-id="0" data-title="Add to wishlist"
+                                                            rel="nofollow">
+                                                            <svg id="yith-wcwl-icon-heart-outline" class="yith-wcwl-icon-svg"
+                                                                fill="none" stroke-width="1.5" stroke="currentColor"
+                                                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z">
+                                                                </path>
+                                                            </svg> <span>Add to wishlist</span>
+                                                        </a>
+                                                    </div> --}}
                                                 <!-- COUNT TEXT -->
 
                                             </div>
                                         </div>
                                     </div>
                                     {{-- <div
-                                        class="elementor-element elementor-element-43596861 elementor-widget elementor-widget-spacer"
-                                        data-id="43596861" data-element_type="widget" data-widget_type="spacer.default">
-                                        <div class="elementor-widget-container">
-                                            <div class="elementor-spacer">
-                                                <div class="elementor-spacer-inner"></div>
+                                            class="elementor-element elementor-element-43596861 elementor-widget elementor-widget-spacer"
+                                            data-id="43596861" data-element_type="widget" data-widget_type="spacer.default">
+                                            <div class="elementor-widget-container">
+                                                <div class="elementor-spacer">
+                                                    <div class="elementor-spacer-inner"></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div> --}}
+                                        </div> --}}
                                     <div class="elementor-element elementor-element-55b36d48 elementor-woo-meta--view-table elementor-widget kitify elementor-kitify-wooproduct-meta"
                                         data-id="55b36d48" data-element_type="widget"
                                         data-widget_type="kitify-wooproduct-meta.default">
@@ -513,16 +555,16 @@
                                                                 <div class="elementor-widget-container">
                                                                     <p>{{ $product->description }}</p>
                                                                     {{-- <p>In WooCommerce, you can create and manage
-                                                                        product descriptions through the
-                                                                        WordPress dashboard. Each product has
-                                                                        its own page where you can input and
-                                                                        format the description, add images, set
-                                                                        prices, and manage other product-related
-                                                                        details. Effective product descriptions
-                                                                        are essential for e-commerce success as
-                                                                        they help customers make informed
-                                                                        decisions and contribute to a positive
-                                                                        shopping experience.</p> --}}
+                                                                            product descriptions through the
+                                                                            WordPress dashboard. Each product has
+                                                                            its own page where you can input and
+                                                                            format the description, add images, set
+                                                                            prices, and manage other product-related
+                                                                            details. Effective product descriptions
+                                                                            are essential for e-commerce success as
+                                                                            they help customers make informed
+                                                                            decisions and contribute to a positive
+                                                                            shopping experience.</p> --}}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -557,9 +599,12 @@
 
                                                                 <li class="review even thread-even depth-1"
                                                                     id="li-comment-{{ $review->id }}">
-                                                                    <div id="comment-{{ $review->id }}" class="comment_container">
-                                                                        <img alt="{{ $name }}" src="{{ $avatar }}"
-                                                                            class="avatar avatar-60 photo" height="60" width="60" />
+                                                                    <div id="comment-{{ $review->id }}"
+                                                                        class="comment_container">
+                                                                        <img alt="{{ $name }}"
+                                                                            src="{{ $avatar }}"
+                                                                            class="avatar avatar-60 photo" height="60"
+                                                                            width="60" />
 
                                                                         <div class="comment-text">
 
@@ -580,7 +625,8 @@
                                                                                 </strong>
                                                                                 <span
                                                                                     class="woocommerce-review__dash">&ndash;</span>
-                                                                                <time class="woocommerce-review__published-date"
+                                                                                <time
+                                                                                    class="woocommerce-review__published-date"
                                                                                     datetime="{{ $review->created_at->toIso8601String() }}">
                                                                                     {{ $review->created_at->format('d/m/Y H:i') }}
                                                                                 </time>
@@ -605,8 +651,10 @@
                                                                     @auth
                                                                         @if ($canReview)
                                                                             {{-- FORM ĐÁNH GIÁ --}}
-                                                                            <form action="{{ route('reviews.store', $product->id) }}"
-                                                                                method="post" id="commentform" class="comment-form">
+                                                                            <form
+                                                                                action="{{ route('reviews.store', $product->id) }}"
+                                                                                method="post" id="commentform"
+                                                                                class="comment-form">
                                                                                 @csrf
 
                                                                                 <p class="comment-notes">
@@ -619,12 +667,13 @@
 
                                                                                 {{-- Rating --}}
                                                                                 <div class="comment-form-rating mb-3">
-                                                                                    <label for="rating" id="comment-form-rating-label">
+                                                                                    <label for="rating"
+                                                                                        id="comment-form-rating-label">
                                                                                         Đánh giá của bạn&nbsp;<span
                                                                                             class="required">*</span>
                                                                                     </label>
-                                                                                    <select name="rating" id="rating" required
-                                                                                        class="form-select">
+                                                                                    <select name="rating" id="rating"
+                                                                                        required class="form-select">
                                                                                         <option value="">Chọn đánh giá…
                                                                                         </option>
                                                                                         <option value="5">Rất tốt (5★)
@@ -645,21 +694,23 @@
                                                                                         Nội dung đánh giá&nbsp;<span
                                                                                             class="required">*</span>
                                                                                     </label>
-                                                                                    <textarea id="comment" name="content" cols="45"
-                                                                                        rows="5" class="form-control"
-                                                                                        required>{{ old('content') }}</textarea>
+                                                                                    <textarea id="comment" name="content" cols="45" rows="5" class="form-control" required>{{ old('content') }}</textarea>
                                                                                 </p>
 
                                                                                 {{-- Tên + email (readonly) --}}
                                                                                 <p class="comment-form-author mb-3">
                                                                                     <label for="author">Tên</label>
-                                                                                    <input id="author" type="text" class="form-control"
-                                                                                        value="{{ auth()->user()->name }}" readonly />
+                                                                                    <input id="author" type="text"
+                                                                                        class="form-control"
+                                                                                        value="{{ auth()->user()->name }}"
+                                                                                        readonly />
                                                                                 </p>
                                                                                 <p class="comment-form-email mb-3">
                                                                                     <label for="email">Email</label>
-                                                                                    <input id="email" type="email" class="form-control"
-                                                                                        value="{{ auth()->user()->email }}" readonly />
+                                                                                    <input id="email" type="email"
+                                                                                        class="form-control"
+                                                                                        value="{{ auth()->user()->email }}"
+                                                                                        readonly />
                                                                                 </p>
 
                                                                                 <p class="form-submit mb-0">
@@ -699,150 +750,6 @@
                                                         </p>
                                                     @endif
                                                 </div>
-
-                                                {{-- <div class="tabs" id="panel_reviews">
-                                                    <div id="reviews" class="woocommerce-Reviews">
-                                                        <div id="comments">
-
-                                                            @if ($ratingCount > 0)
-                                                            <ol class="commentlist">
-                                                                @foreach ($reviews as $review)
-                                                                @php
-                                                                $user = optional(optional($review->order)->user);
-                                                                $name = $user->name ?? 'Khách hàng';
-
-
-                                                                @endphp
-
-                                                                @endforeach
-                                                                @endif
-                                                                <li class="review even thread-even depth-1"
-                                                                    id="li-comment-8">
-
-                                                                    <div id="comment-8" class="comment_container">
-
-                                                                        <img alt=''
-                                                                            src='https://secure.gravatar.com/avatar/87924606b4131a8aceeeae8868531fbb9712aaa07a5d3a756b26ce0f5d6ca674?s=60&amp;d=mm&amp;r=g'
-                                                                            srcset='https://secure.gravatar.com/avatar/87924606b4131a8aceeeae8868531fbb9712aaa07a5d3a756b26ce0f5d6ca674?s=120&#038;d=mm&#038;r=g 2x'
-                                                                            class='avatar avatar-60 photo' height='60'
-                                                                            width='60' decoding='async' />
-                                                                        <div class="comment-text">
-
-                                                                            <div class="star-rating" role="img"
-                                                                                aria-label="Rated 5 out of 5">
-                                                                                <span style="width:100%">Rated
-                                                                                    <strong class="rating">5</strong>
-                                                                                    out of 5</span>
-                                                                            </div>
-                                                                            <p class="meta">
-                                                                                <strong
-                                                                                    class="woocommerce-review__author">test
-                                                                                </strong>
-                                                                                <span
-                                                                                    class="woocommerce-review__dash">&ndash;</span>
-                                                                                <time
-                                                                                    class="woocommerce-review__published-date"
-                                                                                    datetime="2024-01-13T22:01:36+00:00">January
-                                                                                    13, 2024</time>
-                                                                            </p>
-
-                                                                            <div class="description">
-                                                                                <p>test</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </li><!-- #comment-## -->
-                                                            </ol>
-
-                                                        </div>
-
-                                                        <div id="review_form_wrapper">
-                                                            <div id="review_form">
-                                                                <div id="respond" class="comment-respond">
-                                                                    <span id="reply-title" class="comment-reply-title"
-                                                                        role="heading" aria-level="3">Add a
-                                                                        review <small><a rel="nofollow"
-                                                                                id="cancel-comment-reply-link"
-                                                                                href="index.html#respond"
-                                                                                style="display:none;">Cancel
-                                                                                reply</a></small></span>
-                                                                    <form
-                                                                        action="https://mixtas.novaworks.net/wp-comments-post.php"
-                                                                        method="post" id="commentform" class="comment-form">
-                                                                        <p class="comment-notes"><span id="email-notes">Your
-                                                                                email
-                                                                                address
-                                                                                will not be published.</span> <span
-                                                                                class="required-field-message">Required
-                                                                                fields are marked <span
-                                                                                    class="required">*</span></span>
-                                                                        </p>
-                                                                        <div class="comment-form-rating"><label for="rating"
-                                                                                id="comment-form-rating-label">Your
-                                                                                rating&nbsp;<span
-                                                                                    class="required">*</span></label><select
-                                                                                name="rating" id="rating" required>
-                                                                                <option value="">
-                                                                                    Rate&hellip;
-                                                                                </option>
-                                                                                <option value="5">Perfect
-                                                                                </option>
-                                                                                <option value="4">Good
-                                                                                </option>
-                                                                                <option value="3">Average
-                                                                                </option>
-                                                                                <option value="2">Not that
-                                                                                    bad
-                                                                                </option>
-                                                                                <option value="1">Very poor
-                                                                                </option>
-                                                                            </select></div>
-                                                                        <p class="comment-form-comment"><label
-                                                                                for="comment">Your
-                                                                                review&nbsp;<span
-                                                                                    class="required">*</span></label>
-                                                                            <textarea id="comment" name="comment" cols="45"
-                                                                                rows="8" required></textarea>
-                                                                        </p>
-                                                                        <p class="comment-form-author"><label
-                                                                                for="author">Name&nbsp;<span
-                                                                                    class="required">*</span></label><input
-                                                                                id="author" name="author" type="text"
-                                                                                autocomplete="name" value="" size="30"
-                                                                                required />
-                                                                        </p>
-                                                                        <p class="comment-form-email"><label
-                                                                                for="email">Email&nbsp;<span
-                                                                                    class="required">*</span></label><input
-                                                                                id="email" name="email" type="email"
-                                                                                autocomplete="email" value="" size="30"
-                                                                                required />
-                                                                        </p>
-                                                                        <p class="comment-form-cookies-consent">
-                                                                            <input id="wp-comment-cookies-consent"
-                                                                                name="wp-comment-cookies-consent"
-                                                                                type="checkbox" value="yes" />
-                                                                            <label for="wp-comment-cookies-consent">Save
-                                                                                my name, email, and website in this
-                                                                                browser for the next time I
-                                                                                comment.</label>
-                                                                        </p>
-                                                                        <p class="form-submit"><input name="submit"
-                                                                                type="submit" id="submit" class="submit"
-                                                                                value="Submit" />
-                                                                            <input type='hidden' name='comment_post_ID'
-                                                                                value='1558' id='comment_post_ID' />
-                                                                            <input type='hidden' name='comment_parent'
-                                                                                id='comment_parent' value='0' />
-                                                                        </p>
-                                                                    </form>
-                                                                </div><!-- #respond -->
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="clear"></div>
-                                                    </div>
-                                                </div> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -873,12 +780,14 @@
                                                             @foreach ($relatedProducts as $item)
                                                                 @php
                                                                     // Lấy biến thể rẻ nhất để tính giá hiển thị
-                                                                    $sortedVariants = $item->variants->sortBy(function ($v, ) {
+                                                                    $sortedVariants = $item->variants->sortBy(function (
+                                                                        $v,
+                                                                    ) {
                                                                         // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
                                                                         $effectivePrice =
                                                                             $v->sale !== null && $v->sale < $v->price
-                                                                            ? $v->sale
-                                                                            : $v->price;
+                                                                                ? $v->sale
+                                                                                : $v->price;
                                                                         return $effectivePrice;
                                                                     });
 
@@ -902,7 +811,7 @@
                                                                         $discountPercent = round(
                                                                             (($originalPrice - $salePrice) /
                                                                                 $originalPrice) *
-                                                                            100,
+                                                                                100,
                                                                         );
                                                                     }
 
@@ -928,7 +837,8 @@
                                                                         <div class="product-item__badges">
 
                                                                             @if ($discountPercent)
-                                                                                <span class="onsale">{{ $discountPercent }}%</span>
+                                                                                <span
+                                                                                    class="onsale">{{ $discountPercent }}%</span>
                                                                             @endif
                                                                         </div>
                                                                         <div class="product-item__thumbnail">
@@ -936,7 +846,8 @@
                                                                             </div>
                                                                             <a class="product-item-link"
                                                                                 href="{{ route('products.show', ['id' => $item->id]) }}"></a>
-                                                                            <div class="product-item__description--top-actions">
+                                                                            <div
+                                                                                class="product-item__description--top-actions">
 
                                                                                 <a href="{{ route('products.show', ['id' => $item->id]) }}?add_to_wishlist={{ $item->id }}"
                                                                                     data-product-id="{{ $item->id }}"
@@ -951,7 +862,8 @@
                                                                                         wishlist</span>
                                                                                 </a>
 
-                                                                                <a href="#" class="nova_product_quick_view_btn"
+                                                                                <a href="#"
+                                                                                    class="nova_product_quick_view_btn"
                                                                                     data-product-id="{{ $item->id }}"
                                                                                     rel="nofollow"><i
                                                                                         class="inova ic-zoom"></i></a>
@@ -981,12 +893,14 @@
                                                                                 class="product-item__thumbnail-placeholder second_image_enabled">
                                                                                 <a
                                                                                     href="{{ route('products.show', ['id' => $item->id]) }}">
-                                                                                    <img loading="lazy" width="700" height="700"
+                                                                                    <img loading="lazy" width="700"
+                                                                                        height="700"
                                                                                         src="{{ $mainImage }}"
                                                                                         class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
-                                                                                        alt="{{ $item->name }}" decoding="async"
+                                                                                        alt="{{ $item->name }}"
+                                                                                        decoding="async"
                                                                                         srcset="{{ $mainImage }} 700w,
-                                                                                                 {{ $mainImage }} 300w, {{ $mainImage }} 150w, {{ $mainImage }} 768w, {{ $mainImage }} 250w, {{ $mainImage }} 50w, {{ $mainImage }} 100w, {{ $mainImage }} 1000w"
+                                                                                                                                                                                                                                                     {{ $mainImage }} 300w, {{ $mainImage }} 150w, {{ $mainImage }} 768w, {{ $mainImage }} 250w, {{ $mainImage }} 50w, {{ $mainImage }} 100w, {{ $mainImage }} 1000w"
                                                                                         sizes="(max-width: 700px) 100vw, 700px" /><span
                                                                                         class="product_second_image"
                                                                                         style="background-image: url('{{ $hoverImage }}')"></span>
@@ -999,7 +913,8 @@
                                                                             <div class="product-item__description--info">
                                                                                 <div class="info-left">
                                                                                     @if ($item->category)
-                                                                                        <div class="product-item__category">
+                                                                                        <div
+                                                                                            class="product-item__category">
                                                                                             <a class="content-product-cat"
                                                                                                 href="{{ route('products.category', ['slug' => $item->category->slug]) }}"
                                                                                                 rel="tag">{{ $item->category->name }}</a>
@@ -1051,15 +966,15 @@
                                                                                         @endif
                                                                                     @else
                                                                                         {{-- Không có biến thể nào (trường hợp hiếm
-                                                                                        / dữ liệu chưa nhập variant) --}}
+                                                                                            / dữ liệu chưa nhập variant) --}}
                                                                                         <span class="price">
                                                                                             <ins aria-hidden="true">
                                                                                                 <span
                                                                                                     class="woocommerce-Price-amount amount">
                                                                                                     <bdi>
                                                                                                         {{-- fallback 0₫ vì bảng
-                                                                                                        products hiện không có cột
-                                                                                                        price --}}
+                                                                                                            products hiện không có cột
+                                                                                                            price --}}
                                                                                                         0₫
                                                                                                     </bdi>
                                                                                                 </span>
@@ -1105,6 +1020,7 @@
 
                         let selectedColorId = null;
                         let selectedSizeId = null;
+                        let currentVariantStock = null; // <<=== STOCK CỦA BIẾN THỂ HIỆN TẠI
 
                         const priceEl = document.getElementById('js-product-price');
                         const originalEl = document.getElementById('js-product-original-price');
@@ -1116,10 +1032,14 @@
 
                         const variantIdInput = document.getElementById('js-variant-id');
                         const actionTypeInput = document.getElementById('js-action-type');
-                        const addToCartForm = document.getElementById('addToCartFrom');
+                        const addToCartForm = document.getElementById('addToCartForm');
 
                         const colorItems = document.querySelectorAll('.js-color-item');
                         const sizeItems = document.querySelectorAll('.js-size-item');
+
+                        // Ô số lượng + form lỗi
+                        const quantityInput = document.getElementById('quantity_input_{{ $product->id }}');
+                        const qtyErrorEl = document.getElementById('js-qty-error');
 
                         function formatCurrency(value) {
                             if (!value) return '0₫';
@@ -1128,6 +1048,19 @@
                                 currency: 'VND',
                                 maximumFractionDigits: 0
                             }).format(value);
+                        }
+
+                        // ====== FORM THÔNG BÁO LỖI SỐ LƯỢNG ======
+                        function showQtyError(message) {
+                            if (!qtyErrorEl) return;
+                            qtyErrorEl.textContent = message;
+                            qtyErrorEl.style.display = 'block';
+                        }
+
+                        function clearQtyError() {
+                            if (!qtyErrorEl) return;
+                            qtyErrorEl.textContent = '';
+                            qtyErrorEl.style.display = 'none';
                         }
 
                         function resetPriceAndStock() {
@@ -1180,6 +1113,7 @@
                             if (variantIdInput) {
                                 variantIdInput.value = variant.id;
                             }
+                            currentVariantStock = Number(variant.stock ?? 0); // <<=== LƯU LẠI STOCK HIỆN TẠI
 
                             if (stockEl) {
                                 if (variant.stock > 0) {
@@ -1191,6 +1125,10 @@
                                     stockEl.classList.remove('text-body-secondary');
                                     stockEl.classList.add('text-danger');
                                 }
+                            }
+                            clearQtyError();
+                            if (quantityInput && currentVariantStock > 0 && quantityInput.value > currentVariantStock) {
+                                quantityInput.value = currentVariantStock;
                             }
                         }
 
@@ -1211,6 +1149,8 @@
                                 if (variantIdInput) {
                                     variantIdInput.value = '';
                                 }
+                                currentVariantStock = null;
+                                clearQtyError();
                                 return;
                             }
 
@@ -1303,7 +1243,7 @@
 
                         // ===== EVENT: CHỌN / BỎ CHỌN MÀU =====
                         colorItems.forEach(item => {
-                            item.addEventListener('click', function () {
+                            item.addEventListener('click', function() {
                                 if (this.classList.contains('is-disabled')) return;
 
                                 const colorId = this.dataset.colorId;
@@ -1344,7 +1284,7 @@
 
                         // ===== EVENT: CHỌN / BỎ CHỌN SIZE =====
                         sizeItems.forEach(item => {
-                            item.addEventListener('click', function () {
+                            item.addEventListener('click', function() {
                                 if (this.classList.contains('is-disabled')) return;
 
                                 const sizeId = this.dataset.sizeId;
@@ -1383,7 +1323,7 @@
                         // Nút Clear
                         const resetBtn = document.getElementById('js-reset-variations');
                         if (resetBtn) {
-                            resetBtn.addEventListener('click', function (e) {
+                            resetBtn.addEventListener('click', function(e) {
                                 e.preventDefault();
                                 clearSelection();
                             });
@@ -1391,29 +1331,185 @@
 
                         // Bắt action_type cho 2 nút submit (Add to cart / Mua ngay)
                         document.querySelectorAll('.js-submit-cart').forEach(btn => {
-                            btn.addEventListener('click', function () {
+                            btn.addEventListener('click', function() {
                                 if (actionTypeInput) {
                                     actionTypeInput.value = this.dataset.action;
                                 }
                             });
                         });
 
+                        function showFormAlert(message) {
+                            const box = document.getElementById('js-form-alert');
+                            const text = document.getElementById('js-form-alert-text');
+                            if (!box || !text) return;
+
+                            text.textContent = message;
+                            box.style.display = 'block';
+
+                            // Auto hide sau 3s
+                            setTimeout(() => {
+                                box.style.display = 'none';
+                            }, 3000);
+                        }
+
+                        // Tắt khi ấn nút X
+                        document.getElementById('js-form-alert-close')?.addEventListener('click', () => {
+                            document.getElementById('js-form-alert').style.display = 'none';
+                        });
+
                         // Validate trước khi submit form
                         if (addToCartForm) {
-                            addToCartForm.addEventListener('submit', function (e) {
+                            addToCartForm.addEventListener('submit', function(e) {
+                                // 1. Bắt buộc chọn biến thể
                                 if (!variantIdInput || !variantIdInput.value) {
                                     e.preventDefault();
-                                    alert('Vui lòng chọn đầy đủ màu sắc và size trước khi đặt hàng.');
+                                    showMissingVariantAlert();
+                                    return;
+                                }
+
+                                // 2. Check số lượng
+                                if (!validateQuantity()) {
+                                    e.preventDefault();
+                                    showQtyAlert();
                                     return;
                                 }
                             });
                         }
+
+
+
+
+
+                        function validateQuantity() {
+                            if (!quantityInput) return;
+
+                            let qty = parseInt(quantityInput.value, 10);
+                            if (isNaN(qty)) qty = 1;
+
+                            clearQtyError();
+
+                            // 1. Không cho nhỏ hơn 1
+                            if (qty <= 0) {
+                                qty = 1;
+                                quantityInput.value = 1;
+                                showQtyError('Số lượng không thể nhỏ hơn 1');
+                                return false;
+                            }
+
+                            // 2. Không vượt quá stock của biến thể (nếu có)
+                            if (currentVariantStock !== null && currentVariantStock >= 0 && qty > currentVariantStock) {
+                                qty = currentVariantStock || 1;
+                                quantityInput.value = qty;
+                                showQtyError('Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này');
+                                return false;
+                            }
+
+                            // Hợp lệ
+                            quantityInput.value = qty;
+                            return true;
+                        }
+
+                        // Lắng nghe thay đổi số lượng (gõ tay)
+                        if (quantityInput) {
+                            quantityInput.addEventListener('change', validateQuantity);
+                            quantityInput.addEventListener('blur', validateQuantity);
+                            quantityInput.addEventListener('keyup', function() {
+                                // Không spam thông báo quá nhiều, chỉ kiểm tra logic số học
+                                let val = parseInt(this.value, 10);
+                                if (isNaN(val) || val <= 0) return; // để cho user gõ xong rồi mới báo
+                            });
+                        }
+
+                        // Bắt sự kiện nút +/- nếu có (giữ nguyên class của bạn)
+                        document.querySelectorAll('.quantity').forEach(qtyBox => {
+                            const input = qtyBox.querySelector('input[name="quantity"]');
+                            const decBtn = qtyBox.querySelector('.nova-minicart-qty-button.decrease');
+                            const incBtn = qtyBox.querySelector('.nova-minicart-qty-button.increase');
+
+                            if (!input) return;
+
+                            if (decBtn) {
+                                decBtn.addEventListener('click', function() {
+                                    let val = parseInt(input.value, 10);
+                                    if (isNaN(val)) val = 1;
+                                    val = val - 1;
+                                    input.value = val;
+                                    validateQuantity();
+                                });
+                            }
+
+                            if (incBtn) {
+                                incBtn.addEventListener('click', function() {
+                                    let val = parseInt(input.value, 10);
+                                    if (isNaN(val)) val = 1;
+                                    val = val + 1;
+                                    input.value = val;
+                                    validateQuantity();
+                                });
+                            }
+                        });
+
+                        // Bắt action_type cho 2 nút submit (Add to cart / Mua ngay) – GIỮ NGUYÊN
+                        document.querySelectorAll('.js-submit-cart').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                if (actionTypeInput) {
+                                    actionTypeInput.value = this.dataset.action;
+                                }
+                            });
+                        });
                     </script>
+                    <script>
+                        function showMissingVariantAlert() {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Thiếu lựa chọn',
+                                text: 'Vui lòng chọn màu & size trước khi thêm vào giỏ.',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    popup: 'custom-variant-alert'
+                                },
+                                buttonsStyling: true,
+                                allowOutsideClick: true,
+                                allowEscapeKey: true
+                            });
+                        }
 
+                        function showQtyAlert() {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Số lượng không hợp lệ',
+                                text: 'Vui lòng kiểm tra lại số lượng, không được vượt quá tồn kho.',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    popup: 'custom-variant-alert'
+                                },
+                                buttonsStyling: true,
+                                allowOutsideClick: true,
+                                allowEscapeKey: true
+                            });
+                        }
+                    </script>
+                    @if (session('cart_limit_error'))
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Giới hạn mua hàng',
+                                    text: @json(session('cart_limit_error')),
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        popup: 'custom-variant-alert'
+                                    },
+                                    buttonsStyling: true,
+                                    allowOutsideClick: true,
+                                    allowEscapeKey: true
+                                });
+                            });
+                        </script>
+                    @endif
 
-
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
                     @include('layouts.js')
 
-                    <!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 07:21:45 -->
-@endsection
+                @endsection

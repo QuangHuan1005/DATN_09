@@ -24,4 +24,5 @@ class Payment extends Model
         // cột khóa ngoại trong bảng payments là payment_method_id
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
     }
+    
 }

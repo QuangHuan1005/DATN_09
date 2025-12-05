@@ -2211,4 +2211,38 @@
         opacity: 0.4;
         pointer-events: none;
     }
+
+    /* Tùy biến popup SweetAlert2 cho giống screenshot */
+.swal2-popup.custom-variant-alert {
+    border-radius: 12px;
+    padding: 30px 32px 24px;
+}
+
+.swal2-popup.custom-variant-alert .swal2-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+.swal2-popup.custom-variant-alert .swal2-html-container {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Nút OK màu tím */
+.swal2-popup.custom-variant-alert .swal2-styled.swal2-confirm {
+    background-color: #7367F0 !important;
+    border-radius: 6px;
+    padding: 8px 30px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* Icon cảnh báo màu cam */
+.swal2-popup.custom-variant-alert .swal2-icon.swal2-warning {
+    border-color: #f9a825;
+    color: #f9a825;
+}
+
 </style>

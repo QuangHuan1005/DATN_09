@@ -11,7 +11,7 @@ use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
 {
@@ -296,6 +296,15 @@ class ProductController extends Controller
             ->take(8)                                     // giới hạn số lượng (tùy bạn chỉnh)
             ->get();
 
+        $cart = Session::get('cart', []);
+        $variantCartQtyMap = [];
+        foreach ($cart as $row) {
+            if (!empty($row['variant_id'])) {
+                $vid = (int) $row['variant_id'];
+                $variantCartQtyMap[$vid] = (int) ($row['quantity'] ?? 0);
+            }
+        }
+
         return view('products.show', compact(
             'product',
             'displayPrice',
@@ -311,10 +320,11 @@ class ProductController extends Controller
             'images',
             'variantMap',
             'relatedProducts',
+            'variantCartQtyMap'
 
         ));
- }
-    
+    }
+
 
 
     public function showByCategory($slug)

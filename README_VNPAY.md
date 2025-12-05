@@ -1,27 +1,61 @@
 # Hướng dẫn tích hợp VNPay
 
-## Bước 1: Đăng ký tài khoản VNPay
+## ✅ Đã tích hợp VNPay môi trường TEST
 
-1. Truy cập: https://sandbox.vnpayment.vn/ (Sandbox) hoặc https://www.vnpay.vn/ (Production)
-2. Đăng ký tài khoản merchant
-3. Lấy thông tin:
-   - `TMN_CODE` (Terminal ID)
-   - `HASH_SECRET` (Secret Key)
-
-## Bước 2: Cấu hình trong file `.env`
-
-Thêm các biến môi trường sau vào file `.env`:
+### Thông tin VNPay Test đã cấu hình:
 
 ```env
-# VNPay Configuration
-VNPAY_TMN_CODE=your_tmn_code_here
-VNPAY_HASH_SECRET=your_hash_secret_here
+VNPAY_TMN_CODE=HY7R6YX3
+VNPAY_HASH_SECRET=Z63L4QLL6AGATBCEH7V2770CPYE2USE4
+VNPAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
 VNPAY_ENVIRONMENT=sandbox
-# hoặc production khi đã sẵn sàng
+```
 
-# URLs (tự động, nhưng có thể override)
-VNPAY_RETURN_URL=http://localhost:8000/payment/vnpay/return
-VNPAY_IPN_URL=http://localhost:8000/payment/vnpay/ipn
+### Thông tin đăng nhập Merchant Admin:
+- **Địa chỉ:** https://sandbox.vnpayment.vn/merchantv2/
+- **Tên đăng nhập:** phongndph52116@gmail.com
+- **Mật khẩu:** (Mật khẩu đăng ký)
+
+### Thẻ test:
+- **Ngân hàng:** NCB
+- **Số thẻ:** 9704198526191432198
+- **Tên chủ thẻ:** NGUYEN VAN A
+- **Ngày phát hành:** 07/15
+- **Mật khẩu OTP:** 123456
+
+## Cách test:
+
+1. Truy cập: `http://127.0.0.1:8000/checkout`
+2. Đăng nhập tài khoản
+3. Thêm sản phẩm vào giỏ hàng
+4. Chọn phương thức "Thanh toán bằng VNPay"
+5. Nhập thông tin giao hàng và click "Đặt hàng"
+6. Sẽ chuyển đến trang VNPay test
+7. Sử dụng thẻ test ở trên để thanh toán
+8. Sau thanh toán sẽ chuyển về trang thành công
+
+## Bước 1: Đăng ký tài khoản VNPay (đã hoàn thành)
+
+1. ✅ Đã đăng ký tài khoản test tại: https://sandbox.vnpayment.vn/
+2. ✅ Đã lấy thông tin:
+   - `TMN_CODE` (Terminal ID): HY7R6YX3
+   - `HASH_SECRET` (Secret Key): Z63L4QLL6AGATBCEH7V2770CPYE2USE4
+
+## Bước 2: Cấu hình trong file `.env` (✅ Đã hoàn thành)
+
+File `.env` đã được cấu hình với thông tin VNPay test:
+
+```env
+# VNPay Configuration (Sandbox/Test Environment)
+VNPAY_TMN_CODE=HY7R6YX3
+VNPAY_HASH_SECRET=Z63L4QLL6AGATBCEH7V2770CPYE2USE4
+VNPAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+VNPAY_QUERY_URL=https://sandbox.vnpayment.vn/merchant_webapi/merchant.html
+VNPAY_RETURN_URL=http://127.0.0.1:8000/payment/vnpay/return
+VNPAY_IPN_URL=http://127.0.0.1:8000/payment/vnpay/ipn
+VNPAY_ENVIRONMENT=sandbox
+VNPAY_VERSION=2.1.0
+VNPAY_LOCALE=vn
 ```
 
 ### Sandbox (Test):
@@ -36,11 +70,39 @@ VNPAY_URL=https://www.vnpay.vn/paymentv2/vpcpay.html
 VNPAY_QUERY_URL=https://www.vnpay.vn/merchant_webapi/merchant.html
 ```
 
-## Bước 3: Kiểm tra cấu hình
+## Các thành phần đã tích hợp:
 
-Sau khi thêm thông tin vào `.env`, chạy:
+### ✅ 1. File cấu hình `.env` - HOÀN THÀNH
+- Đã cấu hình đầy đủ thông tin VNPay test
+
+### ✅ 2. Config file `config/vnpay.php` - SẴN SÀNG
+- Đã có config file với các setting cần thiết
+
+### ✅ 3. Service `VNPayService` - HOÀN THÀNH
+- Class xử lý tạo URL thanh toán
+- Xác thực callback và IPN
+- Query trạng thái giao dịch
+
+### ✅ 4. Controller `VNPayController` - HOÀN THÀNH
+- Method `return()` xử lý callback từ VNPay
+- Method `ipn()` xử lý IPN notification
+- Tích hợp với model Order và Payment
+
+### ✅ 5. Routes - HOÀN THÀNH
+- Route `/payment/vnpay/return` cho callback
+- Route `/payment/vnpay/ipn` cho IPN
+
+### ✅ 6. Checkout integration - HOÀN THÀNH
+- Cập nhật `CheckoutController` xử lý payment_method VNPay
+- Tạo đơn hàng trước khi thanh toán
+- Tích hợp với cả "mua ngay" và giỏ hàng
+
+## Bước 3: Kiểm tra cấu hình (✅ Đã hoàn thành)
+
+Config đã được clear và cache:
 ```bash
 php artisan config:clear
+php artisan config:cache
 ```
 
 ## Bước 4: Test thanh toán
@@ -73,5 +135,3 @@ Trong các method `vnpayReturn()` và `vnpayIpn()` trong `PaymentController`, c�
 - Gửi email xác nhận
 
 Cần implement các phần này để hoàn thiện hệ thống.
-
-
