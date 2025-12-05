@@ -231,6 +231,10 @@
                                     <li id="menu-item-84"
                                         class="menu-item menu-item-type-post_type menu-item-object-page"><a
                                             href="{{ route('contact.index') }}"><span>Liên hệ</span></a></li>
+
+                                    <li id="menu-item-84"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page"><a
+                                            href="{{ route('chat') }}"><span>Chat trực tuyến</span></a></li>
                                 </ul>
                             </nav>
                         </div>
