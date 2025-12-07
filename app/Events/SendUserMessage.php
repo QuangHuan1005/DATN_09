@@ -45,7 +45,7 @@ class SendUserMessage implements ShouldBroadcastNow
     public function broadcastWith()
     {
         // Assuming sender_id is a user ID
-        $user = User::find($this->message->sender_id); // Replace User with the actual model name if different
+        $user = User::find($this->message->sender_id); 
 
         if ($user) {
             return [
