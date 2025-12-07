@@ -13,89 +13,157 @@ use App\Models\UserAddress;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatusLog;
+use App\Models\Voucher;
 use App\Services\DemoPaymentService;
 use App\Services\VNPayService;
 
 class CheckoutController extends Controller
 {
     public function index()
-    {
-        // ⚡ 1) Ưu tiên “Mua ngay”: nếu có session buy_now thì bỏ qua giỏ
-        if ($buyNow = Session::get('buy_now')) {
-            $variant = ProductVariant::with(['product', 'color', 'size'])
-                        ->find($buyNow['variant_id']);
+{
+    /** -------------------------------------------------------------
+     * 1) ƯU TIÊN "MUA NGAY"
+     * ------------------------------------------------------------- */
+    if ($buyNow = Session::get('buy_now')) {
 
-            if (!$variant) {
-                Session::forget('buy_now');
-                return redirect()->route('cart.index')->with('error', 'Biến thể không tồn tại.');
-            }
+        $variant = ProductVariant::with(['product', 'color', 'size'])
+                    ->find($buyNow['variant_id']);
 
-            $qty = max(1, (int) $buyNow['quantity']);
-            // Ưu tiên giá sale
-            $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
-            $itemTotal   = $price * $qty;
-            $totalAmount = $itemTotal;
-
-            $cartItems = [[
-                'variant'   => $variant,
-                'quantity'  => $qty,
-                'itemTotal' => $itemTotal,
-            ]];
-
-            $user = Auth::user();
-            $defaultAddress = $user->addresses()->where('is_default', true)->first();
-            $addresses = $user->addresses()->orderBy('is_default', 'desc')->orderBy('created_at', 'desc')->get();
-            $addressCount = $addresses->count();
-            $appliedVoucher = Session::get('applied_voucher');
-
-            $shippingFee = $totalAmount > 300000 ? 0 : 30000; // Miễn phí vận chuyển cho đơn > 300k
-            // Đã sửa (Dòng 53)
-$discountAmount = $appliedVoucher ? ($appliedVoucher['discount_type'] === 'percent' ?
-                $totalAmount * $appliedVoucher->discount_value / 100 :
-                $appliedVoucher['discount_value']) : 0;
-            $grandTotal = $totalAmount + $shippingFee - $discountAmount;
-
-            return view('checkout.index', compact('cartItems', 'totalAmount', 'user', 'defaultAddress', 'addresses', 'addressCount', 'appliedVoucher', 'shippingFee', 'grandTotal', 'discountAmount'));
+        if (!$variant) {
+            Session::forget('buy_now');
+            return redirect()->route('cart.index')->with('error', 'Biến thể không tồn tại.');
         }
 
-        // 🛒 2) Luồng giỏ hàng như cũ
-        $cart = Session::get('cart', []);
-        if (empty($cart)) {
-            return redirect()->route('cart.index')->with('error', 'Giỏ hàng trống');
-        }
+        $qty = max(1, (int)$buyNow['quantity']);
+        $price = $variant->sale > 0 ? $variant->sale : $variant->price;
+        $itemTotal = $price * $qty;
 
-        $cartItems   = [];
-        $totalAmount = 0;
+        $cartItems = [[
+            'variant'   => $variant,
+            'quantity'  => $qty,
+            'itemTotal' => $itemTotal,
+        ]];
 
-        foreach ($cart as $variantId => $item) {
-            $variant = ProductVariant::with(['product', 'color', 'size'])->find($variantId);
-            if ($variant) {
-                // Ưu tiên giá sale
-                $price = ($variant->sale > 0) ? $variant->sale : $variant->price;
-                $itemTotal    = $price * $item['quantity'];
-                $totalAmount += $itemTotal;
-                $cartItems[]  = [
-                    'variant'  => $variant,
-                    'quantity' => $item['quantity'],
-                    'itemTotal'=> $itemTotal,
-                ];
+        $totalAmount = $itemTotal;
+
+        // Voucher
+        $appliedVoucherId = session('applied_voucher_id');
+        $appliedVoucher = $appliedVoucherId
+            ? Voucher::with('products')->find($appliedVoucherId)
+            : null;
+
+        $discountAmount = 0;
+
+        if ($appliedVoucher) {
+            $voucherProducts = $appliedVoucher->products->pluck('id')->toArray();
+            $productId       = $variant->product->id;
+
+            // Nếu voucher gắn sản phẩm → chỉ áp dụng cho sản phẩm đó
+            if (empty($voucherProducts) || in_array($productId, $voucherProducts)) {
+
+                if ($appliedVoucher->discount_type === 'percent') {
+                    $discountAmount = $totalAmount * $appliedVoucher->discount_value / 100;
+                } else {
+                    $discountAmount = min($appliedVoucher->discount_value, $totalAmount);
+                }
             }
         }
 
-        $user = Auth::user();
-        $defaultAddress = $user->addresses()->where('is_default', true)->first();
-        $addresses = $user->addresses()->orderBy('is_default', 'desc')->orderBy('created_at', 'desc')->get();
-        $addressCount = $addresses->count();
-        $appliedVoucher = Session::get('applied_voucher');
-
-        $shippingFee = $totalAmount > 300000 ? 0 : 30000; // Miễn phí vận chuyển cho đơn > 300k
-        $discountAmount = $appliedVoucher ? ($appliedVoucher->discount_type === 'percent' ?
-            $totalAmount * $appliedVoucher->discount_value / 100 :
-            $appliedVoucher->discount_value) : 0;
+        // Shipping + grand total
+        $shippingFee = $totalAmount > 300000 ? 0 : 30000;
         $grandTotal = $totalAmount + $shippingFee - $discountAmount;
 
-        return view('checkout.index', compact('cartItems', 'totalAmount', 'user', 'defaultAddress', 'addresses', 'addressCount', 'appliedVoucher', 'shippingFee', 'grandTotal', 'discountAmount'));
+        $user = Auth::user();
+        $addresses = $user->addresses()->orderBy('is_default', 'desc')->get();
+        $defaultAddress = $addresses->where('is_default', true)->first();
+        $addressCount = $addresses->count();
+
+        return view('checkout.index', compact(
+            'cartItems', 'totalAmount', 'user',
+            'defaultAddress', 'addresses', 'addressCount',
+            'appliedVoucher', 'shippingFee', 'grandTotal',
+            'discountAmount'
+        ));
     }
+
+    /** -------------------------------------------------------------
+     * 2) CHECKOUT TỪ GIỎ HÀNG
+     * ------------------------------------------------------------- */
+    $cart = Session::get('cart', []);
+    if (empty($cart)) {
+        return redirect()->route('cart.index')
+            ->with('error', 'Giỏ hàng trống');
+    }
+
+    $cartItems = [];
+    $totalAmount = 0;
+
+    foreach ($cart as $variantId => $item) {
+        $variant = ProductVariant::with(['product', 'color', 'size'])->find($variantId);
+        if ($variant) {
+
+            $price = $variant->sale > 0 ? $variant->sale : $variant->price;
+            $itemTotal = $price * $item['quantity'];
+
+            $cartItems[] = [
+                'variant'  => $variant,
+                'quantity' => $item['quantity'],
+                'itemTotal'=> $itemTotal,
+            ];
+
+            $totalAmount += $itemTotal;
+        }
+    }
+
+    // Voucher
+    $appliedVoucherId = session('applied_voucher_id');
+    $appliedVoucher = $appliedVoucherId
+        ? Voucher::with('products')->find($appliedVoucherId)
+        : null;
+
+    $discountAmount = 0;
+
+    if ($appliedVoucher) {
+
+        $voucherProducts = $appliedVoucher->products->pluck('id')->toArray();
+
+      foreach ($cartItems as $item) {
+    $productId = $item['variant']->product->id;
+    $itemTotal = $item['itemTotal'];
+
+    // Nếu voucher chỉ áp dụng cho 1 số sản phẩm
+    if (!empty($voucherProducts) && !in_array($productId, $voucherProducts)) {
+        continue;
+    }
+
+    // Áp dụng giảm giá CHỈ CHO 1 SẢN PHẨM đầu tiên hợp lệ
+    if ($appliedVoucher->discount_type === 'percent') {
+        $discountAmount = $itemTotal * $appliedVoucher->discount_value / 100;
+    } else {
+        $discountAmount = min($appliedVoucher->discount_value, $itemTotal);
+    }
+
+    break; // ❗ Chỉ áp dụng cho 1 sản phẩm → dừng luôn
+}
+
+    }
+
+    // Shipping + grand total
+    $shippingFee = $totalAmount > 300000 ? 0 : 30000;
+    $grandTotal = $totalAmount + $shippingFee - $discountAmount;
+
+    $user = Auth::user();
+    $addresses = $user->addresses()->orderBy('is_default', 'desc')->get();
+    $defaultAddress = $addresses->where('is_default', true)->first();
+    $addressCount = $addresses->count();
+
+    return view('checkout.index', compact(
+        'cartItems', 'totalAmount', 'user',
+        'defaultAddress', 'addresses', 'addressCount',
+        'appliedVoucher', 'shippingFee', 'grandTotal',
+        'discountAmount'
+    ));
+}
 
   public function store(Request $request)
     {

@@ -58,35 +58,59 @@ class AdminProductController extends Controller
         );
     }
 
-    // Lưu sản phẩm mới
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
+   // Lưu sản phẩm mới
+public function store(Request $request)
+{
+    $validated = $request->validate(
+        [
             'category_id'  => 'required|exists:categories,id',
             'product_code' => 'required|unique:products,product_code',
             'name'         => 'required|string|max:255',
             'description'  => 'nullable|string',
             'image'        => 'nullable|image|max:2048',
+        ],
+        [
+            // category_id
+            'category_id.required' => 'Vui lòng chọn danh mục sản phẩm.',
+            'category_id.exists'   => 'Danh mục bạn chọn không tồn tại.',
+
+            // product_code
+            'product_code.required' => 'Vui lòng nhập mã sản phẩm.',
+            'product_code.unique'   => 'Mã sản phẩm này đã tồn tại.',
+
+            // name
+            'name.required' => 'Vui lòng nhập tên sản phẩm.',
+            'name.string'   => 'Tên sản phẩm phải là chuỗi ký tự.',
+            'name.max'      => 'Tên sản phẩm không được vượt quá 255 ký tự.',
+
+            // description
+            'description.string' => 'Mô tả sản phẩm phải là chuỗi ký tự.',
+
+            // image
+            'image.image' => 'Tệp tải lên phải là hình ảnh.',
+            'image.max'   => 'Ảnh không được vượt quá 2MB.',
+        ]
+    );
+
+    $product = Product::create([
+        'category_id'  => $validated['category_id'],
+        'product_code' => $validated['product_code'],
+        'name'         => $validated['name'],
+        'description'  => $validated['description'] ?? null,
+    ]);
+
+    if ($request->hasFile('image')) {
+        $path = $request->file('image')->store('products', 'public');
+        ProductPhotoAlbum::create([
+            'product_id' => $product->id,
+            'image'      => $path,
         ]);
-
-        $product = Product::create([
-            'category_id'  => $validated['category_id'],
-            'product_code' => $validated['product_code'],
-            'name'         => $validated['name'],
-            'description'  => $validated['description'] ?? null,
-        ]);
-
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            ProductPhotoAlbum::create([
-                'product_id' => $product->id,
-                'image'      => $path,
-            ]);
-        }
-
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Thêm sản phẩm thành công!');
     }
+
+    return redirect()->route('admin.products.index')
+        ->with('success', 'Thêm sản phẩm thành công!');
+}
+
 
     // Xem chi tiết sản phẩm
     public function show($id)
