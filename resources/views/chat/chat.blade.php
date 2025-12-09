@@ -681,22 +681,6 @@
             });
             const channel = pusher.subscribe('admin-messages.' + CURRENT_USER_ID);
 
-            channel.bind('admin-message', function(data) {
-                const currentReceiverId = $('#receiver_id').val();
-
-                if (currentReceiverId && parseInt(data.sender_id) === parseInt(currentReceiverId)) {
-                    appendMessageWithImage(
-                        data.message,
-                        data.image,
-                        false,
-                        'Admin',
-                        data.admin?.picture ? '{{ asset('storage') }}/' + data.admin.picture :
-                        DEFAULT_AVATAR,
-                        data.created_at
-                    );
-                }
-            });
-
             let typingTimer = null;
 
             function sendTyping() {
