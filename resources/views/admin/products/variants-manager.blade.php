@@ -25,6 +25,7 @@
                                 <h4 class="card-title mb-1">Quản Lý Biến Thể</h4>
                                 <p class="text-muted mb-0">Sản phẩm: <strong>{{ $product->name }}</strong> (Mã:
                                     {{ $product->product_code }})</p>
+
                             </div>
                             <div>
                                 <a href="{{ route('admin.products.index') }}" class="btn btn-outline-secondary">
@@ -32,6 +33,7 @@
                                 </a>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#addVariantModal">
+
                                     <i class="bx bx-plus"></i> Thêm Biến Thể
                                 </button>
                             </div>
@@ -75,6 +77,7 @@
                                                 @else
                                                     <div
                                                         style="width: 50px; height: 50px; background: #f5f5f5; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+
                                                         <i class="bx bx-image text-muted"></i>
                                                     </div>
                                                 @endif
@@ -88,6 +91,7 @@
                                                     <div
                                                         style="width: 25px; height: 25px; background-color: {{ $variant->color->color_code ?? '#ccc' }}; border: 1px solid #ddd; border-radius: 4px;">
                                                     </div>
+
                                                     <span>{{ $variant->color->name ?? 'N/A' }}</span>
                                                 </div>
                                             </td>
@@ -96,18 +100,20 @@
                                                 @if ($variant->sale)
                                                     <span
                                                         class="text-success fw-bold">{{ number_format($variant->sale, 0, ',', '.') }}đ</span>
-                                                @else
+
                                                     <span class="text-muted">-</span>
                                                 @endif
                                             </td>
                                             <td>
                                                 <span
                                                     class="badge {{ $variant->quantity > 10 ? 'bg-success' : ($variant->quantity > 0 ? 'bg-warning' : 'bg-danger') }}">
+
                                                     {{ $variant->quantity }}
                                                 </span>
                                             </td>
                                             <td>
                                                 @if ($variant->status == 1)
+
                                                     <span class="badge bg-success">Hoạt động</span>
                                                 @else
                                                     <span class="badge bg-danger">Không hoạt động</span>
@@ -125,6 +131,7 @@
                                                         class="align-middle fs-18"></iconify-icon>
                                                 </button>
                                                 <form action="{{ route('admin.products.variants.destroy', $variant->id) }}"
+
                                                     method="POST" style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
@@ -132,6 +139,7 @@
                                                         onclick="return confirm('Bạn có chắc muốn xóa biến thể này?')">
                                                         <iconify-icon icon="solar:trash-bin-minimalistic-2-broken"
                                                             class="align-middle fs-18"></iconify-icon>
+
                                                     </button>
                                                 </form>
                                             </td>
@@ -142,6 +150,7 @@
                                                 <i class="bx bx-box fs-48 text-muted d-block mb-2"></i>
                                                 <p class="text-muted">Chưa có biến thể nào. Nhấn "Thêm Biến Thể" để bắt đầu.
                                                 </p>
+
                                             </td>
                                         </tr>
                                     @endforelse
@@ -167,12 +176,14 @@
                     <ul class="nav nav-pills mb-3" id="variantTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="auto-tab" data-bs-toggle="pill" data-bs-target="#auto"
+
                                 type="button" role="tab" aria-controls="auto" aria-selected="true">
                                 <i class="bx bx-shuffle"></i> Trộn Tự Động
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="manual-tab" data-bs-toggle="pill" data-bs-target="#manual"
+
                                 type="button" role="tab" aria-controls="manual" aria-selected="false">
                                 <i class="bx bx-add-to-queue"></i> Trộn Thủ Công
                             </button>
@@ -180,13 +191,13 @@
                     </ul>
 
                     <div class="tab-content" id="variantTabsContent">
-                        {{-- Tab Trộn Tự Động --}}
                         <div class="tab-pane fade show active" id="auto" role="tabpanel"
                             aria-labelledby="auto-tab">
                             <div class="alert alert-info">
                                 <i class="bx bx-info-circle"></i>
                                 <strong>Trộn tự động:</strong> Nhấn "Trộn Tự Động" để tạo tất cả tổ hợp Size × Màu. Sau đó
                                 điều chỉnh giá và số lượng cho từng biến thể trước khi lưu.
+
                             </div>
 
                             {{-- Nút Trộn Tự Động --}}
@@ -197,12 +208,14 @@
                                 <p class="text-muted mt-2">Sẽ tạo tổ hợp từ <strong>{{ $sizes->count() }} kích
                                         thước</strong> × <strong>{{ $colors->count() }} màu sắc</strong> =
                                     <strong>{{ $sizes->count() * $colors->count() }} biến thể</strong></p>
+
                             </div>
 
                             {{-- Bảng biến thể (ẩn ban đầu) --}}
                             <div id="variantsTableContainer" style="display: none;">
                                 <form action="{{ route('admin.products.variants.bulk-store', $product->id) }}"
                                     method="POST" id="autoForm">
+
                                     @csrf
                                     <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
                                         <table class="table table-bordered table-sm">
@@ -215,8 +228,7 @@
                                                     <th width="20%">Giá Sale</th>
                                                     <th width="15%">Số Lượng <span class="text-danger">*</span></th>
                                                     <th width="5%">
-                                                        <button type="button" class="btn btn-sm btn-danger"
-                                                            id="btnClearAll" title="Xóa tất cả">
+                                                        <button type="button" class="btn btn-sm btn-danger">
                                                             <i class="bx bx-trash"></i>
                                                         </button>
                                                     </th>
@@ -233,6 +245,7 @@
                                     <div class="alert alert-warning mt-3">
                                         <i class="bx bx-info-circle"></i> Vui lòng kiểm tra kỹ giá và số lượng trước khi
                                         lưu!
+
                                     </div>
 
                                     <div class="text-end">
@@ -256,6 +269,7 @@
                                     <i class="bx bx-info-circle"></i>
                                     <strong>Trộn thủ công:</strong> Thêm từng biến thể một cách cụ thể với thông tin chi
                                     tiết.
+
                                 </div>
 
                                 <div class="row">
@@ -267,6 +281,7 @@
                                             @foreach ($sizes as $size)
                                                 <option value="{{ $size->id }}">{{ $size->name }}
                                                     ({{ $size->size_code }})</option>
+
                                             @endforeach
                                         </select>
                                     </div>
@@ -278,6 +293,7 @@
                                             @foreach ($colors as $color)
                                                 <option value="{{ $color->id }}"
                                                     data-color="{{ $color->color_code }}">
+
                                                     {{ $color->name }}
                                                 </option>
                                             @endforeach
@@ -287,11 +303,13 @@
                                         <label for="manual_price" class="form-label">Giá Gốc <span
                                                 class="text-danger">*</span></label>
                                         <input type="number" class="form-control" id="manual_price" name="price"
+
                                             value="0" min="0" required>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <label for="manual_sale" class="form-label">Giá Sale</label>
                                         <input type="number" class="form-control" id="manual_sale" name="sale"
+
                                             value="" min="0">
                                     </div>
                                 </div>
@@ -306,6 +324,7 @@
                                     <div class="col-md-4 mb-3">
                                         <label for="manual_status" class="form-label">Trạng Thái <span
                                                 class="text-danger">*</span></label>
+
                                         <select class="form-control" id="manual_status" name="status" required>
                                             <option value="active">Hoạt động</option>
                                             <option value="inactive">Không hoạt động</option>
@@ -314,6 +333,7 @@
                                     <div class="col-md-4 mb-3">
                                         <label for="manual_image" class="form-label">Ảnh Biến Thể</label>
                                         <input type="file" class="form-control" id="manual_image" name="image"
+
                                             accept="image/jpeg,image/png,image/jpg,image/webp">
                                     </div>
                                 </div>
@@ -321,6 +341,7 @@
                                 <div class="text-end">
                                     <button type="button" class="btn btn-outline-secondary"
                                         data-bs-dismiss="modal">Hủy</button>
+
                                     <button type="submit" class="btn btn-primary">
                                         <i class="bx bx-check"></i> Thêm Biến Thể
                                     </button>
@@ -336,6 +357,7 @@
     {{-- Modal Sửa Biến Thể --}}
     <div class="modal fade" id="editVariantModal" tabindex="-1" aria-labelledby="editVariantModalLabel"
         aria-hidden="true">
+
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -355,6 +377,7 @@
                                     @foreach ($sizes as $size)
                                         <option value="{{ $size->id }}">{{ $size->name }} ({{ $size->size_code }})
                                         </option>
+
                                     @endforeach
                                 </select>
                             </div>
@@ -364,6 +387,7 @@
                                 <select class="form-control" id="edit_color_id" name="color_id" required>
                                     <option value="">-- Chọn màu --</option>
                                     @foreach ($colors as $color)
+
                                         <option value="{{ $color->id }}" data-color="{{ $color->color_code }}">
                                             {{ $color->name }}
                                         </option>

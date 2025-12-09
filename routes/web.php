@@ -24,6 +24,8 @@ use App\Http\Controllers\Admin\AdminVoucherController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\AdminAttributeController;
+use App\Http\Controllers\Admin\AdminChatController;
+use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VNPayController;
@@ -52,6 +54,13 @@ Route::middleware(['auth'])->group(function () {
 
 // 🗂️ Danh mục
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
+
+Route::middleware('auth')->group(function () {
+    Route::get('chat', [ChatsController::class, 'index'])->name('chat');
+});
+
+Route::get('/fetch-messages', [ChatsController::class, 'fetchMessagesFromUserToAdmin'])->name('fetch.messagesFromSellerToAdmin');
+Route::post('/send-message', [ChatsController::class, 'sendMessageFromUserToAdmin'])->name('send.Messageofsellertoadmin');
 
 // 📰 Blog / Tin tức
 Route::prefix('blog')->group(function () {
@@ -215,6 +224,11 @@ Route::prefix('admin')
 
         // Dashboard
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('chat', [AdminChatController::class, 'index'])->name('chat');
+
+        Route::get('fetch-messages', [ChatsController::class, 'fetchMessages'])->name('fetchMessages');
+        Route::post('send-message', [ChatsController::class, 'sendMessage'])->name('sendMessage');
 
         // Danh mục
         Route::resource('categories', AdminCategoryController::class);
