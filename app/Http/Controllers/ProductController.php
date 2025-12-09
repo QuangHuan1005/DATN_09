@@ -105,60 +105,6 @@ class ProductController extends Controller
         return view('products.index', compact('products', 'categories', 'colors', 'sizes'));
     }
 
-    // public function index(Request $request)
-    // {
-    //     // Đọc tham số lọc từ query string
-    //     $categoryId = $request->integer('category');                  // 1 danh mục
-    //     $minPrice   = $request->integer('min_price');                 // số
-    //     $maxPrice   = $request->integer('max_price');                 // số
-    //     $colorIds   = array_filter((array) $request->input('colors'));// mảng id
-    //     $sizeIds    = array_filter((array) $request->input('sizes')); // mảng id
-
-    //     // Query sản phẩm + áp dụng bộ lọc
-    //     $products = Product::query()
-    //         ->with(['category', 'variants']) // tối ưu N+1
-    //         ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
-    //         ->when($minPrice || $maxPrice, function ($q) use ($minPrice, $maxPrice) {
-    //             $q->whereHas('variants', function ($v) use ($minPrice, $maxPrice) {
-    //                 if ($minPrice) $v->where('price', '>=', $minPrice);
-    //                 if ($maxPrice) $v->where('price', '<=', $maxPrice);
-    //             });
-    //         })
-    //         ->when(!empty($colorIds), fn($q) => $q->whereHas('variants', fn($v) => $v->whereIn('color_id', $colorIds)))
-    //         ->when(!empty($sizeIds),  fn($q) => $q->whereHas('variants', fn($v) => $v->whereIn('size_id',  $sizeIds)))
-    //         ->latest('id')
-    //         ->paginate(12)
-    //         ->appends($request->query()); // giữ nguyên tham số khi phân trang
-
-    //     // Dữ liệu cho sidebar
-    //     $categories = Category::query()
-    //         ->withCount(['products as products_count' => function ($q) {
-    //             // tuỳ cấu trúc, có thể where('status','published')...
-    //         }])->get();
-
-    //     $colors = Color::where('status', 1)->get();
-    //     $sizes  = Size::where('status', 1)->get();
-
-    //     // Build danh sách "active filters" để hiển thị/gỡ từng cái
-    //     $activeFilters = [];
-    //     if ($categoryId) {
-    //         $activeFilters[] = ['key' => 'category', 'label' => 'Danh mục: '.$categories->firstWhere('id',$categoryId)?->name, 'value' => $categoryId];
-    //     }
-    //     if ($minPrice) $activeFilters[] = ['key'=>'min_price','label'=>"Giá từ: {$minPrice}"];
-    //     if ($maxPrice) $activeFilters[] = ['key'=>'max_price','label'=>"Giá đến: {$maxPrice}"];
-    //     if ($colorIds) {
-    //         $labels = $colors->whereIn('id',$colorIds)->pluck('name')->implode(', ');
-    //         $activeFilters[] = ['key'=>'colors','label'=>"Màu: {$labels}", 'value'=>$colorIds];
-    //     }
-    //     if ($sizeIds) {
-    //         $labels = $sizes->whereIn('id',$sizeIds)->pluck('name')->implode(', ');
-    //         $activeFilters[] = ['key'=>'sizes','label'=>"Size: {$labels}", 'value'=>$sizeIds];
-    //     }
-
-    //     return view('products.index', compact(
-    //         'products','categories','colors','sizes','activeFilters'
-    //     ));
-    // }
     public function suggest(Request $request)
     {
         $keyword = $request->get('q', '');
@@ -177,14 +123,6 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-
-        $sessionKey = 'product_viewed_' . $id;
-
-        if (!session()->has($sessionKey)) {
-            $product->increment('view');
-            session()->put($sessionKey, true);
-        }
         $product = Product::with([
             'category:id,name',
             'variants.color:id,name,color_code',
@@ -195,7 +133,12 @@ class ProductController extends Controller
             ->withSum('variants as total_stock', 'quantity')
             ->withSum('orderDetails as total_sold', 'quantity')
             ->findOrFail($id);
+        $sessionKey = 'product_viewed_' . $id;
 
+        if (!session()->has($sessionKey)) {
+            $product->increment('view');
+            session()->put($sessionKey, true);
+        }
         // Tính giá min / sale hiện tại
         $minPrice = $product->variants->min('price');
         $minSale  = $product->variants
@@ -263,17 +206,37 @@ class ProductController extends Controller
             ->unique('id')
             ->values();
 
-        // Ảnh
-        $images = $product->photoAlbums->pluck('image')->toArray();
-        if (empty($images)) {
-            $images = $product->variants
-                ->pluck('image')
-                ->filter()
-                ->unique()
-                ->values()
-                ->toArray();
+        // ===== XỬ LÝ ẢNH HIỂN THỊ THEO THỨ TỰ: 
+        // photo đầu -> ảnh biến thể -> photo còn lại =====
+
+        $albumImages   = $product->photoAlbums->pluck('image')->filter()->values();
+        $variantImages = $product->variants->pluck('image')->filter()->unique()->values();
+
+        $images = [];
+
+        // 1️⃣ Ảnh photoAlbums đầu tiên
+        if ($albumImages->isNotEmpty()) {
+            $images[] = $albumImages->first();
         }
 
+        // 2️⃣ Toàn bộ ảnh biến thể (không trùng)
+        foreach ($variantImages as $img) {
+            if (!in_array($img, $images)) {
+                $images[] = $img;
+            }
+        }
+
+        // 3️⃣ Các ảnh photoAlbums còn lại
+        foreach ($albumImages->slice(1) as $img) {
+            if (!in_array($img, $images)) {
+                $images[] = $img;
+            }
+        }
+
+        $images = array_values($images); // reset index
+
+        // dd($albumImages);
+        // dd($images);
         // Map biến thể: key = color_id_size_id
         $variantMap = $product->variants
             ->mapWithKeys(function ($v) {
@@ -304,7 +267,6 @@ class ProductController extends Controller
                 $variantCartQtyMap[$vid] = (int) ($row['quantity'] ?? 0);
             }
         }
-
         return view('products.show', compact(
             'product',
             'displayPrice',

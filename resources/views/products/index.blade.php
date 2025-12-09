@@ -13,16 +13,15 @@
                 <div id="site-content" class="site-content-wrapper">
                     <div data-elementor-type="product-archive" data-elementor-id="342"
                         class="elementor elementor-342 elementor-location-archive product">
-                        
-                            <div class="e-con-inner">
-                                <div class="elementor-element elementor-element-48a016be kitify-breadcrumbs-page-title-yes kitify-breadcrumbs-align-center elementor-widget kitify elementor-kitify-breadcrumbs"
-                                    data-id="48a016be" data-element_type="widget"
-                                    data-widget_type="kitify-breadcrumbs.default">
-                                    <div class="elementor-widget-container">
-                                        
-                                    </div>
+
+                        <div class="e-con-inner">
+                            <div class="elementor-element elementor-element-48a016be kitify-breadcrumbs-page-title-yes kitify-breadcrumbs-align-center elementor-widget kitify elementor-kitify-breadcrumbs"
+                                data-id="48a016be" data-element_type="widget" data-widget_type="kitify-breadcrumbs.default">
+                                <div class="elementor-widget-container">
+
                                 </div>
-                            
+                            </div>
+
                         </div>
 
                         <div class="elementor-element elementor-element-62eaf656 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
@@ -190,7 +189,8 @@
                                                                                             class="title">
                                                                                             <h3
                                                                                                 class="woocommerce-loop-product__title">
-                                                                                                {{ $item->name }}</h3>
+                                                                                                {{ \Illuminate\Support\Str::limit($item->name, 75) }}
+                                                                                            </h3>
                                                                                         </a>
                                                                                     </div>
                                                                                     <div class="info-right">
