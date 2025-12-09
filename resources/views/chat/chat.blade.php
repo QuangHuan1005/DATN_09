@@ -440,7 +440,7 @@
     <script>
         const DEFAULT_AVATAR =
             'https://img.freepik.com/vector-cao-cap/vector-khuon-mat-nguoi-dan-ong_1072857-7641.jpg?semt=ais_hybrid&w=740&q=80';
-        const CURRENT_USER_ID = {{ Auth::id() }}; 
+        const CURRENT_USER_ID = {{ Auth::id() }};
 
         $(document).ready(function() {
             const imageInput = document.getElementById('imageInput');
@@ -507,12 +507,13 @@
                             appendMessageWithImage(
                                 message || '',
                                 res.data?.image,
-                                true, 
+                                true,
                                 'Bạn',
                                 res.sender_image ? '{{ asset('storage') }}/' + res
                                 .sender_image : DEFAULT_AVATAR,
                                 res.data?.created_at || new Date()
                             );
+                            scrollToBottom();
                         } else {
                             toastr.error(res.message || 'Gửi thất bại');
                         }
@@ -598,8 +599,11 @@
 
             function scrollToBottom() {
                 const container = $('#chatMessageContainer')[0];
-                container.scrollTop = container.scrollHeight;
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight;
+                }, 100);
             }
+
 
             const pusher = new Pusher('39863debe06a2e95784f', {
                 cluster: 'us3'

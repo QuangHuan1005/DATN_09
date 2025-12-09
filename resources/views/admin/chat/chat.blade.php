@@ -112,7 +112,6 @@
             font-size: 1.25rem;
         }
 
-        /* DÙNG LẠI STYLE CHAT CỦA SELLER */
         .chat-body {
             flex: 1;
             padding: 20px;
@@ -409,9 +408,13 @@
                                                 </button>
                                             </div>
                                         </form>
-                                        <div id="imagePreviewContainer" class="image-preview-box" style="display:none;">
-                                            <img id="imagePreview" src="">
-                                            <i id="removePreview" class="fas fa-trash delete-icon"></i>
+                                        <div id="imagePreviewContainer"
+                                            style="display:none; margin-top: 10px; padding: 0 20px;">
+                                            <div class="image-preview-box">
+                                                <img id="imagePreview" src=""
+                                                    style="max-width: 120px; border-radius: 6px;">
+                                                <i id="removePreview" class="fas fa-trash delete-icon"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -495,9 +498,10 @@
                                 res.data?.image,
                                 true,
                                 'Bạn',
-                                null, 
+                                null,
                                 res.data?.created_at
                             );
+                            scrollToBottom();
                         } else {
                             toastr.error(res.message || 'Gửi thất bại');
                         }
@@ -574,9 +578,7 @@
                             m.image,
                             isSender,
                             isSender ? 'Bạn' : 'Client',
-                            isSender ?
-                            null 
-                            :
+                            isSender ? null :
                             (m.sender_picture ? '{{ asset('storage') }}/' + m.sender_picture :
                                 DEFAULT_AVATAR),
                             m.created_at
@@ -587,9 +589,12 @@
                 });
             }
 
+
             function scrollToBottom() {
                 const container = $('#chatMessageContainer')[0];
-                container.scrollTop = container.scrollHeight;
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight;
+                }, 100);
             }
 
             const pusher = new Pusher('39863debe06a2e95784f', {
