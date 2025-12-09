@@ -59,7 +59,7 @@ class AdminUserController extends Controller
         ])->where('user_id', $users->id)->latest('created_at');
 
         // 3. Danh sách đơn hàng phân trang (hiển thị trong Transaction History)
-        $orders = (clone $ordersQuery)->latest('id', 'desc')->paginate(5);
+        $orders = (clone $ordersQuery)->latest('desc')->paginate(5);
 
         // 4. Tổng số đơn
         $totalOrders = (clone $ordersQuery)->count();

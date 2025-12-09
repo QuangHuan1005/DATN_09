@@ -116,7 +116,7 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link" href="#sidebarPurchases" role="button" aria-expanded="false"
                     aria-controls="sidebarPurchases">
                     <span class="nav-icon">
@@ -137,29 +137,17 @@
                         </li>
                     </ul>
                 </div>
-            </li>
+            </li> --}}
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.products.variants') }}" role="button"
-                    aria-expanded="false" aria-controls="sidebarAttributes">
+                <a class="nav-link" href="{{ route('admin.attributes.index') }}" role="button" aria-expanded="false"
+                    aria-controls="sidebarAttributes">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:confetti-minimalistic-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Quản Lý Thuộc Tính </span>
                 </a>
-                <div class="collapse" id="sidebarAttributes">
-                    <ul class="nav sub-navbar-nav">
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="{{ route('admin.products.variants') }}">List</a>
-                        </li>
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="attributes-edit.html">Edit</a>
-                        </li>
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="attributes-add.html">Create</a>
-                        </li>
-                    </ul>
-                </div>
+                
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.users.index') }}" role="button" aria-expanded="false"

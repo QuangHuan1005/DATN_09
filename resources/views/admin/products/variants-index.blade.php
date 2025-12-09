@@ -1,7 +1,7 @@
-@extends('admin.master')
+@extends('layouts.admin.app')
 
 
-@section('title', 'Quản lý biến thể sản phẩm')
+
 
 @section('content')
 <div class="container mt-4">
@@ -12,6 +12,7 @@
                     <p class="text-muted">Chọn loại biến thể bạn muốn quản lý</p>
                 </div>
             </div>
+
 
             <!-- Variant Type Cards -->
             <div class="row justify-content-center">
@@ -25,13 +26,14 @@
                             <p class="card-text text-muted mb-4">
                                 Quản lý các kích thước sản phẩm như S, M, L, XL...
                             </p>
-                            <a href="{{ route('admin.products.variants.type', 'size') }}" 
+                            <a href="{{ route('admin.products.variants.type', 'size') }}"
                                class="btn btn-primary btn-lg">
                                 <i class="fas fa-cog"></i> Quản lý kích thước
                             </a>
                         </div>
                     </div>
                 </div>
+
 
                 <div class="col-md-5 mb-4">
                     <div class="card h-100 shadow-sm">
@@ -43,7 +45,7 @@
                             <p class="card-text text-muted mb-4">
                                 Quản lý các màu sắc sản phẩm như Đỏ, Xanh, Vàng...
                             </p>
-                            <a href="{{ route('admin.products.variants.type', 'color') }}" 
+                            <a href="{{ route('admin.products.variants.type', 'color') }}"
                                class="btn btn-success btn-lg">
                                 <i class="fas fa-cog"></i> Quản lý màu sắc
                             </a>
@@ -51,6 +53,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Quick Stats -->
             <div class="row mt-5">

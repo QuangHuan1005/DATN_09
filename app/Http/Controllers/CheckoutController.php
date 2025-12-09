@@ -151,7 +151,7 @@ class CheckoutController extends Controller
         $orderInfo = 'Thanh toan don hang ' . $orderId;
 
         // Lấy thông tin địa chỉ giao hàng
-        $address = \App\Models\UserAddress::find($validated['address_id']);
+        $address = UserAddress::find($validated['address_id']);
         if (!$address) {
             return redirect()->back()->with('error', 'Địa chỉ giao hàng không tồn tại');
         }
