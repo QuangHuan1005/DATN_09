@@ -344,6 +344,73 @@
         .chat-image:hover {
             opacity: 0.9;
         }
+
+        .unread-badge {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: #e03131;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            text-align: center;
+            border-radius: 50%;
+            border: 2.5px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            padding: 0 6px;
+            box-sizing: border-box;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            line-height: unset;
+
+            display: none;
+        }
+
+        .unread-badge.show {
+            display: flex !important;
+        }
+
+        .unread-badge.big {
+            border-radius: 12px;
+            min-width: 24px;
+            padding: 0 8px;
+        }
+
+        .user-list,
+        .chat-list {
+            transition: all 0.3s ease;
+        }
+
+        .user-item,
+        .chat-item {
+            transition: all 0.3s ease;
+            opacity: 1;
+        }
+
+        .highlight-new {
+            background-color: rgba(67, 97, 238, 0.1) !important;
+            animation: pulse 1.5s ease;
+        }
+
+        @keyframes pulse {
+            0% {
+                background-color: rgba(67, 97, 238, 0.1);
+            }
+
+            50% {
+                background-color: rgba(67, 97, 238, 0.25);
+            }
+
+            100% {
+                background-color: transparent;
+            }
+        }
     </style>
 
     <div class="container-scroller seller">
@@ -360,13 +427,16 @@
                                     </div>
                                     <div class="chat-list">
                                         @foreach ($admins as $admin)
-                                            <div class="chat-item d-flex align-items-center" data-id="{{ $admin->id }}">
-                                                <img src="{{ $admin->picture ? asset('storage/' . $admin->picture) : 'https://img.freepik.com/vector-cao-cap/vector-khuon-mat-nguoi-dan-ong_1072857-7641.jpg?semt=ais_hybrid&w=740&q=80' }}"
+                                            <div class="chat-item d-flex align-items-center position-relative"
+                                                data-id="{{ $admin->id }}">
+                                                <img src="https://img.freepik.com/vector-cao-cap/vector-khuon-mat-nguoi-dan-ong_1072857-7641.jpg?semt=ais_hybrid&w=740&q=80"
                                                     class="rounded-circle" alt="{{ $admin->name }}">
                                                 <div class="profile_info">
                                                     <div class="profile_name">{{ $admin->name }}</div>
                                                     <small class="text-muted">Nhấn để chat</small>
                                                 </div>
+
+                                                <span class="unread-badge" data-unread-for="{{ $admin->id }}"></span>
                                             </div>
                                         @endforeach
                                     </div>
@@ -472,6 +542,7 @@
 
                 $('.chat-footer').show();
                 loadMessages(id);
+                markConversationAsRead(id);
             });
 
             $('#messageForm').on('submit', function(e) {
@@ -543,18 +614,18 @@
                 }
 
                 const messageClass = isSender ? 'sender' : 'receiver';
-                const avatarHtml =
-                    `<div class="message-avatar"><img src="${safeAvatar}" alt="${displayName}"></div>`;
+                const avatarHtml = !isSender ?
+                    `<div class="message-avatar"><img src="${safeAvatar}" alt="${displayName}"></div>` : '';
 
                 const html = `
-                <div class="chat-message ${messageClass}">
-                    ${isSender ? '' : avatarHtml}
-                    <div class="message-content">
-                        ${content}
-                        <div class="timestamp">${timestamp}</div>
-                    </div>
-                    ${isSender ? avatarHtml : ''}
-                </div>`;
+    <div class="chat-message ${messageClass}">
+        ${!isSender ? avatarHtml : ''}   <!-- Chỉ hiện avatar nếu là người nhận (Admin) -->
+        <div class="message-content">
+            ${content}
+            <div class="timestamp">${timestamp}</div>
+        </div>
+        ${isSender ? '' : ''}   <!-- Không hiện avatar bên phải nữa -->
+    </div>`;
 
                 $('#chatMessageContainer').append(html);
                 scrollToBottom();
@@ -668,6 +739,79 @@
                 e.preventDefault();
                 imageInput.value = "";
                 previewBox.style.display = "none";
+            });
+
+            function updateUnreadBadge(userId, count) {
+                const badge = $(`[data-unread-for="${userId}"]`);
+                if (count > 0) {
+                    badge.text(count > 99 ? '99+' : count).show();
+                } else {
+                    badge.hide().text('');
+                }
+            }
+
+            function countUnreadMessages(messages, currentUserId) {
+                return messages.filter(m => m.receiver_id == currentUserId && !m.seen).length;
+            }
+
+            function markConversationAsRead(receiverId) {
+                $.post('{{ route('chat.markAsRead') }}', {
+                    _token: '{{ csrf_token() }}',
+                    sender_id: receiverId
+                }, function(res) {
+                    if (res.success) {
+                        updateUnreadBadge(receiverId, 0);
+                    }
+                });
+            }
+
+            function loadUnreadCounts() {
+                $.get('{{ route('chat.unreadCounts') }}', function(counts) {
+                    Object.keys(counts).forEach(userId => {
+                        updateUnreadBadge(userId, parseInt(counts[userId]));
+                    });
+                });
+            }
+
+            loadUnreadCounts();
+
+            function moveUserToTop(userId) {
+                const item = $(`.user-item[data-id="${userId}"], .chat-item[data-id="${userId}"]`);
+                if (item.length === 0) return;
+
+                const list = item.closest('.user-list, .chat-list');
+
+                item.detach().prependTo(list);
+
+                item.addClass('highlight-new');
+                setTimeout(() => item.removeClass('highlight-new'), 1500);
+            }
+
+            channel.bind('admin-message', function(data) {
+                const senderId = data.sender_id;
+
+                moveUserToTop(senderId);
+                const currentReceiverId = $('#receiver_id').val();
+
+                if (currentReceiverId && parseInt(data.sender_id) === parseInt(currentReceiverId)) {
+                    appendMessageWithImage(
+                        data.message,
+                        data.image,
+                        false,
+                        'Admin',
+                        data.admin?.picture ? '{{ asset('storage') }}/' + data.admin.picture :
+                        DEFAULT_AVATAR,
+                        data.created_at
+                    );
+                    markConversationAsRead(data.sender_id);
+                } else {
+                    let count = parseInt($(`[data-unread-for="${data.sender_id}"]`).text()) || 0;
+                    updateUnreadBadge(data.sender_id, count + 1);
+                }
+            });
+
+            channel.bind('message-seen', function(data) {
+                updateUnreadBadge(data.senderId, 0);
             });
         });
     </script>

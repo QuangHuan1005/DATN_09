@@ -333,3 +333,7 @@ Route::post('/chat/user-typing', function (Request $request) {
 
     return response()->json(['status' => 'ok']);
 })->name('chat.user.typing');
+
+Route::post('/chat/mark-as-read', [ChatsController::class, 'markAsRead'])->name('chat.markAsRead');
+
+Route::get('/chat/unread-counts', [ChatsController::class, 'getUnreadCounts'])->name('chat.unreadCounts');

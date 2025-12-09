@@ -58,6 +58,7 @@ class ChatsController extends Controller
             'receiver_id' => $request->receiver_id,
             'message'     => $request->message ?? '',
             'image'       => $imagePath,
+            'seen'        => false,
         ]);
 
         broadcast(new SendAdminMessage($chat))->toOthers();
@@ -65,7 +66,6 @@ class ChatsController extends Controller
         return response()->json([
             'success' => true,
             'data'    => [
-                // DÙNG Storage::url() → luôn trả về URL đúng: /storage/chat_images/...
                 'image'      => $imagePath ? Storage::url($imagePath) : null,
                 'message'    => $chat->message,
                 'created_at' => $chat->created_at->format('Y-m-d H:i:s'),
@@ -95,6 +95,7 @@ class ChatsController extends Controller
             'receiver_id' => $request->receiver_id,
             'message'     => $request->message ?? '',
             'image'       => $imagePath,
+            'seen'        => false,
         ]);
 
         event(new SendUserMessage($chat));
@@ -102,7 +103,6 @@ class ChatsController extends Controller
         return response()->json([
             'success' => true,
             'data'    => [
-                // DÙNG Storage::url() → luôn đúng dù ở route /admin hay /seller
                 'image'      => $imagePath ? Storage::url($imagePath) : null,
                 'message'    => $chat->message,
                 'created_at' => $chat->created_at->format('Y-m-d H:i:s'),
@@ -139,5 +139,34 @@ class ChatsController extends Controller
         return response()->json([
             'messages' => $messages
         ]);
+    }
+
+    public function markAsRead(Request $request)
+    {
+        $senderId = $request->sender_id;
+        $receiverId = Auth::id();
+
+        Chat::where('sender_id', $senderId)
+            ->where('receiver_id', $receiverId)
+            ->where('seen', false)
+            ->update(['seen' => true]);
+
+        broadcast(new \App\Events\MessageSeen($senderId, $receiverId));
+
+        return response()->json(['success' => true]);
+    }
+
+    public function getUnreadCounts()
+    {
+        $currentUserId = Auth::id();
+
+        $unreadCounts = Chat::where('receiver_id', $currentUserId)
+            ->where('seen', false)
+            ->selectRaw('sender_id, COUNT(*) as count')
+            ->groupBy('sender_id')
+            ->pluck('count', 'sender_id')
+            ->toArray();
+
+        return response()->json($unreadCounts);
     }
 }
