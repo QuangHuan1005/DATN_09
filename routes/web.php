@@ -30,6 +30,8 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VNPayController;
 use App\Http\Controllers\Staff\StaffController;
+use Symfony\Component\HttpFoundation\Request;
+
 /*
 |--------------------------------------------------------------------------
 | FRONTEND ROUTES
@@ -306,3 +308,28 @@ Route::prefix('admin')
             Route::delete('/{size}', [AdminAttributeController::class, 'sizesDestroy'])->name('destroy');
         });
     });
+
+
+Route::post('/chat/admin-typing', function (Request $request) {
+    $adminId = auth('admin')->id();
+    $sellerId = $request->receiver_id;
+    $isTyping = $request->boolean('is_typing', true);
+
+    if ($adminId && $sellerId) {
+        broadcast(new \App\Events\AdminTypingEvent($adminId, $sellerId, $isTyping));
+    }
+
+    return response()->json(['status' => 'ok']);
+})->name('chat.admin.typing');
+
+Route::post('/chat/user-typing', function (Request $request) {
+    $sellerId = auth()->id();
+    $adminId = $request->receiver_id;
+    $isTyping = $request->boolean('is_typing', true);
+
+    if ($sellerId && $adminId) {
+        broadcast(new \App\Events\SellerTypingEvent($sellerId, $adminId, $isTyping));
+    }
+
+    return response()->json(['status' => 'ok']);
+})->name('chat.user.typing');

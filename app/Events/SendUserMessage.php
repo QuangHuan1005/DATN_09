@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Support\Facades\Storage;
 
 class SendUserMessage implements ShouldBroadcastNow
 {
@@ -34,7 +35,7 @@ class SendUserMessage implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('admin-messages.' .$this->message->receiver_id); 
+        return new Channel('admin-messages.' . $this->message->receiver_id);
     }
 
     /**
@@ -44,34 +45,26 @@ class SendUserMessage implements ShouldBroadcastNow
      */
     public function broadcastWith()
     {
-        // Assuming sender_id is a user ID
-        $user = User::find($this->message->sender_id); 
+        $user = User::find($this->message->sender_id);
 
-        if ($user) {
-            return [
-                'message' => $this->message->message,
-                'receiver_id' => $this->message->receiver_id,
-                'sender_id' => $this->message->sender_id,
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'image' => asset('storage/' . $user->picture), 
-                ],
-                'created_at' => $this->message->created_at,
-            ];
-        } else {
-            return [
-                'message' => $this->message->message,
-                'receiver_id' => $this->message->receiver_id,
-                'sender_id' => $this->message->sender_id,
-                'user' => [
-                    'id' => null,
-                    'name' => 'Unknown User',
-                    'image' => asset('storage/default-avatar.png'), 
-                ],
-                'created_at' => $this->message->created_at,
-            ];
-        }
+        $userData = $user ? [
+            'id' => $user->id,
+            'name' => $user->name,
+            'image' => asset('storage/' . $user->picture),
+        ] : [
+            'id' => null,
+            'name' => 'Unknown User',
+            'image' => asset('storage/default-avatar.png'),
+        ];
+
+        return [
+            'message' => $this->message->message,
+            'image' => $this->message->image ? Storage::url($this->message->image) : null,
+            'receiver_id' => $this->message->receiver_id,
+            'sender_id' => $this->message->sender_id,
+            'user' => $userData,
+            'created_at' => $this->message->created_at->format('Y-m-d H:i:s'),
+        ];
     }
 
     /**
@@ -81,6 +74,6 @@ class SendUserMessage implements ShouldBroadcastNow
      */
     public function broadcastAs()
     {
-        return 'user-message'; 
+        return 'user-message';
     }
 }
