@@ -54,6 +54,7 @@ class VNPayController extends Controller
 
             // Cập nhật trạng thái thanh toán
             if ($vnp_ResponseCode == '00') {
+<<<<<<< HEAD
                 // Thanh toán thành công
                 $order->update(['order_status_id' => 5]); // Hoàn thành
 
@@ -72,6 +73,20 @@ class VNPayController extends Controller
                     'payment_amount' => $vnp_Amount / 100, // VNPay trả về số tiền nhân 100
                     'status' => 1, // Completed
                 ]);
+=======
+                // Thanh toán thành công - Đơn hàng vẫn ở trạng thái "Chưa xác nhận" để admin xử lý
+                // Nhưng cập nhật payment_status_id = 3 (Đã thanh toán) để hiển thị đúng
+                $order->update(['payment_status_id' => 3]);
+
+                // Cập nhật payment record (đã tạo trong CheckoutController)
+                $payment = Payment::where('order_id', $order->id)->first();
+                if ($payment) {
+                    $payment->update([
+                        'payment_code' => $request->get('vnp_TransactionNo'),
+                        'status' => 1, // Completed
+                    ]);
+                }
+>>>>>>> origin/phong
 
                 Log::info('VNPay Return: Payment successful', ['order_code' => $vnp_TxnRef]);
 
@@ -81,6 +96,7 @@ class VNPayController extends Controller
                 // Thanh toán thất bại
                 $order->update(['order_status_id' => 6]); // Hủy đơn
 
+<<<<<<< HEAD
                 Payment::create([
                     'order_id' => $order->id,
                     'payment_method_id' => 2, // VNPay
@@ -88,6 +104,16 @@ class VNPayController extends Controller
                     'payment_amount' => $vnp_Amount / 100,
                     'status' => 0, // Failed
                 ]);
+=======
+                // Cập nhật payment record (đã tạo trong CheckoutController)
+                $payment = Payment::where('order_id', $order->id)->first();
+                if ($payment) {
+                    $payment->update([
+                        'payment_code' => $request->get('vnp_TransactionNo'),
+                        'status' => 0, // Failed
+                    ]);
+                }
+>>>>>>> origin/phong
 
                 Log::info('VNPay Return: Payment failed', [
                     'order_code' => $vnp_TxnRef,
@@ -130,6 +156,7 @@ class VNPayController extends Controller
 
             // Cập nhật trạng thái dựa trên kết quả thanh toán
             if ($vnp_ResponseCode == '00') {
+<<<<<<< HEAD
                 // Thanh toán thành công
                 if ($order->order_status_id != 5) { // Chỉ cập nhật nếu chưa được cập nhật
                     $order->update(['order_status_id' => 5]); // Hoàn thành
@@ -146,6 +173,17 @@ class VNPayController extends Controller
                         'payment_method_id' => 2, // VNPay
                         'payment_code' => $request->get('vnp_TransactionNo'),
                         'payment_amount' => $vnp_Amount / 100,
+=======
+                // Thanh toán thành công - Đơn hàng vẫn ở trạng thái "Chưa xác nhận" để admin xử lý
+                // Nhưng cập nhật payment_status_id = 3 (Đã thanh toán) để hiển thị đúng
+                $order->update(['payment_status_id' => 3]);
+
+                // Cập nhật payment record (đã tạo trong CheckoutController)
+                $payment = Payment::where('order_id', $order->id)->first();
+                if ($payment) {
+                    $payment->update([
+                        'payment_code' => $request->get('vnp_TransactionNo'),
+>>>>>>> origin/phong
                         'status' => 1, // Completed
                     ]);
                 }
@@ -156,6 +194,7 @@ class VNPayController extends Controller
                 // Thanh toán thất bại
                 $order->update(['order_status_id' => 6]); // Hủy đơn
 
+<<<<<<< HEAD
                 Payment::create([
                     'order_id' => $order->id,
                     'payment_method_id' => 2, // VNPay
@@ -163,6 +202,16 @@ class VNPayController extends Controller
                     'payment_amount' => $vnp_Amount / 100,
                     'status' => 0, // Failed
                 ]);
+=======
+                // Cập nhật payment record (đã tạo trong CheckoutController)
+                $payment = Payment::where('order_id', $order->id)->first();
+                if ($payment) {
+                    $payment->update([
+                        'payment_code' => $request->get('vnp_TransactionNo'),
+                        'status' => 0, // Failed
+                    ]);
+                }
+>>>>>>> origin/phong
 
                 Log::info('VNPay IPN: Payment failed', [
                     'order_code' => $vnp_TxnRef,

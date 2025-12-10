@@ -14,7 +14,11 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+<<<<<<< HEAD
           'staff_id', 
+=======
+          'staff_id',
+>>>>>>> origin/phong
         'payment_status_id',
         'order_status_id',
         'voucher_id',
@@ -137,8 +141,14 @@ public function staff()
 
     public function getCancelableAttribute(): bool
     {
+<<<<<<< HEAD
         return in_array($this->order_status_id, [self::STATUS_PENDING, self::STATUS_CONFIRMED])
             && $this->payment_status_id !== 3;
+=======
+        // Chỉ cho phép hủy khi đơn hàng ở trạng thái "Chờ xác nhận" (PENDING)
+        // Áp dụng cho cả COD và VNPay khi đơn chưa được admin xử lý
+        return $this->order_status_id === self::STATUS_PENDING;
+>>>>>>> origin/phong
     }
 
     /**

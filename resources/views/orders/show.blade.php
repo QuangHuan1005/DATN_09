@@ -218,6 +218,14 @@
                 background: #fef2f2
             }
 
+<<<<<<< HEAD
+=======
+            /* Override capitalize for cancel button */
+            #btnOpenCancelModal {
+                text-transform: none !important;
+            }
+
+>>>>>>> origin/phong
             /* mobile spacing */
             @media (max-width: 768px) {
                 .order-header {
@@ -576,7 +584,7 @@
                                                                         <input type="hidden" name="reason"
                                                                             value="Khách yêu cầu hủy">
                                                                         <button class="btn-danger-outline" type="button"
-                                                                            id="btnOpenCancelModal">Hủy đơn</button>
+                                                                            id="btnOpenCancelModal">Hủy đơn hàng</button>
                                                                     </form>
                                                                 @endif
                                                             </div>

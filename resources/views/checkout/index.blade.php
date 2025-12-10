@@ -116,12 +116,21 @@
                                 <p>Mọi giao dịch đều được bảo mật và mã hóa.</p>
                                 <div class="checkout-payment__options">
                                     <label class="ds__item">
+                                        <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_cod" value="1" checked />
+                                        <span class="ds__item__label">
+                                            <div class="payment-method-title">Thanh toán khi nhận hàng (COD)</div>
+                                            <div class="payment-method-description">Thanh toán bằng tiền mặt khi nhận hàng tại nhà.</div>
+                                        </span>
+                                    </label>
+
+                                    <label class="ds__item">
                                         <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_vnpay" value="2" />
                                         <span class="ds__item__label">
                                             <div class="payment-method-title">Thanh toán bằng VNPay</div>
                                             <div class="payment-method-description">Hỗ trợ thanh toán online hơn 38 ngân hàng phổ biến Việt Nam.</div>
                                         </span>
                                     </label>
+
                                     
                                     <label class="ds__item">
                                         <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_3" value="3" checked />
@@ -129,6 +138,7 @@
                                             Thanh toán khi giao hàng
                                         </span>
                                     </label>
+
                                 </div>
                             </div>
                         </div>

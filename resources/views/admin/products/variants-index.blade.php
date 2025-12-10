@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 @extends('layouts.admin.app')
 
 
 
+=======
+@extends('admin.master')
+
+
+@section('title', 'Quản lý biến thể sản phẩm')
+>>>>>>> origin/phong
 
 @section('content')
 <div class="container mt-4">
@@ -13,7 +20,10 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
             <!-- Variant Type Cards -->
             <div class="row justify-content-center">
                 <div class="col-md-5 mb-4">
@@ -26,7 +36,11 @@
                             <p class="card-text text-muted mb-4">
                                 Quản lý các kích thước sản phẩm như S, M, L, XL...
                             </p>
+<<<<<<< HEAD
                             <a href="{{ route('admin.products.variants.type', 'size') }}"
+=======
+                            <a href="{{ route('admin.products.variants.type', 'size') }}" 
+>>>>>>> origin/phong
                                class="btn btn-primary btn-lg">
                                 <i class="fas fa-cog"></i> Quản lý kích thước
                             </a>
@@ -34,7 +48,10 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
                 <div class="col-md-5 mb-4">
                     <div class="card h-100 shadow-sm">
                         <div class="card-body text-center p-5">
@@ -45,7 +62,11 @@
                             <p class="card-text text-muted mb-4">
                                 Quản lý các màu sắc sản phẩm như Đỏ, Xanh, Vàng...
                             </p>
+<<<<<<< HEAD
                             <a href="{{ route('admin.products.variants.type', 'color') }}"
+=======
+                            <a href="{{ route('admin.products.variants.type', 'color') }}" 
+>>>>>>> origin/phong
                                class="btn btn-success btn-lg">
                                 <i class="fas fa-cog"></i> Quản lý màu sắc
                             </a>
@@ -54,7 +75,10 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
             <!-- Quick Stats -->
             <div class="row mt-5">
                 <div class="col-12">

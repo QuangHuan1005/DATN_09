@@ -11,10 +11,14 @@ class ProductPhotoAlbum extends Model
 
     protected $table = 'product_photo_albums';
 
+<<<<<<< HEAD
     protected $fillable = [
         'product_id',
         'image'
     ];
+=======
+    protected $fillable = ['product_id', 'image'];
+>>>>>>> origin/phong
 
     public function product()
     {

@@ -13,8 +13,6 @@ use App\Models\UserAddress;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatusLog;
-use App\Services\MomoPaymentService;
-use App\Services\DemoPaymentService;
 use App\Services\VNPayService;
 
 class CheckoutController extends Controller
@@ -101,7 +99,7 @@ class CheckoutController extends Controller
     {
         // Xử lý đặt hàng
         $validated = $request->validate([
-            'payment_method' => 'required|in:1,2,3,4,5',
+            'payment_method' => 'required|in:1,2',
             'address_id' => 'required|integer',
             'receive_vat' => 'boolean',
             'order_vat_email' => 'nullable|email',
@@ -151,7 +149,8 @@ class CheckoutController extends Controller
         $orderInfo = 'Thanh toan don hang ' . $orderId;
 
         // Lấy thông tin địa chỉ giao hàng
-        $address = UserAddress::find($validated['address_id']);
+
+        $address = \App\Models\UserAddress::find($validated['address_id']);
         if (!$address) {
             return redirect()->back()->with('error', 'Địa chỉ giao hàng không tồn tại');
         }
@@ -170,6 +169,7 @@ class CheckoutController extends Controller
                 'address' => $address->address . ', ' . $address->ward . ', ' . $address->district . ', ' . $address->province,
                 'phone' => $address->phone,
                 'payment_method' => $validated['payment_method'],
+
             ];
 
             $order = Order::create($orderData);
@@ -213,6 +213,14 @@ class CheckoutController extends Controller
 
             return $order;
         });
+        // Tạo payment record cho mọi đơn hàng
+        \App\Models\Payment::create([
+            'order_id' => $order->id,
+            'payment_method_id' => $validated['payment_method'],
+            'payment_code' => ($validated['payment_method'] == 1 ? 'COD_' : 'PAY_') . $orderId,
+            'payment_amount' => $totalAmount,
+            'status' => ($validated['payment_method'] == 1 ? 0 : 0), // COD: Pending (0), Online: Pending (0)
+        ]);
 
         // Xử lý theo phương thức thanh toán
         if ($validated['payment_method'] == '2') { // VNPay
@@ -240,45 +248,15 @@ class CheckoutController extends Controller
                 $order->delete();
                 return redirect()->back()->with('error', 'Không thể tạo thanh toán VNPay: ' . $result['message']);
             }
-        } elseif ($validated['payment_method'] == '5') { // Momo
-            // Kiểm tra xem có phải demo mode không
-            $isDemo = config('momo.environment') === 'demo' || !config('momo.partner_code') || config('momo.partner_code') === 'MOMO_PARTNER_CODE';
 
-            if ($isDemo) {
-                // Sử dụng demo service
-                $demoService = new DemoPaymentService();
-                $result = $demoService->createPayment($orderId, $totalAmount, $orderInfo);
-            } else {
-                // Sử dụng Momo service thật
-                $momoService = new MomoPaymentService();
-                $result = $momoService->createPayment($orderId, $totalAmount, $orderInfo);
-            }
+        } elseif ($validated['payment_method'] == '1') { // COD
+            // Xóa giỏ hàng sau khi đặt hàng thành công
+            Session::forget('cart');
+            Session::forget('buy_now');
 
-            if ($result['success']) {
-                // Lưu thông tin đơn hàng tạm thời
-                Session::put('pending_order', [
-                    'order_id' => $order->id,
-                    'orderId' => $orderId,
-                    'totalAmount' => $totalAmount,
-                    'orderInfo' => $orderInfo,
-                    'payment_method' => 'momo',
-                    'momo_data' => $result,
-                    'isDemo' => $isDemo
-                ]);
-
-                // Chuyển đến trang QR code
-                return redirect()->route('payment.momo.qr', [
-                    'order_id' => $result['orderId'],
-                    'qr_code_url' => $result['qrCodeUrl'],
-                    'pay_url' => $result['payUrl']
-                ]);
-            } else {
-                // Xóa đơn hàng nếu tạo thanh toán thất bại
-                $order->delete();
-                return redirect()->back()->with('error', 'Không thể tạo thanh toán Momo: ' . $result['message']);
-            }
+            return redirect()->route('checkout.success')->with('success', 'Đặt hàng thành công!');
         } else {
-            // Các phương thức thanh toán khác (COD, thẻ tín dụng, etc.)
+            // Các phương thức thanh toán khác (thẻ tín dụng, etc.)
 
             // Xóa giỏ hàng sau khi đặt hàng thành công
             Session::forget('cart');

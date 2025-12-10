@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost:3306
+<<<<<<< HEAD
 -- Thời gian đã tạo: Th12 05, 2025 lúc 08:41 AM
+=======
+-- Thời gian đã tạo: Th10 18, 2025 lúc 02:43 PM
+>>>>>>> origin/phong
 -- Phiên bản máy phục vụ: 8.4.3
 -- Phiên bản PHP: 8.3.16
 
@@ -261,8 +265,15 @@ CREATE TABLE `colors` (
 --
 
 INSERT INTO `colors` (`id`, `name`, `color_code`, `description`, `status`, `created_at`, `updated_at`) VALUES
+<<<<<<< HEAD
 (1, 'Đỏ', '#FF0000', NULL, 'active', '2025-10-03 23:28:17', '2025-11-30 08:23:35'),
 (2, 'Xanh', '#0000FF', NULL, 'active', '2025-10-03 23:28:17', '2025-11-30 08:23:57'),
+=======
+(1, 'Redc', '#FF0000', NULL, 'inactive', '2025-10-03 23:28:17', '2025-10-26 16:29:11'),
+(2, 'Blue', '#0000FF', NULL, 'active', '2025-10-03 23:28:17', NULL),
+(3, 'White', '#FFFFFF', NULL, 'active', '2025-10-03 23:28:17', NULL),
+(4, 'Black', '#000000', NULL, 'active', '2025-10-03 23:28:17', NULL),
+>>>>>>> origin/phong
 (6, 'Đen', '#000000', NULL, 'active', '2025-11-14 01:27:58', NULL),
 (7, 'Trắng', '#FFFFFF', NULL, 'active', '2025-11-14 01:27:58', NULL),
 (8, 'Be', '#F5F5DC', NULL, 'active', '2025-11-14 01:27:58', NULL);
@@ -602,6 +613,7 @@ INSERT INTO `orders` (`id`, `user_id`, `payment_status_id`, `order_status_id`, `
 (13, 12, 1, 3, NULL, 'ORD20251102B', 'Nguyễn Văn Hùng', '123 Lĩnh Nam, Hoàng Mai, Hà Nội', '0912345678', 1150000.00, 50000.00, 1100000.00, 'COD - thanh toán khi nhận hàng', '2025-11-04 16:44:05', '2025-11-04 16:44:05'),
 (14, 12, 3, 5, NULL, 'ORD20251102C', 'Nguyễn Văn Hùng', '123 Lĩnh Nam, Hoàng Mai, Hà Nội', '0912345678', 740000.00, 40000.00, 700000.00, 'Đơn hàng đang chờ hoàn tiền', '2025-11-04 16:44:05', '2025-11-10 21:25:49'),
 (15, 12, 3, 5, NULL, 'ORD20251102D', 'Nguyễn Văn Hùng', '123 Lĩnh Nam, Hoàng Mai, Hà Nội', '0912345678', 1280000.00, 80000.00, 1200000.00, 'Khách thanh toán qua ví điện tử', '2025-11-04 16:44:05', '2025-11-05 14:04:12'),
+<<<<<<< HEAD
 (16, 12, 3, 5, NULL, 'ORD20251102E', 'Nguyễn Văn Hùng', '123 Lĩnh Nam, Hoàng Mai, Hà Nội', '0912345678', 880000.00, 30000.00, 850000.00, 'Giao dịch bị từ chối bởi ngân hàng', '2025-11-04 16:44:05', '2025-11-04 16:44:05'),
 (189, 13, 3, 5, NULL, 'ORD_160223461189400_3BEA88_13', 'Hoàng Hùng', '123, Minh Khai, Bắc Từ Liêm, Hà Nội', '0369573472', 680000.00, 0.00, 680000.00, NULL, '2025-12-05 09:07:40', '2025-12-05 09:57:22'),
 (190, 13, 5, 6, NULL, 'ORD_163682357146500_9B3981_13', 'Hoàng Hùng', '123, Minh Khai, Bắc Từ Liêm, Hà Nội', '0369573472', 290000.00, 0.00, 290000.00, NULL, '2025-12-05 10:05:19', '2025-12-05 10:05:33'),
@@ -612,6 +624,9 @@ INSERT INTO `orders` (`id`, `user_id`, `payment_status_id`, `order_status_id`, `
 (195, 13, 5, 6, NULL, 'ORD_178719628345500_AF073C_13', 'Hoàng Hùng', '123, Minh Khai, Bắc Từ Liêm, Hà Nội', '0369573472', 630000.00, 0.00, 630000.00, NULL, '2025-12-05 14:15:56', '2025-12-05 14:16:41'),
 (196, 13, 1, 1, NULL, 'ORD_178800153813400_7DF076_13', 'Hoàng Hùng', '123, Minh Khai, Bắc Từ Liêm, Hà Nội', '0369573472', 630000.00, 0.00, 630000.00, NULL, '2025-12-05 14:17:17', '2025-12-05 14:17:17'),
 (197, 13, 5, 6, NULL, 'ORD_179048729782600_A0F814_13', 'Hoàng Hùng', '123, Minh Khai, Bắc Từ Liêm, Hà Nội', '0369573472', 980000.00, 0.00, 980000.00, NULL, '2025-12-05 14:21:25', '2025-12-05 14:29:04');
+=======
+(16, 12, 3, 5, NULL, 'ORD20251102E', 'Nguyễn Văn Hùng', '123 Lĩnh Nam, Hoàng Mai, Hà Nội', '0912345678', 880000.00, 30000.00, 850000.00, 'Giao dịch bị từ chối bởi ngân hàng', '2025-11-04 16:44:05', '2025-11-04 16:44:05');
+>>>>>>> origin/phong
 
 --
 -- Bẫy `orders`
@@ -720,6 +735,7 @@ INSERT INTO `order_details` (`id`, `order_id`, `product_variant_id`, `price`, `q
 (50, 16, 5, 300000.00, 1, 5, '2025-11-06', '2025-11-04 17:04:56', '2025-11-04 17:04:56'),
 (51, 16, 7, 320000.00, 1, 5, '2025-11-06', '2025-11-04 17:04:56', '2025-11-04 17:04:56'),
 (52, 16, 12, 230000.00, 2, 5, '2025-11-06', '2025-11-04 17:04:56', '2025-11-04 17:04:56'),
+<<<<<<< HEAD
 (175, 189, 37, 340000.00, 1, 2, NULL, '2025-12-05 09:07:40', '2025-12-05 09:44:42'),
 (176, 189, 38, 340000.00, 1, 2, NULL, '2025-12-05 09:07:40', '2025-12-05 09:44:42'),
 (177, 190, 36, 290000.00, 1, 1, NULL, '2025-12-05 10:05:19', '2025-12-05 10:05:19'),
@@ -735,6 +751,18 @@ INSERT INTO `order_details` (`id`, `order_id`, `product_variant_id`, `price`, `q
 (187, 197, 36, 290000.00, 1, 1, NULL, '2025-12-05 14:21:26', '2025-12-05 14:21:26'),
 (188, 197, 37, 340000.00, 1, 1, NULL, '2025-12-05 14:21:26', '2025-12-05 14:21:26'),
 (189, 197, 19, 350000.00, 1, 1, NULL, '2025-12-05 14:21:26', '2025-12-05 14:21:26');
+=======
+(100, 1, 19, 350000.00, 1, 1, '2025-01-06', '2025-01-03 10:15:00', '2025-01-03 10:15:00'),
+(101, 2, 19, 400000.00, 2, 1, '2025-01-08', '2025-01-05 09:02:00', '2025-01-05 09:02:00'),
+(102, 3, 19, 600000.00, 2, 1, '2025-01-10', '2025-01-07 14:20:00', '2025-01-07 14:20:00'),
+(103, 4, 19, 450000.00, 1, 1, '2025-01-12', '2025-01-09 11:45:00', '2025-01-09 11:45:00'),
+(104, 5, 19, 490000.00, 2, 1, '2025-01-15', '2025-01-12 16:10:00', '2025-01-12 16:10:00'),
+(105, 6, 19, 365000.00, 2, 1, '2025-01-17', '2025-01-14 08:30:00', '2025-01-14 08:30:00'),
+(106, 7, 19, 530000.00, 1, 1, '2025-01-20', '2025-01-18 13:55:00', '2025-01-18 13:55:00'),
+(107, 8, 19, 780000.00, 2, 1, '2025-01-21', '2025-01-19 17:40:00', '2025-01-19 17:40:00'),
+(108, 9, 19, 420000.00, 1, 1, '2025-01-23', '2025-01-20 12:12:00', '2025-01-20 12:12:00'),
+(109, 10, 19, 435000.00, 2, 1, '2025-01-25', '2025-01-22 19:28:00', '2025-01-22 19:28:00');
+>>>>>>> origin/phong
 
 -- --------------------------------------------------------
 
@@ -765,6 +793,7 @@ INSERT INTO `order_statuses` (`id`, `name`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
+<<<<<<< HEAD
 -- Cấu trúc bảng cho bảng `order_status_logs`
 --
 
@@ -802,6 +831,8 @@ INSERT INTO `order_status_logs` (`id`, `order_id`, `order_status_id`, `actor_typ
 -- --------------------------------------------------------
 
 --
+=======
+>>>>>>> origin/phong
 -- Cấu trúc bảng cho bảng `password_reset_tokens`
 --
 
@@ -847,6 +878,7 @@ INSERT INTO `payments` (`id`, `order_id`, `payment_method_id`, `payment_code`, `
 (12, 13, 1, 'PAY20251107007', 870000.00, 0, '2025-11-05 01:17:27', '2025-11-05 01:17:27'),
 (13, 14, 2, 'PAY20251107008', 315000.00, 1, '2025-11-05 01:17:27', '2025-11-05 01:17:27'),
 (14, 15, 3, 'PAY20251107009', 255000.00, 2, '2025-11-05 01:17:27', '2025-11-05 01:17:27'),
+<<<<<<< HEAD
 (15, 16, 1, 'PAY20251107010', 499000.00, 1, '2025-11-05 01:17:27', '2025-11-05 01:17:27'),
 (29, 190, 2, '0', 290000.00, 0, '2025-12-05 10:05:33', '2025-12-05 10:05:33'),
 (30, 191, 2, '15321319', 290000.00, 1, '2025-12-05 10:06:11', '2025-12-05 10:06:11'),
@@ -854,6 +886,9 @@ INSERT INTO `payments` (`id`, `order_id`, `payment_method_id`, `payment_code`, `
 (32, 194, 2, '15321859', 680000.00, 1, '2025-12-05 14:09:30', '2025-12-05 14:09:30'),
 (33, 195, 2, '0', 630000.00, 0, '2025-12-05 14:16:41', '2025-12-05 14:16:41'),
 (34, 197, 2, '0', 980000.00, 0, '2025-12-05 14:29:04', '2025-12-05 14:29:04');
+=======
+(15, 16, 1, 'PAY20251107010', 499000.00, 1, '2025-11-05 01:17:27', '2025-11-05 01:17:27');
+>>>>>>> origin/phong
 
 -- --------------------------------------------------------
 
@@ -875,9 +910,15 @@ CREATE TABLE `payment_methods` (
 --
 
 INSERT INTO `payment_methods` (`id`, `name`, `code`, `type`, `created_at`, `updated_at`) VALUES
+<<<<<<< HEAD
 (1, 'Thanh toán khi nhận hàng', 'COD', 'offline', NULL, NULL),
 (2, 'Thanh toán qua VNPAY', 'VNPAY', 'online', NULL, '2025-11-19 09:10:45'),
 (3, 'MoMo', 'MOMO', 'online', NULL, NULL);
+=======
+(1, 'COD', 'COD', 'offline', NULL, NULL),
+(2, 'VNPAY', 'VNPAY', 'online', NULL, NULL),
+(3, '', 'MOMO', 'online', NULL, NULL);
+>>>>>>> origin/phong
 
 -- --------------------------------------------------------
 
@@ -930,17 +971,26 @@ CREATE TABLE `products` (
 INSERT INTO `products` (`id`, `category_id`, `product_code`, `name`, `description`, `view`, `material`, `onpage`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 'SP001', 'Áo sơ mi nam', 'Áo sơ mi công sở', 124, 'Cotton', 1, '2025-10-03 23:28:17', '2025-10-19 08:45:29', NULL),
 (2, 1, 'SP002', 'Áo thun nam', 'Áo thun basic', 174, 'Polyester', 1, '2025-10-03 23:28:17', NULL, NULL),
+<<<<<<< HEAD
 (3, 2, 'SP003', 'Váy nữ xòe', 'Váy công sở xòe nhẹ', 492, 'Lụa', 1, '2025-10-03 23:28:17', '2025-12-02 00:58:12', NULL),
+=======
+(3, 2, 'SP003', 'Váy nữ xòe', 'Váy công sở xòe nhẹ', 491, 'Lụa', 1, '2025-10-03 23:28:17', NULL, NULL),
+>>>>>>> origin/phong
 (4, 4, 'SP004', 'Quần dài túi hộp', 'Giày sneaker trẻ trung', 450, 'Da PU', 1, '2025-10-03 23:28:17', '2025-10-27 11:36:15', NULL),
 (5, 1, 'SP005', 'Quần short jean', 'Túi xách nữ thời trang', 275, 'Da bò', 1, '2025-10-03 23:28:17', '2025-10-27 11:41:15', NULL),
 (6, 1, 'SP006', 'Áo polo nam cao cấp', 'Áo polo vải thun lạnh, thoáng mát', 17, 'Thun lạnh', 1, '2025-10-08 00:04:37', NULL, NULL),
 (7, 1, 'SP007', 'Áo khoác nam chống nắng', 'Áo khoác dù siêu nhẹ, chống tia UV', 230, 'Polyester', 1, '2025-10-08 00:04:37', NULL, NULL),
 (8, 11, 'SP008', 'Áo thun sleep', 'Đầm thiết kế thanh lịch cho dân văn phòng', 109, 'Lụa Nhật', 1, '2025-10-08 00:04:37', '2025-10-29 17:25:23', NULL),
+<<<<<<< HEAD
 (9, 1, 'SP009', 'Quần jean line up', 'Áo nữ thiết kế trẻ trung, phong cách', 340, 'Voan mịn', 1, '2025-10-08 00:04:37', '2025-12-02 00:58:26', NULL),
+=======
+(9, 1, 'SP009', 'Quần jean line up', 'Áo nữ thiết kế trẻ trung, phong cách', 338, 'Voan mịn', 1, '2025-10-08 00:04:37', '2025-10-27 11:42:32', NULL),
+>>>>>>> origin/phong
 (10, 3, 'SP010', 'Kính mát thời trang', 'Kính gọng kim loại cao cấp', 370, 'Kim loại', 0, '2025-10-08 00:04:37', '2025-10-27 11:44:36', '2025-10-27 04:44:36'),
 (11, 1, 'SP011', 'Áo tanktop', 'Thắt lưng nam khóa hợp kim cao cấp', 335, 'Da bò thật', 0, '2025-10-08 00:04:37', '2025-10-27 11:44:45', '2025-10-27 04:44:45'),
 (12, 3, 'SP012', 'Mũ lưỡi trai Unisex', 'Mũ lưỡi trai trơn phong cách Hàn Quốc', 63, 'Cotton', 0, '2025-10-08 00:04:37', '2025-10-27 11:44:51', '2025-10-27 04:44:51'),
 (13, 11, 'SP013', 'Giày thể thao nữ', 'Giày sneaker đế êm, nhẹ', 284, 'Da tổng hợp', 1, '2025-10-08 00:04:37', '2025-10-29 17:26:41', NULL),
+<<<<<<< HEAD
 (14, 4, 'SP014', 'Dép lê nam đơn giản', 'Dép lê cao su, thoải mái khi di chuyển', 242, 'Cao su', 1, '2025-10-08 00:04:37', '2025-12-02 00:57:54', NULL),
 (15, 4, 'SP015', 'Giày da công sở nam', 'Giày tây nam bóng mịn, sang trọng', 341, 'Da bò', 0, '2025-10-08 00:04:37', '2025-11-17 01:41:20', '2025-11-16 18:41:20'),
 (16, 11, 'SP016', 'Áo polo overthinking', 'Túi đeo chéo tiện lợi, phong cách trẻ', 484, 'Vải canvas', 1, '2025-10-08 00:04:37', '2025-11-17 01:40:27', NULL),
@@ -948,6 +998,15 @@ INSERT INTO `products` (`id`, `category_id`, `product_code`, `name`, `descriptio
 (18, 5, 'SP018', 'Ví da nam mini', 'Ví nhỏ gọn, nhiều ngăn, da mềm', 66, 'Da thật', 1, '2025-10-08 00:04:37', '2025-12-02 01:00:52', NULL),
 (19, 11, 'SP019', 'Áo khoác nữ form rộng', 'Áo khoác nữ phong cách Hàn Quốc', 106, 'Kaki', 1, '2025-10-08 00:04:37', '2025-12-05 08:09:45', NULL),
 (20, 1, 'SP020', 'Quần jean nam rách gối', 'Quần jean rách phong cách streetwear', 235, 'Jean cotton', 1, '2025-10-08 00:04:37', '2025-12-05 12:42:05', NULL);
+=======
+(14, 4, 'SP014', 'Dép lê nam đơn giản', 'Dép lê cao su, thoải mái khi di chuyển', 241, 'Cao su', 1, '2025-10-08 00:04:37', '2025-10-29 17:24:30', NULL),
+(15, 4, 'SP015', 'Giày da công sở nam', 'Giày tây nam bóng mịn, sang trọng', 341, 'Da bò', 0, '2025-10-08 00:04:37', '2025-11-17 01:41:20', '2025-11-16 18:41:20'),
+(16, 11, 'SP016', 'Áo polo overthinking', 'Túi đeo chéo tiện lợi, phong cách trẻ', 484, 'Vải canvas', 1, '2025-10-08 00:04:37', '2025-11-17 01:40:27', NULL),
+(17, 5, 'SP017', 'Balo laptop chống nước', 'Balo thời trang, chống thấm nước', 403, 'Nylon', 1, '2025-10-08 00:04:37', '2025-11-17 01:44:12', NULL),
+(18, 5, 'SP018', 'Ví da nam mini', 'Ví nhỏ gọn, nhiều ngăn, da mềm', 65, 'Da thật', 1, '2025-10-08 00:04:37', '2025-11-17 01:44:10', NULL),
+(19, 11, 'SP019', 'Áo khoác nữ form rộng', 'Áo khoác nữ phong cách Hàn Quốc', 87, 'Kaki', 1, '2025-10-08 00:04:37', '2025-11-17 01:44:07', NULL),
+(20, 1, 'SP020', 'Quần jean nam rách gối', 'Quần jean rách phong cách streetwear', 231, 'Jean cotton', 1, '2025-10-08 00:04:37', '2025-11-17 01:45:59', NULL);
+>>>>>>> origin/phong
 
 -- --------------------------------------------------------
 
@@ -1042,6 +1101,7 @@ INSERT INTO `product_variants` (`id`, `product_id`, `color_id`, `size_id`, `pric
 (1, 1, 1, 1, 250000.00, 200000.00, NULL, 437, 1, '2025-10-03 23:28:17', NULL),
 (2, 1, 2, 2, 260000.00, NULL, NULL, 102, 1, '2025-10-03 23:28:17', '2025-11-01 14:40:36'),
 (3, 2, 1, 2, 150000.00, NULL, NULL, 152, 1, '2025-10-03 23:28:17', NULL),
+<<<<<<< HEAD
 (4, 3, NULL, 3, 350000.00, 300000.00, NULL, 398, 1, '2025-10-03 23:28:17', '2025-11-01 14:40:36'),
 (5, 4, NULL, 2, 500000.00, 450000.00, NULL, 502, 1, '2025-10-03 23:28:17', NULL),
 (6, 6, 1, 2, 220000.00, 200000.00, NULL, 259, 1, '2025-10-08 00:04:37', '2025-11-01 14:40:36'),
@@ -1068,6 +1128,34 @@ INSERT INTO `product_variants` (`id`, `product_id`, `color_id`, `size_id`, `pric
 (36, 19, 8, 1, 360000.00, 290000.00, 'products/variant_be_m.jpg', 75, 1, '2025-11-14 01:39:22', '2025-11-30 08:39:19'),
 (37, 19, 8, 2, 360000.00, 340000.00, 'images/variant_be_l.jpg', 10, 1, '2025-11-14 01:39:22', '2025-12-05 09:44:42'),
 (38, 19, 8, 3, 360000.00, 340000.00, 'images/variant_be_xl.jpg', 34, 1, '2025-11-14 01:39:22', '2025-12-05 09:44:42');
+=======
+(4, 3, 3, 3, 350000.00, 300000.00, NULL, 398, 1, '2025-10-03 23:28:17', '2025-11-01 14:40:36'),
+(5, 4, 4, 2, 500000.00, 450000.00, NULL, 502, 1, '2025-10-03 23:28:17', NULL),
+(6, 6, 1, 2, 220000.00, 200000.00, NULL, 259, 1, '2025-10-08 00:04:37', '2025-11-01 14:40:36'),
+(7, 7, 4, 3, 350000.00, 320000.00, NULL, 747, 1, '2025-10-08 00:04:37', NULL),
+(8, 8, 3, 3, 400000.00, 370000.00, NULL, 908, 1, '2025-10-08 00:04:37', NULL),
+(9, 9, 2, 2, 280000.00, NULL, NULL, 259, 1, '2025-10-08 00:04:37', NULL),
+(10, 10, 4, NULL, 250000.00, NULL, NULL, 513, 1, '2025-10-08 00:04:37', NULL),
+(11, 11, 4, NULL, 300000.00, 270000.00, NULL, 743, 1, '2025-10-08 00:04:37', NULL),
+(12, 12, NULL, NULL, 180000.00, NULL, NULL, 136, 1, '2025-10-08 00:04:37', NULL),
+(13, 13, 3, 3, 480000.00, 450000.00, NULL, 391, 1, '2025-10-08 00:04:37', NULL),
+(14, 14, 4, NULL, 120000.00, NULL, NULL, 501, 1, '2025-10-08 00:04:37', NULL),
+(15, 15, 4, 3, 650000.00, 600000.00, NULL, 287, 1, '2025-10-08 00:04:37', NULL),
+(16, 16, NULL, NULL, 230000.00, NULL, NULL, 880, 1, '2025-10-08 00:04:37', NULL),
+(17, 17, 2, NULL, 490000.00, 460000.00, NULL, 499, 1, '2025-10-08 00:04:37', NULL),
+(18, 18, 4, NULL, 210000.00, 180000.00, NULL, 801, 1, '2025-10-08 00:04:37', NULL),
+(19, 19, 2, 4, 400000.00, 350000.00, NULL, 469, 1, '2025-10-08 00:04:37', '2025-10-26 23:52:48'),
+(20, 20, 1, 3, 370000.00, 340000.00, NULL, 2, 1, '2025-10-08 00:04:37', NULL),
+(30, 19, 4, 1, 350000.00, 320000.00, 'products/variant_black_m.jpg', 12, 1, '2025-11-14 01:39:22', NULL),
+(31, 19, 4, 2, 350000.00, 320000.00, 'images/variant_black_l.jpg', 11, 1, '2025-11-14 01:39:22', NULL),
+(32, 19, 4, 3, 350000.00, 320000.00, 'images/variant_black_xl.jpg', 18, 1, '2025-11-14 01:39:22', NULL),
+(33, 19, 3, 1, 350000.00, 330000.00, 'images/variant_white_m.jpg', 32, 1, '2025-11-14 01:39:22', NULL),
+(34, 19, 3, 2, 350000.00, 330000.00, 'images/variant_white_l.jpg', 64, 1, '2025-11-14 01:39:22', NULL),
+(35, 19, 3, 3, 350000.00, 330000.00, 'images/variant_white_xl.jpg', 33, 1, '2025-11-14 01:39:22', NULL),
+(36, 19, 8, 1, 360000.00, 340000.00, 'images/variant_be_m.jpg', 75, 1, '2025-11-14 01:39:22', NULL),
+(37, 19, 8, 2, 360000.00, 340000.00, 'images/variant_be_l.jpg', 11, 1, '2025-11-14 01:39:22', NULL),
+(38, 19, 8, 3, 360000.00, 340000.00, 'images/variant_be_xl.jpg', 35, 1, '2025-11-14 01:39:22', NULL);
+>>>>>>> origin/phong
 
 -- --------------------------------------------------------
 
@@ -1133,6 +1221,11 @@ INSERT INTO `reviews` (`id`, `order_id`, `product_id`, `rating`, `content`, `sta
 (17, 12, 7, 3, 'Giao hàng hơi chậm.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
 (18, 6, 11, 4, 'Màu lên chuẩn, đúng size.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
 (19, 9, 16, 5, 'Chất lượng cao, đáng tiền.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
+<<<<<<< HEAD
+=======
+(20, 10, 18, 2, 'Đường may chưa đều.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
+(21, 8, 20, 4, 'Shop phản hồi nhanh.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
+>>>>>>> origin/phong
 (22, 11, 5, 3, 'Form hơi rộng.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
 (23, 13, 13, 5, 'Mẫu mới đẹp, ấn tượng.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
 (24, 4, 4, 4, 'Giao hàng sớm hơn dự kiến.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
@@ -1199,6 +1292,10 @@ INSERT INTO `reviews` (`id`, `order_id`, `product_id`, `rating`, `content`, `sta
 (85, 3, 17, 5, 'Chất lượng tuyệt vời.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
 (86, 13, 13, 5, 'Rất đáng tiền.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
 (87, 9, 3, 4, 'Form chuẩn, đẹp.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
+<<<<<<< HEAD
+=======
+(88, 9, 19, 2, 'Cần cải thiện vải.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
+>>>>>>> origin/phong
 (89, 14, 15, 3, 'Tạm ổn.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
 (90, 14, 9, 5, 'Shop hỗ trợ nhanh.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
 (91, 14, 6, 4, 'Mặc thoải mái.', 1, '2025-11-06 01:56:07', '2025-11-06 01:56:07'),
@@ -1258,9 +1355,13 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+<<<<<<< HEAD
 ('3FLg20VpfJSl3nzuxiW5iez646e59462GpfDBeuD', 12, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiTUdMcUs5S0xvT09jbW9aUU5DRkNkZktWQXlKbU5vZE50U2FRSFZrQyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM2OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYWRtaW4vcHJvZHVjdHMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUyOiJsb2dpbl9hZG1pbl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjEyO30=', 1764924068),
 ('f7nYIq9YF2W945bCaYII2HWdyXf2ouK0xJtSNgdT', 13, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo5OntzOjY6Il90b2tlbiI7czo0MDoiYXV3aHFWMkNhSDFFUVhjSGdDTlpRbFNIQVhiOUliTXRVd3NValRkNyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyODoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL29yZGVycyI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjMwOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvcHJvZHVjdHMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxMztzOjE3OiJwcm9kdWN0X3ZpZXdlZF8xOSI7YjoxO3M6MTM6InBlbmRpbmdfb3JkZXIiO2E6Njp7czo4OiJvcmRlcl9pZCI7aToxOTc7czoxMDoib3JkZXJfY29kZSI7czoyOToiT1JEXzE3OTA0ODcyOTc4MjYwMF9BMEY4MTRfMTMiO3M6MTE6InRvdGFsQW1vdW50IjtkOjk4MDAwMDtzOjk6Im9yZGVySW5mbyI7czo0OToiVGhhbmggdG9hbiBkb24gaGFuZyBPUkRfMTc5MDQ4NzI5NzgyNjAwX0EwRjgxNF8xMyI7czoxNDoicGF5bWVudF9tZXRob2QiO3M6NToidm5wYXkiO3M6MTA6InZucGF5X2RhdGEiO2E6NDp7czo3OiJzdWNjZXNzIjtiOjE7czoxMToicGF5bWVudF91cmwiO3M6NTc3OiJodHRwczovL3NhbmRib3gudm5wYXltZW50LnZuL3BheW1lbnR2Mi92cGNwYXkuaHRtbD92bnBfQW1vdW50PTk4MDAwMDAwJnZucF9Db21tYW5kPXBheSZ2bnBfQ3JlYXRlRGF0ZT0yMDI1MTIwNTE0MjEyNiZ2bnBfQ3VyckNvZGU9Vk5EJnZucF9FeHBpcmVEYXRlPTIwMjUxMjA1MTQzNjI2JnZucF9JcEFkZHI9MTI3LjAuMC4xJnZucF9Mb2NhbGU9dm4mdm5wX09yZGVySW5mbz1UaGFuaCt0b2FuK2RvbitoYW5nK09SRF8xNzkwNDg3Mjk3ODI2MDBfQTBGODE0XzEzJnZucF9PcmRlclR5cGU9b3RoZXImdm5wX1JldHVyblVybD1odHRwJTNBJTJGJTJGMTI3LjAuMC4xJTNBODAwMCUyRnBheW1lbnQlMkZ2bnBheSUyRnJldHVybiZ2bnBfVG1uQ29kZT1IWTdSNllYMyZ2bnBfVHhuUmVmPU9SRF8xNzkwNDg3Mjk3ODI2MDBfQTBGODE0XzEzJnZucF9WZXJzaW9uPTIuMS4wJnZucF9TZWN1cmVIYXNoPTEzMzc5YWVkN2ZmMGUzZmMzYmUzMGExMjk2ZGUyNDVhYWQ2NTJmZDA0ZTI1NTk2MmQyNjJjZmEzZDZhYTZlZWM2MjAzMTdiMjg0ODllMjRjYWM1MGQ1NzQ3MmExYTU5NzZkMDAyYTAxOGQ2OGQ1YWViMTgxYWM0NTk2NDNkN2QzIjtzOjg6Im9yZGVyX2lkIjtzOjI5OiJPUkRfMTc5MDQ4NzI5NzgyNjAwX0EwRjgxNF8xMyI7czo2OiJhbW91bnQiO2Q6OTgwMDAwO319czoxNzoicHJvZHVjdF92aWV3ZWRfMjAiO2I6MTtzOjQ6ImNhcnQiO2E6Mzp7aTozNjthOjEwOntzOjEwOiJ2YXJpYW50X2lkIjtpOjM2O3M6MTA6InByb2R1Y3RfaWQiO2k6MTk7czo0OiJuYW1lIjtzOjI3OiLDgW8ga2hvw6FjIG7hu68gZm9ybSBy4buZbmciO3M6NToiY29sb3IiO3M6MjoiQmUiO3M6NDoic2l6ZSI7czo1OiJTbWFsbCI7czo1OiJwcmljZSI7ZDoyOTAwMDA7czo4OiJxdWFudGl0eSI7aToxO3M6NzoibWF4X3F0eSI7aTo3NTtzOjU6ImltYWdlIjtzOjU1OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvc3RvcmFnZS9wcm9kdWN0cy92YXJpYW50X2JlX20uanBnIjtzOjQ6InNsdWciO047fWk6Mzc7YToxMDp7czoxMDoidmFyaWFudF9pZCI7aTozNztzOjEwOiJwcm9kdWN0X2lkIjtpOjE5O3M6NDoibmFtZSI7czoyNzoiw4FvIGtob8OhYyBu4buvIGZvcm0gcuG7mW5nIjtzOjU6ImNvbG9yIjtzOjI6IkJlIjtzOjQ6InNpemUiO3M6NjoiTWVkaXVtIjtzOjU6InByaWNlIjtkOjM0MDAwMDtzOjg6InF1YW50aXR5IjtpOjE7czo3OiJtYXhfcXR5IjtpOjEwO3M6NToiaW1hZ2UiO3M6NDQ6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9pbWFnZXMvcGxhY2Vob2xkZXIucG5nIjtzOjQ6InNsdWciO047fWk6MTk7YToxMDp7czoxMDoidmFyaWFudF9pZCI7aToxOTtzOjEwOiJwcm9kdWN0X2lkIjtpOjE5O3M6NDoibmFtZSI7czoyNzoiw4FvIGtob8OhYyBu4buvIGZvcm0gcuG7mW5nIjtzOjU6ImNvbG9yIjtzOjQ6IlhhbmgiO3M6NDoic2l6ZSI7czoxMToiRXh0cmEgTGFyZ2UiO3M6NToicHJpY2UiO2Q6MzUwMDAwO3M6ODoicXVhbnRpdHkiO2k6MTtzOjc6Im1heF9xdHkiO2k6NDY5O3M6NToiaW1hZ2UiO3M6Mzg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zdG9yYWdlL3Byb2R1Y3RzIjtzOjQ6InNsdWciO047fX19', 1764923952),
 ('O7wVU4JFf1zXgsS3PRViFMKMKUTVtSTqlwVoo3px', 12, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWXJjcTVqT0xYdVJCOHJsUzFrcEp2dFFEbThoVFhWQ0NmT3FTbXVMdCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9wcm9kdWN0cyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTI6ImxvZ2luX2FkbWluXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTI7fQ==', 1764921464);
+=======
+('Sc35MZv7zA8yeA9JpGOE02VN5SHjlRYQ91nuA0Mx', 12, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiZ3RqQ3Q3VXBoSEt1RVY2U01CNUR5UVdnbUFoM09lTFRETEgwSDZyYiI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MTk6Imh0dHA6Ly9kYXRuXzA5LnRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjEzOiJwZW5kaW5nX29yZGVyIjthOjQ6e3M6Nzoib3JkZXJJZCI7czoxOToiT1JERVJfMTc2MzQ3NjY5Nl8xMiI7czoxMToidG90YWxBbW91bnQiO2Q6MzUwMDAwO3M6OToib3JkZXJJbmZvIjtzOjM5OiJUaGFuaCB0b2FuIGRvbiBoYW5nIE9SREVSXzE3NjM0NzY2OTZfMTIiO3M6MTQ6InBheW1lbnRfbWV0aG9kIjtzOjM6ImF0bSI7fX0=', 1763476753);
+>>>>>>> origin/phong
 
 -- --------------------------------------------------------
 
@@ -1360,6 +1461,7 @@ INSERT INTO `users` (`id`, `role_id`, `ranking_id`, `image`, `username`, `name`,
 (8, 2, 1, NULL, NULL, 'abcccc', 'a@gmail.com', NULL, '$2y$12$.q3Ycg24XybMIF.5xy9KoelHSZFh6qhLYflCGAPIyu.l414lITBni', NULL, 1, NULL, NULL, '2025-10-22 14:08:57', '2025-11-11 00:49:09', 0, NULL),
 (9, 1, 1, NULL, NULL, 'test', 'test@gmail.com', NULL, '$2y$12$.DUpHvFrmB3f61zPNJXP6u9mVK.JFe1fbHFo7OcsjAPHMYQXow/r6', NULL, 1, NULL, NULL, '2025-10-22 14:11:34', '2025-11-11 01:28:19', 0, NULL),
 (11, 2, NULL, NULL, NULL, 'Nguyễn Quang Huân', 'huan1@gmail.com', NULL, '$2y$12$XSbW2v/kK99Y2reC4UnVpu50F.M7SoMF6xeuUOeXtylVXh5.vRizS', NULL, 1, NULL, NULL, '2025-10-27 12:26:11', '2025-11-11 01:28:49', 0, NULL),
+<<<<<<< HEAD
 (12, 1, 1, 'avatars/a2OCQN2ReiB68jdFxXJJMAM8m3U9etdAsNjd2RSZ.gif', 'HoangHung04', 'Hoàng Văn Hùng', 'hungdz8975@gmail.com', '0369573472', '$2y$12$DRBPxZ4RWmXhSM96HQ230u04IJ9vzHEtunnSgrT3pwHJs1MeqfAbO', '66 Ng. 132 Đ. Cầu Diễn, Nguyên Xá, Bắc Từ Liêm, Hà Nội, Việt Nam', 1, NULL, 'XA3yqOndQpb4nVBFPhUmJ3cEz06E7tfFaE0MsyuOTzK2bfEnDkbBAHQvgHoJ', '2025-11-01 11:06:44', '2025-11-03 00:42:17', 0, NULL),
 (13, 2, 1, NULL, NULL, 'Hoàng Hùng', 'Hoanghung04.work@gmail.com', NULL, '$2y$12$T/8SbwFxLF5X9T5X/OGkJOU4f7uQfcgADRheMKM2pPwlXgEfeUM2y', NULL, 1, NULL, NULL, '2025-11-18 23:59:56', '2025-11-18 23:59:56', 0, NULL),
 (14, 2, 1, NULL, NULL, 'Hoàng Hùng', 'hungdz1888@gmail.com', NULL, '$2y$12$cwylvpxvGKFusSwSDawSDuqG8/KhKd5NYj41x2WRlH4PU3mRqg/G.', NULL, 1, NULL, NULL, '2025-12-05 02:31:38', '2025-12-05 02:31:38', 0, NULL);
@@ -1392,6 +1494,9 @@ CREATE TABLE `user_addresses` (
 INSERT INTO `user_addresses` (`id`, `user_id`, `name`, `phone`, `address`, `province`, `district`, `ward`, `is_default`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 13, 'Hoàng Hùng', '0369573472', '123', 'Hà Nội', 'Bắc Từ Liêm', 'Minh Khai', 1, '2025-12-04 11:12:39', '2025-12-04 11:12:39', NULL),
 (2, 14, 'h', '0', '1', '2', '2', '2', 1, '2025-12-04 19:32:34', '2025-12-04 19:32:34', NULL);
+=======
+(12, 1, 1, 'avatars/a2OCQN2ReiB68jdFxXJJMAM8m3U9etdAsNjd2RSZ.gif', 'HoangHung04', 'Hoàng Văn Hùng', 'hungdz8975@gmail.com', '0369573472', '$2y$12$DRBPxZ4RWmXhSM96HQ230u04IJ9vzHEtunnSgrT3pwHJs1MeqfAbO', '66 Ng. 132 Đ. Cầu Diễn, Nguyên Xá, Bắc Từ Liêm, Hà Nội, Việt Nam', 1, NULL, 'z5gUubRK0KB4ifowDnIJm67PluKSThQliEi57MHdhUMEYYQP7mq1PBZgsfjG', '2025-11-01 11:06:44', '2025-11-03 00:42:17', 0, NULL);
+>>>>>>> origin/phong
 
 -- --------------------------------------------------------
 
@@ -1449,7 +1554,11 @@ INSERT INTO `wishlists` (`id`, `user_id`, `product_id`, `created_at`, `updated_a
 (3, 1, 6, '2025-10-27 02:10:26', '2025-10-27 02:10:26'),
 (4, 1, 4, '2025-10-27 02:10:30', '2025-10-27 02:10:30'),
 (5, 1, 14, '2025-10-27 02:10:37', '2025-10-27 02:10:37'),
+<<<<<<< HEAD
 (16, 12, 1, '2025-11-28 16:22:49', '2025-11-28 16:22:49');
+=======
+(12, 12, 1, '2025-11-18 12:01:41', '2025-11-18 12:01:41');
+>>>>>>> origin/phong
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -1648,6 +1757,7 @@ ALTER TABLE `order_statuses`
   ADD UNIQUE KEY `name` (`name`);
 
 --
+<<<<<<< HEAD
 -- Chỉ mục cho bảng `order_status_logs`
 --
 ALTER TABLE `order_status_logs`
@@ -1656,6 +1766,8 @@ ALTER TABLE `order_status_logs`
   ADD KEY `order_status_id` (`order_status_id`);
 
 --
+=======
+>>>>>>> origin/phong
 -- Chỉ mục cho bảng `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
@@ -1770,6 +1882,7 @@ ALTER TABLE `users`
   ADD KEY `fk_users_ranking` (`ranking_id`);
 
 --
+<<<<<<< HEAD
 -- Chỉ mục cho bảng `user_addresses`
 --
 ALTER TABLE `user_addresses`
@@ -1777,6 +1890,8 @@ ALTER TABLE `user_addresses`
   ADD KEY `user_id` (`user_id`);
 
 --
+=======
+>>>>>>> origin/phong
 -- Chỉ mục cho bảng `vouchers`
 --
 ALTER TABLE `vouchers`
@@ -1907,13 +2022,21 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT cho bảng `orders`
 --
 ALTER TABLE `orders`
+<<<<<<< HEAD
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
+=======
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+>>>>>>> origin/phong
 
 --
 -- AUTO_INCREMENT cho bảng `order_details`
 --
 ALTER TABLE `order_details`
+<<<<<<< HEAD
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
+=======
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+>>>>>>> origin/phong
 
 --
 -- AUTO_INCREMENT cho bảng `order_statuses`
@@ -1922,6 +2045,7 @@ ALTER TABLE `order_statuses`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+<<<<<<< HEAD
 -- AUTO_INCREMENT cho bảng `order_status_logs`
 --
 ALTER TABLE `order_status_logs`
@@ -1932,6 +2056,12 @@ ALTER TABLE `order_status_logs`
 --
 ALTER TABLE `payments`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+=======
+-- AUTO_INCREMENT cho bảng `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+>>>>>>> origin/phong
 
 --
 -- AUTO_INCREMENT cho bảng `payment_methods`
@@ -2003,6 +2133,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
+<<<<<<< HEAD
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
@@ -2010,6 +2141,9 @@ ALTER TABLE `users`
 --
 ALTER TABLE `user_addresses`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+=======
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+>>>>>>> origin/phong
 
 --
 -- AUTO_INCREMENT cho bảng `vouchers`
@@ -2021,7 +2155,11 @@ ALTER TABLE `vouchers`
 -- AUTO_INCREMENT cho bảng `wishlists`
 --
 ALTER TABLE `wishlists`
+<<<<<<< HEAD
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+=======
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+>>>>>>> origin/phong
 
 --
 -- Ràng buộc đối với các bảng kết xuất
@@ -2113,8 +2251,13 @@ ALTER TABLE `notifications`
 -- Ràng buộc cho bảng `orders`
 --
 ALTER TABLE `orders`
+<<<<<<< HEAD
   ADD CONSTRAINT `fk_orders_order_status` FOREIGN KEY (`order_status_id`) REFERENCES `order_statuses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_orders_payment_status` FOREIGN KEY (`payment_status_id`) REFERENCES `payment_statuses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+=======
+  ADD CONSTRAINT `fk_orders_order_status` FOREIGN KEY (`order_status_id`) REFERENCES `order_statuses` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_orders_payment_status` FOREIGN KEY (`payment_status_id`) REFERENCES `payment_statuses` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+>>>>>>> origin/phong
   ADD CONSTRAINT `fk_orders_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_orders_voucher` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -2126,6 +2269,7 @@ ALTER TABLE `order_details`
   ADD CONSTRAINT `fk_od_variant` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variants` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
+<<<<<<< HEAD
 -- Ràng buộc cho bảng `order_status_logs`
 --
 ALTER TABLE `order_status_logs`
@@ -2133,6 +2277,8 @@ ALTER TABLE `order_status_logs`
   ADD CONSTRAINT `order_status_logs_ibfk_2` FOREIGN KEY (`order_status_id`) REFERENCES `order_statuses` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
+=======
+>>>>>>> origin/phong
 -- Ràng buộc cho bảng `payments`
 --
 ALTER TABLE `payments`
@@ -2181,12 +2327,15 @@ ALTER TABLE `users`
   ADD CONSTRAINT `fk_users_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
+<<<<<<< HEAD
 -- Ràng buộc cho bảng `user_addresses`
 --
 ALTER TABLE `user_addresses`
   ADD CONSTRAINT `user_addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
+=======
+>>>>>>> origin/phong
 -- Ràng buộc cho bảng `wishlists`
 --
 ALTER TABLE `wishlists`

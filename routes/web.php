@@ -13,6 +13,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AddressController;
 
+
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminProductController;
@@ -151,6 +152,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/account', [AccountController::class, 'index'])->name('account.dashboard');
     Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders');
     Route::get('/account/addresses', [AccountController::class, 'address'])->name('account.addresses');
+
+
     Route::get('/account/profile', [AccountController::class, 'edit'])->name('account.profile');
     Route::post('/account/update', [AccountController::class, 'update'])->name('account.update');
     Route::get('/account/change-password', [AccountController::class, 'changePassword'])->name('account.password');
@@ -216,7 +219,6 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 */
 
 
-
 Route::prefix('admin')
     ->middleware(['auth:admin', 'is_admin'])
     ->name('admin.')
@@ -249,7 +251,9 @@ Route::prefix('admin')
         Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
         Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
         Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
+
         Route::get('products.photoAlbums.destroy', [AdminProductController::class, 'destroyPhotoAlbum'])->name('products.photoAlbums.destroy');
+
         // Voucher
         Route::resource('vouchers', AdminVoucherController::class);
 
@@ -279,6 +283,7 @@ Route::prefix('admin')
         Route::patch('inventory/bulk', [InventoryController::class, 'bulkUpdate'])->name('inventory.bulk');
 
         // 🎨 Quản lý thuộc tính - Màu sắc
+
         // Route::prefix('attributes/colors')->name('attributes.colors.')->group(function () {
         //     Route::get('/', [AdminAttributeController::class, 'colorsIndex'])->name('index');
         //     Route::get('/create', [AdminAttributeController::class, 'colorsCreate'])->name('create');

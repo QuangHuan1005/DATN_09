@@ -13,6 +13,13 @@
             <a href="{{ route('account.addresses') }}">
                 Địa chỉ </a>
         </li>
+<<<<<<< HEAD
+=======
+        <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--payment">
+            <a href="{{ route('account.bank-accounts.index') }}">
+                Thanh toán </a>
+        </li>
+>>>>>>> origin/phong
         <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-account">
             <a href="{{ route('account.profile') }}">
                 Chi tiết tài khoản </a>

@@ -57,7 +57,11 @@
                                 @elseif($type === 'color')
                                 <div class="mb-3">
                                     <label for="color_code" class="form-label">Giá trị</label>
+<<<<<<< HEAD
 <input type="text" class="form-control" id="color_code" name="color_code" 
+=======
+                                    <input type="text" class="form-control" id="color_code" name="color_code" 
+>>>>>>> origin/phong
                                            value="{{ old('color_code', $variant->color_code) }}" 
                                            placeholder="VD: #FF0000, #0000FF">
                                 </div>
@@ -91,4 +95,10 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 @endsection
+=======
+@endsection
+
+
+>>>>>>> origin/phong

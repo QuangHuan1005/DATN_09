@@ -1,8 +1,15 @@
 @extends('admin.master')
+<<<<<<< HEAD
 @section('content')
     <div class="container-fluid">
 
 
+=======
+
+@section('content')
+    <div class="container-fluid">
+
+>>>>>>> origin/phong
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
@@ -42,25 +49,36 @@
                                             <td>
                                                 <div class="form-check ms-1">
                                                     {{-- Dùng $product->id để tạo id duy nhất cho checkbox --}}
+<<<<<<< HEAD
                                                     <input type="checkbox" class="form-check-input"
                                                         id="customCheck_{{ $product->id }}">
                                                     <label class="form-check-label"
                                                         for="customCheck_{{ $product->id }}">&nbsp;</label>
+=======
+                                                    <input type="checkbox" class="form-check-input" id="customCheck_{{ $product->id }}">
+                                                    <label class="form-check-label" for="customCheck_{{ $product->id }}">&nbsp;</label>
+>>>>>>> origin/phong
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center gap-2">
                                                     <div
                                                         class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
+<<<<<<< HEAD
                                                         {{-- @foreach ($product->photoAlbums as $img)
                                                             <img src="{{ asset('storage/' . $img->image) }}" class="avatar-md">
                                                         @endforeach --}}
                                                         {{-- @if ($product->photoAlbum)
                                                             <img src="{{ asset('storage/' . $photoAlbum->image) }}"
+=======
+                                                        @if ($product->variants->isNotEmpty())
+                                                            <img src="{{ asset('storage/' . $product->variants->first()->image) }}"
+>>>>>>> origin/phong
                                                                 alt="Ảnh Sản Phẩm" class="avatar-md">
                                                         @else
                                                             <img src="{{ asset('images/no-image.png') }}" alt="Không có ảnh"
                                                                 class="avatar-md">
+<<<<<<< HEAD
                                                         @endif --}}
                                                         @if ($product->photoAlbums->isNotEmpty())
                                                             <img src="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"alt="Ảnh Sản Phẩm"
@@ -77,6 +95,14 @@
                                                         <a href="{{ route('admin.products.show', $product->id) }}"
                                                             class="text-dark fw-medium fs-15">{{ \Illuminate\Support\Str::limit($product->name, 30) }}
                                                         </a>
+=======
+                                                        @endif
+
+                                                    </div>
+                                                    <div>
+                                                        <a href="{{ route('admin.products.show', $product->id) }}"
+                                                            class="text-dark fw-medium fs-15">{{ $product->name }}</a>
+>>>>>>> origin/phong
                                                         <p class="text-muted mb-0 mt-1 fs-13"><span>Kích cỡ: </span>
                                                             @if ($product->variants->isNotEmpty())
                                                                 {{ $product->variants->pluck('size.name')->unique()->implode(', ') }}
@@ -87,7 +113,10 @@
                                                     </div>
                                                 </div>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
                                             </td>
                                             <td>
                                                 @php
@@ -95,7 +124,10 @@
                                                     $minPrice = $product->variants->min('price');
                                                 @endphp
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
                                                 @if ($minSale > 0)
                                                     {{ number_format($minSale, 0, ',', '.') }}₫
                                                 @elseif ($minPrice > 0)
@@ -106,13 +138,17 @@
                                             </td>
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/phong
                                             <td>
                                                 @php
                                                     $totalQuantity = $product->variants->sum('quantity');
                                                     // LẤY DỮ LIỆU THỰC TẾ: Sử dụng Accessor (hoặc thuộc tính ảo order_details_sum_quantity)
                                                     // Nếu dùng Accessor: $product->sold_count
+<<<<<<< HEAD
                                                     // Nếu dùng withSum trong Controller:
                                                     $soldCount = $product->order_details_sum_quantity ?? 0;
                                                 @endphp
@@ -128,30 +164,62 @@
                                             <td> {{ $product->category->name ?? 'Chưa phân loại' }}</td>
 
                                             <td>
+=======
+                                                    // Nếu dùng withSum trong Controller: 
+                                                    $soldCount = $product->order_details_sum_quantity ?? 0; 
+                                                @endphp
+                                                
+                                                <p class="mb-1 text-muted"><span class="text-dark fw-medium">{{ number_format($totalQuantity, 0, ',', '.') }} Sản phẩm</span>
+                                                    còn lại</p> 
+                                                <p class="mb-0 text-muted">{{ number_format($soldCount, 0, ',', '.') }} Đã bán</p> 
+                                            </td>
+                                            
+                                            <td> {{ $product->category->name ?? 'Chưa phân loại' }}</td>
+                                            
+                                            <td> 
+>>>>>>> origin/phong
                                                 @php
                                                     // LẤY DỮ LIỆU THỰC TẾ: Sử dụng Accessor (hoặc thuộc tính ảo reviews_avg_rating)
                                                     // Nếu dùng Accessor: $product->average_rating
                                                     $avgRating = number_format($product->reviews_avg_rating ?? 0, 1);
+<<<<<<< HEAD
 
                                                     // Nếu dùng Accessor: $product->review_count
                                                     $reviewCount = $product->reviews_count ?? 0;
                                                 @endphp
 
+=======
+                                                    
+                                                    // Nếu dùng Accessor: $product->review_count
+                                                    $reviewCount = $product->reviews_count ?? 0;
+                                                @endphp
+                                                
+>>>>>>> origin/phong
                                                 <span class="badge p-1 bg-light text-dark fs-12 me-1">
                                                     {{-- Chỉ hiển thị ngôi sao nếu có đánh giá --}}
                                                     @if ($reviewCount > 0)
                                                         <i class="bx bxs-star align-text-top fs-14 text-warning me-1"></i>
                                                     @endif
                                                     {{ $avgRating }}
+<<<<<<< HEAD
                                                 </span>
+=======
+                                                </span> 
+>>>>>>> origin/phong
                                                 {{ $reviewCount }} Lượt đánh giá
                                             </td>
                                             <td>
                                                 @if (!$product->trashed())
                                                     <a href="{{ route('admin.products.variants.product', $product->id) }}"
+<<<<<<< HEAD
                                                         class="btn btn-soft-success btn-sm" title="Quản lý biến thể">
                                                         <iconify-icon icon="solar:color-swatch-broken"
                                                             class="align-middle fs-18"></iconify-icon>
+=======
+                                                        class="btn btn-soft-success btn-sm"
+                                                        title="Quản lý biến thể">
+                                                        <iconify-icon icon="solar:color-swatch-broken" class="align-middle fs-18"></iconify-icon>
+>>>>>>> origin/phong
                                                     </a>
                                                     <a href="{{ route('admin.products.show', $product->id) }}"
                                                         class="btn btn-soft-info btn-sm" title="Xem chi tiết"><iconify-icon
@@ -162,7 +230,10 @@
                                                             icon="solar:pen-2-broken"
                                                             class="align-middle fs-18"></iconify-icon></a>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
                                                     <form action="{{ route('admin.products.destroy', $product->id) }}"
                                                         method="POST" style="display:inline-block;">
                                                         @csrf
@@ -196,17 +267,27 @@
                                                 @endif
                                             </td>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
                                         </tr>
                                     @endforeach
 
 
+<<<<<<< HEAD
 
 
                                 </tbody>
                             </table>
                         </div>
                     </div>
+=======
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+>>>>>>> origin/phong
                     <div class="card-footer border-top">
                         <nav aria-label="Page navigation example">
                             {{ $products->links() }}
@@ -215,9 +296,16 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
 
         </div>
 
 
     </div>
 @endsection
+=======
+        </div>
+
+    </div>
+@endsection
+>>>>>>> origin/phong

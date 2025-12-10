@@ -81,7 +81,6 @@
                                                             data-columns="{{ min(6, max($images ?? [], 6)) ?? null }}"
                                                             style="opacity: 0; transition: opacity .25s ease-in-out;">
                                                             <div class="woocommerce-product-gallery__wrapper">
-                                                                
                                                                 @foreach ($images as $index => $img)
                                                                     @php
                                                                         $imgUrl = asset('storage/' . $img);
@@ -1504,7 +1503,10 @@
                             });
                         </script>
                     @endif
+<<<<<<< HEAD
                     
+=======
+>>>>>>> origin/phong
 
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

@@ -1,9 +1,14 @@
 <?php
 
+<<<<<<< HEAD
 
 namespace App\Http\Controllers\Admin;
 
 
+=======
+namespace App\Http\Controllers\Admin;
+
+>>>>>>> origin/phong
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
@@ -13,13 +18,17 @@ use App\Models\Color;
 use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+<<<<<<< HEAD
 use Illuminate\Support\Str;
+=======
+>>>>>>> origin/phong
 
 class AdminProductController extends Controller
 {
     // Hiển thị danh sách sản phẩm
     public function index(Request $request)
     {
+<<<<<<< HEAD
         $query = Product::with(['photoAlbums', 'category', 'variants'])
             ->withTrashed()
             ->orderBy('id', 'desc');
@@ -28,12 +37,21 @@ class AdminProductController extends Controller
         if ($request->filled('keyword')) {
             $keyword = $request->keyword;
 
+=======
+        $query = Product::with(['category', 'variants'])
+            ->withTrashed()
+            ->orderBy('id', 'desc');
+
+        if ($request->has('keyword') && $request->keyword != '') {
+            $keyword = $request->keyword;
+>>>>>>> origin/phong
             $query->where(function ($q) use ($keyword) {
                 $q->where('name', 'like', '%' . $keyword . '%')
                     ->orWhere('product_code', 'like', '%' . $keyword . '%');
             });
         }
 
+<<<<<<< HEAD
 
         // ✅ Phân trang
         $products = $query->paginate(5);
@@ -42,6 +60,18 @@ class AdminProductController extends Controller
         if ($request->filled('keyword')) {
             $products->appends(['keyword' => $request->keyword]);
         }
+=======
+        $products = Product::with(['category', 'variants'])
+            ->withTrashed()->orderBy('id', 'desc')
+            ->paginate(5);
+
+        if ($request->filled('keyword')) {
+            $products = $query->paginate(5);
+            $products->appends(['keyword' => $request->keyword]);
+        }
+        
+
+>>>>>>> origin/phong
 
         return view(
             'admin.products.index',
@@ -50,8 +80,11 @@ class AdminProductController extends Controller
         );
     }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/phong
     // Form tạo sản phẩm mới
     public function create()
     {
@@ -63,6 +96,7 @@ class AdminProductController extends Controller
         );
     }
 
+<<<<<<< HEAD
 
     // Lưu sản phẩm mới
     // public function store(Request $request)
@@ -233,6 +267,38 @@ class AdminProductController extends Controller
 
 
 
+=======
+    // Lưu sản phẩm mới
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'category_id'  => 'required|exists:categories,id',
+            'product_code' => 'required|unique:products,product_code',
+            'name'         => 'required|string|max:255',
+            'description'  => 'nullable|string',
+            'image'        => 'nullable|image|max:2048',
+        ]);
+
+        $product = Product::create([
+            'category_id'  => $validated['category_id'],
+            'product_code' => $validated['product_code'],
+            'name'         => $validated['name'],
+            'description'  => $validated['description'] ?? null,
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            ProductPhotoAlbum::create([
+                'product_id' => $product->id,
+                'image'      => $path,
+            ]);
+        }
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Thêm sản phẩm thành công!');
+    }
+
+>>>>>>> origin/phong
     // Xem chi tiết sản phẩm
     public function show($id)
     {
@@ -245,6 +311,7 @@ class AdminProductController extends Controller
     }
 
 
+<<<<<<< HEAD
 
 
     // Form chỉnh sửa sản phẩm
@@ -254,6 +321,12 @@ class AdminProductController extends Controller
             ->with(['photoAlbums', 'variants.color', 'variants.size'])
             ->findOrFail($product->id);
 
+=======
+    // Form chỉnh sửa sản phẩm
+    public function edit(Product $product)
+    {
+        $product = Product::withTrashed()->findOrFail($product->id);
+>>>>>>> origin/phong
         $categories = Category::all();
 
         return view(
@@ -263,6 +336,7 @@ class AdminProductController extends Controller
         );
     }
 
+<<<<<<< HEAD
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
@@ -278,6 +352,20 @@ class AdminProductController extends Controller
         ]);
 
         /* ✅ 1. UPDATE SẢN PHẨM */
+=======
+    // Cập nhật sản phẩm
+    public function update(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'material'    => 'nullable|string|max:150',
+            'onpage'      => 'required|boolean',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+>>>>>>> origin/phong
         $product->update([
             'category_id' => $validated['category_id'],
             'name'        => $validated['name'],
@@ -286,6 +374,7 @@ class AdminProductController extends Controller
             'onpage'      => $validated['onpage'],
         ]);
 
+<<<<<<< HEAD
         /* ✅ 2. NẾU CÓ UPLOAD ALBUM MỚI → CHỈ ADD THÊM (KHÔNG XOÁ HẾT) */
         if ($request->hasFile('album_images')) {
 
@@ -314,6 +403,29 @@ class AdminProductController extends Controller
 
 
 
+=======
+        if ($request->hasFile('image')) {
+            // Xóa ảnh cũ
+            foreach ($product->photoAlbums as $album) {
+                if (Storage::disk('public')->exists($album->image)) {
+                    Storage::disk('public')->delete($album->image);
+                }
+                $album->delete();
+            }
+
+            // Lưu ảnh mới
+            $path = $request->file('image')->store('products', 'public');
+            ProductPhotoAlbum::create([
+                'product_id' => $product->id,
+                'image'      => $path,
+            ]);
+        }
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Cập nhật sản phẩm thành công!');
+    }
+
+>>>>>>> origin/phong
     // Ẩn sản phẩm (soft delete)
     public function destroy($id)
     {
@@ -322,12 +434,18 @@ class AdminProductController extends Controller
         $product->save();
         $product->delete();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         return redirect()->route('admin.products.index')
             ->with('success', 'Sản phẩm đã được ẩn.');
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
     // Khôi phục sản phẩm đã ẩn
     public function restore($id)
     {
@@ -336,7 +454,10 @@ class AdminProductController extends Controller
         $product->onpage = 1;
         $product->save();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         return redirect()->route('admin.products.index')
             ->with('success', 'Sản phẩm đã được hiển thị lại.');
     }
@@ -347,13 +468,19 @@ class AdminProductController extends Controller
     }
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/phong
     /*
      * Phần quản lý biến thể sản phẩm
      */
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
     // Danh sách tất cả biến thể sản phẩm
     public function variants()
     {
@@ -362,11 +489,17 @@ class AdminProductController extends Controller
             ->orderBy('id', 'asc')
             ->get();
 
+<<<<<<< HEAD
 
         return view('admin.products.variants-index', compact('variants'));
     }
 
 
+=======
+        return view('admin.products.variants-index', compact('variants'));
+    }
+
+>>>>>>> origin/phong
     // Danh sách biến thể của 1 sản phẩm cụ thể
     public function productVariants($productId)
     {
@@ -375,6 +508,7 @@ class AdminProductController extends Controller
             ->with(['color', 'size'])
             ->orderBy('id', 'asc')
             ->get();
+<<<<<<< HEAD
 
         $colors = Color::where('status', 'active')->get();
         $sizes = Size::where('status', 'active')->get();
@@ -384,6 +518,15 @@ class AdminProductController extends Controller
     }
 
 
+=======
+        
+        $colors = Color::where('status', 'active')->get();
+        $sizes = Size::where('status', 'active')->get();
+
+        return view('admin.products.variants-manager', compact('product', 'variants', 'colors', 'sizes'));
+    }
+
+>>>>>>> origin/phong
     // Form tạo biến thể mới
     public function createVariant($productId)
     {
@@ -391,11 +534,17 @@ class AdminProductController extends Controller
         $colors = Color::all();
         $sizes = Size::all();
 
+<<<<<<< HEAD
 
         return view('admin.products.create-variant', compact('product', 'colors', 'sizes'));
     }
 
 
+=======
+        return view('admin.products.create-variant', compact('product', 'colors', 'sizes'));
+    }
+
+>>>>>>> origin/phong
     // Lưu biến thể mới (Thủ công - 1 biến thể)
     public function storeVariant(Request $request, $productId)
     {
@@ -407,6 +556,7 @@ class AdminProductController extends Controller
             'quantity' => 'required|integer|min:0',
             'status' => 'required|in:active,inactive',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+<<<<<<< HEAD
         ], [
             // Thông báo lỗi tùy chỉnh (Tiếng Việt)
 
@@ -449,18 +599,28 @@ class AdminProductController extends Controller
         ]);
 
 
+=======
+        ]);
+
+>>>>>>> origin/phong
         // Kiểm tra xem biến thể này đã tồn tại chưa
         $existing = ProductVariant::where('product_id', $productId)
             ->where('color_id', $validated['color_id'])
             ->where('size_id', $validated['size_id'])
             ->first();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         if ($existing) {
             return back()->with('error', 'Biến thể này đã tồn tại!');
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         $variant = new ProductVariant([
             'product_id' => $productId,
             'color_id' => $validated['color_id'],
@@ -471,21 +631,32 @@ class AdminProductController extends Controller
             'status' => $validated['status'] === 'active' ? 1 : 0,
         ]);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('product_variants', 'public');
             $variant->image = $path;
         }
 
+<<<<<<< HEAD
 
         $variant->save();
 
 
+=======
+        $variant->save();
+
+>>>>>>> origin/phong
         return redirect()->route('admin.products.variants.product', $productId)
             ->with('success', 'Thêm biến thể sản phẩm thành công!');
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
     // Trộn biến thể tự động (Tạo nhiều biến thể cùng lúc)
     public function bulkStoreVariants(Request $request, $productId)
     {
@@ -502,13 +673,19 @@ class AdminProductController extends Controller
             'variants.*.quantity.required' => 'Vui lòng nhập số lượng cho tất cả các biến thể',
         ]);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         $product = Product::findOrFail($productId);
         $createdCount = 0;
         $skippedCount = 0;
         $variants = [];
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         // Duyệt qua từng biến thể được gửi lên
         foreach ($validated['variants'] as $variantData) {
             // Kiểm tra xem biến thể này đã tồn tại chưa
@@ -517,13 +694,19 @@ class AdminProductController extends Controller
                 ->where('size_id', $variantData['size_id'])
                 ->first();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
             if ($existing) {
                 $skippedCount++;
                 continue;
             }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
             // Tạo biến thể mới
             $variant = ProductVariant::create([
                 'product_id' => $productId,
@@ -535,30 +718,46 @@ class AdminProductController extends Controller
                 'status' => 1, // 1 = active
             ]);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
             $variants[] = $variant;
             $createdCount++;
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         $message = "Đã tạo {$createdCount} biến thể mới!";
         if ($skippedCount > 0) {
             $message .= " Bỏ qua {$skippedCount} biến thể đã tồn tại.";
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         return redirect()->route('admin.products.variants.product', $productId)
             ->with('success', $message);
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
     // Form sửa biến thể
     public function editVariant($variantId)
     {
         // Kiểm tra xem đây là Size hay Color dựa trên route
         $request = request();
         $type = null;
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/phong
         // Lấy type từ referer URL
         if ($request->header('referer')) {
             $referer = $request->header('referer');
@@ -568,7 +767,11 @@ class AdminProductController extends Controller
                 $type = 'color';
             }
         }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/phong
         if ($type === 'size') {
             $variant = Size::findOrFail($variantId);
             $typeName = 'Kích thước';
@@ -581,37 +784,61 @@ class AdminProductController extends Controller
             $typeName = 'Biến thể sản phẩm';
         }
 
+<<<<<<< HEAD
 
         return view('admin.products.edit-variant', compact('variant', 'type', 'typeName'));
     }
 
 
+=======
+        return view('admin.products.edit-variant', compact('variant', 'type', 'typeName'));
+    }
+
+>>>>>>> origin/phong
     public function variantsByType(Request $request, $type)
     {
         // Xác định loại biến thể và tên hiển thị
         $typeName = $type === 'size' ? 'Kích thước' : 'Màu sắc';
+<<<<<<< HEAD
 
         // Lấy dữ liệu từ bảng colors hoặc sizes
         if ($type === 'size') {
             $variants = Size::query();
         } elseif ($type === 'color') {
             $variants = Color::query();
+=======
+        
+        // Lấy dữ liệu từ bảng colors hoặc sizes
+        if ($type === 'size') {
+            $variants = \App\Models\Size::query();
+        } elseif ($type === 'color') {
+            $variants = \App\Models\Color::query();
+>>>>>>> origin/phong
         } else {
             return redirect()->route('admin.products.variants')
                 ->with('error', 'Loại biến thể không hợp lệ');
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         // Tìm kiếm nếu có
         if ($request->has('search') && $request->search) {
             $variants->where('name', 'like', '%' . $request->search . '%');
         }
 
+<<<<<<< HEAD
 
         $variants = $variants->orderBy('created_at', 'desc')
             ->orderBy('id')
             ->get();
 
+=======
+        $variants = $variants->orderBy('created_at', 'desc')
+                            ->orderBy('id')
+                            ->get();
+>>>>>>> origin/phong
 
         // Trả về view danh sách biến thể
         return view('admin.products.variants-list', [
@@ -622,13 +849,20 @@ class AdminProductController extends Controller
     }
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/phong
     // Cập nhật biến thể sản phẩm (ProductVariant)
     public function updateVariant(Request $request, $variantId)
     {
         $variant = ProductVariant::findOrFail($variantId);
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/phong
         $validated = $request->validate([
             'color_id' => 'required|exists:colors,id',
             'size_id' => 'required|exists:sizes,id',
@@ -639,7 +873,10 @@ class AdminProductController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         // Kiểm tra trùng lặp (ngoại trừ chính nó)
         $existing = ProductVariant::where('product_id', $variant->product_id)
             ->where('color_id', $validated['color_id'])
@@ -647,12 +884,18 @@ class AdminProductController extends Controller
             ->where('id', '!=', $variantId)
             ->first();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         if ($existing) {
             return back()->with('error', 'Biến thể này đã tồn tại!');
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         // Cập nhật dữ liệu
         $variant->color_id = $validated['color_id'];
         $variant->size_id = $validated['size_id'];
@@ -661,7 +904,10 @@ class AdminProductController extends Controller
         $variant->quantity = $validated['quantity'];
         $variant->status = $validated['status'];
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
         // Xử lý upload ảnh mới
         if ($request->hasFile('image')) {
             // Xóa ảnh cũ nếu có
@@ -672,22 +918,34 @@ class AdminProductController extends Controller
             $variant->image = $path;
         }
 
+<<<<<<< HEAD
 
         $variant->save();
 
 
+=======
+        $variant->save();
+
+>>>>>>> origin/phong
         return redirect()->route('admin.products.variants.product', $variant->product_id)
             ->with('success', 'Cập nhật biến thể sản phẩm thành công!');
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phong
     // Xóa biến thể
     public function destroyVariant($variantId)
     {
         // Kiểm tra xem đây là Size hay Color dựa trên referer
         $request = request();
         $type = null;
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/phong
         if ($request->header('referer')) {
             $referer = $request->header('referer');
             if (strpos($referer, '/size') !== false) {
@@ -696,7 +954,11 @@ class AdminProductController extends Controller
                 $type = 'color';
             }
         }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/phong
         if ($type === 'size') {
             $variant = Size::findOrFail($variantId);
             $typeName = 'kích thước';
@@ -708,10 +970,15 @@ class AdminProductController extends Controller
                 ->with('error', 'Loại biến thể không hợp lệ');
         }
 
+<<<<<<< HEAD
 
         $variant->delete();
 
 
+=======
+        $variant->delete();
+
+>>>>>>> origin/phong
         return redirect()->route('admin.products.variants.type', $type)
             ->with('success', "Xóa {$typeName} thành công!");
     }
