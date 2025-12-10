@@ -1,7 +1,24 @@
 <?php $__env->startSection('content'); ?>
-
-<?php $__env->startSection('content'); ?>
 <?php
+
+    $statusClass = match($order->order_status_id) {
+        1 => 'status-pending',
+        2 => 'status-confirmed',
+        3 => 'status-shipping',
+        4 => 'status-delivered',
+        5 => 'status-done',
+        6 => 'status-cancel',
+        default => 'status-pending',
+    };
+
+    $payClass = match($order->payment_status_id) {
+        1 => 'pay-unpaid',
+        2 => 'pay-paid',
+        3 => 'pay-refund',
+        default => 'pay-unpaid',
+    };
+
+
     // Trạng thái hiện tại của đơn
     $currentStatus = (int) $order->order_status_id;
 
@@ -12,6 +29,7 @@
         3 => ['label' => 'Đang giao hàng', 'desc' => 'Đơn đang được giao'],
         4 => ['label' => 'Đã giao hàng',    'desc' => 'Hàng đã tới địa chỉ nhận'],
         5 => ['label' => 'Hoàn thành',      'desc' => 'Khách xác nhận đã nhận'],
+         6 => ['label' => 'Đã hủy',        'desc' => 'Đơn hàng đã bị hủy'],
     ];
 
     // Gom log theo trạng thái: [status_id => collection các log]
@@ -33,7 +51,7 @@
 
     // Map trạng thái đơn vào mốc 1..5 trên thanh tiến trình
     $activeStep = match (true) {
-        $statusId === 6 => 1,          // Hủy -> chỉ coi như ở bước 1
+        $statusId === 6 => 6,          // Hủy -> chỉ coi như ở bước 1
         $statusId === 1 => 1,
         $statusId === 2 => 2,
         $statusId === 3 => 3,
@@ -227,18 +245,16 @@
     }
 
     /* ===== Bố cục mới: 2 box dưới thanh trạng thái ===== */
-    .order-info-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin-top: 18px;
-    }
+    .order-info-flex {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
 
-    @media (min-width: 768px) {
-      .order-info-grid {
-        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-      }
-    }
+.order-info-flex .card {
+    flex: 1;              /* mỗi box chiếm 50% */
+}
+
 
     /* Footer: tổng tiền góc phải */
     .order-bottom {
@@ -450,6 +466,30 @@
     .complete-order-overlay.is-open {
       display: flex;
     }
+    .status-badge {
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+strong {
+    font-weight: 700 !important;
+}
+/* Trạng thái đơn hàng */
+.status-pending   { background:#fff3cd; color:#856404; }   /* Chờ xác nhận */
+.status-confirmed { background:#cce5ff; color:#004085; }   /* Đã xác nhận */
+.status-shipping  { background:#ffeeba; color:#856404; }   /* Đang giao */
+.status-delivered { background:#d4edda; color:#155724; }   /* Đã giao */
+.status-done      { background:#d4edda; color:#155724; }   /* Hoàn thành */
+.status-cancel    { background:#f8d7da; color:#721c24; }   /* Hủy */
+
+/* Trạng thái thanh toán */
+.pay-unpaid { background:#f8d7da; color:#721c24; }   /* Chưa thanh toán */
+.pay-paid   { background:#d4edda; color:#155724; }   /* Đã thanh toán */
+.pay-refund { background:#fff3cd; color:#856404; }   /* Hoàn tiền */
+
   </style>
 
   <div class="site-wrapper">
@@ -554,66 +594,152 @@
                                   </button>
                                 </form>
                               <?php endif; ?>
+<?php if($order->cancelable): ?>
+    
+    <button type="button" 
+            class="btn btn-outline-danger" 
+            data-bs-toggle="modal"  
+            data-bs-target="#cancelOrderModal"> Hủy đơn
+    </button>
+<?php endif; ?>
 
-                              <?php if($order->cancelable): ?>
-                                
-                                <form id="cancel-order-form" method="POST" action="<?php echo e(route('orders.cancel', $order->id)); ?>">
-                                  <?php echo csrf_field(); ?>
-                                  <input type="hidden" name="reason" value="Khách yêu cầu hủy">
-                                  <button class="btn-danger-outline" type="button" id="btnOpenCancelModal">Hủy đơn</button>
-                                </form>
-                              <?php endif; ?>
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            <form method="POST" action="<?php echo e(route('orders.cancel', $order->id)); ?>">
+                <?php echo csrf_field(); ?>
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelOrderModalLabel">Xác nhận Yêu cầu Hủy Đơn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Vui lòng nhập **lý do chi tiết** để gửi yêu cầu hủy đơn hàng này. Yêu cầu sẽ được admin xem xét.</p>
+                    
+                    <div class="mb-3">
+                        <label for="cancelReason" class="form-label required">Lý do hủy đơn</label>
+                        
+                        <textarea class="form-control <?php $__errorArgs = ['reason'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" 
+                                  id="cancelReason" 
+                                  name="reason" 
+                                  rows="3" 
+                                  required 
+                                  placeholder="Ví dụ: Đặt nhầm sản phẩm hoặc thay đổi nhu cầu."><?php echo e(old('reason')); ?></textarea>
+                        
+                        
+                        <?php $__errorArgs = ['reason'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback">
+                                <?php echo e($message); ?>
+
+                            </div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-danger">Gửi Yêu Cầu Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
                             </div>
                           </div>
                         </div>
 
                         
-                        <div class="order-info-grid">
-                          
-                          <div class="card">
-                            <div class="card-hd">Đơn hàng</div>
-                            <div class="card-bd">
-                              <div class="sum-row">
-                                <span>Mã đơn</span>
-                                <span>#<?php echo e($order->order_code); ?></span>
-                              </div>
-                              <div class="sum-row">
-                                <span>Trạng thái đơn</span>
-                                <span><?php echo e($statusName); ?></span>
-                              </div>
-                              <div class="sum-row">
-                                <span>Trạng thái thanh toán</span>
-                                <span><?php echo e($order->paymentStatus?->name); ?></span>
-                              </div>
-                              <div class="sum-row">
-                                <span>Phương thức thanh toán</span>
-                                <span><?php echo e($order->payment?->method?->name ?? '—'); ?></span>
-                              </div>
-                              <div class="sum-row">
-                                <span>Thời gian đặt</span>
-                                <span><?php echo e(\Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i')); ?></span>
-                              </div>
-                            </div>
-                          </div>
+                          <div class="order-info-grid">
 
-                          
-                          <div class="card">
-                            <div class="card-hd">Thông tin người nhận</div>
-                            <div class="card-bd">
-                              <address style="margin:0">
-                                <strong><?php echo e($order->name); ?></strong><br>
-                                <?php echo e($order->phone); ?><br>
-                                <?php echo e($order->address); ?><br>
-                                <?php if($order->user?->email): ?>
-                                  <a href="mailto:<?php echo e($order->user->email); ?>"><?php echo e($order->user->email); ?></a>
-                                <?php endif; ?>
-                              </address>
-                              <?php if($order->note): ?>
-                                <div style="margin-top:8px;color:#6b7280">Ghi chú: <?php echo e($order->note); ?></div>
-                              <?php endif; ?>
-                            </div>
-                          </div>
-                        </div>
+    
+   <div class="order-info-flex">
+
+    
+    <div class="card">
+        <div class="card-hd">Đơn hàng</div>
+        <div class="card-bd">
+
+            <div class="sum-row">
+                <span>Mã đơn</span>
+                <span>#<?php echo e($order->order_code); ?></span>
+            </div>
+
+            <div class="sum-row">
+                <span>Trạng thái đơn</span>
+                <span>
+                    <span class="status-badge <?php echo e($statusClass); ?>">
+                        <?php echo e($order->status?->name ?? '—'); ?>
+
+                    </span>
+                </span>
+            </div>
+
+            <div class="sum-row">
+                <span>Trạng thái thanh toán</span>
+                <span>
+                    <span class="status-badge <?php echo e($payClass); ?>">
+                        <?php echo e($order->paymentStatus?->name ?? '—'); ?>
+
+                    </span>
+                </span>
+            </div>
+
+            <div class="sum-row">
+                <span>Phương thức thanh toán</span>
+                <span><?php echo e($order->paymentMethod?->name ?? '—'); ?></span>
+            </div>
+
+            <div class="sum-row">
+                <span>Thời gian đặt</span>
+                <span><?php echo e(\Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i')); ?></span>
+            </div>
+
+        </div>
+    </div>
+
+
+    
+    <div class="card">
+        <div class="card-hd">Thông tin người nhận</div>
+
+        <div class="card-bd pt-2">
+
+            <p class="mb-1"><strong>Họ tên:</strong> <?php echo e($order->name); ?></p>
+            <p class="mb-1"><strong>Điện thoại:</strong> <?php echo e($order->phone); ?></p>
+            <p class="mb-1"><strong>Địa chỉ:</strong> <?php echo e($order->address); ?></p>
+
+            <?php if($order->user?->email): ?>
+                <p class="mb-1">
+                    <strong>Email:</strong>
+                    <a href="mailto:<?php echo e($order->user->email); ?>"><?php echo e($order->user->email); ?></a>
+                </p>
+            <?php endif; ?>
+
+            <?php if($order->note): ?>
+                <p class="mt-2 text-muted"><strong>Ghi chú:</strong> <?php echo e($order->note); ?></p>
+            <?php endif; ?>
+
+        </div>
+    </div>
+
+</div>
+
 
                         
                         <section class="woocommerce-order-details card" style="margin-top:18px">
@@ -664,65 +790,61 @@
                           </div>
                         </section>
 
-                        
-                        <div class="order-bottom">
-                          <div class="order-bottom-left">
-                            <?php if($order->order_status_id == 5): ?>
-                              <div class="woocommerce-message" style="margin-top:14px">
-                                Đơn hàng đã hoàn thành.
-                                <a class="button" href="#">Viết đánh giá</a>
-                              </div>
-                            <?php endif; ?>
-                          </div>
+                    
+<div class="order-bottom">
 
-                          <div class="order-total-card card">
-                            <div class="card-hd">Tổng thanh toán</div>
-                            <div class="card-bd">
-                              <div class="sum-row">
-                                <span>Tạm tính</span>
-                                <span>₫<?php echo e(number_format($calc_subtotal)); ?></span>
-                              </div>
-                              <?php if($calc_shipping_fee > 0): ?>
-                                <div class="sum-row">
-                                  <span>Phí vận chuyển</span>
-                                  <span>₫<?php echo e(number_format($calc_shipping_fee)); ?></span>
-                                </div>
-                              <?php endif; ?>
-                              <?php if($calc_discount > 0): ?>
-                                <div class="sum-row">
-                                  <span>Giảm giá</span>
-                                  <span>-₫<?php echo e(number_format($calc_discount)); ?></span>
-                                </div>
-                              <?php endif; ?>
-                              <?php if($order->voucher): ?>
-                                <div class="sum-row" style="color:#6b7280">
-                                  <span>Voucher</span>
-                                  <span><?php echo e($order->voucher->voucher_code); ?></span>
-                                </div>
-                              <?php endif; ?>
-                              <div class="sum-row">
-                                <span>TT thanh toán</span>
-                                <span><?php echo e($order->paymentStatus?->name); ?></span>
-                              </div>
-                              <div class="sum-row total">
-                                <span>Tổng thanh toán</span>
-                                <span>₫<?php echo e(number_format($calc_total)); ?></span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+    
+    <div class="order-bottom-left">
+        <?php if($order->order_status_id == 5): ?>
+            <div class="woocommerce-message">
+                Đơn hàng đã hoàn thành.
+                <a class="button" href="#">Viết đánh giá</a>
+            </div>
+        <?php endif; ?>
+    </div>
 
-                        
-                        <div class="cancel-order-overlay" id="cancelOrderOverlay">
-                          <div class="cancel-order-modal">
-                            <h3>Hủy đơn hàng</h3>
-                            <p>Bạn chắc chắn muốn hủy đơn này?</p>
-                            <div class="cancel-order-actions">
-                              <button type="button" class="btn-cancel-close" id="btnCancelClose">Không</button>
-                              <button type="button" class="btn-cancel-ok" id="btnCancelOk">Đồng ý</button>
-                            </div>
-                          </div>
-                        </div>
+    
+    <div class="order-total-card card">
+
+        <div class="card-hd">Tổng thanh toán</div>
+
+        <div class="card-bd">
+
+            <div class="sum-row">
+                <span>Tạm tính</span>
+                <span>₫<?php echo e(number_format($calc_subtotal)); ?></span>
+            </div>
+
+            <div class="sum-row">
+                <span>Phí vận chuyển</span>
+                <span>₫<?php echo e(number_format($calc_shipping_fee ?? 0)); ?></span>
+            </div>
+
+            <div class="sum-row">
+                <span>Giảm giá</span>
+                <span>-₫<?php echo e(number_format($calc_discount ?? 0)); ?></span>
+            </div>
+
+            <div class="sum-row">
+                <span>Voucher</span>
+                <span><?php echo e($order->voucher->voucher_code ?? 'Không có'); ?></span>
+            </div>
+
+            <div class="sum-row">
+                <span>Trạng thái thanh toán</span>
+                <span><?php echo e($order->paymentStatus?->name ?? 'Chưa xác định'); ?></span>
+            </div>
+
+            <div class="sum-row total">
+                <span>Tổng thanh toán</span>
+                <span>₫<?php echo e(number_format($calc_total)); ?></span>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
 
                         
                         <div class="complete-order-overlay" id="completeOrderOverlay">
@@ -751,68 +873,53 @@
     </div><!-- .kitify-site-wrapper -->
 
     
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        // ===== HỦY ĐƠN =====
-        const openBtn  = document.getElementById('btnOpenCancelModal');
-        const overlay  = document.getElementById('cancelOrderOverlay');
-        const closeBtn = document.getElementById('btnCancelClose');
-        const okBtn    = document.getElementById('btnCancelOk');
-        const form     = document.getElementById('cancel-order-form');
-
-        if (openBtn && overlay && closeBtn && okBtn && form) {
-          openBtn.addEventListener('click', function () {
-            overlay.classList.add('is-open');
-          });
-
-          closeBtn.addEventListener('click', function () {
-            overlay.classList.remove('is-open');
-          });
-
-          overlay.addEventListener('click', function (e) {
-            if (e.target === overlay) {
-              overlay.classList.remove('is-open');
+   
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // --- Logic cho Modal Hủy Đơn (Sử dụng Bootstrap JS API) ---
+        
+        // Tự động mở lại Modal nếu có lỗi Validation (Lỗi 'reason' từ Controller)
+        <?php if($errors->has('reason')): ?>
+            var modalElement = document.getElementById('cancelOrderModal');
+            // Kiểm tra xem Bootstrap đã được tải chưa
+            if (modalElement && typeof bootstrap !== 'undefined') {
+                var cancelModal = new bootstrap.Modal(modalElement);
+                cancelModal.show(); // Mở Modal khi có lỗi
             }
-          });
+        <?php endif; ?>
 
-          okBtn.addEventListener('click', function () {
-            form.submit();
-          });
-        }
-
-        // ===== ĐÃ NHẬN HÀNG (HOÀN THÀNH) =====
-        const completeOpen   = document.getElementById('btnOpenCompleteModal');
-        const completeOverlay= document.getElementById('completeOrderOverlay');
-        const completeClose  = document.getElementById('btnCompleteClose');
-        const completeOk     = document.getElementById('btnCompleteOk');
-        const completeForm   = document.getElementById('complete-order-form');
+        // --- Logic cho Modal Đã Nhận Hàng (Nếu vẫn dùng Overlay/Vanilla JS) ---
+        
+        // Nếu bạn muốn giữ nguyên logic Overlay/JS tự tạo cho "Đã nhận hàng"
+        const completeOpen = document.getElementById('btnOpenCompleteModal');
+        const completeOverlay = document.getElementById('completeOrderOverlay');
+        const completeClose = document.getElementById('btnCompleteClose');
+        const completeOk = document.getElementById('btnCompleteOk');
+        const completeForm = document.getElementById('complete-order-form');
 
         if (completeOpen && completeOverlay && completeClose && completeOk && completeForm) {
-          completeOpen.addEventListener('click', function () {
-            completeOverlay.classList.add('is-open');
-          });
+            completeOpen.addEventListener('click', function () {
+                completeOverlay.classList.add('is-open');
+            });
 
-          completeClose.addEventListener('click', function () {
-            completeOverlay.classList.remove('is-open');
-          });
+            completeClose.addEventListener('click', function () {
+                completeOverlay.classList.remove('is-open');
+            });
 
-          completeOverlay.addEventListener('click', function (e) {
-            if (e.target === completeOverlay) {
-              completeOverlay.classList.remove('is-open');
-            }
-          });
+            completeOverlay.addEventListener('click', function (e) {
+                if (e.target === completeOverlay) {
+                    completeOverlay.classList.remove('is-open');
+                }
+            });
 
-          completeOk.addEventListener('click', function () {
-            // tại đây user đã xác nhận "Bạn đã nhận hàng..."
-            completeForm.submit();
-          });
+            completeOk.addEventListener('click', function () {
+                // Bạn sẽ cần đảm bảo có nút/form/ID tương ứng cho "Đã nhận hàng"
+                completeForm.submit();
+            });
         }
-      });
-    </script>
-
-    <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    });
+</script>
   </div>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN09\resources\views/orders/show.blade.php ENDPATH**/ ?>

@@ -46,27 +46,34 @@ class AdminUserController extends Controller
             ['pageTitle' => 'Danh sách người dùng']
         );
     }
+
     public function show($id)
     {
         $user = User::findOrFail($id);
-        $orders = Order::where('user_id', $user->id)->with([
-            'details.productVariant.product',
-            'details.productVariant.size',
-            'details.productVariant.color',
-            'status',
-            'user',
-            'payment.method',
-        ])->latest('id','desc')->paginate(5);
-        $latestOrder = $orders->first();
 
+        // Query chung
+        $ordersQuery = Order::where('user_id', $user->id)
+            ->with([
+                'details.productVariant.product',
+                'details.productVariant.size',
+                'details.productVariant.color',
+                'status',
+                'user',
+                'payment.method',
+            ]);
 
+        // Lấy đơn mới nhất
+        $latestOrder = (clone $ordersQuery)->latest('id')->first();
 
-        return view('admin.users.show', compact('orders'), [
-            'users' => $user,
-            'orders' => $orders,
-            'latestOrder' => $latestOrder,
+        // Danh sách đơn hàng phân trang
+        $orders = (clone $ordersQuery)->latest('id')->paginate(5);
+
+        return view('admin.users.show', [
+            'users'        => $user,
+            'orders'       => $orders,
+            'latestOrder'  => $latestOrder,
             'invoiceCount' => $orders->count(),
-            'orderCount' => $orders->count(),
+            'orderCount'   => $orders->count(),
             'totalExpense' => $orders->sum('total_price'),
         ]);
     }
@@ -78,14 +85,11 @@ class AdminUserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Không cho sửa user admin khác
         if ($user->isAdmin()) {
             abort(403, 'Bạn không được phép sửa tài khoản Admin khác');
         }
 
         $roles = Role::all();
-        //  $rankings = Ranking::all();
-
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
@@ -118,20 +122,22 @@ class AdminUserController extends Controller
         ]);
 
         // Cập nhật thông tin cơ bản
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->phone = $validated['phone'] ?? null;
-        $user->address = $validated['address'] ?? null;
-        $user->role_id = $validated['role_id'];
-        $user->ranking_id = $validated['ranking_id'] ?? null;
-        $user->is_locked = $validated['is_locked'] ?? false;
+        $user->fill([
+            'name'      => $validated['name'],
+            'email'     => $validated['email'],
+            'phone'     => $validated['phone'] ?? null,
+            'address'   => $validated['address'] ?? null,
+            'role_id'   => $validated['role_id'],
+            'ranking_id'=> $validated['ranking_id'] ?? null,
+            'is_locked' => $validated['is_locked'] ?? false,
+        ]);
 
         // Thay đổi mật khẩu nếu có
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
         }
 
-        // Xử lý upload ảnh nếu có
+        // Upload ảnh
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
@@ -158,9 +164,7 @@ class AdminUserController extends Controller
         $user->is_locked = !$user->is_locked;
         $user->save();
 
-        return redirect()->back()->with('success', '
-       ' . ($user->is_locked ? 'Khóa' : 'Mở khóa') . ' tài khoản thành công.
-       ');
+        return redirect()->back()->with('success', ($user->is_locked ? 'Khóa' : 'Mở khóa') . ' tài khoản thành công.');
     }
 
     public function restore($id)
@@ -178,7 +182,6 @@ class AdminUserController extends Controller
 
         return redirect()->back()->with('info', 'Người dùng chưa bị ẩn.');
     }
-
 
     /**
      * (Tuỳ chọn) Xóa mềm người dùng

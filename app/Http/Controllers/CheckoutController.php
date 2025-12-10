@@ -167,6 +167,7 @@ class CheckoutController extends Controller
 
   public function store(Request $request)
     {
+
         // Xử lý đặt hàng
         $validated = $request->validate([
             'payment_method' => 'required|in:1,2,3,4,5',
@@ -229,9 +230,10 @@ class CheckoutController extends Controller
         }
 
         // Tạo order_code với timestamp nano + random - đảm bảo unique hoàn toàn
-        $nanoTime = hrtime(true); // High resolution timestamp
-        $randomPart = strtoupper(substr(md5(uniqid(mt_rand(), true) . microtime(true)), 0, 6));
-        $orderId = 'ORD_' . $nanoTime . '_' . $randomPart . '_' . Auth::id();
+        $next = Order::max('id') + 1;
+
+$orderId = 'ORD' . str_pad($next, 4, '0', STR_PAD_LEFT);
+
         $orderInfo = 'Thanh toan don hang ' . $orderId;
 
         // Lấy thông tin địa chỉ giao hàng
@@ -244,6 +246,7 @@ class CheckoutController extends Controller
         $order = \Illuminate\Support\Facades\DB::transaction(function () use ($orderId, $totalAmount, $address, $validated, $variantsToOrder) {
             // Tạo đơn hàng trước
             $orderData = [
+                
                 'user_id' => Auth::id(),
                 'order_code' => $orderId,
                 'order_status_id' => 1, // Chờ xác nhận
@@ -253,7 +256,9 @@ class CheckoutController extends Controller
                 'name' => $address->name,
                 'address' => $address->address . ', ' . $address->ward . ', ' . $address->district . ', ' . $address->province,
                 'phone' => $address->phone,
-                'payment_method' => $validated['payment_method'],
+                'payment_status_id' => 1, // 1 = chưa thanh toán
+                'payment_method_id' => $validated['payment_method'],
+
             ];
 
             $order = Order::create($orderData);

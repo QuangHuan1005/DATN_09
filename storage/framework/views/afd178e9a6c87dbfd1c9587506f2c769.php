@@ -126,7 +126,7 @@
                                     </label>
                                     
                                     <label class="ds__item">
-                                        <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_3" value="3" checked />
+                                        <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_1" value="1" checked />
                                         <span class="ds__item__label">
                                             Thanh toán khi giao hàng
                                         </span>

@@ -107,6 +107,28 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserAddress::class)->where('is_default', true);
     }
+    /**
+     * Quan hệ với UserBankAccount (nhiều tài khoản ngân hàng)
+     */
+    public function bankAccounts()
+    {
+        return $this->hasMany(UserBankAccount::class);
+    }
+
+    /**
+     * Lấy tài khoản ngân hàng mặc định
+     */
+    public function defaultBankAccount()
+    {
+        return $this->hasOne(UserBankAccount::class)->where('is_default', true);
+    }
+
+    // User.php
+    public function favorites()
+    {
+        return $this->belongsToMany(Product::class, 'product_favorites');
+    }
+
   // Gán đơn hàng cho staff
     public function assignedOrders()
 {

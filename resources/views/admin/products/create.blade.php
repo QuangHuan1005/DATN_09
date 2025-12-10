@@ -5,17 +5,6 @@
     <div class="row">
         <div class="col-xl-12 col-lg-12">
 
-            {{-- **LƯU Ý:** Bạn nên mở comment khối hiển thị lỗi chung này nếu không muốn hiển thị lỗi dưới từng trường
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $err)
-                            <li>{{ $err }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            --}}
 
             <form action="{{ route('admin.products.store') }}"
                 method="POST"
@@ -30,35 +19,6 @@
 
                 {{-- KHỐI UP HÌNH CHÍNH – Trường 'image' là trường mà controller đã validate --}}
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Thêm ảnh sản phẩm</h4>
-                    </div>
-                    <div class="card-body">
-                        {{-- Dropzone thường xử lý việc tải ảnh riêng, nhưng nếu muốn hiện lỗi validation từ Laravel cho trường 'image' thì thêm: --}}
-                        @error('image')
-                            <div class="text-danger mb-3" style="font-size:13px">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                        
-                        <div class="fallback">
-                            {{-- Lưu ý: Tên trường trong Dropzone có thể khác. Trong controller bạn dùng 'image', nên dùng 'image' ở đây hoặc cấu hình Dropzone. Tôi giữ nguyên tên bạn dùng là 'file' và giả định bạn đã cấu hình Dropzone đúng cách. --}}
-                            <input name="file" type="file" multiple />
-                        </div>
-                        <div class="dz-message needsclick">
-                            <i class="bx bx-cloud-upload fs-48 text-primary"></i>
-                            <h3 class="mt-4">
-                                Thả ảnh của bạn vào đây, hoặc
-                                <span class="text-primary">nhấp để chọn tệp.</span>
-                            </h3>
-                            <span class="text-muted fs-13">
-                                Kích thước khuyến nghị 1200 x 1600 (3:4). Cho phép các định dạng PNG, JPG và GIF.
-                            </span>
-                        </div>
-                        <div class="dropzone-previews mt-3" id="file-previews"></div>
-                    </div>
-                </div>
-
                 ---
 
                 {{-- THÔNG TIN SẢN PHẨM --}}

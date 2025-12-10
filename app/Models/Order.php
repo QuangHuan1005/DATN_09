@@ -14,7 +14,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'staff_id', 
+        'staff_id',
         'payment_status_id',
         'order_status_id',
         'voucher_id',
@@ -25,32 +25,16 @@ class Order extends Model
         'subtotal',
         'discount',
         'total_amount',
-        // THÊM CÁC TRƯỜNG BỊ THIẾU Ở ĐÂY
-        'shipping_fee',        // Cần thiết nếu có phí ship
-        'grand_total',         // Tổng tiền cuối cùng
-        'customer_email',      // Email khách hàng
-        'payment_method_id',   // BẮT BUỘC PHẢI CÓ
-        // KẾT THÚC CÁC TRƯỜNG THIẾU
+        'shipping_fee',
+        'grand_total',
+        'customer_email',
+        'payment_method_id',
         'note'
     ];
 
     /**
      * =====================
-     * 🔗 Trạng thái đơn hàng
-     * =====================
-     */
-    const STATUS_PENDING 	 = 1; // Chờ xác nhận
-    const STATUS_CONFIRMED = 2; // Đã xác nhận
-    const STATUS_SHIPPING 	= 3; // Đang giao
-    const STATUS_DELIVERED = 4; // Đã giao
-    const STATUS_DONE 	 	= 5; // Hoàn thành
-    const STATUS_CANCEL 	 = 6; // Hủy
-    const STATUS_RETURNED 	= 7; // Trả hàng / Hoàn trả
-
-
-    /**
-     * =====================
-     * 🔗 Quan hệ (Relationships)
+     * 🔗 Relationships
      * =====================
      */
 
@@ -60,12 +44,11 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Nhân viên phụ trách đơn hàng
+    // Nhân viên xử lý đơn
     public function staff()
     {
         return $this->belongsTo(User::class, 'staff_id');
     }
-
 
     // Trạng thái đơn hàng
     public function status()
@@ -79,12 +62,11 @@ class Order extends Model
         return $this->belongsTo(PaymentStatus::class, 'payment_status_id');
     }
 
-      // Phương thức thanh toán
+    // Phương thức thanh toán
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
     }
-
 
     // Mã giảm giá
     public function voucher()
@@ -97,6 +79,7 @@ class Order extends Model
     {
         return $this->hasMany(OrderDetail::class, 'order_id');
     }
+
     public function statusLogs()
     {
         return $this->hasMany(OrderStatusLog::class)->orderBy('created_at');
@@ -114,123 +97,87 @@ class Order extends Model
         return $this->hasOne(Invoice::class, 'order_id');
     }
 
+
     /**
      * =====================
-     * 🧠 Accessors & Logic
+     * 🧠 Logic
      * =====================
      */
 
-    /**
-     * Kiểm tra xem đơn có thể hủy được hay không.
-     * - Chỉ khi trạng thái là "Chờ xác nhận" (1) hoặc "Đã xác nhận" (2)
-     * - Và trạng thái thanh toán KHÔNG phải "Đã hoàn tiền" (3)
-     */
-    // Product model
-    public function photoAlbums()
-    {
-        return $this->hasMany(ProductPhotoAlbum::class, 'product_id');
-    }
-
-    // ProductPhotoAlbum model
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'product_id');
-    }
-
+    // Có thể hủy đơn?
     public function getCancelableAttribute(): bool
     {
-        return in_array($this->order_status_id, [self::STATUS_PENDING, self::STATUS_CONFIRMED])
-            && $this->payment_status_id !== 3;
+        return in_array($this->order_status_id, [1, 2]) && $this->payment_status_id != 3;
     }
 
-    /**
-     * Kiểm tra xem đơn đã hoàn thành chưa
-     */
+    // Đơn đã hoàn thành?
     public function getIsCompletedAttribute(): bool
     {
-        return $this->order_status_id == self::STATUS_DONE;
+        return $this->order_status_id == 5;
     }
 
-    /**
-     * Tổng số lượng sản phẩm trong đơn
-     */
+    // Tổng số lượng sản phẩm
     public function getTotalQuantityAttribute(): int
     {
         return $this->details->sum('quantity');
     }
 
-    /**
-     * Tổng tiền tạm tính (subtotal)
-     */
+    // Tính subtotal động
     public function getCalcSubtotalAttribute(): int
     {
-        return $this->details->sum(function ($d) {
-            return $d->price * $d->quantity;
-        });
+        return $this->details->sum(fn($d) => $d->price * $d->quantity);
     }
 
-    /**
-     * Tổng tiền sau giảm giá
-     */
+    // Tổng sau giảm giá
     public function getCalcTotalAttribute(): int
     {
-        // Sử dụng grand_total nếu có, hoặc tính toán từ subtotal và discount
-        return $this->grand_total ?? ($this->subtotal - $this->discount + $this->shipping_fee); 
+        return $this->grand_total ?? ($this->subtotal - $this->discount + $this->shipping_fee);
     }
 
-    /**
-     * Định dạng ngày tạo (VD: 25/10/2025 14:30)
-     */
     public function getFormattedDateAttribute(): string
     {
         return $this->created_at ? $this->created_at->format('d/m/Y H:i') : '';
     }
 
+
     /**
      * =====================
-     * 🔍 Scope - Truy vấn nhanh
+     * 🔍 Scopes
      * =====================
      */
 
-    // Lấy các đơn hàng đang chờ xác nhận
     public function scopePending($query)
     {
-        return $query->where('order_status_id', self::STATUS_PENDING);
+        return $query->where('order_status_id', 1);
     }
 
-    // Lấy các đơn hàng đã xác nhận
     public function scopeConfirmed($query)
     {
-        return $query->where('order_status_id', self::STATUS_CONFIRMED);
+        return $query->where('order_status_id', 2);
     }
 
-    // Lấy các đơn hàng đang giao
     public function scopeShipping($query)
     {
-        return $query->where('order_status_id', self::STATUS_SHIPPING);
+        return $query->where('order_status_id', 3);
     }
 
-    // Lấy các đơn hàng đã giao
     public function scopeDelivered($query)
     {
-        return $query->where('order_status_id', self::STATUS_DELIVERED);
+        return $query->where('order_status_id', 4);
     }
 
-    // Lấy các đơn đã hoàn thành
     public function scopeCompleted($query)
     {
-        return $query->where('order_status_id', self::STATUS_DONE);
+        return $query->where('order_status_id', 5);
     }
 
-    // Lấy các đơn hàng đã hủy
     public function scopeCanceled($query)
     {
-        return $query->where('order_status_id', self::STATUS_CANCEL);
+        return $query->where('order_status_id', 6);
     }
 
-    // Lấy các đơn trả hàng / hoàn trả
     public function scopeReturned($query)
     {
-        return $query->where('order_status_id', self::STATUS_RETURNED);
+        return $query->where('order_status_id', 7);
     }
 }

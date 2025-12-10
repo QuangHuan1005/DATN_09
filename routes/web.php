@@ -24,6 +24,9 @@ use App\Http\Controllers\Admin\AdminVoucherController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\AdminAttributeController;
+use App\Http\Controllers\Admin\AdminChatController;
+use App\Http\Controllers\ChatsController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VNPayController;
 use App\Http\Controllers\Staff\StaffController;
@@ -45,9 +48,19 @@ Route::prefix('products')->group(function () {
     Route::get('/color/{slug}', [ProductController::class, 'showByColor'])->name('products.color');
     Route::get('/size/{slug}', [ProductController::class, 'showBySize'])->name('products.size');
 });
+Route::middleware(['auth'])->group(function () {
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+});
 
 // 🗂️ Danh mục
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
+
+Route::middleware('auth')->group(function () {
+    Route::get('chat', [ChatsController::class, 'index'])->name('chat');
+});
+
+Route::get('/fetch-messages', [ChatsController::class, 'fetchMessagesFromUserToAdmin'])->name('fetch.messagesFromSellerToAdmin');
+Route::post('/send-message', [ChatsController::class, 'sendMessageFromUserToAdmin'])->name('send.Messageofsellertoadmin');
 
 // 📰 Blog / Tin tức
 Route::prefix('blog')->group(function () {
@@ -75,7 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/refresh-csrf-token', [CheckoutController::class, 'refreshCsrfToken'])->name('refresh.csrf.token');
 
-     // ➕ THÊM MỚI: Mua ngay (chuyển thẳng sang checkout với 1 biến thể & số lượng)
+    // ➕ THÊM MỚI: Mua ngay (chuyển thẳng sang checkout với 1 biến thể & số lượng)
     Route::post('/checkout/buy-now', [CheckoutController::class, 'buyNow'])->name('checkout.buy_now');
 
     // Address management routes for checkout
@@ -102,36 +115,29 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// 💰 Thanh toán Momo
-Route::prefix('payment/momo')->group(function () {
-    Route::post('/create', 'App\Http\Controllers\PaymentController@createMomoPayment')->name('payment.momo.create');
-    Route::get('/qr', 'App\Http\Controllers\PaymentController@showMomoQR')->name('payment.momo.qr');
-    Route::get('/return', 'App\Http\Controllers\PaymentController@momoReturn')->name('payment.momo.return');
-    Route::post('/notify', 'App\Http\Controllers\PaymentController@momoNotify')->name('payment.momo.notify');
-    Route::get('/status', 'App\Http\Controllers\PaymentController@checkPaymentStatus')->name('payment.momo.status');
-});
-
-// 💳 Thanh toán ATM
-Route::prefix('payment/atm')->group(function () {
-    Route::get('/', 'App\Http\Controllers\PaymentController@showATM')->name('payment.atm');
-    Route::post('/process', 'App\Http\Controllers\PaymentController@processATM')->name('payment.atm.process');
-});
-
 // 🏦 Thanh toán VNPay
 Route::prefix('payment/vnpay')->group(function () {
     Route::get('/return', 'App\Http\Controllers\VNPayController@return')->name('payment.vnpay.return');
-    Route::post('/ipn', 'App\Http\Controllers\VNPayController@ipn')->name('payment.vnpay.ipn');
+    Route::get('/ipn', 'App\Http\Controllers\VNPayController@ipn')->name('payment.vnpay.ipn');
 });
-
 // 📦 Đơn hàng người dùng
 Route::prefix('orders')->middleware('auth')->group(function () {
-    Route::get('/', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
 
-    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel')->middleware('auth');
-    // Thêm: người dùng bấm "Hoàn thành" khi đơn đang ở trạng thái ĐÃ GIAO (4)
-    Route::post('/{id}/complete', [OrderController::class, 'complete'])->name('orders.complete')->middleware('auth');
+    Route::get('/', [OrderController::class, 'index'])
+        ->name('orders.index');
+
+    Route::get('/{id}', [OrderController::class, 'show'])
+        ->name('orders.show');
+
+    // Hủy đơn
+    Route::post('/{id}/cancel', [OrderController::class, 'cancel'])
+        ->name('orders.cancel');
+
+    // Hoàn thành đơn
+    Route::post('/{id}/complete', [OrderController::class, 'complete'])
+        ->name('orders.complete');
 });
+
 
 // 👤 Tài khoản cá nhân
 Route::middleware(['auth'])->group(function () {
@@ -202,23 +208,18 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('staff')->name('staff.')->group(function () {
-    Route::get('/dashboard', [StaffController::class, 'dashboard'])->name('dashboard');
-    Route::get('/orders', [StaffController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{id}', [StaffController::class, 'show'])->name('orders.show');
-   Route::post('orders/{id}/status', [StaffController::class, 'updateStatus'])->name('orders.status');
-});
-
-
-
-
 Route::prefix('admin')
-   ->middleware(['auth:admin', 'is_admin'])
+    ->middleware(['auth:admin', 'is_admin'])
     ->name('admin.')
     ->group(function () {
 
         // Dashboard
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('chat', [AdminChatController::class, 'index'])->name('chat');
+
+        Route::get('fetch-messages', [ChatsController::class, 'fetchMessages'])->name('fetchMessages');
+        Route::post('send-message', [ChatsController::class, 'sendMessage'])->name('sendMessage');
 
         // Danh mục
         Route::resource('categories', AdminCategoryController::class);

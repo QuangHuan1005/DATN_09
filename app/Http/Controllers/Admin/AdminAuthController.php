@@ -52,6 +52,10 @@ class AdminAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+<<<<<<< HEAD
+        return redirect('/')->with('success', 'Đã đăng xuất');
+=======
         return redirect()->route('admin.login.form');
+>>>>>>> origin/phong
     }
 }

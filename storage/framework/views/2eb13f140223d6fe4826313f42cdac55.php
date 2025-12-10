@@ -3,7 +3,6 @@
     <div class="row">
         <div class="col-xl-12 col-lg-12">
 
-            
 
             <form action="<?php echo e(route('admin.products.store')); ?>"
                 method="POST"
@@ -18,43 +17,6 @@
 
                 
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Thêm ảnh sản phẩm</h4>
-                    </div>
-                    <div class="card-body">
-                        
-                        <?php $__errorArgs = ['image'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                            <div class="text-danger mb-3" style="font-size:13px">
-                                <?php echo e($message); ?>
-
-                            </div>
-                        <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                        
-                        <div class="fallback">
-                            
-                            <input name="file" type="file" multiple />
-                        </div>
-                        <div class="dz-message needsclick">
-                            <i class="bx bx-cloud-upload fs-48 text-primary"></i>
-                            <h3 class="mt-4">
-                                Thả ảnh của bạn vào đây, hoặc
-                                <span class="text-primary">nhấp để chọn tệp.</span>
-                            </h3>
-                            <span class="text-muted fs-13">
-                                Kích thước khuyến nghị 1200 x 1600 (3:4). Cho phép các định dạng PNG, JPG và GIF.
-                            </span>
-                        </div>
-                        <div class="dropzone-previews mt-3" id="file-previews"></div>
-                    </div>
-                </div>
-
                 ---
 
                 
