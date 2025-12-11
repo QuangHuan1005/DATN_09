@@ -64,7 +64,7 @@
                                                             class="text-dark fw-medium fs-15">{{ $product->name }}</a>
                                                         <p class="text-muted mb-0 mt-1 fs-13"><span>Kích cỡ: </span>
                                                             @if ($product->variants->isNotEmpty())
-                                                                {{ $product->variants->pluck('size.name')->unique()->implode(', ') }}
+                                                                {{ $product->variants->pluck('size.size_code')->unique()->implode(', ') }}
                                                             @else
                                                                 Không áp dụng
                                                             @endif
@@ -97,10 +97,12 @@
                                                     // Nếu dùng withSum trong Controller: 
                                                     $soldCount = $product->order_details_sum_quantity ?? 0; 
                                                 @endphp
-                                                
-                                                <p class="mb-1 text-muted"><span class="text-dark fw-medium">{{ number_format($totalQuantity, 0, ',', '.') }} Sản phẩm</span>
-                                                    còn lại</p> 
-                                                <p class="mb-0 text-muted">{{ number_format($soldCount, 0, ',', '.') }} Đã bán</p> 
+
+                                                <p class="mb-1 text-muted"><span
+                                                        class="text-dark fw-medium">{{ number_format($totalQuantity, 0, ',', '.') }}
+                                                        Sản phẩm</span></p>
+                                                <p class="mb-0 text-muted">Đã
+                                                    bán {{ number_format($soldCount, 0, ',', '.') }} </p>
                                             </td>
                                             
                                             <td> {{ $product->category->name ?? 'Chưa phân loại' }}</td>
@@ -128,8 +130,8 @@
                                                 @if (!$product->trashed())
                                                     <a href="{{ route('admin.products.variants.product', $product->id) }}"
                                                         class="btn btn-soft-success btn-sm"
-                                                        title="Quản lý biến thể">
-                                                        <iconify-icon icon="solar:color-swatch-broken" class="align-middle fs-18"></iconify-icon>
+                                                        title="Quản lý biến thể"><iconify-icon icon="solar:list-broken"
+                                                            class="align-middle fs-18"></iconify-icon>
                                                     </a>
                                                     <a href="{{ route('admin.products.show', $product->id) }}"
                                                         class="btn btn-soft-info btn-sm" title="Xem chi tiết"><iconify-icon

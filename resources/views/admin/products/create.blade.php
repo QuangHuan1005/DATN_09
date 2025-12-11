@@ -36,9 +36,9 @@
                         </div>
                         <div class="card-body">
                             <!-- File Upload -->
-                            <div class="dropzone" data-plugin="dropzone">
+                            <div action="" class="dropzone " data-plugin="dropzone">
                                 <div class="fallback">
-                                    <input type="file" name="album_images[]" multiple>
+                                    <input type="file" name="album_images[]" multiple class="form-control">
                                 </div>
                                 <div class="dz-message needsclick">
                                     <i class="bx bx-cloud-upload fs-48 text-primary"></i>
@@ -51,6 +51,7 @@
                                     </span>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="card">
