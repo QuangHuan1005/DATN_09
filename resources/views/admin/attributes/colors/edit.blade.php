@@ -12,16 +12,6 @@
                             <h4 class="card-title">Chỉnh Sửa Màu Sắc: {{ $color->name }}</h4>
                         </div>
                         <div class="card-body">
-                            {{-- Thông báo lỗi --}}
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
 
                             <div class="row">
                                 <div class="col-lg-6">

@@ -22,15 +22,15 @@ class VNPayService
         $this->hashSecret = config('vnpay.hash_secret');
         $this->url = config('vnpay.url');
         $this->queryUrl = config('vnpay.query_url');
-
+        
         // Không tạo URL trong constructor, sẽ tạo khi cần
         $this->returnUrl = config('vnpay.return_url');
         $this->ipnUrl = config('vnpay.ipn_url');
-
+        
         $this->version = config('vnpay.version', '2.1.0');
         $this->locale = config('vnpay.locale', 'vn');
     }
-
+    
     /**
      * Lấy return URL (tạo khi cần)
      */
@@ -51,7 +51,7 @@ class VNPayService
         $appUrl = config('app.url', 'http://localhost');
         return rtrim($appUrl, '/') . '/payment/vnpay/return';
     }
-
+    
     /**
      * Lấy IPN URL (tạo khi cần)
      */
@@ -128,7 +128,7 @@ class VNPayService
 
             // Tạo query string
             $query = http_build_query($inputData);
-
+            
             // Tạo hash
             $hashData = $query;
             $vnp_SecureHash = hash_hmac('sha512', $hashData, $this->hashSecret);
@@ -149,6 +149,7 @@ class VNPayService
                 'order_id' => $vnp_TxnRef,
                 'amount' => $amount
             ];
+
         } catch (\Exception $e) {
             Log::error('VNPay create payment error: ' . $e->getMessage());
             return [
@@ -182,7 +183,6 @@ class VNPayService
             return false;
         }
     }
-    
 
     /**
      * Kiểm tra trạng thái thanh toán từ VNPay
@@ -234,3 +234,5 @@ class VNPayService
         }
     }
 }
+
+

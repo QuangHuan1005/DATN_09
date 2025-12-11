@@ -12,8 +12,6 @@ class Review extends Model
     protected $table = 'reviews';
 
     protected $fillable = [
-
-        'user_id',
         'order_id',
         'product_id',
         'rating',
@@ -21,18 +19,13 @@ class Review extends Model
         'status'
     ];
 
-    public function user()
+    public function product()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id');
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
     }
 }

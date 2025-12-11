@@ -30,4 +30,10 @@ class Voucher extends Model
         $today = now()->toDateString();
         return $this->status == 1 && $this->start_date <= $today && $this->end_date >= $today;
     }
+
+    // 🔥 Voucher áp dụng cho N sản phẩm (many-to-many)
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'voucher_products', 'voucher_id', 'product_id');
+    }
 }

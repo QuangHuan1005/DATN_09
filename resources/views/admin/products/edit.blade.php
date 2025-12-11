@@ -6,6 +6,10 @@
                 @csrf
                 @method('PUT')
                 <div class="col-xl-12 col-lg-8 ">
+            <div class="col-xl-12 col-lg-8 ">
+                <form action="{{ route('admin.products.update', $product->id) }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
                     <div class="card mb-3">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Album ảnh sản phẩm</h5>
@@ -140,6 +144,139 @@
                                     </select>
                                 </div>
                             </div>
+=======
+            <div class="col-xl-12 col-lg-12 ">
+
+                {{-- Hiển thị lỗi validate --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Thông Tin Sản Phẩm</h4>
+                    </div>
+
+                    {{-- FORM CHÍNH --}}
+                    <form action="{{ route('admin.products.update', $product->id) }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="card-body">
+                            <div class="row">
+                                {{-- Tên sản phẩm --}}
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Tên Sản Phẩm</label>
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            value="{{ old('name', $product->name) }}" placeholder="Tên sản phẩm">
+                                    </div>
+                                </div>
+
+                                {{-- Danh mục --}}
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="product-categories" class="form-label">Danh Mục Sản Phẩm</label>
+                                        <select class="form-control" id="product-categories" name="category_id" data-choices
+                                            data-choices-groups data-placeholder="Chọn danh mục">
+                                            <option value="">Chọn một danh mục</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}"
+                                                    {{ (int) old('category_id', $product->category_id) === $category->id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Size / Màu sắc (demo UI, chưa map dữ liệu biến thể) --}}
+                            <div class="row mb-4">
+                                <div class="col-lg-4">
+                                    <div class="mt-3">
+                                        <h5 class="text-dark fw-medium">Size :</h5>
+                                        <div class="d-flex flex-wrap gap-2" role="group" aria-label="Chọn size">
+                                            @php
+                                                $sizesDemo = ['XS', 'S', 'M', 'XL', 'XXL', '3XL'];
+                                            @endphp
+                                            @foreach ($sizesDemo as $s)
+                                                @php
+                                                    // name="sizes[]" để gửi mảng size[]
+                                                    $id = 'size-' . strtolower($s);
+                                                @endphp
+                                                <input type="checkbox" class="btn-check" id="{{ $id }}"
+                                                    name="sizes[]" value="{{ $s }}"
+                                                    {{ is_array(old('sizes')) && in_array($s, old('sizes')) ? 'checked' : '' }}>
+                                                <label
+                                                    class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
+                                                    for="{{ $id }}">{{ $s }}</label>
+                                            @endforeach
+                                        </div>
+                                        <small class="text-muted d-block mt-1" style="font-size:12px">
+                                            (Tạm thời lưu size dạng mảng sizes[]. Sau này map vào bảng product_variants.)
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-5">
+                                    <div class="mt-3">
+                                        <h5 class="text-dark fw-medium">Màu sắc :</h5>
+                                        <div class="d-flex flex-wrap gap-2" role="group" aria-label="Chọn màu">
+                                            @php
+                                                $colorsDemo = [
+                                                    ['id' => 'dark', 'labelClass' => 'text-dark', 'name' => 'Đen'],
+                                                    [
+                                                        'id' => 'yellow',
+                                                        'labelClass' => 'text-warning',
+                                                        'name' => 'Vàng',
+                                                    ],
+                                                    ['id' => 'white', 'labelClass' => 'text-white', 'name' => 'Trắng'],
+                                                    [
+                                                        'id' => 'blue',
+                                                        'labelClass' => 'text-primary',
+                                                        'name' => 'Xanh dương',
+                                                    ],
+                                                    [
+                                                        'id' => 'green',
+                                                        'labelClass' => 'text-success',
+                                                        'name' => 'Xanh lá',
+                                                    ],
+                                                    ['id' => 'red', 'labelClass' => 'text-danger', 'name' => 'Đỏ'],
+                                                    ['id' => 'sky', 'labelClass' => 'text-info', 'name' => 'Xanh nhạt'],
+                                                    ['id' => 'gray', 'labelClass' => 'text-secondary', 'name' => 'Xám'],
+                                                ];
+                                            @endphp
+
+                                            @foreach ($colorsDemo as $c)
+                                                @php
+                                                    $colorInputId = 'color-' . $c['id'];
+                                                @endphp
+                                                <input type="checkbox" class="btn-check" id="{{ $colorInputId }}"
+                                                    name="colors[]" value="{{ $c['name'] }}"
+                                                    {{ is_array(old('colors')) && in_array($c['name'], old('colors')) ? 'checked' : '' }}>
+                                                <label
+                                                    class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
+                                                    for="{{ $colorInputId }}">
+                                                    <i class="bx bxs-circle fs-18 {{ $c['labelClass'] }}"></i>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                        <small class="text-muted d-block mt-1" style="font-size:12px">
+                                            (Cũng lưu dạng mảng colors[]. Sau này đưa vào bảng màu/variants thật.)
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Mô tả --}}
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">

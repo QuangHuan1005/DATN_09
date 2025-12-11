@@ -1,7 +1,7 @@
 @extends('admin.master')
+
 @section('content')
     <div class="container-fluid">
-
 
         <div class="row">
             <div class="col-xl-12">
@@ -42,41 +42,26 @@
                                             <td>
                                                 <div class="form-check ms-1">
                                                     {{-- Dùng $product->id để tạo id duy nhất cho checkbox --}}
-                                                    <input type="checkbox" class="form-check-input"
-                                                        id="customCheck_{{ $product->id }}">
-                                                    <label class="form-check-label"
-                                                        for="customCheck_{{ $product->id }}">&nbsp;</label>
+                                                    <input type="checkbox" class="form-check-input" id="customCheck_{{ $product->id }}">
+                                                    <label class="form-check-label" for="customCheck_{{ $product->id }}">&nbsp;</label>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center gap-2">
                                                     <div
                                                         class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                        {{-- @foreach ($product->photoAlbums as $img)
-                                                            <img src="{{ asset('storage/' . $img->image) }}" class="avatar-md">
-                                                        @endforeach --}}
-                                                        {{-- @if ($product->photoAlbum)
-                                                            <img src="{{ asset('storage/' . $photoAlbum->image) }}"
+                                                        @if ($product->variants->isNotEmpty())
+                                                            <img src="{{ asset('storage/' . $product->variants->first()->image) }}"
                                                                 alt="Ảnh Sản Phẩm" class="avatar-md">
                                                         @else
                                                             <img src="{{ asset('images/no-image.png') }}" alt="Không có ảnh"
                                                                 class="avatar-md">
-                                                        @endif --}}
-                                                        @if ($product->photoAlbums->isNotEmpty())
-                                                            <img src="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"alt="Ảnh Sản Phẩm"
-                                                                class="avatar-md">
-                                                        @else
-                                                            <img src="{{ asset('images/no-image.png') }}" alt="Không có ảnh"
-                                                                class="avatar-md text-muted">
                                                         @endif
-
-
 
                                                     </div>
                                                     <div>
                                                         <a href="{{ route('admin.products.show', $product->id) }}"
-                                                            class="text-dark fw-medium fs-15">{{ \Illuminate\Support\Str::limit($product->name, 30) }}
-                                                        </a>
+                                                            class="text-dark fw-medium fs-15">{{ $product->name }}</a>
                                                         <p class="text-muted mb-0 mt-1 fs-13"><span>Kích cỡ: </span>
                                                             @if ($product->variants->isNotEmpty())
                                                                 {{ $product->variants->pluck('size.name')->unique()->implode(', ') }}
@@ -87,14 +72,12 @@
                                                     </div>
                                                 </div>
 
-
                                             </td>
                                             <td>
                                                 @php
                                                     $minSale = $product->variants->min('sale');
                                                     $minPrice = $product->variants->min('price');
                                                 @endphp
-
 
                                                 @if ($minSale > 0)
                                                     {{ number_format($minSale, 0, ',', '.') }}₫
@@ -106,52 +89,47 @@
                                             </td>
 
 
-
-
                                             <td>
                                                 @php
                                                     $totalQuantity = $product->variants->sum('quantity');
                                                     // LẤY DỮ LIỆU THỰC TẾ: Sử dụng Accessor (hoặc thuộc tính ảo order_details_sum_quantity)
                                                     // Nếu dùng Accessor: $product->sold_count
-                                                    // Nếu dùng withSum trong Controller:
-                                                    $soldCount = $product->order_details_sum_quantity ?? 0;
+                                                    // Nếu dùng withSum trong Controller: 
+                                                    $soldCount = $product->order_details_sum_quantity ?? 0; 
                                                 @endphp
-
-                                                <p class="mb-1 text-muted"><span
-                                                        class="text-dark fw-medium">{{ number_format($totalQuantity, 0, ',', '.') }}
-                                                        Sản phẩm</span>
-                                                    còn lại</p>
-                                                <p class="mb-0 text-muted">{{ number_format($soldCount, 0, ',', '.') }} Đã
-                                                    bán</p>
+                                                
+                                                <p class="mb-1 text-muted"><span class="text-dark fw-medium">{{ number_format($totalQuantity, 0, ',', '.') }} Sản phẩm</span>
+                                                    còn lại</p> 
+                                                <p class="mb-0 text-muted">{{ number_format($soldCount, 0, ',', '.') }} Đã bán</p> 
                                             </td>
-
+                                            
                                             <td> {{ $product->category->name ?? 'Chưa phân loại' }}</td>
-
-                                            <td>
+                                            
+                                            <td> 
                                                 @php
                                                     // LẤY DỮ LIỆU THỰC TẾ: Sử dụng Accessor (hoặc thuộc tính ảo reviews_avg_rating)
                                                     // Nếu dùng Accessor: $product->average_rating
                                                     $avgRating = number_format($product->reviews_avg_rating ?? 0, 1);
-
+                                                    
                                                     // Nếu dùng Accessor: $product->review_count
                                                     $reviewCount = $product->reviews_count ?? 0;
                                                 @endphp
-
+                                                
                                                 <span class="badge p-1 bg-light text-dark fs-12 me-1">
                                                     {{-- Chỉ hiển thị ngôi sao nếu có đánh giá --}}
                                                     @if ($reviewCount > 0)
                                                         <i class="bx bxs-star align-text-top fs-14 text-warning me-1"></i>
                                                     @endif
                                                     {{ $avgRating }}
-                                                </span>
+                                                </span> 
                                                 {{ $reviewCount }} Lượt đánh giá
                                             </td>
                                             <td>
                                                 @if (!$product->trashed())
                                                     <a href="{{ route('admin.products.variants.product', $product->id) }}"
-                                                        class="btn btn-soft-success btn-sm" title="Quản lý biến thể">
-                                                        <iconify-icon icon="solar:color-swatch-broken"
-                                                            class="align-middle fs-18"></iconify-icon>
+                                                        class="btn btn-soft-success btn-sm"
+                                                        title="Quản lý biến thể">
+                                                        <iconify-icon icon="solar:color-swatch-broken" class="align-middle fs-18"></iconify-icon>
                                                     </a>
                                                     <a href="{{ route('admin.products.show', $product->id) }}"
                                                         class="btn btn-soft-info btn-sm" title="Xem chi tiết"><iconify-icon
@@ -161,7 +139,6 @@
                                                         class="btn btn-soft-primary btn-sm" title="Chỉnh sửa"><iconify-icon
                                                             icon="solar:pen-2-broken"
                                                             class="align-middle fs-18"></iconify-icon></a>
-
 
                                                     <form action="{{ route('admin.products.destroy', $product->id) }}"
                                                         method="POST" style="display:inline-block;">
@@ -196,17 +173,14 @@
                                                 @endif
                                             </td>
 
-
                                         </tr>
                                     @endforeach
-
-
 
 
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                        </div>
                     <div class="card-footer border-top">
                         <nav aria-label="Page navigation example">
                             {{ $products->links() }}
@@ -215,9 +189,7 @@
                 </div>
             </div>
 
-
         </div>
-
 
     </div>
 @endsection

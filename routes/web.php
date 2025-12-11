@@ -115,36 +115,29 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// 💰 Thanh toán Momo
-Route::prefix('payment/momo')->group(function () {
-    Route::post('/create', 'App\Http\Controllers\PaymentController@createMomoPayment')->name('payment.momo.create');
-    Route::get('/qr', 'App\Http\Controllers\PaymentController@showMomoQR')->name('payment.momo.qr');
-    Route::get('/return', 'App\Http\Controllers\PaymentController@momoReturn')->name('payment.momo.return');
-    Route::post('/notify', 'App\Http\Controllers\PaymentController@momoNotify')->name('payment.momo.notify');
-    Route::get('/status', 'App\Http\Controllers\PaymentController@checkPaymentStatus')->name('payment.momo.status');
-});
-
-// 💳 Thanh toán ATM
-Route::prefix('payment/atm')->group(function () {
-    Route::get('/', 'App\Http\Controllers\PaymentController@showATM')->name('payment.atm');
-    Route::post('/process', 'App\Http\Controllers\PaymentController@processATM')->name('payment.atm.process');
-});
-
 // 🏦 Thanh toán VNPay
 Route::prefix('payment/vnpay')->group(function () {
     Route::get('/return', 'App\Http\Controllers\VNPayController@return')->name('payment.vnpay.return');
-    Route::post('/ipn', 'App\Http\Controllers\VNPayController@ipn')->name('payment.vnpay.ipn');
+    Route::get('/ipn', 'App\Http\Controllers\VNPayController@ipn')->name('payment.vnpay.ipn');
 });
-
 // 📦 Đơn hàng người dùng
 Route::prefix('orders')->middleware('auth')->group(function () {
-    Route::get('/', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
 
-    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel')->middleware('auth');
-    // Thêm: người dùng bấm "Hoàn thành" khi đơn đang ở trạng thái ĐÃ GIAO (4)
-    Route::post('/{id}/complete', [OrderController::class, 'complete'])->name('orders.complete')->middleware('auth');
+    Route::get('/', [OrderController::class, 'index'])
+        ->name('orders.index');
+
+    Route::get('/{id}', [OrderController::class, 'show'])
+        ->name('orders.show');
+
+    // Hủy đơn
+    Route::post('/{id}/cancel', [OrderController::class, 'cancel'])
+        ->name('orders.cancel');
+
+    // Hoàn thành đơn
+    Route::post('/{id}/complete', [OrderController::class, 'complete'])
+        ->name('orders.complete');
 });
+
 
 // 👤 Tài khoản cá nhân
 Route::middleware(['auth'])->group(function () {
@@ -215,8 +208,6 @@ Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin
 |--------------------------------------------------------------------------
 */
 
-
-
 Route::prefix('admin')
     ->middleware(['auth:admin', 'is_admin'])
     ->name('admin.')
@@ -283,42 +274,22 @@ Route::prefix('admin')
         Route::patch('inventory/bulk', [InventoryController::class, 'bulkUpdate'])->name('inventory.bulk');
 
         // 🎨 Quản lý thuộc tính - Màu sắc
-        // Route::prefix('attributes/colors')->name('attributes.colors.')->group(function () {
-        //     Route::get('/', [AdminAttributeController::class, 'colorsIndex'])->name('index');
-        //     Route::get('/create', [AdminAttributeController::class, 'colorsCreate'])->name('create');
-        //     Route::post('/', [AdminAttributeController::class, 'colorsStore'])->name('store');
-        //     Route::get('/{color}/edit', [AdminAttributeController::class, 'colorsEdit'])->name('edit');
-        //     Route::put('/{color}', [AdminAttributeController::class, 'colorsUpdate'])->name('update');
-        //     Route::delete('/{color}', [AdminAttributeController::class, 'colorsDestroy'])->name('destroy');
-        // });
+        Route::prefix('attributes/colors')->name('attributes.colors.')->group(function () {
+            Route::get('/', [AdminAttributeController::class, 'colorsIndex'])->name('index');
+            Route::get('/create', [AdminAttributeController::class, 'colorsCreate'])->name('create');
+            Route::post('/', [AdminAttributeController::class, 'colorsStore'])->name('store');
+            Route::get('/{color}/edit', [AdminAttributeController::class, 'colorsEdit'])->name('edit');
+            Route::put('/{color}', [AdminAttributeController::class, 'colorsUpdate'])->name('update');
+            Route::delete('/{color}', [AdminAttributeController::class, 'colorsDestroy'])->name('destroy');
+        });
 
-        // // 📏 Quản lý thuộc tính - Kích thước
-        // Route::prefix('attributes/sizes')->name('attributes.sizes.')->group(function () {
-        //     Route::get('/', [AdminAttributeController::class, 'sizesIndex'])->name('index');
-        //     Route::get('/create', [AdminAttributeController::class, 'sizesCreate'])->name('create');
-        //     Route::post('/', [AdminAttributeController::class, 'sizesStore'])->name('store');
-        //     Route::get('/{size}/edit', [AdminAttributeController::class, 'sizesEdit'])->name('edit');
-        //     Route::put('/{size}', [AdminAttributeController::class, 'sizesUpdate'])->name('update');
-        //     Route::delete('/{size}', [AdminAttributeController::class, 'sizesDestroy'])->name('destroy');
-        // });
-        Route::get('/attributes', [AdminAttributeController::class, 'index'])
-            ->name('attributes.index');
-
-        Route::get('/attributes/{type}', [AdminAttributeController::class, 'show'])
-            ->name('attributes.show');
-
-        Route::get('/attributes/{type}/create', [AdminAttributeController::class, 'create'])
-            ->name('attributes.create');
-
-        Route::post('/attributes/{type}/store', [AdminAttributeController::class, 'store'])
-            ->name('attributes.store');
-
-        Route::get('/attributes/{type}/{id}/edit', [AdminAttributeController::class, 'edit'])
-            ->name('attributes.edit');
-
-        Route::put('/attributes/{type}/{id}', [AdminAttributeController::class, 'update'])
-            ->name('attributes.update');
-
-        Route::delete('/attributes/{type}/{id}', [AdminAttributeController::class, 'destroy'])
-            ->name('attributes.destroy');
+        // 📏 Quản lý thuộc tính - Kích thước
+        Route::prefix('attributes/sizes')->name('attributes.sizes.')->group(function () {
+            Route::get('/', [AdminAttributeController::class, 'sizesIndex'])->name('index');
+            Route::get('/create', [AdminAttributeController::class, 'sizesCreate'])->name('create');
+            Route::post('/', [AdminAttributeController::class, 'sizesStore'])->name('store');
+            Route::get('/{size}/edit', [AdminAttributeController::class, 'sizesEdit'])->name('edit');
+            Route::put('/{size}', [AdminAttributeController::class, 'sizesUpdate'])->name('update');
+            Route::delete('/{size}', [AdminAttributeController::class, 'sizesDestroy'])->name('destroy');
+        });
     });

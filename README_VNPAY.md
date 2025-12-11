@@ -135,3 +135,5 @@ Trong các method `vnpayReturn()` và `vnpayIpn()` trong `PaymentController`, c�
 - Gửi email xác nhận
 
 Cần implement các phần này để hoàn thiện hệ thống.
+
+

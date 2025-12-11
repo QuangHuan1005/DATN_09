@@ -42,9 +42,9 @@ return [
     | Application Locale Configuration
     |--------------------------------------------------------------------------
     */
-    'locale' => env('APP_LOCALE', 'vi'),
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'vn'),
-    'faker_locale' => env('APP_FAKER_LOCALE', 'vi_VN'),
+    'locale' => env('APP_LOCALE', 'en'),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ return [
         * Application Service Providers...
         */
         App\Providers\AppServiceProvider::class,
-
+        
 
         // 👇 Thêm dòng này để tự động truyền biến $categories vào header
         App\Providers\ViewServiceProvider::class,

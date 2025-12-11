@@ -6,17 +6,9 @@
         <h3 class="mb-0">Thêm Voucher mới</h3>
     </div>
 
-    {{-- Hiển thị lỗi validation --}}
-    @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <h5 class="alert-heading fs-15"><i class="bi bi-exclamation-triangle me-2"></i> Lỗi nhập liệu</h5>
-            <ul class="mb-0">
-                @foreach ($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                @endforeach
-            </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    {{-- Hiển thị thông báo thành công hoặc lỗi chung (nếu có) --}}
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
     {{-- Form thêm Voucher mới --}}
@@ -27,77 +19,153 @@
 
                 {{-- Hàng 1: Mã Voucher & Loại giảm giá --}}
                 <div class="row mb-3">
+                    {{-- Mã Voucher (voucher_code) --}}
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Mã voucher <span class="text-danger">*</span></label>
-                        <input type="text" name="voucher_code" value="{{ old('voucher_code') }}" class="form-control" required>
+                        <input type="text" name="voucher_code" value="{{ old('voucher_code') }}" 
+                               class="form-control @error('voucher_code') is-invalid @enderror" >
+                        @error('voucher_code')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
+                    
+                    {{-- Loại giảm giá (discount_type) --}}
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Loại giảm giá <span class="text-danger">*</span></label>
-                        <select name="discount_type" class="form-select" id="discount_type" required>
+                        <select name="discount_type" class="form-select @error('discount_type') is-invalid @enderror" id="discount_type" >
                             <option value="fixed" {{ old('discount_type') == 'fixed' ? 'selected' : '' }}>Giảm cố định (VNĐ)</option>
                             <option value="percent" {{ old('discount_type') == 'percent' ? 'selected' : '' }}>Giảm theo %</option>
                         </select>
+                        @error('discount_type')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
                 {{-- Hàng 2: Số lượng & Giới hạn mỗi người --}}
                 <div class="row mb-3">
+                    {{-- Số lượng (quantity) --}}
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Số lượng (Tổng cộng) <span class="text-danger">*</span></label>
-                        <input type="number" name="quantity" value="{{ old('quantity', 1) }}" class="form-control" min="1" required>
+                        <input type="number" name="quantity" value="{{ old('quantity', 1) }}" 
+                               class="form-control @error('quantity') is-invalid @enderror" min="1" >
+                        @error('quantity')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
+                    
+                    {{-- Giới hạn mỗi người (user_limit) --}}
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Giới hạn mỗi người (Số lần sử dụng) <span class="text-danger">*</span></label>
-                        <input type="number" name="user_limit" value="{{ old('user_limit', 1) }}" class="form-control" min="1" required>
+                        <input type="number" name="user_limit" value="{{ old('user_limit', 1) }}" 
+                               class="form-control @error('user_limit') is-invalid @enderror" min="1" >
+                        @error('user_limit')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
                 {{-- Hàng 3: Giá trị giảm, Đơn tối thiểu, Giảm tối đa --}}
                 <div class="row mb-3">
+                    {{-- Giá trị giảm (discount_value) --}}
                     <div class="col-md-4">
                         <label class="form-label fw-bold">
                             Giá trị giảm (<span id="discount-label" class="text-primary">{{ old('discount_type') == 'percent' ? '%' : 'VNĐ' }}</span>) <span class="text-danger">*</span>
                         </label>
-                        <input type="number" name="discount_value" value="{{ old('discount_value') }}" class="form-control" min="0" step="1" required>
+                        <input type="number" name="discount_value" value="{{ old('discount_value') }}" 
+                               class="form-control @error('discount_value') is-invalid @enderror" min="0" step="1" >
                         @error('discount_value')
                             <div class="text-danger mt-1 fs-13">{{ $message }}</div>
                         @enderror
                     </div>
+                    
+                    {{-- Giá trị đơn hàng tối thiểu (min_order_value) --}}
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Giá trị đơn hàng tối thiểu <span class="text-danger">*</span></label>
-                        <input type="number" name="min_order_value" value="{{ old('min_order_value', 0) }}" class="form-control" step="1000" min="0" required>
+                        <input type="number" name="min_order_value" value="{{ old('min_order_value', 0) }}" 
+                               class="form-control @error('min_order_value') is-invalid @enderror" step="1000" min="0" >
+                        @error('min_order_value')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
+                    
+                    {{-- Giá trị giảm tối đa (sale_price) --}}
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Giá trị giảm tối đa (Sale Price)</label>
-                        <input type="number" name="sale_price" value="{{ old('sale_price', 0) }}" class="form-control" step="1000" min="0">
+                        <input type="number" name="sale_price" value="{{ old('sale_price', 0) }}" 
+                               class="form-control @error('sale_price') is-invalid @enderror" step="1000" min="0">
                         <small class="text-muted">Đặt giới hạn tối đa cho mức giảm (chỉ áp dụng nếu Loại giảm giá là %)</small>
+                        @error('sale_price')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
                 {{-- Hàng 4: Ngày bắt đầu và Ngày kết thúc --}}
                 <div class="row mb-3">
+                    {{-- Ngày bắt đầu (start_date) --}}
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Ngày bắt đầu <span class="text-danger">*</span></label>
-                        <input type="date" name="start_date" value="{{ old('start_date') }}" class="form-control" required>
+                        <input type="date" name="start_date" value="{{ old('start_date') }}" 
+                               class="form-control @error('start_date') is-invalid @enderror" >
+                        @error('start_date')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
+                    
+                    {{-- Ngày kết thúc (end_date) --}}
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Ngày kết thúc <span class="text-danger">*</span></label>
-                        <input type="date" name="end_date" value="{{ old('end_date') }}" class="form-control" required>
+                        <input type="date" name="end_date" value="{{ old('end_date') }}" 
+                               class="form-control @error('end_date') is-invalid @enderror" >
+                        @error('end_date')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
-                
-                {{-- Hàng 5: Trạng thái và Mô tả --}}
+
+                {{-- Hàng 5: Chọn sản phẩm áp dụng --}}
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">Sản phẩm áp dụng</label>
+                        <select name="product_ids[]" 
+                                class="form-select @error('product_ids') is-invalid @enderror" multiple>
+                            @foreach($products as $product)
+                                <option value="{{ $product->id }}" {{ collect(old('product_ids'))->contains($product->id) ? 'selected' : '' }}>
+                                    {{ $product->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted">Nếu không chọn, voucher áp dụng cho tất cả sản phẩm.</small>
+                        @error('product_ids')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Hàng 6: Trạng thái và Mô tả --}}
                 <div class="row mb-4">
+                    {{-- Trạng thái (status) --}}
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Trạng thái <span class="text-danger">*</span></label>
-                        <select name="status" class="form-select" required>
+                        <select name="status" class="form-select @error('status') is-invalid @enderror" >
                             <option value="1" {{ old('status', '1') == '1' ? 'selected' : '' }}>Hoạt động</option>
                             <option value="0" {{ old('status', '1') == '0' ? 'selected' : '' }}>Ngừng hoạt động</option>
                         </select>
+                        @error('status')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
+                    
+                    {{-- Mô tả (description) --}}
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Mô tả</label>
-                        <textarea name="description" rows="1" class="form-control" placeholder="Mô tả chi tiết về điều kiện áp dụng nếu cần">{{ old('description') }}</textarea>
+                        <textarea name="description" rows="1" 
+                                  class="form-control @error('description') is-invalid @enderror" 
+                                  placeholder="Mô tả chi tiết về điều kiện áp dụng nếu cần">{{ old('description') }}</textarea>
+                        @error('description')
+                            <div class="text-danger mt-1 fs-13">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -117,20 +185,17 @@
 
 @section('script')
 <script>
-    // Cập nhật nhãn đơn vị giảm giá khi thay đổi Loại giảm giá
     document.addEventListener('DOMContentLoaded', function () {
         const typeSelect = document.getElementById('discount_type');
         const label = document.getElementById('discount-label');
 
-        // Hàm cập nhật nhãn
         function updateDiscountLabel() {
-            label.textContent = typeSelect.value === 'fixed' ? 'VNĐ' : '%';
+            // Cập nhật nhãn và đảm bảo giá trị cũ được giữ nếu có lỗi validation
+            const selectedValue = typeSelect.value || "{{ old('discount_type', 'fixed') }}"; 
+            label.textContent = selectedValue === 'fixed' ? 'VNĐ' : '%';
         }
 
-        // Cập nhật ngay khi tải trang (để đảm bảo trạng thái old() ban đầu là đúng)
         updateDiscountLabel(); 
-        
-        // Thêm sự kiện thay đổi
         typeSelect.addEventListener('change', updateDiscountLabel);
     });
 </script>
