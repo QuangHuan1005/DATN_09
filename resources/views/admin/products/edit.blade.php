@@ -2,10 +2,10 @@
 @section('content')
     <div class="container-xxl">
         <div class="row">
-            <div class="col-xl-12 col-lg-8 ">
-                <form action="{{ route('admin.products.update', $product->id) }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+            <form action="{{ route('admin.products.update', $product->id) }}" method="post" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="col-xl-12 col-lg-8 ">
                     <div class="card mb-3">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Album ảnh sản phẩm</h5>
@@ -20,26 +20,27 @@
                                             <div class="position-relative border rounded overflow-hidden">
                                                 <img src="{{ asset('storage/' . $album->image) }}" class="img-fluid"
                                                     alt="Album image">
-                                                    
                                                 <button type="button"
                                                     class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 btn-delete-album"
                                                     data-id="{{ $album->id }}"
                                                     data-url="{{ route('admin.products.photoAlbums.destroy', [$product->id, $album->id]) }}">
                                                     &times;
                                                 </button>
-                                                
+
                                             </div>
                                         </div>
-                                    
                                     @endforeach
                                 </div>
                             @endif
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Thêm Ảnh Sản Phẩm</h4>
+                        </div>
+                        <div class="card-body">
                             <!-- File Upload -->
-                            <div class="dropzone"  data-plugin="dropzone"
-                                >
+                            <div class="dropzone" data-plugin="dropzone">
                                 <div class="fallback">
                                     <input type="file" name="album_images[]" multiple>
                                 </div>
@@ -54,7 +55,6 @@
                                     </span>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="card">
@@ -84,7 +84,7 @@
                                         <option value="">Chọn một danh mục</option>
                                         @foreach ($categories ?? [] as $category)
                                             <option value="{{ $category->id }}"
-                                                {{ (int) old('category_id', $product->category_id) === $category->id ? 'selected' : '' }}>
+                                                {{ (int) old('category_id', $product->category_id ?? '') === $category->id ? 'selected' : '' }}>
                                                 {{ $category->name }}
                                             </option>
                                         @endforeach
@@ -164,51 +164,54 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
+@endsection
 @section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = '{{ csrf_token() }}';
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = '{{ csrf_token() }}';
 
-            document.querySelectorAll('.btn-delete-album').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    const url = this.dataset.url;
-                    const id = this.dataset.id;
+        document.querySelectorAll('.btn-delete-album').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const url = this.dataset.url;
+                const id = this.dataset.id;
 
-                    if (!confirm('Bạn chắc chắn muốn xoá ảnh này?')) {
-                        return;
+                if (!confirm('Bạn chắc chắn muốn xoá ảnh này?')) {
+                    return;
+                }
+
+                fetch(url, {
+                    method: 'POST', // vì mình spoof DELETE bằng _method
+                    headers: {
+                        'X-CSRF-TOKEN': token,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        '_method': 'DELETE'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Delete response:', data);
+                    if (data.status === 'success') {
+                        const el = document.getElementById('album-' + id);
+                        if (el) el.remove();
+                    } else {
+                        alert(data.message || 'Xoá ảnh thất bại.');
                     }
-
-                    fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': token,
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: new URLSearchParams({
-                                '_method': 'DELETE'
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                const el = document.getElementById('album-' + id);
-                                if (el) el.remove();
-                            } else {
-                                alert('Xoá ảnh thất bại.');
-                            }
-                        })
-                        .catch(() => {
-                            alert('Có lỗi xảy ra khi xoá ảnh.');
-                        });
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Có lỗi xảy ra khi xoá ảnh.');
                 });
             });
         });
-    </script>
+    });
+</script>
 @endsection
-@endsection
+

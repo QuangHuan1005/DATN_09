@@ -308,23 +308,23 @@
             </div>
         </div>
         <!-- ========== Topbar End ========== -->
-<!-- ========== App Menu Start ========== -->
-<!-- ========== App Menu Start ========== -->
-<!-- ========== App Menu Start ========== -->
-<div class="app-menu">
-    @hasSection('menu')
-        @yield('menu')
-    @else
-        @include('admin.layouts.menu-nav')
-    @endif
-</div>
-<!-- ========== App Menu End ========== -->
+        <!-- ========== App Menu Start ========== -->
+        <!-- ========== App Menu Start ========== -->
+        <!-- ========== App Menu Start ========== -->
+        <div class="app-menu">
+            @hasSection('menu')
+                @yield('menu')
+            @else
+                @include('admin.layouts.menu-nav')
+            @endif
+        </div>
+        <!-- ========== App Menu End ========== -->
 
-<!-- ========== App Menu End ========== -->
+        <!-- ========== App Menu End ========== -->
 
 
 
-<!-- ========== App Menu End ========== -->
+        <!-- ========== App Menu End ========== -->
 
 
 
@@ -349,6 +349,8 @@
     </div>
     <!-- END Wrapper -->
     @include('admin.layouts.js')
+    @yield('scripts')
+
 </body>
 
 

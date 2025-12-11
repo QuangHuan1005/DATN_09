@@ -44,14 +44,7 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.chat') }}">
-                    <span class="nav-icon">
-                        <iconify-icon icon="solar:message-5-bold-duotone"></iconify-icon>
-                    </span>
-                    <span class="nav-text"> Chat trực tuyến </span>
-                </a>
-            </li>
+
 
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.products.index') }}" role="button" aria-expanded="false"
@@ -147,7 +140,7 @@
                     </span>
                     <span class="nav-text"> Quản Lý Thuộc Tính </span>
                 </a>
-                
+
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.users.index') }}" role="button" aria-expanded="false"
@@ -168,6 +161,14 @@
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.chat') }}">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:chat-round-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Chat </span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#sidebarInvoice" role="button" aria-expanded="false"

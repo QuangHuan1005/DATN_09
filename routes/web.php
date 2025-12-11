@@ -239,9 +239,14 @@ Route::prefix('admin')
         Route::resource('products', AdminProductController::class);
         Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('products.restore');
         Route::delete('products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('products.forceDelete');
+    Route::delete(
+        'products/{product}/album/{album}',
+        [AdminProductController::class, 'destroyAlbum']
+    )->name('products.photoAlbums.destroy');
+    // Route::get('products.photoAlbums.destroy', [AdminProductController::class, 'destroyPhotoAlbum'])->name('products.photoAlbums.destroy');
 
-        // Biến thể sản phẩm
-        Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
+    // Biến thể sản phẩm
+    Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
         Route::get('products/{productId}/variants', [AdminProductController::class, 'productVariants'])->name('products.variants.product');
         Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('products.variants.type');
         Route::post('products/{productId}/variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
@@ -249,7 +254,6 @@ Route::prefix('admin')
         Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
         Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
         Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
-        Route::get('products.photoAlbums.destroy', [AdminProductController::class, 'destroyPhotoAlbum'])->name('products.photoAlbums.destroy');
         // Voucher
         Route::resource('vouchers', AdminVoucherController::class);
 

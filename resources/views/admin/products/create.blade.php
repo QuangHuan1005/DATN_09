@@ -5,7 +5,7 @@
             <div class="col-xl-12 col-lg-8 ">
                 <form action="{{ route('admin.products.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="card">
+                    {{-- <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Add Product Photo</h4>
                         </div>
@@ -28,30 +28,32 @@
                             </div>
 
                         </div>
-                    </div>
-                    {{-- <div class="card">
+                    </div> --}}
+                    <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Add Product Photo</h4>
+                            <h4 class="card-title">Thêm Ảnh Sản Phẩm</h4>
                         </div>
                         <div class="card-body">
                             <!-- File Upload -->
-                            <div action="https://techzaa.in/" method="post" class="dropzone" id="myAwesomeDropzone"
+                            <div action="https://techzaa.in/" class="dropzone" id="myAwesomeDropzone"
                                 data-plugin="dropzone" data-previews-container="#file-previews"
                                 data-upload-preview-template="#uploadPreviewTemplate">
                                 <div class="fallback">
-                                    <input name="file" type="file" multiple />
+                                    <input name="alum_images[]" type="file" multiple />
                                 </div>
                                 <div class="dz-message needsclick">
                                     <i class="bx bx-cloud-upload fs-48 text-primary"></i>
-                                    <h3 class="mt-4">Drop your images here, or <span class="text-primary">click to
-                                            browse</span></h3>
+                                    <h3 class="mt-4">
+                                        Kéo và thả tệp vào đây để tải lên
+                                        , hoặc <span class="text-primary">nhấp để tải lên</span></h3>
                                     <span class="text-muted fs-13">
-                                        1600 x 1200 (4:3) recommended. PNG, JPG and GIF files are allowed
+                                        Khuyến nghị kích thước hình ảnh 1600 x 1200 (4:3).
+                                        Định dạng tệp được hỗ trợ PNG, JPG và GIF.
                                     </span>
                                 </div>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Thông Tin Sản Phầm</h4>

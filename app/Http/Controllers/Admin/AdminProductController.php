@@ -12,8 +12,10 @@ use App\Models\ProductVariant;
 use App\Models\Color;
 use App\Models\Size;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AdminProductController extends Controller
 {
@@ -266,18 +268,17 @@ class AdminProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'category_id'   => 'required|exists:categories,id',
-            'name'          => 'required|string|max:255',
-            'description'   => 'nullable|string',
-            'material'      => 'nullable|string|max:150',
-            'onpage'        => 'required|boolean',
+            'category_id' => 'exists:categories,id',
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'material'    => 'nullable|string|max:150',
+            'onpage'      => 'required|boolean',
 
-            // ✅ ALBUM ẢNH MỚI (nếu có)
             'album_images'   => 'nullable|array',
-            'album_images.*' => 'image|mimes:jpg,jpeg,png,webp|max:4096',
+            'album_images.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:4096',
         ]);
 
-        /* ✅ 1. UPDATE SẢN PHẨM */
+
         $product->update([
             'category_id' => $validated['category_id'],
             'name'        => $validated['name'],
@@ -286,21 +287,20 @@ class AdminProductController extends Controller
             'onpage'      => $validated['onpage'],
         ]);
 
-        /* ✅ 2. NẾU CÓ UPLOAD ALBUM MỚI → CHỈ ADD THÊM (KHÔNG XOÁ HẾT) */
+
         if ($request->hasFile('album_images')) {
+            foreach ($request->file('album_images') as $file) {
+                $$ext = $img->getClientOriginalExtension();
 
-            foreach ($request->file('album_images') as $img) {
+                // Tạo tên file dạng: ao-khoac-nam-1733802234-65ab3da9c1.jpg
+                $newName = Str::slug($product->name) . '-' . time() . '.' . $ext;
 
-                $ext = $img->getClientOriginalExtension();
-
-                // ✅ Tên file theo tên SP
-                $newName = Str::slug($product->name)
-                    . '-' . time()
-                    . '-' . uniqid()
-                    . '.' . $ext;
-
+                // Lưu vào storage/app/public/products/albums/
                 $path = $img->storeAs('products/photoAlbums', $newName, 'public');
 
+                $product->photoAlbums()->create([
+                    'image' => $path,
+                ]);
                 ProductPhotoAlbum::create([
                     'product_id' => $product->id,
                     'image'      => $path,
@@ -308,11 +308,28 @@ class AdminProductController extends Controller
             }
         }
 
+
         return redirect()->route('admin.products.index')
-            ->with('success', 'Cập nhật sản phẩm và album ảnh thành công!');
+            ->with('success', 'Cập nhật sản phẩm thành công!');
     }
+    public function destroyAlbum(Product $product, $albumId)
+    {
+        // Tìm album thuộc đúng product (tránh xóa nhầm)
+        $album = $product->photoAlbums()->where('id', $albumId)->firstOrFail();
 
+        // Xóa file trên storage
+        if (!empty($album->image) && Storage::disk('public')->exists($album->image)) {
+            Storage::disk('public')->delete($album->image);
+        }
 
+        // Xóa record DB
+        $album->delete();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Xóa ảnh thành công',
+        ]);
+    }
 
     // Ẩn sản phẩm (soft delete)
     public function destroy($id)
@@ -359,7 +376,7 @@ class AdminProductController extends Controller
     {
         $variants = ProductVariant::with(['product', 'color', 'size'])
             ->orderBy('created_at', 'desc')
-            ->orderBy('id', 'asc')
+            ->orderBy('id', 'desc')
             ->get();
 
 
@@ -664,10 +681,11 @@ class AdminProductController extends Controller
 
         // Xử lý upload ảnh mới
         if ($request->hasFile('image')) {
-            // Xóa ảnh cũ nếu có
-            if ($variant->image) {
-                Storage::delete('public/' . $variant->image);
+
+            if (!empty($variant->image) && Storage::disk('public')->exists($variant->image)) {
+                Storage::disk('public')->delete($variant->image);
             }
+
             $path = $request->file('image')->store('product_variants', 'public');
             $variant->image = $path;
         }

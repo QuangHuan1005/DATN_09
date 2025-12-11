@@ -176,7 +176,10 @@
                      </a>
 
                      <div class="dropdown-menu dropdown-menu-end">
-                         Xin chào, <strong>{{ Str::afterLast(Auth::user()->name, ' ') }}</strong> 👋
+                        @auth
+    Xin chào, <strong>{{ Str::afterLast(Auth::user()->name, ' ') }}</strong> 👋
+@endauth
+
                          <a class="dropdown-item" href="pages-profile.html">
                              <i class="bx bx-user-circle text-muted fs-18 align-middle me-1"></i><span
                                  class="align-middle">Profile</span>
