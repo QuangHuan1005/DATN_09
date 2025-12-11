@@ -39,6 +39,10 @@ class AdminOrderController extends Controller
             ->withSum('details', 'quantity')
             ->orderByDesc('id');
 
+         if ($request->filled('date')) {
+        $query->whereDate('created_at', $request->date);
+    }
+
         if ($request->filled('status')) {
             $query->where('order_status_id', $request->status);
         }
@@ -69,7 +73,7 @@ class AdminOrderController extends Controller
             'user',
             'payment.method',
             'staff',
-            ])->findOrFail($id);
+        ])->findOrFail($id);
 
         $lines = $order->details->map(function ($d) {
             $v = $d->productVariant;
@@ -98,74 +102,72 @@ class AdminOrderController extends Controller
         );
     }
 
-    public function update(Request $request, $id, InventoryService $inv)
-    {
-        $data = $request->validate([
-            'order_status_id' => ['required', 'integer'],
-        ]);
+   public function update(Request $request, $id, InventoryService $inv)
+{
+    $data = $request->validate([
+        'order_status_id' => ['required', 'integer'],
+    ]);
 
-        $order = Order::findOrFail($id);
+    $order = Order::findOrFail($id);
 
-        $oldStatus = (int) $order->order_status_id;
-        $newStatus = (int) $data['order_status_id'];
+    $oldStatus = (int) $order->order_status_id;
+    $newStatus = (int) $data['order_status_id'];
 
-        if ($newStatus !== $oldStatus && $newStatus !== $oldStatus + 1) {
-            return back()->with('error', 'Chỉ được cập nhật trạng thái tiến từng bước một.');
+    if ($newStatus !== $oldStatus && $newStatus !== $oldStatus + 1) {
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Chỉ được cập nhật trạng thái tiến từng bước một.'], 422);
         }
+        return back()->with('error', 'Chỉ được cập nhật trạng thái tiến từng bước một.');
+    }
 
-        $order->order_status_id = $newStatus;
+    $order->order_status_id = $newStatus;
 
-        // ============= KHO =============
-        $statusDeductStock = [
-            self::STATUS_CONFIRMED,
-            self::STATUS_SHIPPING,
-            self::STATUS_DELIVERED,
-            self::STATUS_DONE,
-        ];
+    // ============= KHO =============
+    $statusDeductStock = [self::STATUS_CONFIRMED, self::STATUS_SHIPPING, self::STATUS_DELIVERED, self::STATUS_DONE];
+    $statusRestoreStock = [self::STATUS_CANCEL, self::STATUS_RETURNED];
 
-        $statusRestoreStock = [
-            self::STATUS_CANCEL,
-            self::STATUS_RETURNED,
-        ];
+    if (!in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusDeductStock)) {
+        $inv->deductForOrder($order);
+    }
 
-        if (!in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusDeductStock)) {
-            $inv->deductForOrder($order);
-        }
+    if (in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusRestoreStock)) {
+        $inv->restoreForOrder($order);
+    }
 
-        if (in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusRestoreStock)) {
-            $inv->restoreForOrder($order);
-        }
+    if (in_array($oldStatus, $statusRestoreStock) && in_array($newStatus, $statusDeductStock)) {
+        $inv->deductForOrder($order);
+    }
 
-        if (in_array($oldStatus, $statusRestoreStock) && in_array($newStatus, $statusDeductStock)) {
-            $inv->deductForOrder($order);
-        }
+    // ============= THANH TOÁN =============
+    $PAYMENT_STATUS_UNPAID = 1;
+    $PAYMENT_STATUS_PAID   = 2;
+    $PAYMENT_METHOD_COD    = 1;
 
-        // ============= THANH TOÁN =============
-        $PAYMENT_STATUS_UNPAID = 1;
-        $PAYMENT_STATUS_PAID   = 2;
-
-        $PAYMENT_METHOD_COD    = 1;
-
-        if (in_array($newStatus, [self::STATUS_DELIVERED, self::STATUS_DONE])) {
-            if ((int)$order->payment_method_id === $PAYMENT_METHOD_COD) {
+    if (in_array($newStatus, [self::STATUS_DELIVERED, self::STATUS_DONE])) {
+        if ((int)$order->payment_method_id === $PAYMENT_METHOD_COD) {
+            $order->payment_status_id = $PAYMENT_STATUS_PAID;
+        } else {
+            if ((int)$order->payment_status_id === $PAYMENT_STATUS_UNPAID) {
                 $order->payment_status_id = $PAYMENT_STATUS_PAID;
-            } else {
-                if ((int)$order->payment_status_id === $PAYMENT_STATUS_UNPAID) {
-                    $order->payment_status_id = $PAYMENT_STATUS_PAID;
-                }
             }
         }
-
-        $order->save();
-
-        OrderStatusLog::create([
-            'order_id'        => $order->id,
-            'order_status_id' => $newStatus,
-            'actor_type'      => 'system',
-        ]);
-
-        return back()->with('success', 'Đã cập nhật trạng thái đơn hàng');
     }
+
+    $order->save();
+
+    OrderStatusLog::create([
+        'order_id'        => $order->id,
+        'order_status_id' => $newStatus,
+        'actor_type'      => 'system',
+    ]);
+
+    if ($request->ajax()) {
+        return response()->json(['message' => 'Đã cập nhật trạng thái đơn hàng']);
+    }
+
+    return back()->with('success', 'Đã cập nhật trạng thái đơn hàng');
+}
+
 
     public function assignForm(Order $order)
     {

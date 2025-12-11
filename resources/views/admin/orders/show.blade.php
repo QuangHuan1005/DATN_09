@@ -182,44 +182,33 @@
                                                 <th>Thành Tiền</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach ($lines as $line)
-                                                <tr>
-                                                    {{-- <pre><code class="language-php">{{ $lines }}</code></pre> --}}
-
-                                                    <td>
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <div
-                                                                class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                                @if ($line->image)
-                                                                    <img src="{{ asset('storage/' . $line->image) }}"
-                                                                        alt="image" style="width:60px;">
-                                                                @else
-                                                                    <span>Không có</span>
-                                                                @endif
-                                                            </div>
-                                                            <div>
-                                                                <a href="#!"
-                                                                    class="text-dark fw-medium fs-15">{{ $line->product_name }}</a>
-                                                                <p class="text-muted mb-0 mt-1 fs-13">
-                                                                    <span>{{ $line->variant_text ?? '-' }}</span>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-
-                                                    </td>
-
-                                                    {{-- <td>
-                                                        <span
-                                                            class="badge bg-success-subtle text-success  px-2 py-1 fs-13">Ready</span>
-                                                    </td> --}}
-                                                    <td>{{ number_format($line->unit_price, 0, ',', '.') }}₫</td>
-                                                    <td> {{ $line->qty }}</td>
-                                                    <td>{{ number_format($line->line_total, 0, ',', '.') }}₫</td>
-
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
+                                      <tbody>
+                                                @foreach ($lines as $line)
+<tr>
+    <td>
+        <div class="d-flex align-items-center gap-2">
+            <div class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
+                <!-- ĐÃ SỬA DỨT ĐIỂM: Sử dụng đường dẫn chính xác bạn đã xác nhận là 'storage/product_images/' -->
+                <img src="{{ $line->image ? asset('storage/product_images/' . $line->image) : asset('images/no-image.png') }}"
+                     alt="{{ $line->product_name }}"
+                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"
+                >
+            </div>
+        </div>
+    </td>
+    <td>
+        {{ $line->product_name }}
+        
+        <!-- ĐÃ GỠ BỎ TOÀN BỘ DÒNG DEBUG -->
+        
+    </td>
+    <td>{{ $line->variant_text }}</td>
+    <td>{{ number_format($line->unit_price) }}₫</td>
+    <td>{{ $line->qty }}</td>
+    <td>{{ number_format($line->line_total) }}₫</td>
+</tr>
+                                                @endforeach
+                                            </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -379,11 +368,7 @@
                                                     icon="solar:kick-scooter-broken" class="align-middle"></iconify-icon>
                                                 Phí giao hàng. : </p>
                                         </td>
-                                        @if ($calc_subtotal < 300000)
-                                            <td class="text-end text-dark fw-medium px-0">30.000₫</td>
-                                        @else
-                                            <td class="text-end text-dark fw-medium px-0">Miễn phí</ @endif
-
+                                        <td class="text-end text-dark fw-medium px-0">30.000₫</td>
                                     </tr>
 
                                 </tbody>
@@ -395,7 +380,7 @@
                             <p class="fw-medium text-dark mb-0">Tổng Số Tiền</p>
                         </div>
                         <div>
-                            <p class="fw-medium text-dark mb-0">{{ number_format($calc_total, 0, ',', '.') }}₫
+                            <p class="fw-medium text-dark mb-0">{{ number_format($calc_total + 30000, 0, ',', '.') }}₫
                             </p>
                         </div>
 
@@ -467,6 +452,7 @@
                                 {{-- <a href="#!"><i class='bx bx-edit-alt fs-18'></i></a> --}}
                             </div>
                         </div>
+
                         <p class="mb-1">Giống với địa chỉ giao hàng</p>
                     </div>
                 </div>

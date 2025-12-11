@@ -40,11 +40,8 @@ class AdminCategoryController extends Controller
         // Lấy danh mục cha (danh mục gốc) để chọn parent
         $categories = Category::whereNull('parent_id')->get();
 
-        return view(
-            'admin.categories.create',
-            compact('categories'),
-            ['pageTitle' => 'Thêm mới danh mục']
-        );
+        return view('admin.categories.create', compact('categories'),
+            ['pageTitle' => 'Thêm mới danh mục']);
     }
 
     /**
@@ -90,11 +87,7 @@ class AdminCategoryController extends Controller
             ->where('id', '<>', $category->id)
             ->get();
 
-        return view(
-            'admin.categories.edit',
-            compact('category', 'categories'),
-            ['pageTitle' => 'Chỉnh sửa danh mục']
-        );
+        return view('admin.categories.edit', compact('category', 'categories'));
     }
 
     /**
@@ -105,7 +98,7 @@ class AdminCategoryController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'slug' => 'nullable|string|max:255|unique:categories,slug,' . $category->id,
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'parent_id' => 'nullable|exists:categories,id',
         ], [
             'name.required' => 'Tên danh mục không được để trống',

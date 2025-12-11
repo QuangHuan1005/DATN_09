@@ -33,8 +33,6 @@ class CartController extends Controller
             'quantity'           => ['required', 'integer', 'min:1'],
             // Giữ lại nếu form có gửi kèm (không bắt buộc ở đây)
             'product_id'         => ['nullable', 'integer'],
-            // lấy thêm action_type từ hidden input trong form (add_to_cart | buy_now)
-            'action_type'        => ['nullable', 'string', 'in:add_to_cart,buy_now'],
         ]);
 
         // Lấy variantId từ 1 trong 2 tên field
@@ -64,7 +62,6 @@ class CartController extends Controller
         $imageUrl = $this->normalizeImageUrl($product, $variant);
 
         $qty = (int) $data['quantity'];
-        $action  = $data['action_type'] ?? 'add_to_cart'; // mặc định add_to_cart
 
         // Lấy giỏ hiện tại
         $cart = Session::get('cart', []);
@@ -72,29 +69,23 @@ class CartController extends Controller
         // Key giỏ HAI LÀ GIỮ NGUYÊN: (string)$variantId
         $key = (string) $variant->id;
 
-        // == GIỚI HẠN THEO TỒN KHO ==
-        // == GIỚI HẠN THEO TỒN KHO ==
+      // == GIỚI HẠN THEO TỒN KHO ==
         $stock    = max(0, (int) ($variant->quantity ?? 0)); // tồn kho của biến thể
         $existing = isset($cart[$key]) ? (int) ($cart[$key]['quantity'] ?? 0) : 0;
         $canAdd   = max(0, $stock - $existing);
 
         if ($canAdd <= 0) {
-            // ĐÃ ĐỦ SỐ LƯỢNG TỒN KHO TRONG GIỎ
-            $limitMessage = "Bạn đã có {$existing} sản phẩm này trong giỏ hàng. "
-                . "Không thể thêm số lượng đã chọn vào giỏ hàng vì sẽ vượt quá giới hạn mua hàng của bạn.";
-
+            // Hết hàng hoặc đã đạt tối đa trong giỏ
             if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
                 return response()->json([
                     'ok'        => false,
-                    'message'   => $limitMessage,
+                    'message'   => 'Sản phẩm đã hết hàng hoặc bạn đã đạt số lượng tối đa trong giỏ.',
                     'fixed_qty' => $existing,
                     'max'       => $stock,
                 ], 409);
             }
-
-            return back()->with('cart_limit_error', $limitMessage);
+            return back()->with('error', 'Sản phẩm đã hết hàng hoặc bạn đã đạt số lượng tối đa trong giỏ.');
         }
-
 
         $limited = false;
         if ($qty > $canAdd) {
@@ -125,34 +116,29 @@ class CartController extends Controller
 
         // [EDIT] Trả JSON khi là AJAX để không chuyển trang
         $cartCount = collect($cart)->sum(fn($row) => (int)($row['quantity'] ?? 0));
-        $subtotal  = collect($cart)->reduce(function ($sum, $row) {
+        $subtotal  = collect($cart)->reduce(function($sum, $row){
             return $sum + (float)($row['price'] ?? 0) * (int)($row['quantity'] ?? 0);
         }, 0);
 
         if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
-            return response()->json([
-                'ok'         => true,
-                'message'    => 'Đã thêm vào giỏ hàng.',
-                'cart_count' => $cartCount,
-                'subtotal'   => $subtotal,
-                'item'       => [
-                    'variant_id' => (int) $variant->id,
-                    'quantity'   => (int) $cart[$key]['quantity'],
-                    'price'      => (float) $cart[$key]['price'],
-                    'name'       => $cart[$key]['name'] ?? ($product->name ?? 'Sản phẩm'),
-                    'image'      => $cart[$key]['image'] ?? null,
-                ]
-            ]);
-        }
-        if ($action === 'buy_now') {
-            return redirect()->route('checkout.index');
+           return response()->json([
+            'ok'         => !$limited,
+            'message'    => $limited
+                ? ('Chỉ thêm tối đa do giới hạn tồn kho (còn ' . $stock . ').')
+                : 'Đã thêm vào giỏ hàng.',
+            'cart_count' => $cartCount,
+            'subtotal'   => $subtotal,
+            'item'       => [
+                'variant_id' => (int) $variant->id,
+                'quantity'   => (int) $cart[$key]['quantity'],
+                'price'      => (float) $cart[$key]['price'],
+                'name'       => $cart[$key]['name'] ?? ($product->name ?? 'Sản phẩm'),
+                'image'      => $cart[$key]['image'] ?? null,
+            ]
+        ], $limited ? 409 : 200);
         }
 
-        return back()->with('cart_success', [
-            'product_name' => $name,
-            'cart_count'   => $cartCount,
-            'subtotal'     => $subtotal,
-        ]);
+        return back()->with('success', 'Đã thêm vào giỏ hàng.');
     }
 
     /**
@@ -227,7 +213,7 @@ class CartController extends Controller
             Session::put('cart', $cart);
             return back()->with('success', 'Đã xóa sản phẩm khỏi giỏ');
         }
-        return back()->with('error', 'Sản phẩm không tồn tại trong giỏ');
+return back()->with('error', 'Sản phẩm không tồn tại trong giỏ');
     }
 
     /**
@@ -236,99 +222,71 @@ class CartController extends Controller
      */
     public function update(Request $req, $variantId)
     {
-        // Số lượng người dùng gửi lên
         $qty = (int) $req->input('quantity', 1);
-        if ($qty < 1) {
-            $qty = 1;
-        }
+        if ($qty < 1) $qty = 1;
 
         $cart = Session::get('cart', []);
         $key  = (string) $variantId;
 
         if (!isset($cart[$key])) {
             if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
-                return response()->json([
-                    'ok'      => false,
-                    'message' => 'Sản phẩm không tồn tại trong giỏ hàng.'
-                ], 404);
+                return response()->json(['ok' => false, 'message' => 'Sản phẩm không tồn tại trong giỏ'], 404);
             }
-            return back()->with('error', 'Sản phẩm không tồn tại trong giỏ hàng');
+            return back()->with('error', 'Sản phẩm không tồn tại trong giỏ');
         }
 
-        // ================== LẤY TỒN KHO HIỆN TẠI ==================
-        // Ưu tiên đọc từ DB để nếu quản trị viên vừa cập nhật stock, giỏ hàng vẫn tuân theo.
+        // Cập nhật số lượng
+        // == CHẶN THEO TỒN KHO KHI CẬP NHẬT ==
         $variant = ProductVariant::find($variantId);
+        $stock   = $variant ? max(0, (int) $variant->quantity) : 0;
 
-        // đổi 'stock' thành tên cột tồn kho thực tế nếu bạn đặt khác
-        $stockFromDb   = $variant ? (int) ($variant->stock ?? 0) : 0;
-        $stockFromCart = (int) ($cart[$key]['max_qty'] ?? 0);
+        $prevQty = (int) ($cart[$key]['quantity'] ?? 1);
+        $cart[$key]['max_qty'] = $stock; // đồng bộ cho view
 
-        // stock thực dùng để kiểm tra
-        $maxStock = max(0, $stockFromDb, $stockFromCart);
-
-        // Nếu hết hàng thì xoá khỏi giỏ
-        if ($maxStock <= 0) {
-            unset($cart[$key]);
-            Session::put('cart', $cart);
-
-            $msg = 'Sản phẩm này hiện đã hết hàng, đã được xoá khỏi giỏ.';
+        if ($stock <= 0) {
+            // Hết hàng: giữ số cũ và báo lỗi
             if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
                 return response()->json([
-                    'ok'      => false,
-                    'message' => $msg,
-                    'removed' => true,
-                ], 410);
+                    'ok'        => false,
+                    'message'   => 'Sản phẩm đã hết hàng.',
+                    'fixed_qty' => $prevQty,
+                    'max'       => 0,
+                ], 409);
             }
-            return back()->with('error', $msg);
+            return back()->with('error', 'Sản phẩm đã hết hàng.');
         }
 
-        // ================== VALIDATE VƯỢT TỒN KHO ==================
         $limited = false;
-        if ($qty > $maxStock) {
-            $qty     = $maxStock;
+        if ($qty > $stock) {
+            $qty     = $stock; // clamp về tồn kho
             $limited = true;
         }
 
-        // Cập nhật lại giỏ (quantity + max_qty để view còn dùng)
+        // Cập nhật số lượng (đã clamp)
         $cart[$key]['quantity'] = $qty;
-        $cart[$key]['max_qty']  = $maxStock;
         Session::put('cart', $cart);
 
-        // Tính lại tiền dòng & tổng giỏ
-        $linePrice = (float) ($cart[$key]['price'] ?? 0);
-        $lineTotal = $linePrice * (int) $cart[$key]['quantity'];
+
+        // Tính lại tiền dòng & tổng giỏ (KHÔNG có phí ship)
+        $linePrice = (float)($cart[$key]['price'] ?? 0);
+        $lineTotal = $linePrice * (int)$cart[$key]['quantity'];
 
         $cartTotal = 0;
         foreach ($cart as $row) {
-            $cartTotal += (float) ($row['price'] ?? 0) * (int) ($row['quantity'] ?? 0);
+            $cartTotal += (float)($row['price'] ?? 0) * (int)($row['quantity'] ?? 0);
         }
 
-        // ================== TRẢ VỀ KHI AJAX ==================
         if ($req->wantsJson() || $req->ajax() || $req->expectsJson()) {
-            $payload = [
-                'ok'            => !$limited,
-                'limited'       => $limited,                 // true nếu bị hạ về maxStock
-                'message'       => $limited
-                    ? "Số lượng tối đa cho sản phẩm này chỉ còn {$maxStock}."
-                    : 'Đã cập nhật số lượng.',
-                'quantity'      => $qty,                     // số lượng thực tế sau khi clamp
-                'line_total'    => $lineTotal,
-                'cart_total'    => $cartTotal,
-                'grand_total'   => $cartTotal,
-                'item_subtotal' => $lineTotal,
-            ];
-
-            // Nếu bị giới hạn thì dùng 422 để JS nhận biết
-            $status = $limited ? 422 : 200;
-            return response()->json($payload, $status);
-        }
-
-        // ================== TRẢ VỀ KHI SUBMIT FORM THƯỜNG ==================
-        if ($limited) {
-            return back()->with(
-                'error',
-                "Số lượng tối đa cho sản phẩm này chỉ còn {$maxStock}."
-            );
+          return response()->json([
+            'ok'           => !$limited,
+            'message'      => $limited ? ('Chỉ còn ' . $stock . ' sản phẩm trong kho') : null,
+            'line_total'   => $lineTotal,
+            'cart_total'   => $cartTotal,
+            'grand_total'  => $cartTotal,
+            'item_subtotal'=> $lineTotal,
+            'fixed_qty'    => (int) $cart[$key]['quantity'],
+            'max'          => $stock,
+        ], $limited ? 409 : 200);
         }
 
         return back()->with('success', 'Đã cập nhật số lượng');
@@ -365,25 +323,25 @@ class CartController extends Controller
         }
 
         // 3) Bóc 'storage/' nếu có để làm việc với public disk
-        $rel = Str::startsWith($raw, 'storage/')
-            ? Str::after($raw, 'storage/')
+        $rel = \Illuminate\Support\Str::startsWith($raw, 'storage/')
+            ? \Illuminate\Support\Str::after($raw, 'storage/')
             : $raw;
 
         // 4) Lấy basename và ưu tiên thư mục 'products/'
-        $file = basename($rel);
+$file = basename($rel);
         $candidates = array_values(array_unique(array_filter([
             // ưu tiên products/
-            'products/' . $file,
+            'products/'.$file,
             // thử giữ nguyên nếu rel có thư mục sẵn
             ltrim($rel, '/'),
             // thêm product_images/ vì dự án của bạn có thư mục này
-            'product_images/' . $file,
+            'product_images/'.$file,
         ])));
 
         // 5) Tìm trên storage/app/public
         foreach ($candidates as $relPath) {
-            if (Storage::disk('public')->exists($relPath)) {
-                return asset('storage/' . $relPath);   // => /storage/products/<file>
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($relPath)) {
+                return asset('storage/'.$relPath);   // => /storage/products/<file>
             }
         }
 
@@ -397,4 +355,7 @@ class CartController extends Controller
         // 7) Fallback nội bộ
         return asset('images/placeholder.png');
     }
+
+
+
 }

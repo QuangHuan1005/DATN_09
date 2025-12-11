@@ -14,15 +14,13 @@ class OrderConfirmation extends Mailable
     use Queueable, SerializesModels;
 
     public $order;
-    public $orderDetails;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Order $order, $orderDetails)
+    public function __construct(Order $order)
     {
         $this->order = $order;
-        $this->orderDetails = $orderDetails;
     }
 
     /**
@@ -31,7 +29,7 @@ class OrderConfirmation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Xác nhận đơn hàng #' . $this->order->order_code . ' - Friday Shop',
+            subject: 'Xác nhận đơn hàng #' . $this->order->order_code,
         );
     }
 

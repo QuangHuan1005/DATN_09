@@ -36,7 +36,7 @@ class AdminUserController extends Controller
         }
 
         // 📄 Phân trang
-        $users = $query->orderByDesc('created_at')->paginate(6)->withQueryString();
+        $users = $query->orderByDesc('created_at')->paginate(5)->withQueryString();
 
         $roles = Role::all();
 
@@ -46,48 +46,35 @@ class AdminUserController extends Controller
             ['pageTitle' => 'Danh sách người dùng']
         );
     }
+
     public function show($id)
     {
-        // 1. Lấy user
-        $users = User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        // 2. Query đơn hàng của user (dùng lại nhiều lần nên tách riêng)
-        $ordersQuery = Order::with([
-            'payment.paymentMethod', // payments + payment_methods
-            'status',           // order_statuses
-            // 'invoices',              // invoices
-        ])->where('user_id', $users->id)->latest('created_at');
+        // Query chung
+        $ordersQuery = Order::where('user_id', $user->id)
+            ->with([
+                'details.productVariant.product',
+                'details.productVariant.size',
+                'details.productVariant.color',
+                'status',
+                'user',
+                'payment.method',
+            ]);
 
-        // 3. Danh sách đơn hàng phân trang (hiển thị trong Transaction History)
-        $orders = (clone $ordersQuery)->latest('desc')->paginate(5);
+        // Lấy đơn mới nhất
+        $latestOrder = (clone $ordersQuery)->latest('id')->first();
 
-        // 4. Tổng số đơn
-        $totalOrders = (clone $ordersQuery)->count();
+        // Danh sách đơn hàng phân trang
+        $orders = (clone $ordersQuery)->latest('id')->paginate(5);
 
-        // 5. Tổng chi tiêu (có thể lọc theo trạng thái đã thanh toán nếu sau này cần)
-        $totalExpense = (clone $ordersQuery)->sum('total_amount');
-
-        // 6. Hóa đơn (invoice) gần nhất của user
-        // $invoiceBaseQuery = Invoice::whereHas('order', function ($q) use ($users) {
-        //     $q->where('user_id', $users->id);
-        // });
-
-        // $totalInvoices  = (clone $invoiceBaseQuery)->count();
-        // $latestInvoices = (clone $invoiceBaseQuery)
-        //     ->latest('issue_date')
-        //     ->take(4)
-        //     ->get();
-
-        // 7. Trả ra view
-        return view('admin.users.show', compact(
-            'users',
-            'orders',
-            'totalOrders',
-            'totalExpense',
-            // 'totalInvoices',
-            // 'latestInvoices'
-        ), [
-            'pageTitle' => 'Chi Tiết Người Dùng'
+        return view('admin.users.show', [
+            'users'        => $user,
+            'orders'       => $orders,
+            'latestOrder'  => $latestOrder,
+            'invoiceCount' => $orders->count(),
+            'orderCount'   => $orders->count(),
+            'totalExpense' => $orders->sum('total_price'),
         ]);
     }
 
@@ -98,14 +85,11 @@ class AdminUserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Không cho sửa user admin khác
         if ($user->isAdmin()) {
             abort(403, 'Bạn không được phép sửa tài khoản Admin khác');
         }
 
         $roles = Role::all();
-        //  $rankings = Ranking::all();
-
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
@@ -138,20 +122,22 @@ class AdminUserController extends Controller
         ]);
 
         // Cập nhật thông tin cơ bản
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->phone = $validated['phone'] ?? null;
-        $user->address = $validated['address'] ?? null;
-        $user->role_id = $validated['role_id'];
-        $user->ranking_id = $validated['ranking_id'] ?? null;
-        $user->is_locked = $validated['is_locked'] ?? false;
+        $user->fill([
+            'name'      => $validated['name'],
+            'email'     => $validated['email'],
+            'phone'     => $validated['phone'] ?? null,
+            'address'   => $validated['address'] ?? null,
+            'role_id'   => $validated['role_id'],
+            'ranking_id'=> $validated['ranking_id'] ?? null,
+            'is_locked' => $validated['is_locked'] ?? false,
+        ]);
 
         // Thay đổi mật khẩu nếu có
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
         }
 
-        // Xử lý upload ảnh nếu có
+        // Upload ảnh
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
@@ -178,9 +164,7 @@ class AdminUserController extends Controller
         $user->is_locked = !$user->is_locked;
         $user->save();
 
-        return redirect()->back()->with('success', '
-       ' . ($user->is_locked ? 'Khóa' : 'Mở khóa') . ' tài khoản thành công.
-       ');
+        return redirect()->back()->with('success', ($user->is_locked ? 'Khóa' : 'Mở khóa') . ' tài khoản thành công.');
     }
 
     public function restore($id)
@@ -198,7 +182,6 @@ class AdminUserController extends Controller
 
         return redirect()->back()->with('info', 'Người dùng chưa bị ẩn.');
     }
-
 
     /**
      * (Tuỳ chọn) Xóa mềm người dùng

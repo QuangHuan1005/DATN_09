@@ -63,6 +63,8 @@
                                     <label for="color_code" class="form-label">Giá trị</label>
                                     <input type="text" class="form-control" id="color_code" name="color_code"
                                            value="{{ old('color_code', $variant->color_code) }}"
+<input type="text" class="form-control" id="color_code" name="color_code" 
+                                           value="{{ old('color_code', $variant->color_code) }}" 
                                            placeholder="VD: #FF0000, #0000FF">
                                 </div>
                                 @endif
@@ -99,5 +101,3 @@
         </div>
     </div>
 @endsection
-
-
