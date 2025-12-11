@@ -59,53 +59,48 @@
                                                 data-widget_type="kitify-wooproduct-images.default">
                                                 <div class="elementor-widget-container">
                                                     <div class="kitify-product-images layout-type-2">
-    <div class="woocommerce-product-gallery
+                                                        <div class="woocommerce-product-gallery
                 woocommerce-product-gallery--with-images
                 woocommerce-product-gallery--columns-6 images"
-        data-columns="{{ min(6, max(1, count($images))) }}"
-        style="opacity: 1; transition: opacity .25s ease-in-out;">
+                                                            data-columns="{{ min(6, max(1, count($images))) }}"
+                                                            style="opacity: 1; transition: opacity .25s ease-in-out;">
 
-        <div class="woocommerce-product-gallery__wrapper">
+                                                            <div class="woocommerce-product-gallery__wrapper">
 
-            @foreach ($images as $index => $img)
-                @php
-                    // URL đầy đủ tới ảnh (storage)
-                    $imgUrl = asset('storage/' . $img);
-                    $alt    = $product->name . ' - Image ' . ($index + 1);
-                @endphp
+                                                                @foreach ($images as $index => $img)
+                                                                    @php
+                                                                        // URL đầy đủ tới ảnh (storage)
+                                                                        $imgUrl = asset('storage/' . $img);
+                                                                        $alt =
+                                                                            $product->name . ' - Image ' . ($index + 1);
+                                                                    @endphp
 
-                <div class="woocommerce-product-gallery__image"
-                     data-thumb="{{ $imgUrl }}"
-                     data-thumb-alt="{{ $alt }}"
-                     data-thumb-srcset="{{ $imgUrl }} 1000w"
-                     data-thumb-sizes="(max-width: 250px) 100vw, 250px">
+                                                                    <div class="woocommerce-product-gallery__image"
+                                                                        data-thumb="{{ $imgUrl }}"
+                                                                        data-thumb-alt="{{ $alt }}"
+                                                                        data-thumb-srcset="{{ $imgUrl }} 1000w"
+                                                                        data-thumb-sizes="(max-width: 250px) 100vw, 250px">
 
-                    <a href="{{ $imgUrl }}">
-                        <img
-                            width="1000"
-                            height="1000"
-                            src="{{ $imgUrl }}"
-                            class="{{ $index === 0 ? 'wp-post-image' : '' }}"
-                            alt="{{ $alt }}"
-                            data-caption=""
-                            data-src="{{ $imgUrl }}"
-                            data-large_image="{{ $imgUrl }}"
-                            data-large_image_width="1000"
-                            data-large_image_height="1000"
-                            sizes="(max-width: 1000px) 100vw, 1000px"
-                            {{-- Gắn id cho ảnh chính để JS đổi theo màu/biến thể --}}
-                            @if ($index === 0)
-                                id="js-main-image"
-                                data-image-base="{{ asset('storage') }}/"
-                            @endif
-                        />
-                    </a>
-                </div>
-            @endforeach
+                                                                        <a href="{{ $imgUrl }}">
+                                                                            <img width="1000" height="1000"
+                                                                                src="{{ $imgUrl }}"
+                                                                                class="{{ $index === 0 ? 'wp-post-image' : '' }}"
+                                                                                alt="{{ $alt }}" data-caption=""
+                                                                                data-src="{{ $imgUrl }}"
+                                                                                data-large_image="{{ $imgUrl }}"
+                                                                                data-large_image_width="1000"
+                                                                                data-large_image_height="1000"
+                                                                                sizes="(max-width: 1000px) 100vw, 1000px"
+                                                                                {{-- Gắn id cho ảnh chính để JS đổi theo màu/biến thể --}}
+                                                                                @if ($index === 0) id="js-main-image"
+                                data-image-base="{{ asset('storage') }}/" @endif />
+                                                                        </a>
+                                                                    </div>
+                                                                @endforeach
 
-        </div>
-    </div>
-</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
                                                     <div class="kitify-product-images layout-type-2">
                                                         <div class="woocommerce-product-gallery woocommerce-product-gallery--with-images woocommerce-product-gallery--columns-6 images"
@@ -145,7 +140,8 @@
                                                                             data-src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2.jpg"
                                                                             data-large_image="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2.jpg"
                                                                             data-large_image_width="1000"
-                                                                            data-large_image_height="1000" decoding="async"
+                                                                            data-large_image_height="1000"
+                                                                            decoding="async"
                                                                             srcset="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2.jpg 1000w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2-300x300.jpg 300w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2-150x150.jpg 150w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2-768x768.jpg 768w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2-700x700.jpg 700w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2-250x250.jpg 250w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2-50x50.jpg 50w, https://mixtas.b-cdn.net/wp-content/uploads/2023/12/m1_09_2-100x100.jpg 100w"
                                                                             sizes="(max-width: 1000px) 100vw, 1000px" /></a>
                                                                 </div>
@@ -1406,7 +1402,8 @@
                                                                             class="button product_type_variable add_to_cart_button"
                                                                             data-product_id="154" data-product_sku=""
                                                                             aria-label="Select options for &ldquo;Carhartt OG Santa Fe Jacket&rdquo;"
-                                                                            rel="nofollow"><svg class="mixtas-addtocart">
+                                                                            rel="nofollow"><svg
+                                                                                class="mixtas-addtocart">
                                                                                 <use xlink:href="#mixtas-addtocart"
                                                                                     xmlns:xlink="http://www.w3.org/1999/xlink">
                                                                                 </use>
@@ -2565,139 +2562,130 @@
 
 
 
-<div class="reset_variations_alert screen-reader-text"
-     role="alert" aria-live="polite" aria-relevant="all"></div>
+                    <div class="reset_variations_alert screen-reader-text" role="alert" aria-live="polite"
+                        aria-relevant="all"></div>
 
-<div class="single_variation_wrap">
-    <div class="woocommerce-variation single_variation"></div>
+                    <div class="single_variation_wrap">
+                        <div class="woocommerce-variation single_variation"></div>
 
-    <div class="woocommerce-variation-add-to-cart variations_button">
-        <div class="woocommerce-product-details__add-to-cart">
+                        <div class="woocommerce-variation-add-to-cart variations_button">
+                            <div class="woocommerce-product-details__add-to-cart">
 
-            {{-- FORM ADD TO CART / MUA NGAY --}}
-            <form action="{{ route('cart.store') }}"
-                  method="POST"
-                  id="product-add-to-cart-form">
-                @csrf
+                                {{-- FORM ADD TO CART / MUA NGAY --}}
+                                <form action="{{ route('cart.store') }}" method="POST"
+                                    id="product-add-to-cart-form">
+                                    @csrf
 
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                <input type="hidden" name="variant_id" id="js-variant-id" value="">
-                <input type="hidden" name="action_type" id="js-action-type" value="add_to_cart">
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="variant_id" id="js-variant-id" value="">
+                                    <input type="hidden" name="action_type" id="js-action-type"
+                                        value="add_to_cart">
 
-                <div class="d-flex align-items-center gap-3">
-                    {{-- Quantity --}}
-                    <div class="quantity d-flex align-items-center">
-                        <span class="nova-minicart-qty-button decrease" id="js-qty-decrease">
-                            <svg class="icon">
-                                <use xlink:href="#mini-cart-delete"></use>
-                            </svg>
-                        </span>
+                                    <div class="d-flex align-items-center gap-3">
+                                        {{-- Quantity --}}
+                                        <div class="quantity d-flex align-items-center">
+                                            <span class="nova-minicart-qty-button decrease" id="js-qty-decrease">
+                                                <svg class="icon">
+                                                    <use xlink:href="#mini-cart-delete"></use>
+                                                </svg>
+                                            </span>
 
-                        <label class="screen-reader-text" for="js-quantity-input">
-                            Số lượng
-                        </label>
+                                            <label class="screen-reader-text" for="js-quantity-input">
+                                                Số lượng
+                                            </label>
 
-                        <input type="number"
-                               id="js-quantity-input"
-                               class="input-text qty text"
-                               name="quantity"
-                               value="1"
-                               aria-label="Product quantity"
-                               min="1"
-                               max=""
-                               step="1"
-                               inputmode="numeric"
-                               autocomplete="off" />
+                                            <input type="number" id="js-quantity-input" class="input-text qty text"
+                                                name="quantity" value="1" aria-label="Product quantity"
+                                                min="1" max="" step="1" inputmode="numeric"
+                                                autocomplete="off" />
 
-                        <span class="nova-minicart-qty-button increase" id="js-qty-increase">
-                            <svg class="icon">
-                                <use xlink:href="#mini-cart-add"></use>
-                            </svg>
-                        </span>
+                                            <span class="nova-minicart-qty-button increase" id="js-qty-increase">
+                                                <svg class="icon">
+                                                    <use xlink:href="#mini-cart-add"></use>
+                                                </svg>
+                                            </span>
+                                        </div>
+
+                                        {{-- Nút hành động --}}
+                                        <button type="button" class="single_add_to_cart_button button alt"
+                                            data-action-type="add_to_cart">
+                                            Thêm vào giỏ
+                                        </button>
+
+                                        <button type="button" class="single_add_to_cart_button button btn-primary"
+                                            data-action-type="buy_now">
+                                            Mua ngay
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
                     </div>
-
-                    {{-- Nút hành động --}}
-                    <button type="button"
-                            class="single_add_to_cart_button button alt"
-                            data-action-type="add_to_cart">
-                        Thêm vào giỏ
-                    </button>
-
-                    <button type="button"
-                            class="single_add_to_cart_button button btn-primary"
-                            data-action-type="buy_now">
-                        Mua ngay
-                    </button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
 
                     <!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 07:13:29 -->
                 @endsection
-<div class="tabs" id="panel_reviews">
-    <div id="reviews" class="woocommerce-Reviews">
-        <div id="comments">
-            @if ($ratingCount > 0)
-                <ol class="commentlist">
-                    @foreach ($reviews as $review)
-                        @php
-                            $user   = optional(optional($review->order)->user);
-                            $name   = $user->name ?? 'Khách ẩn danh';
-                            $avatar = $user->image
-                                ? asset('storage/' . $user->image)
-                                : asset('assets/images/users/avatar-1.jpg'); // avatar mặc định
-                            $ratingPercent = max(0, min(100, ($review->rating / 5) * 100));
-                        @endphp
+                <div class="tabs" id="panel_reviews">
+                    <div id="reviews" class="woocommerce-Reviews">
+                        <div id="comments">
+                            @if ($ratingCount > 0)
+                                <ol class="commentlist">
+                                    @foreach ($reviews as $review)
+                                        @php
+                                            $user = optional(optional($review->order)->user);
+                                            $name = $user->name ?? 'Khách ẩn danh';
+                                            $avatar = $user->image
+                                                ? asset('storage/' . $user->image)
+                                                : asset('assets/images/users/avatar-1.jpg'); // avatar mặc định
+                                            $ratingPercent = max(0, min(100, ($review->rating / 5) * 100));
+                                        @endphp
 
-                        <li class="review even thread-even depth-1" id="li-comment-{{ $review->id }}">
-                            <div id="comment-{{ $review->id }}" class="comment_container">
-                                <img alt="{{ $name }}"
-                                     src="{{ $avatar }}"
-                                     class="avatar avatar-60 photo"
-                                     height="60" width="60" />
+                                        <li class="review even thread-even depth-1"
+                                            id="li-comment-{{ $review->id }}">
+                                            <div id="comment-{{ $review->id }}" class="comment_container">
+                                                <img alt="{{ $name }}" src="{{ $avatar }}"
+                                                    class="avatar avatar-60 photo" height="60"
+                                                    width="60" />
 
-                                <div class="comment-text">
+                                                <div class="comment-text">
 
-                                    {{-- Sao đánh giá --}}
-                                    <div class="star-rating" role="img"
-                                         aria-label="Rated {{ $review->rating }} out of 5">
-                                        <span style="width:{{ $ratingPercent }}%">
-                                            Rated
-                                            <strong class="rating">{{ $review->rating }}</strong>
-                                            out of 5
-                                        </span>
-                                    </div>
+                                                    {{-- Sao đánh giá --}}
+                                                    <div class="star-rating" role="img"
+                                                        aria-label="Rated {{ $review->rating }} out of 5">
+                                                        <span style="width:{{ $ratingPercent }}%">
+                                                            Rated
+                                                            <strong class="rating">{{ $review->rating }}</strong>
+                                                            out of 5
+                                                        </span>
+                                                    </div>
 
-                                    <p class="meta">
-                                        <strong class="woocommerce-review__author">
-                                            {{ $name }}
-                                        </strong>
-                                        <span class="woocommerce-review__dash">&ndash;</span>
-                                        <time class="woocommerce-review__published-date"
-                                              datetime="{{ $review->created_at->toIso8601String() }}">
-                                            {{ $review->created_at->format('d/m/Y H:i') }}
-                                        </time>
-                                    </p>
+                                                    <p class="meta">
+                                                        <strong class="woocommerce-review__author">
+                                                            {{ $name }}
+                                                        </strong>
+                                                        <span class="woocommerce-review__dash">&ndash;</span>
+                                                        <time class="woocommerce-review__published-date"
+                                                            datetime="{{ $review->created_at->toIso8601String() }}">
+                                                            {{ $review->created_at->format('d/m/Y H:i') }}
+                                                        </time>
+                                                    </p>
 
-                                    <div class="description">
-                                        <p>{{ $review->content }}</p>
-                                    </div>
+                                                    <div class="description">
+                                                        <p>{{ $review->content }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ol>
+
+                                {{-- Phân trang --}}
+                                <div class="mt-3">
+                                    {{ $reviews->links() }}
                                 </div>
-                            </div>
-                        </li>
-                    @endforeach
-                </ol>
-
-                {{-- Phân trang --}}
-                <div class="mt-3">
-                    {{ $reviews->links() }}
-                </div>
-            @else
-                <p class="woocommerce-noreviews mb-0">
-                    Chưa có đánh giá nào cho sản phẩm này.
-                </p>
-            @endif
-        </div>
+                            @else
+                                <p class="woocommerce-noreviews mb-0">
+                                    Chưa có đánh giá nào cho sản phẩm này.
+                                </p>
+                            @endif
+                        </div>

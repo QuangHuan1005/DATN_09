@@ -2,7 +2,10 @@
 @section('content')
     <div class="container-xxl">
         <div class="row">
-<<<<<<< HEAD
+            <form action="{{ route('admin.products.update', $product->id) }}" method="post" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="col-xl-12 col-lg-8 ">
             <div class="col-xl-12 col-lg-8 ">
                 <form action="{{ route('admin.products.update', $product->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
@@ -21,26 +24,27 @@
                                             <div class="position-relative border rounded overflow-hidden">
                                                 <img src="{{ asset('storage/' . $album->image) }}" class="img-fluid"
                                                     alt="Album image">
-                                                    
                                                 <button type="button"
                                                     class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 btn-delete-album"
                                                     data-id="{{ $album->id }}"
                                                     data-url="{{ route('admin.products.photoAlbums.destroy', [$product->id, $album->id]) }}">
                                                     &times;
                                                 </button>
-                                                
+
                                             </div>
                                         </div>
-                                    
                                     @endforeach
                                 </div>
                             @endif
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Thêm Ảnh Sản Phẩm</h4>
+                        </div>
+                        <div class="card-body">
                             <!-- File Upload -->
-                            <div class="dropzone"  data-plugin="dropzone"
-                                >
+                            <div class="dropzone" data-plugin="dropzone">
                                 <div class="fallback">
                                     <input type="file" name="album_images[]" multiple>
                                 </div>
@@ -55,7 +59,6 @@
                                     </span>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="card">
@@ -85,7 +88,7 @@
                                         <option value="">Chọn một danh mục</option>
                                         @foreach ($categories ?? [] as $category)
                                             <option value="{{ $category->id }}"
-                                                {{ (int) old('category_id', $product->category_id) === $category->id ? 'selected' : '' }}>
+                                                {{ (int) old('category_id', $product->category_id ?? '') === $category->id ? 'selected' : '' }}>
                                                 {{ $category->name }}
                                             </option>
                                         @endforeach
@@ -274,113 +277,16 @@
                             </div>
 
                             {{-- Mô tả --}}
->>>>>>> origin/phong
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
                                         <label for="description" class="form-label">Mô Tả</label>
-<<<<<<< HEAD
                                         <textarea class="form-control bg-light-subtle" id="description" rows="7"
                                             placeholder="Mô tả sản phẩm..."name="description">{{ old('description', $product->description) }}</textarea>
-=======
-                                        <textarea class="form-control bg-light-subtle" name="description" id="description" rows="7"
-                                            placeholder="Mô tả về sản phẩm">{{ old('description', $product->description) }}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- Mã SP / Tồn kho / Chất liệu --}}
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="mb-3">
-                                        <label for="product_code" class="form-label">Mã Sản Phẩm</label>
-                                        <input type="text" id="product_code" name="product_code" class="form-control"
-                                            value="{{ old('product_code', $product->product_code) }}"
-                                            placeholder="#******">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4">
-                                    <div class="mb-3">
-                                        <label for="product-stock" class="form-label">Số Lượng</label>
-                                        <input type="number" id="product-stock" name="quantity" class="form-control"
-                                            value="{{ old('quantity') }}" placeholder="0" min="0">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4">
-                                    <div class="mb-3">
-                                        <label for="product-material" class="form-label">Chất Liệu</label>
-                                        <input type="text" id="product-material" name="material" class="form-control"
-                                            value="{{ old('material', $product->material) }}"
-                                            placeholder="Cotton 100%, denim...">
-                                    </div>
-                                </div>
-                            </div>
-                        </div> {{-- end card-body Thông tin sản phẩm --}}
-
-                        {{-- KHỐI GIÁ --}}
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h4 class="card-title">Chi Tiết Giá</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-
-                                    {{-- Giá gốc --}}
-                                    <div class="col-lg-4">
-                                        <div class="mb-3">
-                                            <label for="product-price" class="form-label">Giá</label>
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text fs-20">
-                                                    <i class='bx bx-dollar'></i>
-                                                </span>
-                                                <input type="number" id="product-price" name="price"
-                                                    class="form-control" value="{{ old('price') }}" placeholder="000"
-                                                    min="0">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{-- Giá giảm / sale price --}}
-                                    <div class="col-lg-4">
-                                        <div class="mb-3">
-                                            <label for="product-discount" class="form-label">Giảm Giá</label>
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text fs-20">
-                                                    <i class='bx bxs-discount'></i>
-                                                </span>
-                                                <input type="number" id="product-discount" name="sale"
-                                                    class="form-control" value="{{ old('sale') }}" placeholder="000"
-                                                    min="0">
-                                            </div>
-                                            <small class="text-muted" style="font-size:12px">
-                                                Nếu trống hoặc = 0 thì hiểu là không giảm.
-                                            </small>
-                                        </div>
-                                    </div>
-
-                                    {{-- Onepage --}}
-                                    <div class="col-lg-4">
-                                        <div class="mb-3">
-                                            <label for="onepage" class="form-label">Hiển Thị Trang Chủ</label>
-                                            <select class="form-control" name="onpage" id="onepage" data-choices
-                                                data-choices-groups data-placeholder="Select Onepage">
-                                                <option value="0"
-                                                    {{ (int) old('onpage', $product->onpage) === 0 ? 'selected' : '' }}>
-                                                    Không
-                                                </option>
-                                                <option value="1"
-                                                    {{ (int) old('onpage', $product->onpage) === 1 ? 'selected' : '' }}>Có
-                                                </option>
-                                            </select>
-                                        </div>
->>>>>>> origin/phong
                                     </div>
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                     </div>
                     <div class="p-3 bg-light mb-3 rounded">
                         <div class="row justify-content-end g-2">
@@ -395,75 +301,54 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
+@endsection
 @section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = '{{ csrf_token() }}';
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = '{{ csrf_token() }}';
 
-            document.querySelectorAll('.btn-delete-album').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    const url = this.dataset.url;
-                    const id = this.dataset.id;
+        document.querySelectorAll('.btn-delete-album').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const url = this.dataset.url;
+                const id = this.dataset.id;
 
-                    if (!confirm('Bạn chắc chắn muốn xoá ảnh này?')) {
-                        return;
+                if (!confirm('Bạn chắc chắn muốn xoá ảnh này?')) {
+                    return;
+                }
+
+                fetch(url, {
+                    method: 'POST', // vì mình spoof DELETE bằng _method
+                    headers: {
+                        'X-CSRF-TOKEN': token,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        '_method': 'DELETE'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Delete response:', data);
+                    if (data.status === 'success') {
+                        const el = document.getElementById('album-' + id);
+                        if (el) el.remove();
+                    } else {
+                        alert(data.message || 'Xoá ảnh thất bại.');
                     }
-
-                    fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': token,
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: new URLSearchParams({
-                                '_method': 'DELETE'
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                const el = document.getElementById('album-' + id);
-                                if (el) el.remove();
-                            } else {
-                                alert('Xoá ảnh thất bại.');
-                            }
-                        })
-                        .catch(() => {
-                            alert('Có lỗi xảy ra khi xoá ảnh.');
-                        });
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Có lỗi xảy ra khi xoá ảnh.');
                 });
             });
         });
-    </script>
+    });
+</script>
 @endsection
-=======
 
-                        {{-- ACTION BUTTONS --}}
-                        <div class="p-3 bg-light mb-3 rounded">
-                            <div class="row justify-content-end g-2">
-                                <div class="col-lg-2">
-                                    <button type="submit" class="btn btn-outline-primary w-100">
-                                        Cập nhập
-                                    </button>
-                                </div>
-                                <div class="col-lg-2">
-                                    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary w-100">
-                                        Hủy
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                    </form> {{-- end FORM CHÍNH --}}
-                </div>
-            </div>
-        </div>
-    </div>
->>>>>>> origin/phong
-@endsection

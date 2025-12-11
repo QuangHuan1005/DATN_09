@@ -44,6 +44,8 @@
                 </a>
             </li>
 
+
+
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.products.index') }}" role="button" aria-expanded="false"
                     aria-controls="sidebarProducts">
@@ -168,6 +170,14 @@
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.chat') }}">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:chat-round-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Chat </span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#sidebarInvoice" role="button" aria-expanded="false"

@@ -15,6 +15,7 @@
             </div>
         @endif
 
+
         {{-- Header --}}
         <div class="row mb-3">
             <div class="col-12">
@@ -38,6 +39,7 @@
                 </div>
             </div>
         </div>
+
 
         {{-- Danh sách biến thể --}}
         <div class="row">
@@ -73,9 +75,9 @@
         // Lấy đường dẫn ảnh hoàn chỉnh được tạo bởi Laravel
         $imageUrl = Storage::url($variant->image);
     @endphp
-    
-    <img src="{{ $imageUrl }}" 
-         alt="Variant Image" 
+   
+    <img src="{{ $imageUrl }}"
+         alt="Variant Image"
          style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
 @else
     {{-- Hiển thị placeholder nếu không có ảnh --}}
@@ -114,7 +116,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-soft-primary btn-sm btn-edit-variant" 
+                                                <button type="button" class="btn btn-soft-primary btn-sm btn-edit-variant"
                                                     data-id="{{ $variant->id }}"
                                                     data-size-id="{{ $variant->size_id }}"
                                                     data-color-id="{{ $variant->color_id }}"
@@ -125,7 +127,7 @@
                                                     data-image="{{ $variant->image }}">
                                                     <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                                                 </button>
-                                                <form action="{{ route('admin.products.variants.destroy', $variant->id) }}" 
+                                                <form action="{{ route('admin.products.variants.destroy', $variant->id) }}"
                                                     method="POST" style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
@@ -153,6 +155,7 @@
         </div>
     </div>
 
+
     {{-- Modal Thêm Biến Thể --}}
     <div class="modal fade" id="addVariantModal" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -165,18 +168,19 @@
                     {{-- Tabs --}}
                     <ul class="nav nav-pills mb-3" id="variantTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="auto-tab" data-bs-toggle="pill" data-bs-target="#auto" 
+                            <button class="nav-link active" id="auto-tab" data-bs-toggle="pill" data-bs-target="#auto"
                                 type="button" role="tab" aria-controls="auto" aria-selected="true">
                                 <i class="bx bx-shuffle"></i> Trộn Tự Động
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="manual-tab" data-bs-toggle="pill" data-bs-target="#manual" 
+                            <button class="nav-link" id="manual-tab" data-bs-toggle="pill" data-bs-target="#manual"
                                 type="button" role="tab" aria-controls="manual" aria-selected="false">
                                 <i class="bx bx-add-to-queue"></i> Trộn Thủ Công
                             </button>
                         </li>
                     </ul>
+
 
                     <div class="tab-content" id="variantTabsContent">
                         {{-- Tab Trộn Tự Động --}}
@@ -186,6 +190,7 @@
                                 <strong>Trộn tự động:</strong> Nhấn "Trộn Tự Động" để tạo tất cả tổ hợp Size × Màu. Sau đó điều chỉnh giá và số lượng cho từng biến thể trước khi lưu.
                             </div>
 
+
                             {{-- Nút Trộn Tự Động --}}
                             <div class="text-center mb-3" id="generateBtnContainer">
                                 <button type="button" class="btn btn-lg btn-primary" id="btnGenerateVariants">
@@ -193,6 +198,7 @@
                                 </button>
                                 <p class="text-muted mt-2">Sẽ tạo tổ hợp từ <strong>{{ $sizes->count() }} kích thước</strong> × <strong>{{ $colors->count() }} màu sắc</strong> = <strong>{{ $sizes->count() * $colors->count() }} biến thể</strong></p>
                             </div>
+
 
                             {{-- Bảng biến thể (ẩn ban đầu) --}}
                             <div id="variantsTableContainer" style="display: none;">
@@ -221,11 +227,14 @@
                                         </table>
                                     </div>
 
+
                                     <input type="hidden" name="variants_data" id="variantsDataInput">
+
 
                                     <div class="alert alert-warning mt-3">
                                         <i class="bx bx-info-circle"></i> Vui lòng kiểm tra kỹ giá và số lượng trước khi lưu!
                                     </div>
+
 
                                     <div class="text-end">
                                         <button type="button" class="btn btn-outline-secondary" id="btnBackToGenerate">
@@ -239,6 +248,7 @@
                             </div>
                         </div>
 
+
                         {{-- Tab Trộn Thủ Công --}}
                         <div class="tab-pane fade" id="manual" role="tabpanel" aria-labelledby="manual-tab">
                             <form action="{{ route('admin.products.variants.store', $product->id) }}" method="POST" enctype="multipart/form-data" id="manualForm">
@@ -247,6 +257,7 @@
                                     <i class="bx bx-info-circle"></i>
                                     <strong>Trộn thủ công:</strong> Thêm từng biến thể một cách cụ thể với thông tin chi tiết.
                                 </div>
+
 
                                 <div class="row">
     {{-- Kích Thước (size_id) --}}
@@ -268,6 +279,7 @@
         @enderror
     </div>
 
+
     {{-- Màu Sắc (color_id) --}}
     <div class="col-md-3 mb-3">
         <label for="manual_color_id" class="form-label">Màu Sắc <span class="text-danger">*</span></label>
@@ -287,10 +299,11 @@
         @enderror
     </div>
 
+
     {{-- Giá Gốc (price) --}}
     <div class="col-md-3 mb-3">
         <label for="manual_price" class="form-label">Giá Gốc <span class="text-danger">*</span></label>
-        <input type="number" class="form-control @error('price') is-invalid @enderror" id="manual_price" name="price" 
+        <input type="number" class="form-control @error('price') is-invalid @enderror" id="manual_price" name="price"
             value="{{ old('price', 0) }}" min="">
         {{-- Hiển thị lỗi cho price (chủ yếu là lỗi 'numeric' và 'min') --}}
         @error('price')
@@ -300,10 +313,11 @@
         @enderror
     </div>
 
+
     {{-- Giá Sale (sale) --}}
     <div class="col-md-3 mb-3">
         <label for="manual_sale" class="form-label">Giá Sale</label>
-        <input type="number" class="form-control @error('sale') is-invalid @enderror" id="manual_sale" name="sale" 
+        <input type="number" class="form-control @error('sale') is-invalid @enderror" id="manual_sale" name="sale"
             value="{{ old('sale') }}" min="0">
         {{-- Hiển thị lỗi cho sale (chủ yếu là lỗi 'numeric' và 'min') --}}
         @error('sale')
@@ -314,11 +328,12 @@
     </div>
 </div>
 
+
 <div class="row">
     {{-- Số Lượng (quantity) --}}
     <div class="col-md-4 mb-3">
         <label for="manual_quantity" class="form-label">Số Lượng <span class="text-danger">*</span></label>
-        <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="manual_quantity" name="quantity" 
+        <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="manual_quantity" name="quantity"
             value="{{ old('quantity', 0) }}" min="0">
         {{-- Hiển thị lỗi cho quantity (chủ yếu là lỗi 'integer' và 'min') --}}
         @error('quantity')
@@ -327,6 +342,7 @@
             </div>
         @enderror
     </div>
+
 
     {{-- Trạng Thái (status) --}}
     <div class="col-md-4 mb-3">
@@ -343,10 +359,11 @@
         @enderror
     </div>
 
+
     {{-- Ảnh Biến Thể (image) --}}
     <div class="col-md-4 mb-3">
         <label for="manual_image" class="form-label">Ảnh Biến Thể</label>
-        <input type="file" class="form-control @error('image') is-invalid @enderror" id="manual_image" name="image" 
+        <input type="file" class="form-control @error('image') is-invalid @enderror" id="manual_image" name="image"
             accept="image/jpeg,image/png,image/jpg,image/webp">
         {{-- Hiển thị lỗi cho image (chủ yếu là lỗi 'image', 'mimes', 'max') --}}
         @error('image')
@@ -356,6 +373,7 @@
         @enderror
     </div>
 </div>
+
 
                                 <div class="text-end">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -370,6 +388,7 @@
             </div>
         </div>
     </div>
+
 
     {{-- Modal Sửa Biến Thể --}}
     <div class="modal fade" id="editVariantModal" tabindex="-1" aria-labelledby="editVariantModalLabel" aria-hidden="true">
@@ -406,23 +425,25 @@
                             </div>
                         </div>
 
+
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="edit_price" class="form-label">Giá Gốc <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="edit_price" name="price" 
+                                <input type="number" class="form-control" id="edit_price" name="price"
                                     value="0" min="0" >
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="edit_sale" class="form-label">Giá Sale</label>
-                                <input type="number" class="form-control" id="edit_sale" name="sale" 
+                                <input type="number" class="form-control" id="edit_sale" name="sale"
                                     value="" min="0">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="edit_quantity" class="form-label">Số Lượng <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="edit_quantity" name="quantity" 
+                                <input type="number" class="form-control" id="edit_quantity" name="quantity"
                                     value="0" min="0" >
                             </div>
                         </div>
+
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -440,6 +461,7 @@
                             </div>
                         </div>
 
+
                         <div id="edit_current_image_container" style="display: none;" class="mb-3">
                             <label class="form-label">Ảnh Hiện Tại:</label><br>
                             <img id="edit_current_image" src="" alt="Current Image" style="max-width: 150px; border: 1px solid #ddd; border-radius: 4px;">
@@ -456,16 +478,18 @@
         </div>
     </div>
 
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Dữ liệu sizes và colors từ server
             const sizes = @json($sizes);
             const colors = @json($colors);
-            
+           
             console.log('Sizes:', sizes);
             console.log('Colors:', colors);
-            
+           
             let variantsData = [];
+
 
             // Nút "Trộn Tự Động"
             const btnGenerate = document.getElementById('btnGenerateVariants');
@@ -474,12 +498,14 @@
                 return;
             }
 
+
             btnGenerate.addEventListener('click', function() {
                 console.log('Button clicked!');
                 generateAllVariants();
                 document.getElementById('generateBtnContainer').style.display = 'none';
                 document.getElementById('variantsTableContainer').style.display = 'block';
             });
+
 
         // Nút "Quay Lại"
         document.getElementById('btnBackToGenerate').addEventListener('click', function() {
@@ -488,6 +514,7 @@
             variantsData = [];
         });
 
+
         // Nút "Xóa Tất Cả"
         document.getElementById('btnClearAll').addEventListener('click', function() {
             if (confirm('Bạn có chắc muốn xóa tất cả các dòng?')) {
@@ -495,6 +522,7 @@
                 variantsData = [];
             }
         });
+
 
             // Hàm tạo tất cả tổ hợp
             function generateAllVariants() {
@@ -507,6 +535,7 @@
                 tbody.innerHTML = '';
                 variantsData = [];
                 let index = 1;
+
 
                 sizes.forEach(size => {
                     colors.forEach(color => {
@@ -522,7 +551,9 @@
                         quantity: 0
                     };
 
+
                     variantsData.push(rowData);
+
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -539,21 +570,21 @@
                             <input type="hidden" name="variants[${index-1}][color_id]" value="${color.id}">
                         </td>
                         <td>
-                            <input type="number" class="form-control form-control-sm" 
-                                name="variants[${index-1}][price]" 
+                            <input type="number" class="form-control form-control-sm"
+                                name="variants[${index-1}][price]"
                                 value="0" min="0"  
                                 data-index="${index-1}">
                         </td>
                         <td>
-                            <input type="number" class="form-control form-control-sm" 
-                                name="variants[${index-1}][sale]" 
+                            <input type="number" class="form-control form-control-sm"
+                                name="variants[${index-1}][sale]"
                                 value="" min="0"
                                 data-index="${index-1}">
                         </td>
                         <td>
-                            <input type="number" class="form-control form-control-sm" 
-                                name="variants[${index-1}][quantity]" 
-                                value="0" min="0" 
+                            <input type="number" class="form-control form-control-sm"
+                                name="variants[${index-1}][quantity]"
+                                value="0" min="0"
                                 data-index="${index-1}">
                         </td>
                         <td class="text-center">
@@ -563,10 +594,12 @@
                         </td>
                     `;
 
+
                     tbody.appendChild(row);
                     index++;
                 });
             });
+
 
             // Thêm event listener cho nút xóa từng dòng
             document.querySelectorAll('.btn-remove-row').forEach(btn => {
@@ -578,36 +611,38 @@
             });
         }
 
+
         // Validation form trước khi submit
         document.getElementById('autoForm').addEventListener('submit', function(e) {
             const rows = document.querySelectorAll('#variantsTableBody tr');
-            
+           
             if (rows.length === 0) {
                 e.preventDefault();
                 alert('Vui lòng tạo ít nhất 1 biến thể!');
                 return false;
             }
 
+
             // Kiểm tra giá và số lượng (tìm tất cả input trong mỗi dòng)
             let hasError = false;
             let errorMessage = '';
-            
+           
             rows.forEach((row, idx) => {
                 const priceInput = row.querySelector('input[name*="[price]"]');
                 const quantityInput = row.querySelector('input[name*="[quantity]"]');
-                
+               
                 if (!priceInput || !quantityInput) {
                     hasError = true;
                     errorMessage = 'Không tìm thấy input giá hoặc số lượng!';
                     return;
                 }
-                
+               
                 if (priceInput.value === '' || priceInput.value === null || parseFloat(priceInput.value) < 0) {
                     hasError = true;
                     errorMessage = `Dòng ${idx + 1}: Vui lòng nhập giá hợp lệ!`;
                     return;
                 }
-                
+               
                 if (quantityInput.value === '' || quantityInput.value === null || parseInt(quantityInput.value) < 0) {
                     hasError = true;
                     errorMessage = `Dòng ${idx + 1}: Vui lòng nhập số lượng hợp lệ!`;
@@ -615,18 +650,20 @@
                 }
             });
 
+
             if (hasError) {
                 e.preventDefault();
                 alert(errorMessage || 'Vui lòng nhập đầy đủ giá và số lượng cho tất cả các biến thể!');
                 return false;
             }
-            
+           
             console.log('Form is valid, submitting...');
             return true;
         });
 
+
         // ==================== EDIT VARIANT MODAL ====================
-        
+       
         // Xử lý khi click nút Edit
         document.querySelectorAll('.btn-edit-variant').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -639,11 +676,14 @@
                 const status = this.dataset.status;
                 const image = this.dataset.image;
 
+
                 console.log('Edit variant:', variantId);
+
 
                 // Set form action
                 const form = document.getElementById('editVariantForm');
                 form.action = `/admin/product-variants/${variantId}`;
+
 
                 // Fill dữ liệu vào form
                 document.getElementById('edit_size_id').value = sizeId;
@@ -653,6 +693,7 @@
                 document.getElementById('edit_quantity').value = quantity;
                 document.getElementById('edit_status').value = status;
 
+
                 // Hiển thị ảnh hiện tại nếu có
                 if (image) {
                     document.getElementById('edit_current_image').src = `/storage/${image}`;
@@ -661,11 +702,13 @@
                     document.getElementById('edit_current_image_container').style.display = 'none';
                 }
 
+
                 // Mở modal
                 const modal = new bootstrap.Modal(document.getElementById('editVariantModal'));
                 modal.show();
             });
         });
+
 
         }); // End DOMContentLoaded
     </script>

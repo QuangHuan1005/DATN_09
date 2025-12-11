@@ -1,6 +1,8 @@
 @extends('layouts.admin.app')
 
+
 @section('title', 'Sửa biến thể sản phẩm')
+
 
 @section('content')
 <div class="container mt-4">
@@ -16,6 +18,7 @@
         </div>
     </div>
 
+
             <!-- Success Message -->
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -23,6 +26,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
+
 
             <!-- Edit Form -->
             <div class="row justify-content-center">
@@ -37,39 +41,40 @@
                             <form action="{{ route('admin.products.variants.update', $variant) }}" method="POST">
                                 @csrf
                                 @method('PUT')
-                                
+                               
                                 <input type="hidden" name="type" value="{{ $type }}">
-                                
+                               
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Tên {{ $typeName ?? 'biến thể' }}</label>
-                                    <input type="text" class="form-control" id="name" name="name" 
+                                    <input type="text" class="form-control" id="name" name="name"
                                            value="{{ old('name', $variant->name) }}" required>
                                 </div>
+
 
                                 @if($type === 'size')
                                 <div class="mb-3">
                                     <label for="size_code" class="form-label">Giá trị</label>
-                                    <input type="text" class="form-control" id="size_code" name="size_code" 
-                                           value="{{ old('size_code', $variant->size_code) }}" 
+                                    <input type="text" class="form-control" id="size_code" name="size_code"
+                                           value="{{ old('size_code', $variant->size_code) }}"
                                            placeholder="VD: S, M, L, XL">
                                 </div>
                                 @elseif($type === 'color')
                                 <div class="mb-3">
                                     <label for="color_code" class="form-label">Giá trị</label>
-<<<<<<< HEAD
+                                    <input type="text" class="form-control" id="color_code" name="color_code"
+                                           value="{{ old('color_code', $variant->color_code) }}"
 <input type="text" class="form-control" id="color_code" name="color_code" 
-=======
-                                    <input type="text" class="form-control" id="color_code" name="color_code" 
->>>>>>> origin/phong
                                            value="{{ old('color_code', $variant->color_code) }}" 
                                            placeholder="VD: #FF0000, #0000FF">
                                 </div>
                                 @endif
 
+
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Mô tả</label>
                                     <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $variant->description) }}</textarea>
                                 </div>
+
 
                                 <div class="mb-3">
                                     <label for="status" class="form-label">Trạng thái</label>
@@ -78,6 +83,7 @@
                                         <option value="inactive" {{ old('status', $variant->status) === 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
                                     </select>
                                 </div>
+
 
                                 <div class="d-flex gap-2">
                                     <button type="submit" class="btn btn-primary">
@@ -94,10 +100,4 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 @endsection
-=======
-@endsection
-
-
->>>>>>> origin/phong

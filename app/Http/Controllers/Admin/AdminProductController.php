@@ -10,7 +10,10 @@ use App\Models\ProductVariant;
 use App\Models\Color;
 use App\Models\Size;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AdminProductController extends Controller
 {
@@ -141,13 +144,16 @@ public function store(Request $request)
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'exists:categories,id',
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
             'material'    => 'nullable|string|max:150',
             'onpage'      => 'required|boolean',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            'album_images'   => 'nullable|array',
+            'album_images.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:4096',
         ]);
+
 
         $product->update([
             'category_id' => $validated['category_id'],
@@ -157,13 +163,24 @@ public function store(Request $request)
             'onpage'      => $validated['onpage'],
         ]);
 
-        if ($request->hasFile('image')) {
-            // Xóa ảnh cũ
-            foreach ($product->photoAlbums as $album) {
-                if (Storage::disk('public')->exists($album->image)) {
-                    Storage::disk('public')->delete($album->image);
-                }
-                $album->delete();
+
+        if ($request->hasFile('album_images')) {
+            foreach ($request->file('album_images') as $file) {
+                $$ext = $img->getClientOriginalExtension();
+
+                // Tạo tên file dạng: ao-khoac-nam-1733802234-65ab3da9c1.jpg
+                $newName = Str::slug($product->name) . '-' . time() . '.' . $ext;
+
+                // Lưu vào storage/app/public/products/albums/
+                $path = $img->storeAs('products/photoAlbums', $newName, 'public');
+
+                $product->photoAlbums()->create([
+                    'image' => $path,
+                ]);
+                ProductPhotoAlbum::create([
+                    'product_id' => $product->id,
+                    'image'      => $path,
+                ]);
             }
 
             // Lưu ảnh mới
@@ -174,8 +191,27 @@ public function store(Request $request)
             ]);
         }
 
+
         return redirect()->route('admin.products.index')
             ->with('success', 'Cập nhật sản phẩm thành công!');
+    }
+    public function destroyAlbum(Product $product, $albumId)
+    {
+        // Tìm album thuộc đúng product (tránh xóa nhầm)
+        $album = $product->photoAlbums()->where('id', $albumId)->firstOrFail();
+
+        // Xóa file trên storage
+        if (!empty($album->image) && Storage::disk('public')->exists($album->image)) {
+            Storage::disk('public')->delete($album->image);
+        }
+
+        // Xóa record DB
+        $album->delete();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Xóa ảnh thành công',
+        ]);
     }
 
     // Ẩn sản phẩm (soft delete)
@@ -217,7 +253,7 @@ public function store(Request $request)
     {
         $variants = ProductVariant::with(['product', 'color', 'size'])
             ->orderBy('created_at', 'desc')
-            ->orderBy('id', 'asc')
+            ->orderBy('id', 'desc')
             ->get();
 
         return view('admin.products.variants-index', compact('variants'));
@@ -485,10 +521,11 @@ public function store(Request $request)
 
         // Xử lý upload ảnh mới
         if ($request->hasFile('image')) {
-            // Xóa ảnh cũ nếu có
-            if ($variant->image) {
-                Storage::delete('public/' . $variant->image);
+
+            if (!empty($variant->image) && Storage::disk('public')->exists($variant->image)) {
+                Storage::disk('public')->delete($variant->image);
             }
+
             $path = $request->file('image')->store('product_variants', 'public');
             $variant->image = $path;
         }

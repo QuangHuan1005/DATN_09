@@ -1,556 +1,43 @@
 @extends('master')
 @section('content')
 
-<body
-    class="wp-singular product-template-default single single-product postid-164 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-383 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
-    <div class="site-wrapper">
-
-        <div class="kitify-site-wrapper elementor-459kitify">
-            @include('layouts.header')
-            <div class="container py-5">
-
-
-
-    <div class="row align-items-start">
-    <!-- Hình ảnh sản phẩm -->
-    <div class="col-md-6 text-center pe-md-5"> {{-- thêm pe-md-5 để tạo khoảng cách bên phải --}}
-        {{-- Ảnh chính --}}
-
-     <div class="main-image mb-4">
-    <img
-        src="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"
-        data-default="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"
-        alt="{{ $product->name }}"
-        class="img-fluid rounded shadow"
-        style="max-height: 500px; object-fit: cover;">
-</div>
-
-
-
-
-        {{-- Album ảnh nhỏ phía dưới --}}
-        @if(isset($albums) && $albums->count())
-        <div class="album-images d-flex justify-content-center gap-3 flex-wrap mt-3">
-            @foreach($albums as $img)
-            <img
-                src="{{ Storage::disk('public')->url('product_images/'.$img->image) }}"
-                alt=""
-                width="100" height="100"
-                class="img-thumbnail border border-secondary"
-                style="object-fit: cover; border-radius: 6px;">
-            @endforeach
-        </div>
-        @endif
-    </div>
-
-    <!-- Thông tin sản phẩm -->
-    <div class="col-md-6 ps-md-5"> {{-- thêm ps-md-5 để tạo khoảng cách bên trái --}}
-        <h2 class="mb-3">{{ $product->name }}</h2>
-        <p class="text-muted">{{ $product->material }}</p>
-        <p>{{ $product->description }}</p>
-
-        @if(isset($variants) && $variants->count() > 0)
-            <h4 class="mt-4 mb-2">Chọn thuộc tính</h4>
-
-{{-- Form thêm giỏ --}}
-<form method="POST" action="{{ route('cart.add') }}" id="addToCartForm" class="border p-3 rounded">
-    @csrf
-    <input type="hidden" name="product_id" value="{{ $product->id }}">
-    {{-- sẽ set động theo lựa chọn --}}
-    <input type="hidden" name="product_variant_id" id="variantId" value="">
-
-    {{-- Màu --}}
-    <div class="mb-3">
-        <label for="selectColor" class="form-label fw-semibold">Màu sắc</label>
-
-        @php
-            // Lấy các color_id còn hàng từ $variants của chính product này
-            $inStockColorIds = $variants
-                ->filter(fn($v) => ($v->quantity ?? 0) > 0 && !empty($v->color_id))
-                ->pluck('color_id')
-                ->unique()
-                ->values()
-                ->all();
-        @endphp
-
-        <select id="selectColor" class="form-select">
-            <option value="" selected>— Chọn màu —</option>
-            @foreach($colors->whereIn('id', $inStockColorIds) as $c)
-                <option value="{{ $c->id }}">{{ $c->name }}</option>
-            @endforeach
-        </select>
-
-        {{-- Trường hợp không còn màu nào còn hàng --}}
-        @if(empty($inStockColorIds))
-            <small class="text-danger d-block mt-1">Sản phẩm tạm hết hàng.</small>
-        @endif
-    </div>
-
-    {{-- Size (tuỳ theo màu đã chọn sẽ lọc) --}}
-    <div class="mb-3">
-        <label for="selectSize" class="form-label fw-semibold">Kích cỡ</label>
-        <select id="selectSize" class="form-select" disabled>
-            <option value="" selected>— Chọn size —</option>
-        </select>
-    </div>
-
-    {{-- Giá hiển thị theo biến thể đã chọn --}}
-    <div class="mb-3">
-    <label class="form-label fw-semibold">Giá Tiền</label>
-    <div id="priceBox">
-    @php
-        // Lấy giá gốc và giá sale
-        $allVariants = collect($variants ?? []);
-        
-        // Giá hiển thị: ưu tiên sale, nếu không có thì price
-        $displayPrices = $allVariants->map(fn($v) => (float)($v->sale > 0 ? $v->sale : $v->price));
-        $minDisplay = $displayPrices->min();
-        $maxDisplay = $displayPrices->max();
-        
-        // Giá gốc (để gạch ngang nếu có sale)
-        $originalPrices = $allVariants->map(fn($v) => (float)$v->price);
-        $minOriginal = $originalPrices->min();
-        $maxOriginal = $originalPrices->max();
-        
-        // Kiểm tra có sale không
-        $hasSale = $allVariants->some(fn($v) => $v->sale > 0 && $v->sale < $v->price);
-    @endphp
-
-    @if(!is_null($minDisplay))
-        <div class="price">
-            @if($hasSale)
-                {{-- Hiển thị giá gốc gạch ngang --}}
-                <span class="text-muted text-decoration-line-through me-2">
-                    {{ number_format($minOriginal, 0, ',', '.') }}₫
-                    @if($maxOriginal > $minOriginal)
-                        – {{ number_format($maxOriginal, 0, ',', '.') }}₫
-                    @endif
-                </span>
-            @endif
-            {{-- Giá sale hoặc giá hiện tại --}}
-            <span class="price--normal" style="color: {{ $hasSale ? '#e74c3c' : 'inherit' }}; font-weight: bold;">
-                {{ number_format($minDisplay, 0, ',', '.') }}₫
-                @if($maxDisplay > $minDisplay)
-                    – {{ number_format($maxDisplay, 0, ',', '.') }}₫
-                @endif
-            </span>
-        </div>
-    @else
-        <div class="price"><span class="price--normal">Đang cập nhật</span></div>
-    @endif
-    </div>
-    </div>
-
-    <!-- Tồn kho -->
-    <div class="mb-3">
-    <label class="form-label fw-semibold">Tồn Kho</label>
-    <span id="stockBox" class="text-muted">Vui lòng chọn màu & size</span>
-    </div>
-
-    {{-- Số lượng --}}
-
-        <div class="mb-3">
-        <label for="quantity" class="form-label fw-semibold m-0">Số lượng</label>
-        <div class="qty-pill" id="qtyBox">
-            <button type="button" class="qty-btn" id="qtyMinus" aria-label="Giảm">−</button>
-            <input type="number" id="quantity" name="quantity" class="qty-input" value="1" min="1" inputmode="numeric" pattern="\d*">
-            <button type="button" class="qty-btn" id="qtyPlus" aria-label="Tăng">+</button>
-        </div>
-        </div>
-
-        {{-- Nút thêm giỏ hàng đưa xuống dưới ô số lượng --}}
-        <button type="submit"
-                class="btn btn-dark d-inline-block"
-                style="margin-top:8px; display:block"
-                id="btnAddToCart" >
-        Thêm Vào Giỏ Hàng
-        </button>
-
-        <button type="submit"
-                class="btn btn-primary"
-                id="btnBuyNow"
-                style="margin-top:8px"
-                formaction="{{ route('checkout.buy_now') }}">
-        Mua Ngay
-        </button>
-</form>
-
-{{-- Dữ liệu variants cho JS --}}
-<script>
-    // Popup dạng modal trung tâm
-function showWarnModal(message, title = 'Thông báo') {
-  Swal.fire({
-    icon: 'warning',
-    title: title,
-    text: message,
-    confirmButtonColor: '#3085d6',
-    confirmButtonText: 'Đã hiểu',
-  });
-}
-
-// Popup dạng toast góc phải, tự ẩn
-function showWarnToast(message) {
-  Swal.fire({
-    toast: true,
-    position: 'top-end',
-    icon: 'warning',
-    title: message,
-    showConfirmButton: false,
-    timer: 2200,
-    timerProgressBar: true,
-  });
-}
-    // map "colorId-sizeId" -> data
-    const VARIANTS = @json($variantMap);
-
-    // xây index: colorId -> [{size_id, size_name}]
-    const COLOR_SIZES = {};
-    @foreach($variants as $v)
-        @if($v->color_id && $v->size_id && ($v->quantity ?? 0) > 0)
-            COLOR_SIZES[{{ $v->color_id }}] = COLOR_SIZES[{{ $v->color_id }}] || [];
-            COLOR_SIZES[{{ $v->color_id }}].push({
-                id: {{ $v->size_id }},
-                name: "{{ $v->size?->name }}"
-            });
-        @endif
-    @endforeach
-
-    const fmt = (n) => new Intl.NumberFormat('vi-VN').format(n) + '₫';
-
-    const selectColor = document.getElementById('selectColor');
-    const selectSize  = document.getElementById('selectSize');
-    const priceBox    = document.getElementById('priceBox');
-    const variantId   = document.getElementById('variantId');
-    const btnAdd      = document.getElementById('btnAddToCart');
-    const btnBuy      = document.getElementById('btnBuyNow');
-    const stockBox    = document.getElementById('stockBox');
-
-
-    // === ẢNH: luôn lấy được ảnh gốc & chuẩn bị base URL ===
-    const mainImg          = document.querySelector('.main-image img');
-    const DEFAULT_SRC      = mainImg ? (mainImg.getAttribute('data-default') || mainImg.src) : null;
-    const urlProductImages = `{{ Storage::disk('public')->url('product_images') }}`;
-    const urlProducts      = `{{ Storage::disk('public')->url('products') }}`;
-    const storageBase      = `{{ asset('storage') }}`; // => /storage
-
-    // helper: thử tải 1 url, resolve(true/false)
-    function canLoad(url) {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-            img.src = url;
-        });
-    }
-
-    // helper: từ v.image -> danh sách URL thử lần lượt
-    function buildCandidateUrls(vImage) {
-        const list = [];
-        if (!vImage) return list;
-
-        const trimmed = (vImage + '').trim();
-
-        // URL tuyệt đối
-        if (/^https?:\/\//i.test(trimmed)) {
-            list.push(trimmed);
-            return list;
+    <style>
+        /* Item mặc định */
+        .variable-item.color-variable-item {
+            border: 1px solid #e2e2e2;
+            border-radius: 1px;
+            padding: 3px;
+            transition: all 0.2s ease;
         }
 
-        if (trimmed.startsWith('/storage') || trimmed.startsWith('storage/')) {
-        list.push(trimmed.startsWith('/') ? trimmed : `/${trimmed}`);
-        return list;
-}
-
-        // đã có thư mục (ví dụ "products/xxx.jpg" hoặc "product_images/xxx.jpg")
-        if (trimmed.includes('/')) {
-            // ghép với /storage (Laravel public disk)
-            list.push(`${storageBase}/${trimmed}`);
-        } else {
-            // chỉ là tên file -> thử 2 thư mục quen dùng
-           // chỉ là tên file -> thử 2 thư mục (ưu tiên 'products')
-list.push(`${urlProducts}/${trimmed}`);
-list.push(`${urlProductImages}/${trimmed}`);
-
+        /* Hover */
+        .variable-item.color-variable-item:hover {
+            border-color: #c1995a;
+            /* gold theo brand */
         }
 
-        return list;
-    }
-
-    // khi chọn màu -> nạp danh sách size hợp lệ và trả ảnh về mặc định
-    selectColor.addEventListener('change', () => {
-        const colorId = selectColor.value;
-        selectSize.innerHTML = '<option value="" selected>— Chọn size —</option>';
-        variantId.value = '';
-        btnAdd.disabled = true;
-        if (btnBuy) btnBuy.disabled = true;
-        priceBox.innerHTML = '<span class="text-muted">Chọn size để xem giá</span>';
-
-        if (stockBox) {
-        stockBox.textContent = 'Vui lòng chọn màu & size';
-        stockBox.classList.remove('text-success','text-danger');
-        }
-        // Bỏ giới hạn số lượng khi chưa chọn đủ biến thể (MAX_QTY sẽ set lại khi chọn size)
-        if (typeof MAX_QTY !== 'undefined') {
-        MAX_QTY = null;
-        qtyInput.value = clampQty(qtyInput.value);
-        syncQtyButtons();
-        }
-        // if (mainImg && DEFAULT_SRC) mainImg.src = DEFAULT_SRC;
-
-        if (!colorId) {
-            selectSize.disabled = true;
-            return;
+        /* Khi được chọn */
+        .variable-item.color-variable-item.active,
+        .variable-item.color-variable-item[aria-checked="true"] {
+            border-color: #c1995a;
+            box-shadow: 0 0 0 2px rgba(193, 153, 90, 0.3);
         }
 
-        const sizes = (COLOR_SIZES[colorId] || []).reduce((acc, s) => {
-            if (!acc.some(x => x.id === s.id)) acc.push(s); // tránh trùng size
-            return acc;
-        }, []);
-
-        sizes.forEach(s => {
-            const op = document.createElement('option');
-            op.value = s.id;
-            op.textContent = s.name;
-            selectSize.appendChild(op);
-        });
-
-        selectSize.disabled = sizes.length === 0;
-        if (sizes.length === 0) {
-            priceBox.innerHTML = '<span class="text-danger">Màu này tạm hết size</span>';
+        /* Viền bo cho ô màu */
+        .variable-item-span-color {
+            border-radius: 4px;
         }
-    });
+    </style>
 
-    const BASE_STORAGE_URL = "{{ asset('storage') }}";
-    // khi chọn size -> tìm biến thể, hiện giá, ĐỔI ẢNH CÓ KIỂM TRA TẢI
-    selectSize.addEventListener('change', async () => {
-        const colorId = selectColor.value || '0';
-        const sizeId  = selectSize.value  || '0';
-        const key = `${colorId}-${sizeId}`;
-        const v = VARIANTS[key];
+    <body
+        class="wp-singular product-template-default single single-product postid-1558 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-383 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
+        <div class="site-wrapper">
 
-        if (!v) {
-            variantId.value = '';
-            btnAdd.disabled = true;
-            if (btnBuy) btnBuy.disabled = true;
-            priceBox.innerHTML = '<span class="text-danger">Biến thể không tồn tại</span>';
-            if (mainImg && DEFAULT_SRC) mainImg.src = DEFAULT_SRC;
-            return;
-        }
-
-        variantId.value = v.id;
-        btnAdd.disabled = false;
-        if (btnBuy) btnBuy.disabled = false;
-
-        // hiện giá (ưu tiên sale)
-        if (v.sale && Number(v.sale) > 0) {
-        priceBox.innerHTML =
-            `<div class="price">
-                <span class="price--sale">${fmt(v.sale)}</span>
-                <span class="price--original">${fmt(v.price)}</span>
-            </div>`;
-        } else {
-        priceBox.innerHTML =
-            `<div class="price">
-                <span class="price--normal">${fmt(v.price)}</span>
-            </div>`;
-        }
-
-        // --- TỒN KHO & GIỚI HẠN SỐ LƯỢNG ---
-        if (typeof v.stock !== 'undefined' && v.stock !== null) {
-        const s = parseInt(v.stock, 10) || 0;
-
-        if (stockBox) {
-            if (s > 0) {
-            stockBox.textContent = `${s} sản phẩm`;
-            stockBox.classList.remove('text-danger');
-            stockBox.classList.add('text-success');
-            } else {
-            stockBox.textContent = 'Hết hàng';
-            stockBox.classList.remove('text-success');
-            stockBox.classList.add('text-danger');
-            }
-        }
-
-        // Khoá/mở nút Thêm vào giỏ
-        btnAdd.disabled = s <= 0;
-        if (btnBuy) btnBuy.disabled = s <= 0;
-
-        // Giới hạn số lượng theo tồn kho
-        MAX_QTY = s > 0 ? s : null;
-        qtyInput.value = clampQty(qtyInput.value);
-        syncQtyButtons();
-        } else {
-        if (stockBox) {
-            stockBox.textContent = 'Vui lòng chọn màu & size';
-            stockBox.classList.remove('text-success','text-danger');
-        }
-        MAX_QTY = null;
-        btnAdd.disabled = false;
-        if (btnBuy) btnBuy.disabled = false; // hoặc true nếu muốn bắt buộc stock > 0 mới cho thêm
-        qtyInput.value = clampQty(qtyInput.value);
-        syncQtyButtons();
-        }
-
-
-        // === ĐỔI ẢNH: chỉ set src khi chắc chắn có URL load được ===
-        if (mainImg) {
-            const candidates = buildCandidateUrls(v.image);
-
-            let loadedUrl = null;
-            for (const url of candidates) {
-                // eslint-disable-next-line no-await-in-loop
-                if (await canLoad(url)) { loadedUrl = url; break; }
-            }
-
-            if (loadedUrl) {
-                // Bổ sung tiền tố /storage/products nếu là tên file tương đối
-                if (!loadedUrl.startsWith('http') && !loadedUrl.startsWith('/storage')) {
-                    loadedUrl = `${BASE_STORAGE_URL}/${loadedUrl.replace(/^\/?/, '')}`;
-                }
-                mainImg.src = loadedUrl;
-
-            } else if (v.image) {
-                // Có tên file nhưng không load được theo candidates -> tự build URL tuyệt đối
-                mainImg.src = v.image.startsWith('http')
-                ? v.image
-                : (v.image.startsWith('/storage') || v.image.startsWith('storage/'))
-                ? (v.image.startsWith('/') ? v.image : `/${v.image}`)
-                : `${BASE_STORAGE_URL}/${(v.image+'').replace(/^\/?/, '')}`;
-
-
-            } else if (mainImg.src && mainImg.src.trim() !== '' && !mainImg.src.includes('undefined') && !mainImg.src.includes('null')) {
-                // ✅ GIỮ NGUYÊN ẢNH HIỆN TẠI nếu variant không có ảnh riêng
-                mainImg.src = mainImg.src;
-
-            } else if (DEFAULT_SRC) {
-                // fallback cuối cùng
-                mainImg.src = DEFAULT_SRC;
-            }
-        }
-
-
-
-    });
-
-    // chặn submit nếu chưa có variant
-    document.getElementById('addToCartForm').addEventListener('submit', (e) => {
-        if (!variantId.value) {
-            e.preventDefault();
-            showWarnModal('Vui lòng chọn màu và size trước khi thêm vào giỏ hàng.');
-        }
-    });
-
-    // --- SỐ LƯỢNG: – / + ---
-    const qtyInput = document.getElementById('quantity');
-    const btnMinus = document.getElementById('qtyMinus');
-    const btnPlus  = document.getElementById('qtyPlus');
-
-    const MIN_QTY = parseInt(qtyInput?.min || '1', 10) || 1;
-    let MAX_QTY = null; // sẽ set theo tồn kho nếu bạn có (v.stock)
-
-    // đồng bộ trạng thái nút
-    function syncQtyButtons() {
-    const val = parseInt(qtyInput.value || '1', 10);
-    btnMinus.disabled = val <= MIN_QTY;
-    btnPlus.disabled  = (MAX_QTY && val >= MAX_QTY) ? true : false;
-    }
-    function clampQty(v) {
-    let n = parseInt(v || '1', 10);
-    if (isNaN(n) || n < MIN_QTY) n = MIN_QTY;
-    if (MAX_QTY && n > MAX_QTY) n = MAX_QTY;
-    return n;
-    }
-
-    btnMinus.addEventListener('click', () => {
-    let val = parseInt(qtyInput.value || '1', 10);
-    val = Math.max(MIN_QTY, val - 1);
-    qtyInput.value = val;
-    syncQtyButtons();
-    });
-
-    btnPlus.addEventListener('click', () => {
-        let val = parseInt(qtyInput.value || '1', 10);
-        val += 1;
-
-        if (MAX_QTY && val > MAX_QTY) {
-            val = MAX_QTY;
-            // ⚠️ Hiển thị cảnh báo
-            Swal.fire({
-            icon: 'warning',
-            title: 'Vượt quá số lượng tồn kho!',
-            text: `Sản phẩm chỉ còn ${MAX_QTY} sản phẩm trong kho.`,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Đã hiểu',
-    });
-        }
-
-        qtyInput.value = val;
-        syncQtyButtons();
-    });
-
-    // Khi người dùng gõ tay
-    qtyInput.addEventListener('input', () => {
-        let val = parseInt(qtyInput.value || '1', 10);
-
-        if (isNaN(val) || val < MIN_QTY) val = MIN_QTY;
-        if (MAX_QTY && val > MAX_QTY) {
-            val = MAX_QTY;
-            showWarnToast(`Chỉ còn ${MAX_QTY} sản phẩm trong kho`);
-        }
-
-        qtyInput.value = val;
-        syncQtyButtons();
-    });
-
-    syncQtyButtons();
-
-</script>
-
-
-        @endif
-
-        {{-- <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-4">
-            @csrf
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
-            </button>
-            <a href="{{ route('products.index') }}" class="btn btn-secondary ms-2">
-                <i class="bi bi-arrow-left"></i> Quay lại
-            </a>
-        </form> --}}
-    </div>
-</div>
-
-    <!-- Đánh giá sản phẩm -->
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <h3>Đánh giá sản phẩm</h3>
-            @if(isset($reviews) && $reviews->count() > 0)
-                @foreach($reviews as $r)
-                    <div class="border-bottom py-3">
-                        <strong>⭐ {{ $r->rating }}/5</strong>
-                        <p class="mb-0">{{ $r->content }}</p>
-                    </div>
-                @endforeach
-            @else
-                <p>Chưa có đánh giá nào cho sản phẩm này.</p>
-            @endif
-        </div>
-    </div>
-
-    {{-- Sản phẩm cùng danh mục --}}
-    @if(isset($relatedProducts) && $relatedProducts->count())
-        <div class="row mt-5">
-            <div class="col-12">
-                <h3 class="mb-4">Sản phẩm cùng danh mục</h3>
-            </div>
-
-            @foreach($relatedProducts as $item)
-                <div class="col-6 col-md-3 mb-4">
-                    <a href="{{ route('products.show', $item->id) }}"
-                       class="text-decoration-none text-dark">
-                        <div class="card h-100 border-0 shadow-sm">
-                            {{-- Ảnh sản phẩm --}}
+            <div class="kitify-site-wrapper elementor-459kitify">
+                @include('layouts.header')
+                <div id="site-content" class="site-content-wrapper">
+                    <div class="woocommerce-notices-wrapper">
+                        @if (session('cart_success'))
                             @php
                                 $thumb = optional($item->photoAlbums->first())->image;
                             @endphp
@@ -563,6 +50,118 @@ list.push(`${urlProductImages}/${trimmed}`);
                                     class="card-img-top"
                                     style="object-fit: cover; border-radius: 8px 8px 0 0;">
                             </div>
+                        @endif
+                    </div>
+                    <div class="woocommerce-notices-wrapper"></div>
+                    <div data-elementor-type="product" data-elementor-id="383"
+                        class="elementor elementor-383 elementor-location-single post-1558 product type-product status-publish has-post-thumbnail product_cat-jackets product_cat-men product_cat-tshirts product_tag-clothing product_tag-etc product_tag-fashion product_tag-m81 product_tag-men product_tag-products first instock shipping-taxable purchasable product-type-variable has-default-attributes product">
+                        <div class="elementor-element elementor-element-39b316d e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                            data-id="39b316d" data-element_type="container">
+                            <div class="e-con-inner">
+                                <div class="elementor-element elementor-element-58d624c5 elementor-widget kitify elementor-kitify-breadcrumbs"
+                                    data-id="58d624c5" data-element_type="widget"
+                                    data-widget_type="kitify-breadcrumbs.default">
+                                    <div class="elementor-widget-container">
+
+                                        <div class="kitify-breadcrumbs">
+                                            <div class="kitify-breadcrumbs__content">
+                                                <div class="kitify-breadcrumbs__wrap">
+                                                    <div class="kitify-breadcrumbs__item"><a href="/"
+                                                            class="kitify-breadcrumbs__item-link is-home" rel="home"
+                                                            title="Trang Chủ">Trang Chủ</a></div>
+                                                    <div class="kitify-breadcrumbs__item">
+                                                        <div class="kitify-breadcrumbs__item-sep"><span>/</span></div>
+                                                    </div>
+                                                    <div class="kitify-breadcrumbs__item"><a
+                                                            href="{{ route('products.index') }}"
+                                                            class="kitify-breadcrumbs__item-link" rel="tag"
+                                                            title="Sản Phẩm">Sản Phẩm</a></div>
+                                                    <div class="kitify-breadcrumbs__item">
+                                                        <div class="kitify-breadcrumbs__item-sep"><span>/</span></div>
+                                                    </div>
+                                                    <div class="kitify-breadcrumbs__item"><span
+                                                            class="kitify-breadcrumbs__item-target">{{ $product->name }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="elementor-element elementor-element-2e5f5a67 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                            data-id="2e5f5a67" data-element_type="container">
+                            <div class="e-con-inner">
+                                <div class="elementor-element elementor-element-7f1d1720 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                    data-id="7f1d1720" data-element_type="container">
+                                    <div class="elementor-element elementor-element-951389e e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                        data-id="951389e" data-element_type="container"
+                                        data-settings="{&quot;sticky&quot;:&quot;top&quot;,&quot;sticky_on&quot;:[&quot;desktop&quot;,&quot;tablet_extra&quot;,&quot;laptop&quot;],&quot;sticky_offset&quot;:1,&quot;sticky_parent&quot;:&quot;yes&quot;,&quot;sticky_effects_offset&quot;:0}">
+                                        <div class="e-con-inner">
+                                            <div class="elementor-element elementor-element-1f95cbfc elementor-widget kitify elementor-kitify-wooproduct-images"
+                                                data-id="1f95cbfc" data-element_type="widget"
+                                                data-widget_type="kitify-wooproduct-images.default">
+                                                <div class="elementor-widget-container">
+                                                    <div class="kitify-product-images layout-type-1">
+                                                        <div class="woocommerce-product-gallery
+                                                                    woocommerce-product-gallery--with-images
+                                                                    woocommerce-product-gallery--columns-6 images"
+                                                            data-columns="{{ min(6, max($images ?? [], 6)) ?? null }}"
+                                                            style="opacity: 0; transition: opacity .25s ease-in-out;">
+                                                            <div class="woocommerce-product-gallery__wrapper">
+
+                                                                @foreach ($images as $index => $img)
+                                                                    @php
+                                                                        $imgUrl = asset('storage/' . $img);
+                                                                        $alt =
+                                                                            $product->name . '- Image' . ($index + 1);
+                                                                    @endphp
+
+                                                                    <div data-thumb="{{ $imgUrl }}"
+                                                                        data-thumb-alt="{{ $alt }}"
+                                                                        data-thumb-srcset="{{ $imgUrl }} 250w,
+                                                                            {{ $imgUrl }} 300w,
+                                                                            {{ $imgUrl }} 150w,
+                                                                            {{ $imgUrl }} 768w,
+                                                                            {{ $imgUrl }} 700w,
+                                                                            {{ $imgUrl }} 50w,
+                                                                            {{ $imgUrl }} 100w,
+                                                                            {{ $imgUrl }} 1000w"
+                                                                        data-thumb-sizes="(max-width: 250px) 100vw, 250px"
+                                                                        class="woocommerce-product-gallery__image">
+
+                                                                        <a href="{{ $imgUrl }}">
+                                                                            <img fetchpriority="high" width="1000"
+                                                                                height="1000" src="{{ $imgUrl }}"
+                                                                                class="{{ $index == 0 ? 'wp-post-image' : '' }}"
+                                                                                alt="{{ $alt }}" data-caption=""
+                                                                                data-src="{{ $imgUrl }}"
+                                                                                data-large_image="{{ $imgUrl }}"
+                                                                                data-large_image_width="1000"
+                                                                                data-large_image_height="1000"
+                                                                                decoding="async"
+                                                                                srcset="{{ $imgUrl }} 1000w,
+                                                                            {{ $imgUrl }} 300w,
+                                                                            {{ $imgUrl }} 150w,
+                                                                            {{ $imgUrl }} 768w,
+                                                                            {{ $imgUrl }} 700w,
+                                                                            {{ $imgUrl }} 250w,
+                                                                            {{ $imgUrl }} 50w,
+                                                                            {{ $imgUrl }} 100w"
+                                                                                sizes="(max-width: 1000px) 100vw, 1000px"
+                                                                                @if ($index === 0) id="js-main-image"
+                                                                                        data-image-base="{{ asset('storage') }}" @endif />
+                                                                        </a>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                             <div class="card-body p-2">
                                 {{-- Tên sản phẩm --}}
@@ -919,6 +518,40 @@ list.push(`${urlProductImages}/${trimmed}`);
                     });
                     })();
                     </script>
+
+                        function showQtyAlert() {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Số lượng không hợp lệ',
+                                text: 'Vui lòng kiểm tra lại số lượng, không được vượt quá tồn kho.',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    popup: 'custom-variant-alert'
+                                },
+                                buttonsStyling: true,
+                                allowOutsideClick: true,
+                                allowEscapeKey: true
+                            });
+                        }
+                    </script>
+                    @if (session('cart_limit_error'))
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Giới hạn mua hàng',
+                                    text: @json(session('cart_limit_error')),
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        popup: 'custom-variant-alert'
+                                    },
+                                    buttonsStyling: true,
+                                    allowOutsideClick: true,
+                                    allowEscapeKey: true
+                                });
+                            });
+                        </script>
+                    @endif
 
 
 
