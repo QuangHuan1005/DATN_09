@@ -36,7 +36,6 @@ class AdminProductController extends Controller
             });
         }
 
-
         // ✅ Phân trang
         $products = $query->paginate(5);
 
@@ -44,7 +43,6 @@ class AdminProductController extends Controller
         if ($request->filled('keyword')) {
             $products->appends(['keyword' => $request->keyword]);
         }
-
         return view(
             'admin.products.index',
             compact('products'),
@@ -64,68 +62,6 @@ class AdminProductController extends Controller
             ['pageTitle' => 'Thêm mới sản phẩm']
         );
     }
-
-
-    // Lưu sản phẩm mới
-    // public function store(Request $request)
-    // {
-    //     $validated = $request->validate(
-    //         [
-    //             'category_id'  => 'required|exists:categories,id',
-    //             'product_code' => 'required|unique:products,product_code',
-    //             'name'         => 'required|string|max:255',
-    //             'description'  => 'nullable|string',
-    //             'image'        => 'nullable|image|max:2048',
-    //         ],
-    //         [
-    //             // category_id
-    //             'category_id.required' => 'Vui lòng chọn danh mục sản phẩm.',
-    //             'category_id.exists'   => 'Danh mục bạn chọn không tồn tại.',
-
-
-    //             // product_code
-    //             'product_code.required' => 'Vui lòng nhập mã sản phẩm.',
-    //             'product_code.unique'   => 'Mã sản phẩm này đã tồn tại.',
-
-
-    //             // name
-    //             'name.required' => 'Vui lòng nhập tên sản phẩm.',
-    //             'name.string'   => 'Tên sản phẩm phải là chuỗi ký tự.',
-    //             'name.max'      => 'Tên sản phẩm không được vượt quá 255 ký tự.',
-
-
-    //             // description
-    //             'description.string' => 'Mô tả sản phẩm phải là chuỗi ký tự.',
-
-
-    //             // image
-    //             'image.image' => 'Tệp tải lên phải là hình ảnh.',
-    //             'image.max'   => 'Ảnh không được vượt quá 2MB.',
-    //         ]
-    //     );
-
-
-    //     $product = Product::create([
-    //         'category_id'  => $validated['category_id'],
-    //         'product_code' => $validated['product_code'],
-    //         'name'         => $validated['name'],
-    //         'description'  => $validated['description'] ?? null,
-    //     ]);
-
-
-    //     if ($request->hasFile('image')) {
-    //         $path = $request->file('image')->store('products', 'public');
-    //         ProductPhotoAlbum::create([
-    //             'product_id' => $product->id,
-    //             'image'      => $path,
-    //         ]);
-    //     }
-
-
-    //     return redirect()->route('admin.products.index')
-    //         ->with('success', 'Thêm sản phẩm thành công!');
-    // }
-
     public function store(Request $request)
     {
         $validated = $request->validate(
@@ -232,9 +168,6 @@ class AdminProductController extends Controller
             ->with('success', 'Đã thêm sản phẩm + ảnh album + biến thể thành công!');
     }
 
-
-
-
     // Xem chi tiết sản phẩm
     public function show($id)
     {
@@ -245,9 +178,6 @@ class AdminProductController extends Controller
             ['pageTitle' => 'Chi tiết sản phẩm']
         );
     }
-
-
-
 
     // Form chỉnh sửa sản phẩm
     public function edit(Product $product)
@@ -292,10 +222,8 @@ class AdminProductController extends Controller
             foreach ($request->file('album_images') as $file) {
                 $$ext = $img->getClientOriginalExtension();
 
-                // Tạo tên file dạng: ao-khoac-nam-1733802234-65ab3da9c1.jpg
                 $newName = Str::slug($product->name) . '-' . time() . '.' . $ext;
 
-                // Lưu vào storage/app/public/products/albums/
                 $path = $img->storeAs('products/photoAlbums', $newName, 'public');
 
                 $product->photoAlbums()->create([
@@ -307,7 +235,6 @@ class AdminProductController extends Controller
                 ]);
             }
         }
-
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Cập nhật sản phẩm thành công!');
@@ -327,7 +254,7 @@ class AdminProductController extends Controller
 
         return response()->json([
             'status'  => 'success',
-            'message' => 'Xóa ảnh thành công',
+            'message' => 'Xóa ảnh thành công !',
         ]);
     }
 
