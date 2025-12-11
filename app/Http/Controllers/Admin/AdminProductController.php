@@ -24,7 +24,10 @@ class AdminProductController extends Controller
     {
         $query = Product::with(['photoAlbums', 'category', 'variants'])
             ->withTrashed()
+            ->withSum('variants as total_stock', 'quantity')
+            ->withSum('orderDetails as total_sold', 'quantity')
             ->orderBy('id', 'desc');
+
 
         // ✅ Tìm kiếm theo từ khoá
         if ($request->filled('keyword')) {
@@ -128,7 +131,7 @@ class AdminProductController extends Controller
                 $ext = $img->getClientOriginalExtension();
 
                 // Tạo tên file dạng: ao-khoac-nam-1733802234-65ab3da9c1.jpg
-                $newName = Str::slug($product->name) . '-' . time() . '.' . $ext;
+                $newName = Str::slug($product->name) . '-' . uniqid() . '.' . $ext;
 
                 // Lưu vào storage/app/public/products/albums/
                 $path = $img->storeAs('products/photoAlbums', $newName, 'public');
@@ -139,6 +142,7 @@ class AdminProductController extends Controller
                 ]);
             }
         }
+
 
 
         /* ✅ 3. TẠO BIẾN THỂ */
@@ -171,11 +175,128 @@ class AdminProductController extends Controller
     // Xem chi tiết sản phẩm
     public function show($id)
     {
-        $product = Product::with(['photoAlbums', 'variants.color', 'variants.size'])->findOrFail($id);
+        $product = Product::with([
+            'category:id,name',
+            'variants.color:id,name,color_code',
+            'variants.size:id,name,size_code',
+            'photoAlbums',
+            'reviews',
+        ])
+            ->withSum('variants as total_stock', 'quantity')
+            ->withSum('orderDetails as total_sold', 'quantity')
+            ->findOrFail($id);
+        // Tính giá min / sale hiện tại
+        $minPrice = $product->variants->min('price');
+        $minSale  = $product->variants
+            ->filter(fn($v) => $v->sale && $v->sale > 0)
+            ->min('sale');
+
+        $displayPrice    = $minSale ?: $minPrice;
+        $originalPrice   = $minPrice;
+        $discountPercent = null;
+
+        if ($minSale && $minPrice && $minSale < $minPrice) {
+            $discountPercent = round((($minPrice - $minSale) / $minPrice) * 100);
+        }
+
+        // Rating
+        $avgRating    = round($product->reviews->avg('rating') ?? 0, 1);
+        $ratingCount  = $product->reviews->count();
+
+        // Màu & size
+        $colors = $product->variants
+            ->pluck('color')
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        $sizes  = $product->variants
+            ->pluck('size')
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        // ===== XỬ LÝ ẢNH HIỂN THỊ THEO THỨ TỰ: 
+        // photo đầu -> ảnh biến thể -> photo còn lại =====
+
+        $albumImages   = $product->photoAlbums->pluck('image')->filter()->values()->take(6);
+        $variantImages = $product->variants->pluck('image')->filter()->unique()->values();
+
+        $images = [];
+
+        // 1️⃣ Ảnh photoAlbums đầu tiên
+        if ($albumImages->isNotEmpty()) {
+            $images[] = $albumImages->first();
+        }
+
+        // 2️⃣ Toàn bộ ảnh biến thể (không trùng)
+        foreach ($variantImages as $img) {
+            if (!in_array($img, $images)) {
+                $images[] = $img;
+            }
+        }
+
+        // 3️⃣ Các ảnh photoAlbums còn lại
+        foreach ($albumImages->slice(1) as $img) {
+            if (!in_array($img, $images)) {
+                $images[] = $img;
+            }
+        }
+
+        $images = array_values($images); 
+        $variantPaginator = $product->variants()  
+            ->with(['orderDetails', 'color', 'size'])
+            ->paginate(4);
+        // 2) Biến đổi collection bên trong paginator
+        $variantMap = $variantPaginator->getCollection()
+            ->mapWithKeys(function ($v) {
+                $key = $v->color_id . '_' . $v->size_id;
+                $soldQuantity = $v->orderDetails->sum('quantity');
+                $stock        = $v->quantity;
+                $remaining    = max($stock - $soldQuantity, 0); // 🔹 tránh âm
+                return [
+                    $key => [
+                        'id'            => $v->id,
+                        'color_id'      => $v->color_id,
+                        'color_name'    => $v->color->name ?? null,
+                        'size_id'       => $v->size_id,
+                        'size_name'     => $v->size->size_code ?? null,
+                        'price'         => $v->price,
+                        'sale'          => $v->sale,
+                        'stock'         => $stock,
+                        'sold'          => $soldQuantity,
+                        'remaining'     => $remaining,
+                        'image'         => $v->image,
+                    ],
+                ];
+            });
+        $variantPaginator->setCollection($variantMap->values());
+        $relatedProducts = Product::with(['photoAlbums', 'variants'])
+            ->where('category_id', $product->category_id) // cùng danh mục
+            ->where('id', '!=', $product->id)             // loại trừ sản phẩm hiện tại
+            ->take(8)                                     // giới hạn số lượng (tùy bạn chỉnh)
+            ->get();
+
         return view(
             'admin.products.show',
-            compact('product'),
-            ['pageTitle' => 'Chi tiết sản phẩm']
+            compact(
+                'product',
+                'displayPrice',
+                'originalPrice',
+                'discountPercent',
+                'avgRating',
+                'ratingCount',
+                'colors',
+                'sizes',
+                'images',
+                'variantMap',
+                'relatedProducts'
+            ),
+            [
+                'pageTitle' => 'Chi tiết sản phẩm',
+                'product'          => $product,
+                'variantsPaginate' => $variantPaginator,
+            ]
         );
     }
 
@@ -219,16 +340,13 @@ class AdminProductController extends Controller
 
 
         if ($request->hasFile('album_images')) {
-            foreach ($request->file('album_images') as $file) {
-                $$ext = $img->getClientOriginalExtension();
+            foreach ($request->file('album_images') as $img) {
 
-                $newName = Str::slug($product->name) . '-' . time() . '.' . $ext;
+                $ext = $img->getClientOriginalExtension();
+
+                $newName = Str::slug($product->name) . '-' . uniqid() . '.' . $ext;
 
                 $path = $img->storeAs('products/photoAlbums', $newName, 'public');
-
-                $product->photoAlbums()->create([
-                    'image' => $path,
-                ]);
                 ProductPhotoAlbum::create([
                     'product_id' => $product->id,
                     'image'      => $path,
@@ -287,6 +405,7 @@ class AdminProductController extends Controller
     public function forceDelete($id)
     {
         Product::withTrashed()->where('id', $id)->forceDelete();
+
         return redirect()->back()->with('success', 'Đã xóa vĩnh viễn sản phẩm!');
     }
 
