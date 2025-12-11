@@ -1,0 +1,164 @@
+[33meef3847[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mHoangHung04[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #85 from QuangHuan1005/HoangHung04
+[33m15d999b[m Merge branch 'main' into HoangHung04
+[33m6a65631[m[33m ([m[1;31morigin/HoangHung04[m[33m)[m cap nhap code
+[33m186457e[m Fix VNPay controller
+[33m675a862[m Fix merge conflict
+[33m4a44c5b[m Resolve merge conflict between main and phong
+[33mf4dd98f[m Merge pull request #84 from QuangHuan1005/HoangHung04
+[33m8f1413e[m cap nhap code
+[33m4b46ffb[m cap nhap code
+[33m69ead88[m cáº­p nháº­t code
+[33m94235fa[m resolve conflict keep local
+[33m87e359e[m save local changes
+[33mdf1db1e[m Merge branch 'tung' of https://github.com/QuangHuan1005/DATN_09
+[33mac846b3[m test
+[33mfd132e6[m Merge branch 'huan-fix'
+[33m21f3452[m save fix
+[33ma679cb5[m Merge branch 'tung' of https://github.com/QuangHuan1005/DATN_09
+[33m7a17a09[m sua tinh nang chat
+[33m5982d18[m Merge branch 'tung' of https://github.com/QuangHuan1005/DATN_09
+[33md693f39[m chat real time
+[33me2807fa[m Merge pull request #83 from QuangHuan1005/HoangHung04
+[33mdf54ffe[m Merge branch 'main' into HoangHung04
+[33mf075196[m update
+[33m5aa4d23[m Update and rename VNPayController.php to VnPayController.php
+[33m59a2726[m cap nhap code
+[33mf84d134[m cap nhap code
+[33mebed9e3[m cap nhap code
+[33m5832091[m Cập nhật code
+[33m94d8655[m Delete duplicate VnPayController
+[33m19f8b8e[m Ngừng theo dõi các file không cần thiết
+[33m6e30ca7[m cập nhật lại code
+[33mbf8e53a[m Merge pull request #80 from QuangHuan1005/HoangHung04
+[33m30af910[m cap nhap code
+[33mcb0af57[m Replace all old code with new code from phong branch
+[33m4af4f1f[m Merge pull request #79 from QuangHuan1005/HoangHung04
+[33mf0e5a60[m cap nhap code
+[33m4973ac9[m Merge pull request #78 from QuangHuan1005/HoangHung04
+[33md92ac4b[m cap nhap code
+[33m5e3416a[m Merge pull request #77 from QuangHuan1005/HoangHung04
+[33m340f755[m cap nhap code
+[33me1fce35[m cap nhap code
+[33m8ac1a8c[m Merge pull request #76 from QuangHuan1005/HoangHung04
+[33m1ea6120[m Merge branch 'main' into HoangHung04
+[33m8224afb[m cap nhap code
+[33m412194e[m biáº¿n thá»ƒ
+[33m6146c73[m vnpay
+[33m067d11a[m Merge pull request #75 from QuangHuan1005/huan
+[33m6f1d948[m Đánh giá sản phẩm
+[33m9d976fb[m Merge pull request #74 from QuangHuan1005/nam
+[33m5a5d44a[m cap nhat code quan ly san pham
+[33md1faa70[m Merge pull request #73 from QuangHuan1005/huan
+[33m3d13a0e[m Resolve merge conflicts
+[33m5e73cd2[m Fix merge conflict
+[33m396adbc[m cập nhật code
+[33m774df4b[m Merge pull request #72 from QuangHuan1005/Huy
+[33m2f685a0[m Remove compiled view from repo
+[33m14b9758[m update code
+[33mcbd1b79[m Merge pull request #71 from QuangHuan1005/dung
+[33mdd42bf3[m Update orders/show view
+[33md4a4ecb[m Merge pull request #70 from QuangHuan1005/dung
+[33m0994914[m thêm tác nhân và thời gian
+[33m6151e53[m Merge pull request #69 from QuangHuan1005/dung
+[33mc2fd7f6[m sua gd dhang
+[33m23c7fb3[m Merge pull request #68 from QuangHuan1005/huan
+[33mc4761c4[m Đã xử lý conflict và hoàn tất gộp
+[33mdc641cf[m Quản lý đơn hàng (staff)
+[33mdd8976b[m Merge pull request #67 from QuangHuan1005/dung
+[33m0b87e8d[m thống kê Admin
+[33m5d67747[m Resolve merge conflicts: remove cached view files
+[33m51c1629[m .
+[33mf0057ad[m Merge pull request #65 from QuangHuan1005/dung
+[33mfde2397[m fix kho và điều hướng
+[33m09cfddb[m Merge pull request #64 from QuangHuan1005/HoangHung04
+[33m686faa7[m Merge branch 'main' into HoangHung04
+[33mf43d9cd[m cap nhap giao dien admin
+[33mac74076[m Merge pull request #63 from QuangHuan1005/Huy
+[33m8c7365e[m Merge branch 'main' into Huy
+[33m8c9b28f[m Update trang chi tiết và giỏ hàng
+[33me2eeb5d[m Merge pull request #62 from QuangHuan1005/dung
+[33ma8ba0de[m fix login qtri
+[33m39c6d73[m Ignore storage/framework/views cache files
+[33mc29fb12[m chá»©c nÄƒng thanh toÃ¡n
+[33mcf9ef58[m Merge pull request #61 from QuangHuan1005/huan
+[33md56cffc[m cập nhật trang quản lý đơn hàng
+[33m69a809a[m Merge pull request #60 from QuangHuan1005/huan
+[33ma174db1[m câpj nhật code
+[33m9596010[m Merge pull request #59 from QuangHuan1005/phong
+[33m411e43a[m Merge pull request #58 from QuangHuan1005/huan
+[33m4e5dcc8[m cập nhật code
+[33md725d62[m Merge pull request #57 from QuangHuan1005/tung
+[33mfd9436e[m Update show.blade.php
+[33maa691dc[m Update show.blade.php
+[33m7e9544b[m fix code
+[33ma6ce3af[m Merge pull request #56 from QuangHuan1005/dung
+[33mbe4855e[m đnhap
+[33md8ff23e[m Merge pull request #55 from QuangHuan1005/dung
+[33m4dbd618[m ivoi
+[33md0f5147[m thanh toÃ¡n ver 1
+[33mf644d4d[m Merge pull request #54 from QuangHuan1005/tung
+[33mb28e0ce[m Merge branch 'main' into tung
+[33mf1d4c93[m ThÃªm chá»©c nÄƒng wishlist - chá»‰ cÃ¡c file liÃªn quan
+[33m23ddb44[m Update and rename Account.php to News.php
+[33mb6c0e30[m tin_tuc_va_lien_he
+[33m811060a[m Merge pull request #52 from QuangHuan1005/huan
+[33m25fe1d7[m Merge branch 'main' into huan
+[33m4577ea5[m quản lý đơn hàng
+[33mb6a4dab[m Merge pull request #51 from QuangHuan1005/dung
+[33m357ed82[m gd dh
+[33m753f4a0[m Merge pull request #50 from QuangHuan1005/dung
+[33mafd1154[m ud đh
+[33ma296427[m fix code
+[33mf599d3f[m Merge pull request #48 from QuangHuan1005/HoangHung04
+[33m1f191d6[m fix code
+[33mae5617d[m Merge pull request #47 from QuangHuan1005/dung
+[33m4149410[m kho hàng
+[33mca0d0eb[m chi tiết đơn hàng
+[33m2ba676a[m Merge pull request #45 from QuangHuan1005/huan
+[33mc29108f[m cập nhật code
+[33m51e72fb[m Merge pull request #44 from QuangHuan1005/huan
+[33me4eacbf[m Đã xử lý xung đột cart/index.blade.php
+[33m9e3a11a[m cap nhat code
+[33m22bbcda[m Merge pull request #43 from QuangHuan1005/HoangHung04
+[33m0854c22[m cap nhap trang tai khoan (profile + password)
+[33m18b29ea[m Merge pull request #42 from QuangHuan1005/nam
+[33m6a2d87d[m Merge branch 'main' into nam
+[33m6779872[m Quan ly vouchers
+[33maa0df8f[m[33m ([m[1;32mmain[m[33m)[m Merge pull request #40 from QuangHuan1005/huan
+[33m983b1ba[m Merge branch 'main' into huan
+[33mdb295aa[m Merge pull request #41 from QuangHuan1005/HoangHung04
+[33m3673152[m cap nhap code
+[33m4aded2b[m cap nhat code
+[33mfb9b954[m cap nhap code
+[33m646f2f4[m Merge pull request #39 from QuangHuan1005/HoangHung04
+[33mdcffd6f[m Merge branch 'HoangHung04' of https://github.com/QuangHuan1005/DATN_09 into HoangHung04
+[33m1e87006[m cap nhap tai khoan
+[33mc8fdb9b[m cap nhap tai khoan
+[33mfeaf10c[m Merge pull request #38 from QuangHuan1005/Huy
+[33mdb6c392[m Merge branch 'main' into Huy
+[33m23c325f[m Phần giỏ hàng
+[33m16ed097[m Merge pull request #37 from QuangHuan1005/huan
+[33m29afe26[m Merge branch 'main' into huan
+[33m16eb8ac[m Hoàn tất merge từ nhánh huan
+[33m951529b[m cập nhật code
+[33me68abae[m Merge pull request #36 from QuangHuan1005/HoangHung04
+[33mb7b0145[m Merge branch 'main' into HoangHung04
+[33m6ede2dc[m cap nhap tai khoan
+[33md23ab58[m Merge pull request #35 from QuangHuan1005/huan
+[33m38dcfb4[m Merge branch 'main' into huan
+[33m41766f2[m quản lý tài khoản
+[33m0a0e757[m Merge pull request #34 from QuangHuan1005/nam
+[33m970b158[m Cap nhap code Quan ly san pham
+[33m08c4e95[m cap nhat login
+[33m3e0d6c6[m Merge pull request #33 from QuangHuan1005/dung
+[33m2a649c2[m fix
+[33mb717a76[m Merge pull request #32 from QuangHuan1005/dung
+[33mb559460[m Merge branch 'main' into dung
+[33mbce8e18[m fix lg lo
+[33m87add71[m Merge pull request #31 from QuangHuan1005/HoangHung04
+[33mdf9ba80[m Merge branch 'main' into HoangHung04
+[33m651c139[m cap nhap giao dien
+[33mf5b6c63[m Merge pull request #30 from QuangHuan1005/huan
+[33m98cef8d[m[33m ([m[1;31morigin/huan[m[33m)[m cap nhat code
+[33ma2c26ae[m Merge pull request #29 from QuangHuan1005/huan
+[33m73308a3[m cập nhật c

@@ -35,11 +35,9 @@
                         </div>
                         <div class="card-body">
                             <!-- File Upload -->
-                            <div action="https://techzaa.in/" class="dropzone" id="myAwesomeDropzone"
-                                data-plugin="dropzone" data-previews-container="#file-previews"
-                                data-upload-preview-template="#uploadPreviewTemplate">
+                            <div class="dropzone" data-plugin="dropzone">
                                 <div class="fallback">
-                                    <input name="alum_images[]" type="file" multiple />
+                                    <input type="file" name="album_images[]" multiple>
                                 </div>
                                 <div class="dz-message needsclick">
                                     <i class="bx bx-cloud-upload fs-48 text-primary"></i>
