@@ -1,9 +1,9 @@
 <div class="shop_header_placeholder kitify-active">
     <header class="woocommerce-archive-header">
         <div class="woocommerce-archive-header-inside">
-            {{-- <p class="woocommerce-result-count">
+            <p class="woocommerce-result-count">
                 Hiển thị {{ $products->firstItem() }}&ndash;{{ $products->lastItem() }} / {{ $products->total() }} kết
-                quả</p> --}}
+                quả</p>
             <div class="woocommerce-archive-toolbar sh--color">
                 <div class="nova-product-filter" data-breakpoint="1024">
                     <button class="js-column-toggle"><span class="icon-filter"><i class="inova ic-options"></i></span><span

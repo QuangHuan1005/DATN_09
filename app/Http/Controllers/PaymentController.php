@@ -39,7 +39,7 @@ class PaymentController extends Controller
 
         // Kiểm tra xem có phải demo mode không
         $isDemo = config('momo.environment') === 'demo' || !config('momo.partner_code') || config('momo.partner_code') === 'MOMO_PARTNER_CODE';
-
+        
         if ($isDemo) {
             $result = $this->demoService->createPayment($orderId, $amount, $orderInfo);
         } else {
@@ -110,7 +110,7 @@ class PaymentController extends Controller
     public function momoNotify(Request $request)
     {
         $data = $request->all();
-
+        
         // Xác thực chữ ký
         if (!$this->momoService->verifyCallback($data)) {
             return response()->json(['error' => 'Invalid signature'], 400);
@@ -146,7 +146,7 @@ class PaymentController extends Controller
 
         // Kiểm tra xem có phải demo mode không
         $isDemo = config('momo.environment') === 'demo' || !config('momo.partner_code') || config('momo.partner_code') === 'MOMO_PARTNER_CODE';
-
+        
         if ($isDemo) {
             // Demo mode - luôn trả về chưa thanh toán để test
             return response()->json([
@@ -159,7 +159,7 @@ class PaymentController extends Controller
             if (!$requestId) {
                 return response()->json(['error' => 'Missing request_id parameter'], 400);
             }
-
+            
             $status = $this->momoService->checkPaymentStatus($orderId, $requestId);
             return response()->json($status);
         }
@@ -171,7 +171,7 @@ class PaymentController extends Controller
     public function showATM(Request $request)
     {
         $orderId = $request->get('order_id');
-
+        
         if (!$orderId) {
             return redirect()->route('checkout.index')->with('error', 'Thông tin đơn hàng không hợp lệ');
         }
@@ -200,10 +200,10 @@ class PaymentController extends Controller
 
         // TODO: Tích hợp với payment gateway thật (VNPay, OnePay, etc.)
         // Hiện tại chỉ là demo
-
+        
         // Simulate payment processing
         $success = true; // Trong thực tế, đây sẽ là kết quả từ payment gateway
-
+        
         if ($success) {
             // Thanh toán thành công
             return response()->json([
@@ -223,61 +223,60 @@ class PaymentController extends Controller
     /**
      * Xử lý callback khi người dùng quay lại từ VNPay
      */
-    public function vnpayReturn(Request $request)
-    {
-        $vnp_SecureHash = $request->input('vnp_SecureHash');
-        $data = $request->all();
+   public function vnpayReturn(Request $request)
+{
+    $data = $request->all();
 
-        // Verify signature
-        $isValid = $this->vnpayService->verifyCallback($data);
+    // Validate chữ ký VNPay
+    if (!$this->vnpayService->verifyCallback($data)) {
+        Log::warning('VNPay return callback signature invalid', $data);
+        return redirect()->route('checkout.index')
+            ->with('error', 'Xác thực thanh toán không hợp lệ.');
+    }
 
-        if (!$isValid) {
-            Log::warning('VNPay return callback signature invalid', $data);
-            return redirect()->route('checkout.index')
-                ->with('error', 'Xác thực thanh toán không thành công. Vui lòng thử lại.');
-        }
+    $vnp_ResponseCode = $request->input('vnp_ResponseCode');
+    $orderCode = $request->input('vnp_TxnRef'); // Mã đơn hàng
+    $amount = $request->input('vnp_Amount') / 100;
 
-        $vnp_ResponseCode = $request->input('vnp_ResponseCode');
-        $vnp_TxnRef = $request->input('vnp_TxnRef');
-        $vnp_Amount = $request->input('vnp_Amount') / 100; // VNPay trả về số tiền nhân 100
-        $vnp_TransactionStatus = $request->input('vnp_TransactionStatus');
-        $vnp_BankCode = $request->input('vnp_BankCode');
-        $vnp_PayDate = $request->input('vnp_PayDate');
+    // Lấy đơn hàng trong DB
+    $order = \App\Models\Order::where('order_code', $orderCode)->first();
 
-        Log::info('VNPay Return Callback', [
-            'vnp_ResponseCode' => $vnp_ResponseCode,
-            'vnp_TxnRef' => $vnp_TxnRef,
-            'vnp_Amount' => $vnp_Amount,
-            'vnp_TransactionStatus' => $vnp_TransactionStatus,
+    if (!$order) {
+        return redirect()->route('checkout.index')
+            ->with('error', 'Không tìm thấy đơn hàng.');
+    }
+
+    // THÀNH CÔNG: ResponseCode = 00
+    if ($vnp_ResponseCode == '00') {
+
+        // Cập nhật trạng thái đơn & trạng thái thanh toán
+        $order->update([
+            'payment_status_id' => 2, // 2 = đã thanh toán
+            'order_status_id' => 2,   // 2 = đã xác nhận
         ]);
 
-        // ResponseCode = '00' và TransactionStatus = '00' nghĩa là thanh toán thành công
-        if ($vnp_ResponseCode == '00' && $vnp_TransactionStatus == '00') {
-            // Lấy thông tin đơn hàng từ session
-            $pendingOrder = Session::get('pending_order');
+        // Ghi log vào bảng order_status_logs
+        \App\Models\OrderStatusLog::create([
+            'order_id' => $order->id,
+            'order_status_id' => 2,
+            'actor_type' => 'system',
+            'note' => 'Thanh toán VNPay thành công'
+        ]);
 
-            if ($pendingOrder && $pendingOrder['orderId'] == $vnp_TxnRef) {
-                // TODO: Tạo đơn hàng trong database
-                // TODO: Cập nhật trạng thái thanh toán
+        // Xóa giỏ hàng
+        Session::forget('cart');
 
-                // Xóa giỏ hàng và pending order
-                Session::forget('cart');
-                Session::forget('pending_order');
-
-                return redirect()->route('checkout.success')
-                    ->with('success', 'Thanh toán thành công! Cảm ơn bạn đã mua hàng.');
-            } else {
-                return redirect()->route('checkout.index')
-                    ->with('error', 'Không tìm thấy thông tin đơn hàng.');
-            }
-        } else {
-            // Thanh toán thất bại
-            $errorMessage = $this->getVNPayErrorMessage($vnp_ResponseCode);
-
-            return redirect()->route('checkout.index')
-                ->with('error', 'Thanh toán thất bại: ' . $errorMessage);
-        }
+        return redirect()->route('checkout.success')
+            ->with('success', 'Thanh toán VNPay thành công!');
     }
+
+    // THẤT BẠI
+    $errorMessage = $this->getVNPayErrorMessage($vnp_ResponseCode);
+
+    return redirect()->route('checkout.index')
+        ->with('error', 'Thanh toán thất bại: ' . $errorMessage);
+}
+
 
     /**
      * Xử lý IPN (Instant Payment Notification) từ VNPay
@@ -315,7 +314,7 @@ class PaymentController extends Controller
         if ($vnp_ResponseCode == '00' && $vnp_TransactionStatus == '00') {
             // TODO: Cập nhật đơn hàng trong database
             // TODO: Gửi email xác nhận cho khách hàng
-
+            
             return response()->json([
                 'RspCode' => '00',
                 'Message' => 'Success'

@@ -36,10 +36,10 @@ return new class extends Migration
                     WHEN 1 THEN 1   -- Chờ xác nhận      -> Chưa thanh toán
                     WHEN 2 THEN 1   -- Xác nhận    -> Chưa thanh toán
                     WHEN 3 THEN 1   -- Đang giao hàng -> Chưa thanh toán
-                    WHEN 4 THEN 2   -- Đã giao hàng -> Đang xử lý
-                    WHEN 5 THEN 3   -- Hoàn thành  -> Đã thanh toán
-                    WHEN 6 THEN 5   -- Hủy  -> Hoàn tiền
-                    WHEN 7 THEN 5   -- Hoàn hàng  -> Hoàn tiền
+                    WHEN 4 THEN 2   -- Đã giao hàng -> Đã thanh toán
+                    WHEN 5 THEN 2   -- Hoàn thành  -> Đã thanh toán
+                    WHEN 6 THEN 3   -- Hủy  -> Hoàn tiền
+                    WHEN 7 THEN 3   -- Hoàn hàng  -> Hoàn tiền
                     ELSE NEW.payment_status_id
                 END;
             END
@@ -56,10 +56,10 @@ return new class extends Migration
                     WHEN 1 THEN 1   -- Chờ xác nhận      -> Chưa thanh toán
                     WHEN 2 THEN 1   -- Xác nhận    -> Chưa thanh toán
                     WHEN 3 THEN 1   -- Đang giao hàng -> Chưa thanh toán
-                    WHEN 4 THEN 2   -- Đã giao hàng -> Đang xử lý
-                    WHEN 5 THEN 3   -- Hoàn thành  -> Đã thanh toán
-                    WHEN 6 THEN 5   -- Hủy  -> Hoàn tiền
-                    WHEN 7 THEN 5   -- Hoàn hàng  -> Hoàn tiền
+                    WHEN 4 THEN 2   -- Đã giao hàng -> Đã thanh toán
+                    WHEN 5 THEN 2   -- Hoàn thành  -> Đã thanh toán
+                    WHEN 6 THEN 3   -- Hủy  -> Hoàn tiền
+                    WHEN 7 THEN 3   -- Hoàn hàng  -> Hoàn tiền
                     ELSE NEW.payment_status_id
                 END;
             END

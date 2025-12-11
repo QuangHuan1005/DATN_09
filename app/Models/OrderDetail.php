@@ -17,7 +17,7 @@ class OrderDetail extends Model
         'price',
         'quantity',
         'status',
-        'estimated_delivery'
+        'estimated_delivery',
     ];
 
     /**
@@ -35,7 +35,7 @@ class OrderDetail extends Model
     // Biến thể sản phẩm (kích thước, màu sắc...)
     public function productVariant()
     {
-        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id')->with(['color', 'size', 'product']);
     }
 
     // Sản phẩm chính (nếu muốn truy cập qua variant)
@@ -61,6 +61,18 @@ class OrderDetail extends Model
     public function getTotalPriceAttribute(): float
     {
         return $this->price * $this->quantity;
+    }
+
+    // Lấy tên sản phẩm
+    public function getProductNameAttribute(): string
+    {
+        return $this->productVariant->product->name ?? '';
+    }
+
+    // Lấy tên biến thể
+    public function getVariantNameAttribute(): string
+    {
+        return $this->productVariant->getVariantName() ?? '';
     }
 
     // Định dạng ngày giao hàng dự kiến

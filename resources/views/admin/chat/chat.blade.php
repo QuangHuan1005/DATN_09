@@ -6,14 +6,15 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emojionearea/dist/emojionearea.min.css">
 
     <style>
         :root {
             --primary: #4361ee;
-            --success: #06d6a0;
             --light: #f8f9fa;
             --dark: #343a40;
-            --gray: #95a5a6;
+            --gray: #6c757d;
+            --success: #06d6a0;
         }
 
         .admin-chat-wrapper {
@@ -29,7 +30,7 @@
 
         .chat-sidebar {
             width: 360px;
-            background: #2f3542;
+            background: #5e6062;
             color: white;
         }
 
@@ -115,20 +116,21 @@
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            background: url('https://i.imgur.com/6F3qL8q.png') center/cover;
+            background: url('https://i.imgur.com/6F3qL8q.png') center/cover no-repeat;
+            background-color: #f0f2f5;
         }
 
-        .message {
+        .chat-message {
             display: flex;
-            margin-bottom: 20px;
-            max-width: 78%;
-            animation: fadeIn 0.35s ease;
+            margin-bottom: 18px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(15px);
+                transform: translateY(10px);
             }
 
             to {
@@ -137,121 +139,276 @@
             }
         }
 
-        .message.sent {
+        .chat-message.sender {
             margin-left: auto;
             flex-direction: row-reverse;
         }
 
-        .message-bubble {
+        .chat-message .message-content {
             background: white;
-            padding: 12px 18px;
+            padding: 12px 16px;
             border-radius: 18px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             position: relative;
+            margin-left: 10px;
         }
 
-        .message.sent .message-bubble {
+        .chat-message.sender .message-content {
             background: #4361ee;
             color: white;
         }
 
-        .message.received .message-bubble {
+        .chat-message.receiver .message-content {
             border-bottom-left-radius: 4px;
         }
 
-        .message.sent .message-bubble {
+        .chat-message.sender .message-content {
             border-bottom-right-radius: 4px;
         }
 
-        .message img {
-            width: 42px;
-            height: 42px;
+        .chat-message .message-avatar img {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            margin: 0 10px;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .message p {
+        .chat-message .message-content p {
             margin: 0;
             font-size: 15px;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
-        .message .time {
+        .chat-message .timestamp {
             font-size: 11px;
             opacity: 0.7;
-            margin-top: 6px;
+            margin-top: 5px;
             text-align: right;
         }
 
         .chat-footer-admin {
-            padding: 16px 24px;
+            padding: 15px 20px;
             background: white;
             border-top: 1px solid #eee;
         }
 
         .input-group-admin {
             display: flex;
+            gap: 10px;
             align-items: center;
-            gap: 12px;
         }
 
         #messageInput {
             flex: 1;
-            padding: 14px 20px;
             border-radius: 30px;
+            padding: 12px 20px;
             border: 1px solid #ddd;
             font-size: 15px;
-            transition: all 0.3s;
         }
 
         #messageInput:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
         }
 
         #sendMessageButton {
-            width: 52px;
-            height: 52px;
             border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            font-size: 20px;
+            width: 50px;
+            height: 50px;
+            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.3s;
+            background: var(--primary);
+            color: white;
+            border: none;
         }
 
-        #sendMessageButton:hover {
-            background: #3751cc;
-            transform: scale(1.05);
+        #typingIndicator {
+            margin-bottom: 18px;
+            animation: fadeIn 0.3s ease;
+            margin-left: 20px;
         }
 
-        .no-chat {
+        .typing-animation {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            margin-left: 20px;
+        }
+
+        .typing-animation span {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background-color: #999;
+            display: inline-block;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-animation span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-animation span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        .typing-animation span:nth-child(3) {
+            animation-delay: 0s;
+        }
+
+        @keyframes typingBounce {
+
+            0%,
+            80%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+
+            40% {
+                transform: translateY(-12px);
+                opacity: 1;
+            }
+        }
+
+        .btn-file {
+            cursor: pointer;
+            color: #555;
+            font-size: 18px;
+        }
+
+        .btn-file:hover {
+            color: #000;
+        }
+
+        #imagePreviewContainer {
+            margin-top: 10px;
+            padding: 0 20px;
+            display: none;
+        }
+
+        .image-preview-box {
+            position: relative;
+            display: inline-block;
+        }
+
+        .image-preview-box img {
+            max-width: 120px;
+            border-radius: 6px;
+        }
+
+        .delete-icon {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            transition: .3s;
+        }
+
+        #imagePreviewContainer:hover .delete-icon,
+        .image-preview-box:hover .delete-icon {
+            opacity: 1;
+        }
+
+        .chat-image {
+            max-width: 250px;
+            border-radius: 12px;
+            margin-top: 8px;
+            display: block;
+            cursor: pointer;
+        }
+
+        .chat-image:hover {
+            opacity: 0.9;
+        }
+
+        .emojionearea {
+            height: 40px !important;
+            border-radius: 5px;
+        }
+
+        .unread-badge {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: #e03131;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
             text-align: center;
-            color: #777;
-            margin-top: 100px;
+            border-radius: 50%;
+            border: 2.5px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            padding: 0 6px;
+            box-sizing: border-box;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            line-height: unset;
+
+            display: none;
         }
 
-        .no-chat i {
-            font-size: 60px;
-            margin-bottom: 20px;
-            opacity: 0.3;
+        .unread-badge.show {
+            display: flex !important;
         }
 
-        #chatFooter {
+        .unread-badge.big {
+            border-radius: 12px;
+            min-width: 24px;
+            padding: 0 8px;
+        }
+
+        .user-list,
+        .chat-list {
             transition: all 0.3s ease;
+        }
+
+        .user-item,
+        .chat-item {
+            transition: all 0.3s ease;
+            opacity: 1;
+        }
+
+        .highlight-new {
+            background-color: rgba(67, 97, 238, 0.1) !important;
+            animation: pulse 1.5s ease;
+        }
+
+        @keyframes pulse {
+            0% {
+                background-color: rgba(67, 97, 238, 0.1);
+            }
+
+            50% {
+                background-color: rgba(67, 97, 238, 0.25);
+            }
+
+            100% {
+                background-color: transparent;
+            }
         }
     </style>
 
-
-    <div class="container-scroller">
+    <div class="container-scroller admin">
         <div class="container-fluid page-body-wrapper">
             <div class="main-panel">
                 <div class="content-wrapper pt-4">
-
                     <div class="row justify-content-center">
                         <div class="col-12 col-lg-11">
                             <div class="admin-chat-wrapper">
@@ -262,13 +419,16 @@
                                     </div>
                                     <div class="user-list">
                                         @foreach ($users as $user)
-                                            <div class="user-item d-flex align-items-center" data-id="{{ $user->id }}">
-                                                <img src="{{ $user->picture ? asset('storage/' . $user->picture) : 'https://img.freepik.com/vector-cao-cap/vector-khuon-mat-nguoi-dan-ong_1072857-7641.jpg?semt=ais_hybrid&w=740&q=80' }}"
+                                            <div class="user-item d-flex align-items-center position-relative"
+                                                data-id="{{ $user->id }}">
+                                                <img src="https://img.freepik.com/vector-cao-cap/vector-khuon-mat-nguoi-dan-ong_1072857-7641.jpg?semt=ais_hybrid&w=740&q=80"
                                                     alt="{{ $user->name }}">
                                                 <div class="user-info">
                                                     <div class="name">{{ $user->name }}</div>
                                                     <small>Nhấn để xem tin nhắn</small>
                                                 </div>
+
+                                                <span class="unread-badge" data-unread-for="{{ $user->id }}"></span>
                                             </div>
                                         @endforeach
                                     </div>
@@ -283,112 +443,221 @@
                                     </div>
 
                                     <div class="chat-body" id="chatMessageContainer">
-                                        <div class="no-chat">
-                                            <i class="fas fa-comments fa-4x"></i>
-                                            <h4>Chào Admin!</h4>
-                                            <p>Chọn một người dùng bên trái để bắt đầu hỗ trợ</p>
+                                        <div class="text-center text-muted mt-5">
+                                            <i class="fas fa-comment-dots fa-3x mb-3"></i>
+                                            <p>Chọn một người dùng để bắt đầu hỗ trợ</p>
+                                        </div>
+                                    </div>
+
+                                    <div id="typingIndicator" style="display:none;">
+                                        <div class="chat-message receiver">
+                                            <div class="message-avatar">
+                                                <img src="" id="typingAvatar" alt="User">
+                                            </div>
+                                            <div class="typing-animation">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="chat-footer-admin" id="chatFooter" style="display: none;">
-                                        <form id="messageForm">
+                                        <form id="messageForm" enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" id="receiver_id" name="receiver_id">
                                             <div class="input-group-admin">
-                                                <input type="text" id="messageInput" placeholder="Soạn tin nhắn..."
-                                                    autocomplete="off">
+                                                <label for="imageInput" class="btn-file">
+                                                    <i class="fas fa-paperclip"></i>
+                                                </label>
+                                                <input type="file" id="imageInput" accept="image/*"
+                                                    style="display: none">
+                                                <textarea id="messageInput" placeholder="Nhập tin nhắn..." autocomplete="off" rows="1" style="height: 20px"></textarea>
                                                 <button type="submit" id="sendMessageButton">
                                                     <i class="fas fa-paper-plane"></i>
                                                 </button>
                                             </div>
                                         </form>
+                                        <div id="imagePreviewContainer"
+                                            style="display:none; margin-top: 10px; padding: 0 20px;">
+                                            <div class="image-preview-box">
+                                                <img id="imagePreview" src=""
+                                                    style="max-width: 120px; border-radius: 6px;">
+                                                <i id="removePreview" class="fas fa-trash delete-icon"></i>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emojionearea/dist/emojionearea.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
 
     <script>
         const DEFAULT_AVATAR =
             'https://img.freepik.com/vector-cao-cap/vector-khuon-mat-nguoi-dan-ong_1072857-7641.jpg?semt=ais_hybrid&w=740&q=80';
+        const CURRENT_ADMIN_ID = {{ Auth::id() }};
+
+        const STORAGE_KEY_ORDER = 'admin_chat_user_order_v2';
+        const STORAGE_KEY_UNREAD = 'admin_chat_unread_counts_v2';
 
         $(document).ready(function() {
-            $('.user-item').on('click', function() {
-                $('.user-item').removeClass('active');
-                $(this).addClass('active');
 
-                const name = $(this).find('.name').text();
-                const id = $(this).data('id');
-                const img = $(this).find('img').attr('src') || DEFAULT_AVATAR;
+            let userOrder = JSON.parse(localStorage.getItem(STORAGE_KEY_ORDER)) || [];
+            let unreadCounts = JSON.parse(localStorage.getItem(STORAGE_KEY_UNREAD)) || {};
 
-                $('#receiver_id').val(id);
-                $('#chat_name').text(name);
-                $('#chat_img').attr('src', img);
-                $('#chatFooter').show();
+            function saveOrderAndUnread() {
+                localStorage.setItem(STORAGE_KEY_ORDER, JSON.stringify(userOrder));
+                localStorage.setItem(STORAGE_KEY_UNREAD, JSON.stringify(unreadCounts));
+            }
 
-                loadMessages(id);
-            });
+            function moveUserToTop(userId) {
+                userId = String(userId);
+                userOrder = userOrder.filter(id => id != userId);
+                userOrder.unshift(userId);
+                if (userOrder.length > 100) userOrder = userOrder.slice(0, 100);
 
-            $('#messageForm').on('submit', function(e) {
-                e.preventDefault();
-                const msg = $('#messageInput').val().trim();
-                const receiverId = $('#receiver_id').val();
-                if (!msg || !receiverId) return;
+                const $item = $(`.user-item[data-id="${userId}"]`);
+                if ($item.length) {
+                    $item.detach().prependTo('.user-list');
+                    $item.addClass('highlight-new');
+                    setTimeout(() => $item.removeClass('highlight-new'), 1500);
+                }
 
-                $.post('{{ route('admin.sendMessage') }}', {
-                    _token: '{{ csrf_token() }}',
-                    message: msg,
-                    receiver_id: receiverId
-                }, function(res) {
-                    if (res.success) {
-                        $('#messageInput').val('');
-                        appendMessage(msg, true, 'You', null, new Date());
-                    } else {
-                        toastr.error(res.message || 'Gửi thất bại');
+                saveOrderAndUnread();
+            }
+
+            function updateUnreadBadge(userId, count) {
+                userId = String(userId);
+                unreadCounts[userId] = count;
+                saveOrderAndUnread();
+
+                const $badge = $(`[data-unread-for="${userId}"]`);
+                if (count > 0) {
+                    const text = count > 99 ? '99+' : count;
+                    $badge.text(text).addClass('show');
+                    if (count > 9) $badge.addClass('big');
+                    else $badge.removeClass('big');
+                } else {
+                    $badge.removeClass('show big').text('');
+                    delete unreadCounts[userId];
+                    saveOrderAndUnread();
+                }
+            }
+
+            function restoreUserOrderAndBadges() {
+                const $list = $('.user-list');
+
+                userOrder.forEach(userId => {
+                    const $item = $(`.user-item[data-id="${userId}"]`);
+                    if ($item.length) {
+                        $list.prepend($item);
                     }
-                }).fail(() => toastr.error('Lỗi mạng'));
-            });
+                });
 
-            function loadMessages(userId) {
-                $.get('{{ route('admin.fetchMessages') }}', {
-                    receiver_id: userId
-                }, function(res) {
-                    $('#chatMessageContainer').empty();
-
-                    if (!res.messages || res.messages.length === 0) {
-                        $('#chatMessageContainer').html(`
-                        <div class="no-chat">
-                            <i class="fas fa-comment-medical fa-4x"></i>
-                            <p>Chưa có tin nhắn nào. Hãy bắt đầu hỗ trợ khách hàng!</p>
-                        </div>
-                    `);
-                        return;
+                Object.keys(unreadCounts).forEach(userId => {
+                    const count = parseInt(unreadCounts[userId]);
+                    if (count > 0) {
+                        const $badge = $(`[data-unread-for="${userId}"]`);
+                        const text = count > 99 ? '99+' : count;
+                        $badge.text(text).addClass('show');
+                        if (count > 9) $badge.addClass('big');
                     }
-
-                    res.messages.forEach(m => {
-                        const isSentByAdmin = m.sender_type === 'admin' || m.sender_id !== userId;
-                        const displayName = isSentByAdmin ? 'You' : 'Client';
-                        const avatar = isSentByAdmin ? null :
-                        DEFAULT_AVATAR; 
-
-                        appendMessage(m.message, isSentByAdmin, displayName, avatar, m.created_at);
-                    });
-
-                    scrollToBottom();
                 });
             }
 
-            function appendMessage(text, isSent, displayName, avatarUrl, time) {
-                const t = time ?
+            $('#messageForm').on('submit', function(e) {
+                e.preventDefault();
+                const message = $("#messageInput")[0].emojioneArea.getText().trim();
+                const receiverId = $('#receiver_id').val();
+                const file = document.getElementById('imageInput').files[0];
+
+                if (!message && !file) return toastr.warning('Vui lòng nhập tin nhắn hoặc chọn ảnh');
+
+                const formData = new FormData(this);
+                formData.append('message', message);
+                if (file) formData.append('image', file);
+
+                $.ajax({
+                    url: '{{ route('admin.sendMessage') }}',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        if (res.success) {
+                            $("#messageInput")[0].emojioneArea.setText('');
+                            document.getElementById('imageInput').value = "";
+                            document.getElementById('imagePreviewContainer').style.display =
+                                "none";
+
+                            appendMessageWithImage(message, res.data?.image, true, 'Bạn', null,
+                                res.data?.created_at);
+                            scrollToBottom();
+                            moveUserToTop(receiverId);
+                        }
+                    }
+                });
+            });
+
+            const pusher = new Pusher('39863debe06a2e95784f', {
+                cluster: 'us3'
+            });
+            const channel = pusher.subscribe('admin-messages.' + CURRENT_ADMIN_ID);
+
+            channel.bind('user-message', function(data) {
+                const senderId = String(data.sender_id);
+
+                moveUserToTop(senderId);
+
+                if ($('#receiver_id').val() == senderId) {
+                    appendMessageWithImage(data.message, data.image, false, 'Client',
+                        data.user?.picture ? '{{ asset('storage') }}/' + data.user.picture :
+                        DEFAULT_AVATAR,
+                        data.created_at
+                    );
+                    scrollToBottom();
+                    updateUnreadBadge(senderId, 0);
+                } else {
+                    const current = parseInt(unreadCounts[senderId] || 0);
+                    updateUnreadBadge(senderId, current + 1);
+                }
+            });
+
+            channel.bind('message-seen', function(data) {
+                updateUnreadBadge(String(data.senderId), 0);
+            });
+
+            $(document).on('click', '.user-item', function() {
+                $('.user-item').removeClass('active');
+                $(this).addClass('active');
+
+                const id = $(this).data('id');
+                const name = $(this).find('.name').text().trim();
+                const img = $(this).find('img').attr('src');
+
+                $('#receiver_id').val(id);
+                $('#chat_name').text(name);
+                $('#chat_img').attr('src', img || DEFAULT_AVATAR);
+                $('#typingAvatar').attr('src', img || DEFAULT_AVATAR);
+                $('#chatFooter').show();
+
+                loadMessages(id);
+
+                updateUnreadBadge(id, 0);
+                moveUserToTop(id);
+            });
+
+            function appendMessageWithImage(text, imageUrl, isSender, name, avatar, time) {
+                const timeStr = time ?
                     new Date(time).toLocaleTimeString('vi-VN', {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -398,47 +667,131 @@
                         minute: '2-digit'
                     });
 
-                const avatarHtml = isSent ?
-                    '' :
-                    `<img src="${avatarUrl || DEFAULT_AVATAR}" alt="${displayName}">`;
+                let content = text ? `<p>${text.replace(/\n/g, '<br>')}</p>` : '';
+
+                if (imageUrl) {
+                    content +=
+                        `<img src="${imageUrl}" class="chat-image" onclick="window.open(this.src,'_blank')" style="display:none;">`;
+                }
+
+                const avatarHtml = !isSender ?
+                    `<div class="message-avatar"><img src="${avatar || DEFAULT_AVATAR}" alt="${name}"></div>` :
+                    '';
 
                 const html = `
-                <div class="message ${isSent ? 'sent' : 'received'}">
-                    ${avatarHtml}
-                    <div class="message-bubble">
-                        <p><strong>${displayName}:</strong> ${text}</p>
-                        <div class="time">${t}</div>
-                    </div>
-                </div>`;
+        <div class="chat-message ${isSender ? 'sender' : 'receiver'}">
+            ${avatarHtml}
+            <div class="message-content">
+                ${content}
+                <div class="timestamp">${timeStr}</div>
+            </div>
+        </div>`;
 
                 $('#chatMessageContainer').append(html);
-                scrollToBottom();
+
+                if (imageUrl) {
+                    const $img = $('#chatMessageContainer').find('img.chat-image').last();
+                    $img.one('load', function() {
+                        scrollToBottom();
+                    }).each(function() {
+                        if (this.complete) $(this).trigger('load');
+                    });
+                    $img.show();
+                } else {
+                    scrollToBottom();
+                }
+            }
+
+            function loadMessages(userId) {
+                $.get('{{ route('admin.fetchMessages') }}', {
+                    receiver_id: userId
+                }, function(res) {
+                    $('#chatMessageContainer').empty();
+                    if (!res.messages?.length) {
+                        $('#chatMessageContainer').html(
+                            `<div class="text-center text-muted mt-5"><i class="fas fa-comment-dots fa-3x mb-3"></i><p>Chưa có tin nhắn nào</p></div>`
+                        );
+                        return;
+                    }
+                    res.messages.forEach(m => {
+                        const isSender = parseInt(m.sender_id) === CURRENT_ADMIN_ID;
+                        appendMessageWithImage(
+                            m.message || '',
+                            m.image,
+                            isSender,
+                            isSender ? 'Bạn' : 'Client',
+                            isSender ? null : (m.sender_picture ? '{{ asset('storage') }}/' + m
+                                .sender_picture : DEFAULT_AVATAR),
+                            m.created_at
+                        );
+                    });
+                    scrollToBottom();
+                });
             }
 
             function scrollToBottom() {
-                const container = $('#chatMessageContainer');
-                container.scrollTop(container[0].scrollHeight);
+                const el = $('#chatMessageContainer')[0];
+                setTimeout(() => el.scrollTop = el.scrollHeight, 100);
             }
 
-            const pusher = new Pusher('39863debe06a2e95784f', {
-                cluster: 'us3'
+            restoreUserOrderAndBadges();
+
+            $.get('{{ route('chat.unreadCounts') }}', function(serverCounts) {
+                let needSave = false;
+                Object.keys(serverCounts).forEach(uid => {
+                    const serverCount = parseInt(serverCounts[uid]);
+                    const localCount = parseInt(unreadCounts[uid] || 0);
+                    if (serverCount > localCount) {
+                        unreadCounts[uid] = serverCount;
+                        updateUnreadBadge(uid, serverCount);
+                        needSave = true;
+                    }
+                });
+                if (needSave) saveOrderAndUnread();
             });
 
-            const id = {{ Auth::id() }};
-            const channel = pusher.subscribe('admin-messages.' + id);
+            $("#messageInput").emojioneArea({
+                pickerPosition: "top",
+                tones: false
+            });
 
-            channel.bind('user-message', function(data) {
-                const currentUserId = $('#receiver_id').val();
+            let typingTimer;
+            $("#messageInput")[0].emojioneArea.on("keyup", function() {
+                const rid = $('#receiver_id').val();
+                if (!rid) return;
+                $.post('/chat/admin-typing', {
+                    _token: '{{ csrf_token() }}',
+                    receiver_id: rid,
+                    is_typing: true
+                });
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => {
+                    $.post('/chat/admin-typing', {
+                        _token: '{{ csrf_token() }}',
+                        receiver_id: rid,
+                        is_typing: false
+                    });
+                }, 1500);
+            });
 
-                if (currentUserId && parseInt(data.user.id) === parseInt(currentUserId)) {
-                    appendMessage(
-                        data.message,
-                        false, 
-                        'Client', 
-                        DEFAULT_AVATAR, 
-                        data.created_at
-                    );
+            channel.bind('user-typing', function(data) {
+                if ($('#receiver_id').val() == data.seller_id) {
+                    $('#typingAvatar').attr('src', $('#chat_img').attr('src'));
+                    $('#typingIndicator')[data.is_typing ? 'show' : 'hide']();
+                    if (data.is_typing) scrollToBottom();
                 }
+            });
+
+            $('#imageInput').on('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    $('#imagePreview').attr('src', URL.createObjectURL(file));
+                    $('#imagePreviewContainer').show();
+                }
+            });
+            $('#removePreview').on('click', function() {
+                $('#imageInput').val('');
+                $('#imagePreviewContainer').hide();
             });
         });
     </script>

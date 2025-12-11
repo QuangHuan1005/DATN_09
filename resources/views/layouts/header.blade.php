@@ -231,10 +231,6 @@
                                     <li id="menu-item-84"
                                         class="menu-item menu-item-type-post_type menu-item-object-page"><a
                                             href="{{ route('contact.index') }}"><span>Liên hệ</span></a></li>
-
-                                    <li id="menu-item-84"
-                                        class="menu-item menu-item-type-post_type menu-item-object-page"><a
-                                            href="{{ route('chat') }}"><span>Chat trực tuyến</span></a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -340,14 +336,14 @@
                                                 Xin chào, <strong>{{ Str::afterLast(Auth::user()->name, ' ') }}</strong> 👋
                                             </div>
                                             {{-- @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
-                                            <a href="{{ route('admin.dashboard') }}"
-                                                style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
-                                                🔑 Truy cập quản trị
-                                            </a>
-                                            <a href="{{ route('account.dashboard') }}"
-                                                style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
-                                                🧾 Tài khoản của tôi
-                                            </a>
+                                                <a href="{{ route('admin.dashboard') }}"
+                                                    style="display:block; padding:10px 15px; color:#007bff; text-decoration:none; border-bottom:1px solid #eee;">
+                                                    🔑 Truy cập quản trị
+                                                </a>
+                                                <a href="{{ route('account.dashboard') }}"
+                                                    style="display:block; padding:10px 15px; color:#333; text-decoration:none; border-bottom:1px solid #eee;">
+                                                    🧾 Tài khoản của tôi
+                                                </a>
                                             @endif --}}
 
                                             @auth
@@ -470,17 +466,17 @@
                     document.addEventListener('wishlistUpdated', function() {
                         updateWishlistCount();
                     });
-                    }
+                }
 
-                    // Cập nhật khi trang load
-                    document.addEventListener('DOMContentLoaded', function() {
-                        updateWishlistCount();
-                    });
+                // Cập nhật khi trang load
+                document.addEventListener('DOMContentLoaded', function() {
+                    updateWishlistCount();
+                });
 
-                    // Cập nhật khi có thay đổi wishlist
-                    document.addEventListener('wishlistUpdated', function() {
-                        updateWishlistCount();
-                    });
+                // Cập nhật khi có thay đổi wishlist
+                document.addEventListener('wishlistUpdated', function() {
+                    updateWishlistCount();
+                });
                 </script>
 
                 {{-- phần wishlist và cart giữ nguyên --}}
@@ -518,16 +514,7 @@
                                                 fill="currentColor"></path>
                                         </svg></span>
                                     <div class="cart-text">
-                                        @php
-                                            $cart = session('cart', []);
-                                            // Đếm số dòng trong giỏ (mỗi dòng là 1 biến thể / 1 “đơn hàng nhỏ”)
-                                            $cartItemCount = is_array($cart) ? count($cart) : 0;
-                                        @endphp
-
-                                        <div class="count-badge js_count_bag_item">
-                                            {{ $cartItemCount }}
-                                        </div>
-
+                                        <div class="count-badge js_count_bag_item">0</div>
                                     </div>
                                 </div>
                             </a>

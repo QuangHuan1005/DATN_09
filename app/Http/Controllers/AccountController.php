@@ -156,7 +156,7 @@ class AccountController extends Controller
             ->whereRaw('total_used < quantity') // Còn số lượng
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function ($voucher) {
+            ->map(function($voucher) {
                 // Format discount text
                 $discountText = '';
                 if ($voucher->discount_type === 'percent') {

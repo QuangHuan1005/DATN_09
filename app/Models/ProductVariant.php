@@ -17,9 +17,10 @@ class ProductVariant extends Model
         'size_id',
         'price',
         'sale',
+        'sale_price',
         'image',
         'quantity',
-        'status',  // trạng thái: 1 = active, 0 = inactive
+        'status',  // trạng thái: active, inactive
     ];
 
     /**
@@ -49,10 +50,6 @@ class ProductVariant extends Model
     /**
      * Scope: Lấy biến thể đang hoạt động (status = 1)
      */
-    public function orderDetails()
-    {
-        return $this->hasMany(OrderDetail::class);
-    }
     public function scopeActive($query)
     {
         return $query->where('status', 1);
@@ -64,5 +61,23 @@ class ProductVariant extends Model
     public function getStatusTextAttribute()
     {
         return $this->status == 1 ? 'Hoạt động' : 'Ngừng bán';
-    }   
+    }
+
+    /**
+     * Lấy tên biến thể (Màu sắc - Kích cỡ)
+     */
+    public function getVariantName()
+    {
+        $parts = [];
+
+        if ($this->color) {
+            $parts[] = $this->color->name;
+        }
+
+        if ($this->size) {
+            $parts[] = $this->size->name;
+        }
+
+        return implode(' - ', $parts) ?: 'Mặc định';
+    }
 }

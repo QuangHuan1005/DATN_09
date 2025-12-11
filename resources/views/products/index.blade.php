@@ -13,17 +13,33 @@
                 <div id="site-content" class="site-content-wrapper">
                     <div data-elementor-type="product-archive" data-elementor-id="342"
                         class="elementor elementor-342 elementor-location-archive product">
+                        <div class="elementor-element elementor-element-154c7994 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                            data-id="154c7994" data-element_type="container">
+                            <div class="e-con-inner">
+                                <div class="elementor-element elementor-element-48a016be kitify-breadcrumbs-page-title-yes kitify-breadcrumbs-align-center elementor-widget kitify elementor-kitify-breadcrumbs"
+                                    data-id="48a016be" data-element_type="widget"
+                                    data-widget_type="kitify-breadcrumbs.default">
+                                    <div class="elementor-widget-container">
 
-                        <div class="e-con-inner">
-                            <div class="elementor-element elementor-element-48a016be kitify-breadcrumbs-page-title-yes kitify-breadcrumbs-align-center elementor-widget kitify elementor-kitify-breadcrumbs"
-                                data-id="48a016be" data-element_type="widget" data-widget_type="kitify-breadcrumbs.default">
-                                <div class="elementor-widget-container">
-
+                                        <div class="kitify-breadcrumbs">
+                                            <h3 class="kitify-breadcrumbs__title">Shop</h3>
+                                            <div class="kitify-breadcrumbs__content">
+                                                <div class="kitify-breadcrumbs__wrap">
+                                                    <div class="kitify-breadcrumbs__item"><a href="../index.html"
+                                                            class="kitify-breadcrumbs__item-link is-home" rel="home"
+                                                            title="Home">Home</a></div>
+                                                    <div class="kitify-breadcrumbs__item">
+                                                        <div class="kitify-breadcrumbs__item-sep"><span>/</span></div>
+                                                    </div>
+                                                    <div class="kitify-breadcrumbs__item"><span
+                                                            class="kitify-breadcrumbs__item-target">Shop</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
-
                         <div class="elementor-element elementor-element-62eaf656 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
                             data-id="62eaf656" data-element_type="container">
                             <div class="e-con-inner">
@@ -189,8 +205,7 @@
                                                                                             class="title">
                                                                                             <h3
                                                                                                 class="woocommerce-loop-product__title">
-                                                                                                {{ \Illuminate\Support\Str::limit($item->name, 75) }}
-                                                                                            </h3>
+                                                                                                {{ $item->name }}</h3>
                                                                                         </a>
                                                                                     </div>
                                                                                     <div class="info-right">
@@ -198,7 +213,8 @@
                                                                                             @if ($hasSale)
                                                                                                 {{-- Có khuyến mãi --}}
                                                                                                 <span class="price">
-                                                                                                    <del aria-hidden="true">
+                                                                                                    <del
+                                                                                                        aria-hidden="true">
                                                                                                         <span
                                                                                                             class="woocommerce-Price-amount amount">
                                                                                                             <bdi>
@@ -206,7 +222,8 @@
                                                                                                             </bdi>
                                                                                                         </span>
                                                                                                     </del>
-                                                                                                    <ins aria-hidden="true">
+                                                                                                    <ins
+                                                                                                        aria-hidden="true">
                                                                                                         <span
                                                                                                             class="woocommerce-Price-amount amount">
                                                                                                             <bdi>
@@ -218,7 +235,8 @@
                                                                                             @else
                                                                                                 {{-- Không khuyến mãi --}}
                                                                                                 <span class="price">
-                                                                                                    <ins aria-hidden="true">
+                                                                                                    <ins
+                                                                                                        aria-hidden="true">
                                                                                                         <span
                                                                                                             class="woocommerce-Price-amount amount">
                                                                                                             <bdi>

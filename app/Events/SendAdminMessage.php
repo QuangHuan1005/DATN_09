@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Support\Facades\Storage;
 
 class SendAdminMessage implements ShouldBroadcastNow
 {
@@ -33,7 +34,7 @@ class SendAdminMessage implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('admin-messages.' .$this->message->receiver_id);
+        return new Channel('admin-messages.' . $this->message->receiver_id);
     }
 
     /**
@@ -41,35 +42,30 @@ class SendAdminMessage implements ShouldBroadcastNow
      *
      * @return array
      */
+    // Thêm trường image vào broadcastWith()
     public function broadcastWith()
     {
         $admin = User::find($this->message->sender_id);
 
-        if ($admin) {
-            return [
-                'message' => $this->message->message,
-                'receiver_id' => $this->message->receiver_id,
-                'sender_id' => $this->message->sender_id,
-                'admin' => [
-                    'id' => $admin->id,
-                    'name' => $admin->name,
-                    'image' => asset('storage/' . $admin->picture),
-                ],
-                'created_at' => $this->message->created_at,
-            ];
-        } else {
-            return [
-                'message' => $this->message->message,
-                'receiver_id' => $this->message->receiver_id,
-                'sender_id' => $this->message->sender_id,
-                'admin' => [
-                    'id' => null,
-                    'name' => 'Unknown Admin',
-                    'image' => asset('storage/default-avatar.png'),
-                ],
-                'created_at' => $this->message->created_at,
-            ];
-        }
+        $adminData = $admin ? [
+            'id' => $admin->id,
+            'name' => $admin->name,
+            'image' => asset('storage/' . $admin->picture),
+        ] : [
+            'id' => null,
+            'name' => 'Unknown Admin',
+            'image' => asset('storage/default-avatar.png'),
+        ];
+
+        return [
+            'message' => $this->message->message,
+            // Trong broadcastWith() của cả 2 event
+            'image' => $this->message->image ? Storage::url($this->message->image) : null,
+            'receiver_id' => $this->message->receiver_id,
+            'sender_id' => $this->message->sender_id,
+            'admin' => $adminData,
+            'created_at' => $this->message->created_at->format('Y-m-d H:i:s'),
+        ];
     }
 
     /**

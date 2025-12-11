@@ -65,7 +65,7 @@ class User extends Authenticatable
      */
     public function ranking()
     {
-        //   return $this->belongsTo(Ranking::class, 'ranking_id');
+     //   return $this->belongsTo(Ranking::class, 'ranking_id');
     }
 
     /**
@@ -106,6 +106,21 @@ class User extends Authenticatable
     public function defaultAddress()
     {
         return $this->hasOne(UserAddress::class)->where('is_default', true);
+    }
+    /**
+     * Quan hệ với UserBankAccount (nhiều tài khoản ngân hàng)
+     */
+    public function bankAccounts()
+    {
+        return $this->hasMany(UserBankAccount::class);
+    }
+
+    /**
+     * Lấy tài khoản ngân hàng mặc định
+     */
+    public function defaultBankAccount()
+    {
+        return $this->hasOne(UserBankAccount::class)->where('is_default', true);
     }
 
     // User.php

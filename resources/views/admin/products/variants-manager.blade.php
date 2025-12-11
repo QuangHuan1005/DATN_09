@@ -496,7 +496,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="edit_image" class="form-label">Ảnh Biến Thể</label>
-                                <input type="file" class="form-control" id="edit_image" name="image"
+                                <input type="file" class="form-control" id="edit_image" name="image" 
                                     accept="image/jpeg,image/png,image/jpg,image/webp">
                                 <small class="text-muted">Để trống nếu không muốn thay đổi ảnh</small>
                             </div>
@@ -759,3 +759,4 @@
         }); // End DOMContentLoaded
     </script>
 @endsection
+

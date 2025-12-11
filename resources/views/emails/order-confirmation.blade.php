@@ -166,27 +166,3 @@
     </div>
 </body>
 </html>
-@component('mail::message')
-# {{ $statusLabel }}
-
-Xin chào {{ $order->name ?? ($order->user->name ?? 'Bạn') }},
-
-Đơn hàng của bạn với mã **{{ $order->order_code }}** hiện đang ở trạng thái:  
-**{{ $statusLabel }}**
-
-**Thông tin đơn hàng:**
-
-- Mã đơn: {{ $order->order_code }}
-- Ngày đặt: {{ $order->created_at->format('d/m/Y H:i') }}
-- Tổng tiền: {{ number_format($order->total_amount, 0, ',', '.') }}₫
-- Người nhận: {{ $order->name }}
-- Số điện thoại: {{ $order->phone }}
-- Địa chỉ: {{ $order->address }}
-
-@component('mail::button', ['url' => route('orders.show', $order->id)])
-Xem chi tiết đơn hàng
-@endcomponent
-
-Cảm ơn bạn đã mua sắm tại {{ config('app.name') }}!
-
-@endcomponent

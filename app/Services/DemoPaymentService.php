@@ -11,7 +11,7 @@ class DemoPaymentService
     {
         // Tạo QR code demo bằng QR Server API
         $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode("MOMO_DEMO_ORDER_{$orderId}_AMOUNT_{$amount}");
-
+        
         // Tạo pay URL demo
         $payUrl = route('payment.momo.qr', [
             'order_id' => $orderId,

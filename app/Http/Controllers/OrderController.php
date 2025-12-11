@@ -3,13 +3,12 @@
 // app/Http/Controllers/OrderController.php
 namespace App\Http\Controllers;
 
-use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderStatus;
 use App\Models\OrderStatusLog;
-use Illuminate\Support\Facades\Mail;
+
 
 class OrderController extends Controller
 {
@@ -19,7 +18,7 @@ class OrderController extends Controller
         $statusId = (int) $request->query('status_id', 0);
 
         // Lấy danh sách trạng thái để render filter
-        $statuses = OrderStatus::orderBy('id')->get(['id', 'name']);
+        $statuses = OrderStatus::orderBy('id')->get(['id','name']);
 
         // Đếm số đơn theo trạng thái (để hiện số trên tab)
         $counts = \App\Models\Order::query()
@@ -29,69 +28,46 @@ class OrderController extends Controller
             ->pluck('c', 'order_status_id'); // [status_id => count]
 
         $orders = \App\Models\Order::query()
-            ->with(['status', 'paymentStatus', 'payment.paymentMethod', 'details']) // eager để tính SL
+            ->with(['status','paymentStatus','payment.method','details']) // eager để tính SL
             ->where('user_id', Auth::id())
             ->when($statusId > 0, fn($q) => $q->where('order_status_id', $statusId))
             ->latest('created_at')                 // mới nhất lên đầu
             ->paginate(5)                          // <= chỉ 5 đơn mỗi trang
             ->withQueryString();                   // giữ ?status_id khi next page
 
-        return view('orders.index', compact('orders', 'statuses', 'statusId', 'counts'));
+        return view('orders.index', compact('orders','statuses','statusId','counts'));
     }
 
     // Chi tiết đơn hàng
     public function show($id)
     {
-        $order = Order::query()
-            ->with([
-                'status',
-                'paymentStatus',
-                'payment.paymentMethod',
-                'invoice',
-                'voucher',
-                'user:id,name,email',
-                'details.productVariant.product:id,name',
-                'details.productVariant.color:id,name,color_code',
-                'details.productVariant.size:id,name,size_code',
-                'details.productVariant.product.photoAlbums:id,product_id,image',
+       $order = Order::query()
+        ->with([
+            'status','paymentStatus','payment.method','invoice','voucher',
+            'user:id,name,email',
+            'details.productVariant.product:id,name',
+            'details.productVariant.color:id,name,color_code',
+            'details.productVariant.size:id,name,size_code',
+            'statusLogs', // <= THÊM DÒNG NÀY
+        ])
+        ->where('id', $id)
+        ->where('user_id', Auth::id())
+        ->first();
 
-                'statusLogs', // <= THÊM DÒNG NÀY
-            ])
-            ->where('id', $id)
-            ->where('user_id', Auth::id())
-            ->first();
         if (!$order) {
             return redirect()->route('orders.index')->with('error', 'Không tìm thấy đơn hàng.');
         }
-        
 
         // Chuẩn hóa dữ liệu hiển thị dòng SP
         $lines = $order->details->map(function ($d) {
             $v = $d->productVariant;
-            $image = null;
-
-            // 1. Ưu tiên ảnh lưu ở product_variants.image
-            if ($v && $v->image) {
-                $image = asset('storage/' . $v->image);
-            }
-            // 2. Nếu biến thể không có ảnh riêng, lấy ảnh đầu tiên của album sản phẩm
-            elseif ($v && $v->product && $v->product->photoAlbums->isNotEmpty()) {
-                $image = asset('storage/products/' . $v->product->photoAlbums->first()->image);
-            }
-            // 3. (optional) fallback ảnh no-image
-            // else {
-            //     $image = asset('assets/images/no-image.png');
-            // }
-
             $variantText = [];
-            if ($v?->size?->name)  $variantText[] = "Size: {$v->size->size_code}";
+            if ($v?->size?->name)  $variantText[] = "Size: {$v->size->name}";
             if ($v?->color?->name) $variantText[] = "Màu: {$v->color->name}";
-
             return (object)[
-                'product_id'   => $v?->product?->id,
                 'product_name' => $v?->product?->name ?? 'Sản phẩm',
                 'variant_text' => $variantText ? implode(' · ', $variantText) : null,
-                'image'         => $image, // <-- dùng biến image ở trên
+                'image'        => $v?->image, // chuỗi path lưu trong DB (vd: shirt1-red.jpg)
                 'unit_price'   => (int)$d->price,
                 'qty'          => (int)$d->quantity,
                 'line_total'   => (int)($d->price * $d->quantity),
@@ -99,12 +75,11 @@ class OrderController extends Controller
             ];
         });
 
-
-
         // Tính tạm tính/tổng (nếu muốn dựa hoàn toàn DB thì dùng cột đã có)
         $calc_subtotal = $lines->sum('line_total');
         $calc_discount = (int)$order->discount;
         $calc_total    = (int)$order->total_amount;
+        
         // Tính shipping fee: total_amount = subtotal + shipping_fee - discount
         // => shipping_fee = total_amount - subtotal + discount
         $calc_shipping_fee = max(0, $calc_total - $calc_subtotal + $calc_discount);
@@ -122,11 +97,11 @@ class OrderController extends Controller
     // (Tuỳ chọn) Hủy đơn – thêm route POST nếu bạn muốn bật thao tác này
     public function cancel(Request $request, $id)
     {
-        $order = Order::where('id', $id)->where('user_id', Auth::id())->first();
-        if (!$order) return back()->with('error', 'Không tìm thấy đơn hàng.');
+        $order = Order::where('id',$id)->where('user_id',Auth::id())->first();
+        if (!$order) return back()->with('error','Không tìm thấy đơn hàng.');
 
         if (!$order->cancelable) {
-            return back()->with('error', 'Đơn hàng không thể hủy ở trạng thái hiện tại.');
+            return back()->with('error','Đơn hàng không thể hủy ở trạng thái hiện tại.');
         }
 
         // Đổi trạng thái: Hủy (id = 6 theo seed của bạn)
@@ -136,7 +111,7 @@ class OrderController extends Controller
             $order->payment_status_id = 3; // Hoàn tiền
             // TODO: ghi nhận giao dịch hoàn về ví nếu bạn có module ví
         }
-        $order->note = trim($request->input('reason', 'Khách yêu cầu hủy'));
+        $order->note = trim($request->input('reason','Khách yêu cầu hủy'));
         $order->save();
         OrderStatusLog::create([
             'order_id'        => $order->id,
@@ -145,7 +120,7 @@ class OrderController extends Controller
         ]);
 
 
-        return redirect()->route('orders.show', $order->id)->with('success', 'Đã hủy đơn hàng.');
+        return redirect()->route('orders.show',$order->id)->with('success','Đã hủy đơn hàng.');
     }
 
     /**
@@ -178,31 +153,5 @@ class OrderController extends Controller
         return redirect()
             ->route('orders.show', $order->id)
             ->with('success', 'Đơn hàng đã chuyển sang trạng thái Hoàn thành.');
-    }
-    public function updateStatus(Request $request, $id)
-    {
-        $order = Order::with('user')->findOrFail($id);
-
-        $oldStatus = $order->order_status_id;
-        $order->order_status_id = (int) $request->input('order_status_id');
-        $order->save();
-
-        // Nếu chuyển sang ĐÃ ĐẶT HÀNG => gửi mail
-        if ($order->order_status_id === Order::STATUS_PLACED && $oldStatus !== Order::STATUS_PLACED) {
-            if ($order->user && $order->user->email) {
-                Mail::to($order->user->email)
-                    ->queue(new OrderConfirmation($order, 'Đặt hàng thành công'));
-            }
-        }
-
-        // Nếu chuyển sang HOÀN THÀNH => gửi mail
-        if ($order->order_status_id === Order::STATUS_COMPLETED && $oldStatus !== Order::STATUS_COMPLETED) {
-            if ($order->user && $order->user->email) {
-                Mail::to($order->user->email)
-                    ->queue(new OrderConfirmation($order, 'Đơn hàng đã hoàn thành'));
-            }
-        }
-
-        return back()->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
     }
 }

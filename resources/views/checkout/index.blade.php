@@ -124,7 +124,7 @@
                                     </label>
                                     
                                     <label class="ds__item">
-                                        <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_3" value="3" checked />
+                                        <input class="ds__item__input" type="radio" name="payment_method" id="payment_method_1" value="1" checked />
                                         <span class="ds__item__label">
                                             Thanh toán khi giao hàng
                                         </span>
@@ -261,11 +261,11 @@
                                 </div>
                                 @if($appliedVoucher)
                                 <div id="appliedVoucherInfo" style="padding: 10px; background: #e8f5e9; border-radius: 4px; margin-top: 10px;">
-                                    <strong>Đã áp dụng: {{ $appliedVoucher->voucher_code }}</strong>
-                                    @if(stripos($appliedVoucher->voucher_code, 'FREESHIP') !== false || stripos($appliedVoucher->description ?? '', 'Miễn phí vận chuyển') !== false)
+                                    <strong>Đã áp dụng:{{ $appliedVoucher['voucher_code'] ?? '' }}</strong>
+                                    @if(stripos($appliedVoucher['voucher_code'] ?? '', 'FREESHIP') !== false || stripos($appliedVoucher['description'] ?? '', 'Miễn phí vận chuyển') !== false)
                                         <span> - Miễn phí vận chuyển</span>
-                                    @elseif($appliedVoucher->discount_type === 'percent')
-                                        <span> - Giảm {{ $appliedVoucher->discount_value }}%</span>
+                                    @elseif($appliedVoucher['discount_type'] ?? '' === 'percent')
+                                        <span> - Giảm {{ $appliedVoucher['discount_value'] ?? 0 }}%</span>
                                     @elseif($appliedVoucher->discount_type === 'fixed')
                                         <span> - Giảm {{ number_format($appliedVoucher->discount_value) }}đ</span>
                                     @endif
