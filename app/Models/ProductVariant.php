@@ -47,6 +47,11 @@ class ProductVariant extends Model
         return $this->belongsTo(Size::class, 'size_id');
     }
 
+        public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
+
     /**
      * Scope: Lấy biến thể đang hoạt động (status = 1)
      */

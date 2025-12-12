@@ -14,18 +14,18 @@ class Product extends Model
 
     protected $fillable = [
         'category_id',
-        'role_id',
         'product_code',
         'name',
-        'image',
-        'quantity',
         'description',
         'view',
         'material',
         'onpage',
+
     ];
 
     protected $dates = ['deleted_at'];
+
+    // App\Models\Product.php
 
     public function category()
     {
@@ -42,22 +42,28 @@ class Product extends Model
         return $this->hasMany(ProductPhotoAlbum::class);
     }
 
-    // Ảnh đại diện
+    // Ảnh đại diện (1 ảnh duy nhất cho card sản phẩm)
     public function firstPhoto()
     {
         return $this->hasOne(ProductPhotoAlbum::class)
-                    ->orderBy('id', 'asc');
+            ->orderBy('id', 'asc'); // hoặc where('is_main', 1)
     }
+    // Trong Product model
+    public function orderDetails()
+    {
+        return $this->hasManyThrough(
+            OrderDetail::class,
+            ProductVariant::class,
+            'product_id',      // khóa ngoại trên product_variants
+            'product_variant_id', // khóa ngoại trên order_details
+            'id',              // khóa chính trên products
+            'id'               // khóa chính trên product_variants
+        );
+    }
+
 
     public function reviews()
     {
         return $this->hasMany(Review::class);
     }
-
-    // 🔥 Sản phẩm thuộc nhiều voucher
-    public function vouchers()
-    {
-        return $this->belongsToMany(Voucher::class, 'voucher_products', 'product_id', 'voucher_id');
-    }
-    
 }
