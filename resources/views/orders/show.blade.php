@@ -356,6 +356,90 @@
       border-color: #ef4444 !important;
     }
 
+    /* Nút "YÊU CẦU HOÀN HÀNG" - CSS giống btn-complete, chỉ khác màu */
+            .btn-return {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                padding: 8px 14px;
+                min-width: 120px;0px;
+                border-radius: 999px;
+                border: 1px solid #f59e0b;
+                background: #f59e0b;
+                color: #fff !important;
+                font-weight: 600;
+                cursor: pointer;
+                text-decoration: none;
+                margin-left: 8px;
+                margin-left: 8px;
+            }
+
+            .btn-return:hover {
+                background: #d97706;
+                border-color: #d97706;
+                color: #fff !important;
+            }
+
+            .btn-return:active {
+                transform: translateY(0.5px);
+            }
+
+            .btn-return.disabled {
+                background: #d1d5db;
+                border-color: #d1d5db;
+                color: #6b7280 !important;
+                cursor: not-allowed;
+                opacity: 0.6;
+                transform: none; /* Không có active effect cho disabled */
+            }
+
+            /* Nút "CHI TIẾT HOÀN HÀNG" - Màu vàng */
+            .btn-return-detail {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 170px;
+                min-width: 170px;
+                padding: 8px 16px;
+                margin: 0;
+                border: 1.5px solid #eab308;
+                border-radius: 999px;
+                background: #eab308;
+                color: #fff !important;
+                font-size: 13px;
+                font-weight: 600;
+                text-align: center;
+                cursor: pointer;
+                box-sizing: border-box;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+
+            .btn-return-detail:hover {
+                background: #ca8a04;
+                border-color: #ca8a04;
+                color: #fff !important;
+            }
+
+            .btn-return-detail:active {
+                transform: translateY(0.5px);
+            }
+
+            /* Mobile: đưa badge + nút căn trái để đỡ chật */
+            @media (max-width: 768px) {
+                .order-header>div:last-child {
+                    justify-content: flex-start;
+                    text-align: left;
+                }
+            }
+
+            .btn-danger-outline:hover {
+                background: #fef2f2 !important;
+                color: #b91c1c !important;
+                border-color: #ef4444 !important;
+            }
+
     /* ==== Giảm khoảng trắng phần My account & đơn hàng ==== */
 
     /* Thu bớt padding trên container của trang xem đơn */
@@ -588,64 +672,124 @@ strong {
                                     id="btnOpenCompleteModal"
                                     title="Xác nhận đã nhận hàng"
                                   >
-                                    Hoàn thành
+                                   Đã nhận được hàng
                                   </button>
                                 </form>
                               @endif
-@if($order->cancelable)
-    {{-- Nút Hủy đơn: Dùng thuộc tính data-bs-toggle và data-bs-target để kích hoạt Modal Bootstrap --}}
-    <button type="button" 
-            class="btn btn-outline-danger" 
-            data-bs-toggle="modal"  
-            data-bs-target="#cancelOrderModal"> Hủy đơn
-    </button>
-@endif
+                  
 
-<div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            {{-- FORM SUBMIT POST ĐỂ GỬI YÊU CẦU HỦY --}}
-            <form method="POST" action="{{ route('orders.cancel', $order->id) }}">
-                @csrf
+                                {{-- Nút YÊU CẦU HOÀN HÀNG: hiển thị khi đơn đã giao hoặc hoàn thành --}}
+                                                                @if (in_array($order->order_status_id, [4, 5]))
+                                                                    @php
+                                                                        $hasReturnRequest = \App\Models\OrderReturn::where('order_id', $order->id)->exists();
+                                                                    @endphp
+                                                                    @if (!$hasReturnRequest)
+                                                                        <button type="button"
+                                                                                onclick="window.location.href='{{ route('orders.return.create', $order->id) }}'"
+                                                                                class="btn-return"
+                                                                                title="Yêu cầu hoàn hàng">
+                                                                            Yêu cầu hoàn hàng
+                                                                        </button>
+                                                                    @else
+                                                                        <span class="btn-return disabled" title="Đã gửi yêu cầu hoàn hàng">
+                                                                            Đã gửi yêu cầu hoàn hàng
+                                                                        </span>
+                                                                    @endif
+                                                                @endif
 
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cancelOrderModalLabel">Xác nhận Yêu cầu Hủy Đơn</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                @if ($order->order_status_id == 7 || \App\Models\OrderReturn::where('order_id', $order->id)->exists())
+                                                                    @php
+                                                                        $returnRequest = \App\Models\OrderReturn::where('order_id', $order->id)->first();
+                                                                    @endphp
+                                                                    @if ($returnRequest)
+                                                                        <button type="button"
+                                                                                onclick="window.location.href='{{ route('orders.return.show', $returnRequest->id) }}'"
+                                                                                class="btn-return-detail"
+                                                                                title="Xem chi tiết hoàn hàng">
+                                                                            Chi tiết hoàn hàng
+                                                                        </button>
+                                                                    @endif
+                                                                @endif
+
+                                                                @if ($order->cancelable)
+                                                                    {{-- form hủy đơn KHÔNG dùng confirm() nữa --}}
+                                                                    <form id="cancel-order-form" method="POST"
+                                                                        action="{{ route('orders.cancel', $order->id) }}">
+                                                                        @csrf
+                                                                        <input type="hidden" name="reason"
+                                                                            value="Khách yêu cầu hủy">
+                                                                        <button class="btn-danger-outline" type="button"
+                                                                            id="btnOpenCancelModal">Hủy đơn hàng</button>
+                                                                    </form>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                      @if ($order->cancelRequest)
+    {{-- Khởi tạo biến để xác định trạng thái hiển thị --}}
+    @php
+        $request = $order->cancelRequest;
+        $statusId = $request->status; // 1: pending, 2: accepted, 3: rejected
+        
+        $statusText = '';
+        $alertClass = '';
+        
+        switch ($statusId) {
+            case 1:
+                $statusText = 'ĐANG CHỜ XEM XÉT';
+                $alertClass = 'alert-warning';
+                break;
+            case 2:
+                $statusText = 'ĐÃ CHẤP NHẬN HỦY';
+                $alertClass = 'alert-success';
+                break;
+            case 3:
+                $statusText = 'ĐÃ BỊ TỪ CHỐI';
+                $alertClass = 'alert-danger';
+                break;
+            default:
+                $statusText = 'KHÔNG XÁC ĐỊNH';
+                $alertClass = 'alert-secondary';
+                break;
+        }
+    @endphp
+
+    <div class="alert {{ $alertClass }}" role="alert">
+        <h4 class="alert-heading">⚠️ YÊU CẦU HỦY ĐƠN HÀNG</h4>
+        <p>
+            Trạng thái hiện tại của yêu cầu hủy của bạn là: 
+            <span class="font-weight-bold">{{ $statusText }}</span>.
+        </p>
+        
+        <hr>
+        
+        <div class="row">
+            {{-- Lý do Khách hàng --}}
+            <div class="col-md-6 mb-2">
+                <strong>Lý do bạn cung cấp:</strong>
+                <p class="mb-0 text-muted">{{ $request->reason_user }}</p>
+            </div>
+            
+            {{-- Phản hồi của Admin (chỉ hiển thị nếu đã có) --}}
+            @if ($request->reason_admin)
+                <div class="col-md-6 mb-2">
+                    <strong>Phản hồi từ Admin:</strong>
+                    <p class="mb-0 font-weight-bold text-dark">{{ $request->reason_admin }}</p>
                 </div>
-
-                <div class="modal-body">
-                    <p>Vui lòng nhập **lý do chi tiết** để gửi yêu cầu hủy đơn hàng này. Yêu cầu sẽ được admin xem xét.</p>
-                    
-                    <div class="mb-3">
-                        <label for="cancelReason" class="form-label required">Lý do hủy đơn</label>
-                        {{-- Ô nhập lý do phải có name="reason" --}}
-                        <textarea class="form-control @error('reason') is-invalid @enderror" 
-                                  id="cancelReason" 
-                                  name="reason" 
-                                  rows="3" 
-                                  required 
-                                  placeholder="Ví dụ: Đặt nhầm sản phẩm hoặc thay đổi nhu cầu.">{{ old('reason') }}</textarea>
-                        
-                        {{-- Hiển thị lỗi Validation nếu Controller redirect lại --}}
-                        @error('reason')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-danger">Gửi Yêu Cầu Hủy</button>
-                </div>
-            </form>
+            @endif
+            
+            {{-- Ngày gửi yêu cầu --}}
+            <div class="col-md-12">
+                <small class="text-secondary">Yêu cầu được gửi lúc: {{ $request->created_at->format('H:i d/m/Y') }}</small>
+            </div>
         </div>
     </div>
-</div>
-                            </div>
-                          </div>
-                        </div>
+    <br>
+@endif              
+
+
+
 
                         {{-- ======= 2 BOX: ĐƠN HÀNG & THÔNG TIN NGƯỜI NHẬN ======= --}}
                           <div class="order-info-grid">
@@ -780,11 +924,45 @@ $firstImage = $it->photoAlbums->first()?->image;
     {{-- phần bên trái (bạn giữ nguyên nếu có) --}}
     <div class="order-bottom-left">
         @if($order->order_status_id == 5)
-            <div class="woocommerce-message">
-                Đơn hàng đã hoàn thành.
-                <a class="button" href="#">Viết đánh giá</a>
+            <h2>Sản phẩm cần đánh giá</h2>
+    <div class="review-list">
+
+        {{-- Lặp qua từng chi tiết sản phẩm trong đơn hàng --}}
+        @foreach ($order->details as $detail)
+            <div class="product-review-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded">
+
+                {{-- Hiển thị tên sản phẩm --}}
+                <div>
+                    <strong>{{ $detail->product->name ?? 'Sản phẩm không rõ' }}</strong>
+                    <p class="text-muted mb-0">SKU: {{ $detail->variant_sku }}</p>
+                </div>
+
+                {{-- Kiểm tra xem sản phẩm này đã được đánh giá chưa --}}
+                @php
+                    // Lấy đánh giá cho sản phẩm/đơn hàng cụ thể
+                    $existingReview = $detail->product->reviews()->where('order_id', $order->id)->first();
+                @endphp
+
+                <div class="review-action">
+                    @if ($existingReview)
+                        {{-- Nếu đã có đánh giá --}}
+                        <span class="text-success me-3">
+                            <i class="fa fa-check-circle"></i> Đã đánh giá ({{ $existingReview->rating }} sao)
+                        </span>
+                        <a href="{{ route('review.edit', $existingReview->id) }}" class="btn btn-sm btn-outline-secondary">Sửa đánh giá</a>
+                    @else
+                        {{-- Nếu chưa có đánh giá --}}
+                       <a href="{{ route('review.create', ['order_id' => $order->id, 'product_id' => $detail->product->id]) }}"
+                           class="btn btn-sm btn-primary">
+                           <i class="fa fa-star"></i> Viết đánh giá
+                        </a>
+                    @endif
+                </div>
             </div>
-        @endif
+        @endforeach
+
+    </div>
+@endif
     </div>
 
     {{-- BOX TỔNG THANH TOÁN BÊN PHẢI --}}
@@ -828,6 +1006,35 @@ $firstImage = $it->photoAlbums->first()?->image;
     </div>
 
 </div>
+             {{-- ===== Modal xác nhận hủy đơn ===== --}}
+                                                   <div class="cancel-order-overlay" id="cancelOrderOverlay">
+    <div class="cancel-order-modal">
+        {{-- Bắt đầu Form để gửi yêu cầu hủy đơn hàng --}}
+        <form id="cancelOrderForm" method="POST" action="{{ route('orders.cancel', $order->id) }}">
+            @csrf
+
+            <h3>Hủy đơn hàng</h3>
+            <p>Bạn chắc chắn muốn hủy đơn này? Vui lòng cung cấp lý do dưới đây:</p>
+
+            {{-- Thêm trường nhập Lý do Hủy --}}
+            <div class="mb-3">
+                <label for="cancelReason" class="form-label visually-hidden">Lý do hủy</label>
+                <textarea class="form-control" id="cancelReason" name="reason" rows="3" required
+                          placeholder="Nhập lý do hủy đơn hàng (Ví dụ: Đặt trùng đơn, thay đổi ý định...)"></textarea>
+            </div>
+
+            <div class="cancel-order-actions">
+                {{-- Nút đóng Modal (KHÔNG gửi Form) --}}
+                <button type="button" class="btn-cancel-close" id="btnCancelClose">Không</button>
+
+                {{-- Nút xác nhận: Thay đổi type="button" thành type="submit" để gửi Form --}}
+                <button type="submit" class="btn-cancel-ok" id="btnCancelOk">Đồng ý</button>
+            </div>
+        </form>
+        {{-- Kết thúc Form --}}
+    </div>
+</div>
+
 
 
                         {{-- ===== Modal xác nhận ĐÃ NHẬN HÀNG ===== --}}
@@ -858,19 +1065,34 @@ $firstImage = $it->photoAlbums->first()?->image;
 
     {{-- JS điều khiển modal hủy đơn & đã nhận hàng --}}
    {{-- JS điều khiển modal hủy đơn & đã nhận hàng --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // --- Logic cho Modal Hủy Đơn (Sử dụng Bootstrap JS API) ---
-        
-        // Tự động mở lại Modal nếu có lỗi Validation (Lỗi 'reason' từ Controller)
-        @if ($errors->has('reason'))
-            var modalElement = document.getElementById('cancelOrderModal');
-            // Kiểm tra xem Bootstrap đã được tải chưa
-            if (modalElement && typeof bootstrap !== 'undefined') {
-                var cancelModal = new bootstrap.Modal(modalElement);
-                cancelModal.show(); // Mở Modal khi có lỗi
-            }
-        @endif
+ <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                    // ===== HỦY ĐƠN =====
+                    const openBtn = document.getElementById('btnOpenCancelModal');
+                    const overlay = document.getElementById('cancelOrderOverlay');
+                    const closeBtn = document.getElementById('btnCancelClose');
+                    const okBtn = document.getElementById('btnCancelOk');
+                    const form = document.getElementById('cancel-order-form');
+
+                    if (openBtn && overlay && closeBtn && okBtn && form) {
+                        openBtn.addEventListener('click', function() {
+                            overlay.classList.add('is-open');
+                        });
+
+                        closeBtn.addEventListener('click', function() {
+                            overlay.classList.remove('is-open');
+                        });
+
+                        overlay.addEventListener('click', function(e) {
+                            if (e.target === overlay) {
+                                overlay.classList.remove('is-open');
+                            }
+                        });
+
+                        okBtn.addEventListener('click', function() {
+                            form.submit();
+                        });
+                    }
 
         // --- Logic cho Modal Đã Nhận Hàng (Nếu vẫn dùng Overlay/Vanilla JS) ---
         
@@ -902,6 +1124,6 @@ $firstImage = $it->photoAlbums->first()?->image;
             });
         }
     });
-</script>
+        </script>
   </div>
 @endsection

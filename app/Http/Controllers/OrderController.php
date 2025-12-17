@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderStatus;
 use App\Models\OrderStatusLog;
+use Illuminate\Support\Facades\DB; // <--- Cần thêm dòng này
 
 
 class OrderController extends Controller
@@ -48,7 +49,8 @@ class OrderController extends Controller
             'details.productVariant.product:id,name',
             'details.productVariant.color:id,name,color_code',
             'details.productVariant.size:id,name,size_code',
-            'statusLogs', // <= THÊM DÒNG NÀY
+            'statusLogs',
+            'cancelRequest',
         ])
         ->where('id', $id)
         ->where('user_id', Auth::id())
@@ -97,30 +99,75 @@ class OrderController extends Controller
     // (Tuỳ chọn) Hủy đơn – thêm route POST nếu bạn muốn bật thao tác này
     public function cancel(Request $request, $id)
     {
-        $order = Order::where('id',$id)->where('user_id',Auth::id())->first();
-        if (!$order) return back()->with('error','Không tìm thấy đơn hàng.');
+        // Quan hệ chính xác là 'details' và 'productVariant'
+    $order = Order::with('details.productVariant') 
+                    ->where('id',$id)
+                    ->where('user_id',Auth::id())
+                    ->first();
+    
+    // Kiểm tra đơn hàng có tồn tại và thuộc về người dùng hiện tại không
+    if (!$order) {
+        return back()->with('error','Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập.');
+    }
 
-        if (!$order->cancelable) {
-            return back()->with('error','Đơn hàng không thể hủy ở trạng thái hiện tại.');
-        }
+    // Kiểm tra tính hợp lệ của việc hủy đơn (dùng accessor getCancelableAttribute)
+    if (!$order->cancelable) {
+        return back()->with('error','Đơn hàng không thể hủy ở trạng thái hiện tại.');
+    }
 
-        // Đổi trạng thái: Hủy (id = 6 theo seed của bạn)
+    // BẮT ĐẦU TRANSACTION
+    DB::beginTransaction();
+
+    try {
+        // Cập nhật trạng thái và lý do
         $order->order_status_id = 6; // Hủy
-        // Nếu đã thanh toán (payment_status_id = 2) → chuyển sang Hoàn tiền (3)
+        
+        // Logic hoàn tiền
         if ((int)$order->payment_status_id === 2) {
             $order->payment_status_id = 3; // Hoàn tiền
             // TODO: ghi nhận giao dịch hoàn về ví nếu bạn có module ví
         }
+        
+        // Ghi lại lý do hủy
         $order->note = trim($request->input('reason','Khách yêu cầu hủy'));
         $order->save();
+        
+        // ===============================================
+        //  🎯 HOÀN TRẢ TỒN KHO SẢN PHẨM
+        // ===============================================
+        // Dùng $order->details và sử dụng collect() để tránh lỗi NULL nếu quan hệ không tải được
+        foreach (collect($order->details) as $item) {
+            // Sửa tên quan hệ để truy cập biến thể
+            $variant = $item->productVariant; 
+            
+            if ($variant) {
+                // Tăng số lượng tồn kho (quantity) của biến thể lên số lượng đã đặt
+                // Giả định Model ProductVariant có cột 'quantity'
+                $variant->increment('quantity', $item->quantity);
+            }
+        }
+        // ===============================================
+
+        // Ghi log trạng thái
         OrderStatusLog::create([
             'order_id'        => $order->id,
-            'order_status_id' => 6,          // Hủy
-            'actor_type'      => 'user',     // khách tự hủy trên giao diện
+            'order_status_id' => 6,
+            'actor_type'      => 'user',
         ]);
+        
+        DB::commit(); // Hoàn tất giao dịch
 
+        return redirect()->route('orders.show',$order->id)->with('success','Đã hủy đơn hàng thành công và hoàn lại tồn kho.');
 
-        return redirect()->route('orders.show',$order->id)->with('success','Đã hủy đơn hàng.');
+    } catch (\Exception $e) {
+        DB::rollBack(); // Quay lại nếu có lỗi
+        
+        // Ghi log chi tiết lỗi để kiểm tra sau này
+        \Illuminate\Support\Facades\Log::error("Cancellation Error for Order #{$id}: " . $e->getMessage()); 
+        
+        // TRẢ VỀ LỖI CHUNG
+        return back()->with('error','Đã xảy ra lỗi hệ thống khi hủy đơn hàng. Vui lòng thử lại.');
+    }
     }
 
     /**

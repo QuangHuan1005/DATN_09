@@ -99,6 +99,16 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.returns.index') }}" role="button" aria-expanded="false"
+                    aria-controls="sidebarOrders">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:refresh-square-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Quản Lý hoàn hàng </span>
+                </a>
+            </li>
+
              <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.vouchers.index') }}" role="button" aria-expanded="false"
                     aria-controls="sidebarOrders">
