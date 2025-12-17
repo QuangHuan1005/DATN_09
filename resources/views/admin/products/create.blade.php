@@ -29,30 +29,7 @@
 
                         </div>
                     </div> --}}
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Thêm Ảnh Sản Phẩm</h4>
-                        </div>
-                        <div class="card-body">
-                            <!-- File Upload -->
-                            <div action="" class="dropzone " data-plugin="dropzone">
-                                <div class="fallback">
-                                    <input type="file" name="album_images[]" multiple class="form-control">
-                                </div>
-                                <div class="dz-message needsclick">
-                                    <i class="bx bx-cloud-upload fs-48 text-primary"></i>
-                                    <h3 class="mt-4">
-                                        Kéo và thả tệp vào đây để tải lên
-                                        , hoặc <span class="text-primary">nhấp để tải lên</span></h3>
-                                    <span class="text-muted fs-13">
-                                        Khuyến nghị kích thước hình ảnh 1600 x 1200 (4:3).
-                                        Định dạng tệp được hỗ trợ PNG, JPG và GIF.
-                                    </span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+            
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Thông Tin Sản Phầm</h4>

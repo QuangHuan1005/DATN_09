@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 use App\Models\Voucher;
+use App\Models\ProductVariant;
+use Illuminate\Support\Facades\Log; // <-- Đã thêm: Cần thiết cho Log::error()
 
 
 class AccountController extends Controller
@@ -33,6 +35,7 @@ class AccountController extends Controller
 
         return view('account.orders', compact('orders'));
     }
+
     public function address()
     {
         $user = Auth::user();
@@ -47,7 +50,6 @@ class AccountController extends Controller
     }
 
     // Cập nhật thông tin hồ sơ
-
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -56,30 +58,38 @@ class AccountController extends Controller
                 'required',
                 'string',
                 'max:50',
+                // Đảm bảo username là duy nhất, trừ chính user hiện tại, và không bị xóa mềm
                 Rule::unique('users', 'username')->ignore($user->id)->whereNull('deleted_at'),
                 'regex:/^[a-zA-Z0-9_.-]+$/', // chỉ chữ/số/gạch dưới/gạch nối/dấu chấm
             ],
-            'name'     => ['required', 'string', 'max:255'],
-            'phone'    => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\-\s()]*$/'],
-            'email'    => [
+            'name'      => ['required', 'string', 'max:255'],
+            'phone'     => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\-\s()]*$/'],
+            'email'     => [
                 'required',
                 'email',
                 'max:255',
+                // Đảm bảo email là duy nhất, trừ chính user hiện tại
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
         ], [
             'username.regex' => 'Username chỉ gồm chữ, số, dấu chấm, gạch dưới hoặc gạch nối.',
             'phone.regex'    => 'Số điện thoại chỉ chứa 0-9, +, -, khoảng trắng, ().',
         ]);
+        
         $data = $request->all();
+        
         if ($request->hasFile('image')) {
             if ($user->image) {
+                // Xóa ảnh đại diện cũ (nếu có)
                 Storage::delete('public/' . $user->image);
             }
+            // Lưu ảnh mới
             $imagePath = $request->file('image')->store('avatars', 'public');
             $data['image'] = $imagePath;
         }
+        
         $user->update($data);
+        
         return redirect()->route('account.profile')->with('success', 'Cập nhật thông tin thành công!');
     }
 
@@ -156,7 +166,7 @@ class AccountController extends Controller
             ->whereRaw('total_used < quantity') // Còn số lượng
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function($voucher) {
+            ->map(function ($voucher) {
                 // Format discount text
                 $discountText = '';
                 if ($voucher->discount_type === 'percent') {
@@ -198,70 +208,106 @@ class AccountController extends Controller
             'voucher_code' => 'required|string'
         ]);
 
-        $user = Auth::user();
-        $voucherCode = $request->voucher_code;
-        $today = now();
-
-        // Tìm voucher với điều kiện đúng theo cấu trúc database
-        $voucher = Voucher::where('voucher_code', $voucherCode)
-            ->where('status', 1) // Active (không phải is_active)
-            ->where('start_date', '<=', $today)
-            ->where('end_date', '>=', $today)
-            ->whereRaw('total_used < quantity') // Còn số lượng
+        $voucher = Voucher::with('products')
+            ->where('voucher_code', $request->voucher_code)
+            ->where('status', 1)
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->whereRaw('total_used < quantity')
             ->first();
 
         if (!$voucher) {
             return response()->json([
                 'success' => false,
-                'message' => 'Mã giảm giá không hợp lệ hoặc đã hết hạn'
+                'message' => 'Voucher không hợp lệ'
             ]);
         }
 
-        // Kiểm tra giá trị đơn hàng tối thiểu
-        $cartTotal = $request->cart_total ?? 0;
-        if ($voucher->min_order_value > 0 && $cartTotal < $voucher->min_order_value) {
+        $cart = session('cart', []);
+        if (empty($cart)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Đơn hàng tối thiểu ' . number_format($voucher->min_order_value, 0) . 'đ để sử dụng mã này'
+                'message' => 'Giỏ hàng trống'
             ]);
         }
 
-        // Tính giá trị giảm giá
         $discountAmount = 0;
-        if ($voucher->discount_type === 'percent') {
-            $discountAmount = ($cartTotal * $voucher->discount_value) / 100;
-            // Giới hạn discount nếu có sale_price
-            if ($voucher->sale_price > 0 && $discountAmount > $voucher->sale_price) {
-                $discountAmount = $voucher->sale_price;
+        $totalAmount = 0;
+        $eligibleAmount = 0; // Tổng giá trị của các sản phẩm đủ điều kiện áp dụng voucher
+
+        // Lặp để tính TỔNG GIÁ TRỊ GIỎ HÀNG VÀ SẢN PHẨM ĐỦ ĐIỀU KIỆN
+        foreach ($cart as $variantId => $item) {
+            $variant = ProductVariant::with('product')->find($variantId);
+            if (!$variant) continue;
+
+            $price = $variant->sale > 0 ? $variant->sale : $variant->price;
+            $itemTotal = $price * $item['quantity'];
+
+            $totalAmount += $itemTotal; // Tổng tiền hàng không giảm
+
+            $isApplicable = true;
+            // Kiểm tra Voucher gắn sản phẩm cụ thể
+            if ($voucher->products()->exists()) {
+                if (!$voucher->products->pluck('id')->contains($variant->product_id)) {
+                    $isApplicable = false; // KHÔNG đủ điều kiện
+                }
             }
-        } else {
-            $discountAmount = $voucher->discount_value;
+
+            if ($isApplicable) {
+                $eligibleAmount += $itemTotal;
+            }
         }
 
-        // Đảm bảo discount không vượt quá tổng đơn hàng
-        $discountAmount = min($discountAmount, $cartTotal);
+        // ❌ Kiểm tra đơn hàng tối thiểu trên TỔNG GIÁ TRỊ GIỎ HÀNG
+        if ($voucher->min_order_value > 0 && $totalAmount < $voucher->min_order_value) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Đơn hàng chưa đạt giá trị tối thiểu ' . number_format($voucher->min_order_value) . ' đ',
+            ]);
+        }
 
-        // Lưu voucher vào session với thông tin chi tiết
-        session(['applied_voucher' => [
-            'id' => $voucher->id,
-            'code' => $voucher->voucher_code,
-            'discount_type' => $voucher->discount_type,
-            'discount_value' => $voucher->discount_value,
-            'discount_amount' => $discountAmount,
-            'min_order_value' => $voucher->min_order_value,
-        ]]);
+        // ----------------------------------------------------
+        // Tính toán giảm giá LỚN NHẤT một lần trên eligibleAmount
+        // ----------------------------------------------------
+        $discountAmount = 0;
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Áp dụng mã giảm giá thành công',
-            'discount_amount' => $discountAmount,
-            'grand_total' => $cartTotal - $discountAmount,
-            'voucher' => [
-                'code' => $voucher->voucher_code,
-                'discount_amount' => $discountAmount,
-            ]
-        ]);
-    }
+        if ($voucher->discount_type === 'percent') {
+            $rawDiscount = $eligibleAmount * $voucher->discount_value / 100;
+
+            // Giới hạn giảm giá tối đa (nếu có)
+            if ($voucher->max_discount_value > 0) {
+                $discountAmount = min($rawDiscount, $voucher->max_discount_value);
+            } else {
+                $discountAmount = $rawDiscount;
+            }
+        } else { // Fixed amount (Giảm giá cố định)
+            // Nếu là voucher cố định, áp dụng trên TỔNG ĐỦ ĐIỀU KIỆN
+            $discountAmount = min($voucher->discount_value, $eligibleAmount);
+        }
+
+       if ($discountAmount <= 0) {
+ return response()->json([
+ 'success' => false,
+ 'message' => 'Voucher không áp dụng cho sản phẩm nào hoặc giá trị giảm quá nhỏ.'
+ ]);
+ }
+
+// ✅ LƯU SESSION
+session([
+'applied_voucher' => [
+ 'id' => $voucher->id,
+ 'discount_amount' => round($discountAmount), // Làm tròn giá trị
+ ]
+ ]);
+// ---------------------------------------------------------
+        // 🚀 ĐOẠN ĐƯỢC SỬA: BỎ KHỐI TRY-CATCH, TRẢ VỀ TRỰC TIẾP
+        // ---------------------------------------------------------
+return response()->json([
+'success' => true,
+        'message' => 'Áp dụng voucher thành công. Đã giảm ' . number_format(round($discountAmount)) . ' đ',
+           'discount_amount' => round($discountAmount)
+]); 
+} // Kết thúc hàm applyVouch
 
     public function removeVoucher()
     {

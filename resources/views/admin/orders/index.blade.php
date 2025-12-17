@@ -2,6 +2,8 @@
 
 @section('content')
 <div class="container-xxl">
+    
+    <h3 class="fw-bold mb-4">Danh Sách Đơn Hàng</h3>
 
     {{-- Thông báo thành công / lỗi --}}
     @foreach (['success', 'error'] as $msg)
@@ -19,7 +21,7 @@
         <div class="col-md-6">
             <form method="GET" action="{{ route('admin.orders.index') }}" class="d-flex gap-2">
                 <input type="search" name="keyword" class="form-control" placeholder="Tìm mã đơn / tên KH"
-                       value="{{ request('keyword') }}" style="max-width: 250px;">
+                        value="{{ request('keyword') }}" style="max-width: 250px;">
                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
             </form>
         </div>
@@ -54,6 +56,7 @@
                             <th>Tổng Tiền</th>
                             <th>Thanh Toán</th>
                             <th>Sản Phẩm</th>
+                            <th class="text-center">Hủy Yêu Cầu</th>  {{-- <--- CỘT MỚI --}}
                             <th>Trạng Thái</th>
                             <th>Thao Tác</th>
                         </tr>
@@ -86,6 +89,25 @@
                                     <span class="badge {{ $paymentColor }} px-2 py-1 fs-13">{{ $paymentName }}</span>
                                 </td>
                                 <td>{{ $order->details_sum_quantity ?? 0 }} sản phẩm</td>
+                                
+                                {{-- CỘT CẢNH BÁO YÊU CẦU HỦY (Liên kết đến trang xử lý) --}}
+                                <td class="text-center">
+                                    @if($order->cancelRequest && $order->cancelRequest->status_id == 1)
+                                        {{-- Yêu cầu đang chờ xử lý (status_id = 1) --}}
+                                        <a href="{{ route('admin.order-cancellations.show', $order->cancelRequest->id) }}" 
+                                           class="btn btn-warning btn-sm py-1 px-2" 
+                                           title="Có yêu cầu hủy đang chờ duyệt!">
+                                            <iconify-icon icon="solar:bell-bing-broken" class="fs-18 me-1"></iconify-icon> Duyệt
+                                        </a>
+                                    @elseif($order->cancelRequest)
+                                        {{-- Yêu cầu đã tồn tại nhưng đã được xử lý (accepted/rejected) --}}
+                                        <span class="text-success" title="Đã xử lý">
+                                            <iconify-icon icon="solar:document-check-broken" class="fs-18"></iconify-icon>
+                                        </span>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
 
                                 {{-- Cập nhật trạng thái --}}
                                 <td>
@@ -114,7 +136,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">Không có đơn hàng nào.</td>
+                                <td colspan="9" class="text-center py-4 text-muted">Không có đơn hàng nào.</td> {{-- Cập nhật colspan thành 9 --}}
                             </tr>
                         @endforelse
                     </tbody>
@@ -143,6 +165,11 @@ document.addEventListener('DOMContentLoaded', function() {
             select.className = 'form-select form-select-sm w-auto ' + selectedOption.dataset.color;
         }
     });
+    
+    // Lưu trạng thái hiện tại (giá trị ban đầu) của select để reset nếu user cancel
+    document.querySelectorAll('select[name="order_status_id"]').forEach(select => {
+        select.dataset.current = select.value;
+    });
 });
 
 function confirmStatusChange(select){
@@ -150,12 +177,22 @@ function confirmStatusChange(select){
     const form = select.form;
 
     if(confirm(`Bạn có chắc chắn muốn đổi trạng thái sang "${newStatusText}" không?`)) {
+        // Cập nhật màu và gửi form
         const color = select.selectedOptions[0].dataset.color || '';
         select.className = 'form-select form-select-sm w-auto ' + color;
-        select.dataset.current = select.value;
+        
+        // Lưu lại giá trị mới (sau khi đã confirm)
+        select.dataset.current = select.value; 
+        
         form.submit();
     } else {
+        // Đặt lại giá trị ban đầu nếu user hủy
         select.value = select.dataset.current;
+        
+        // Cập nhật lại màu về trạng thái cũ
+        const currentOption = select.querySelector(`option[value="${select.value}"]`);
+        const currentColor = currentOption ? currentOption.dataset.color : '';
+        select.className = 'form-select form-select-sm w-auto ' + currentColor;
     }
 }
 </script>

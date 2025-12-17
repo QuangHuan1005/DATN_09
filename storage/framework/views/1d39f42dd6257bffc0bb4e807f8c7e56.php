@@ -10,13 +10,13 @@
                     <div class="elementor-widget-container">
                         <div class="kitify-logo kitify-logo-type-image kitify-logo-display-block">
                             <a href="../index.html" class="kitify-logo__link"><img
-                                    src="https://mixtas.b-cdn.net/wp-content/uploads/2023/12/footer-logo.svg"
+                                    src="<?php echo e(asset('storage/banner/Friday-logo.png')); ?>"
                                     class="kitify-logo__img kitify-logo-default" alt="Mixtas" width="150"
                                     height="36"><img
                                     src="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo_light.svg"
                                     class="kitify-logo__img kitify-logo-light" alt="Mixtas" width="150"
                                     height="36"></a>
-                        </div>
+                                </div>
                     </div>
                 </div>
                 <div class="elementor-element elementor-element-7276cec9 elementor-widget elementor-widget-heading"

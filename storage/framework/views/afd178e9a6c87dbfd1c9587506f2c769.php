@@ -69,7 +69,7 @@
                                 <div class="col-12 col-2xl-7 pb-3">
                                     <h3 class="checkout-title">Địa chỉ giao hàng</h3>
                                     <div class="block-border address-default" id="selectedAddressDisplay">
-                                        <input type="hidden" name="address_id" id="selected_address_id" value="<?php echo e($defaultAddress->id ?? 0); ?>" />
+                                     <input type="hidden" name="address_id" id="selected_address_id" value="<?php echo e($defaultAddress->id ?? ''); ?>" />
                                         <h4 id="selectedAddressNameContainer">
                                             <span id="selectedAddressName"><?php echo e($defaultAddress->name ?? ($user->name ?? 'Khách hàng')); ?></span>
                                             <?php if(isset($defaultAddress->is_default) && $defaultAddress->is_default): ?>
@@ -228,62 +228,81 @@
                                 </div>
                             </div>
                             
-                            <div class="cart-summary__voucher-form">
-                                <div class="cart-summary__voucher-form__title">
-                                    <h4 class="active">Mã phiếu giảm giá</h4>
-                                    <span> </span>
-                                    <h4 data-toggle="modal" data-target="#myVoucherWallet">Mã của tôi</h4>
-                                    <div class="modal fade voucher-wallet" id="myVoucherWallet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title" id="exampleModalLabel">Danh sách mã Voucher</h4>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body box-voucher-wallet">
-                                                    <p>Rất tiếc, bạn không còn mã giảm giá nào !</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="" id="p_coupon" style="padding-top: 5px; display: none; text-align: center"></p>
-                                <div class="form-group">
-                                    <div class="d-flex gap-2 align-items-center" style="position: relative;">
-                                        <div style="position: relative; flex: 1;">
-                                            <input class="form-control" type="text" placeholder="Mã giảm giá" name="coupon_code_text" id="coupon_code_text" value="<?php echo e($appliedVoucher->voucher_code ?? ''); ?>" readonly style="background-color: #f5f5f5; cursor: pointer;" autocomplete="off" />
-                                            <div id="voucherDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-top: none; max-height: 300px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                                                <!-- Danh sách voucher sẽ được load ở đây -->
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn btn--large" id="but_coupon_code" style="display: <?php echo e($appliedVoucher ? 'inline-block' : 'none'); ?>;">Áp dụng</button>
-                                        <button type="button" class="btn btn--large btn-outline-danger" id="but_coupon_delete" style="display: <?php echo e($appliedVoucher ? 'inline-block' : 'none'); ?>;">Bỏ Mã</button>
-                                    </div>
-                                </div>
-                                <?php if($appliedVoucher): ?>
-                                <div id="appliedVoucherInfo" style="padding: 10px; background: #e8f5e9; border-radius: 4px; margin-top: 10px;">
-                                    <strong>Đã áp dụng:<?php echo e($appliedVoucher['voucher_code'] ?? ''); ?></strong>
-                                    <?php if(stripos($appliedVoucher['voucher_code'] ?? '', 'FREESHIP') !== false || stripos($appliedVoucher['description'] ?? '', 'Miễn phí vận chuyển') !== false): ?>
-                                        <span> - Miễn phí vận chuyển</span>
-                                    <?php elseif($appliedVoucher['discount_type'] ?? '' === 'percent'): ?>
-                                        <span> - Giảm <?php echo e($appliedVoucher['discount_value'] ?? 0); ?>%</span>
-                                    <?php elseif($appliedVoucher->discount_type === 'fixed'): ?>
-                                        <span> - Giảm <?php echo e(number_format($appliedVoucher->discount_value)); ?>đ</span>
-                                    <?php endif; ?>
-                                </div>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <div class="cart-summary__button">
-                                <button type="submit" id="but-checkout-continue-step2" name="btn_continue_step2" class="btn btn--large">
-                                    Hoàn thành
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                          <div class="cart-summary__voucher-form">
+    <!-- Tiêu đề voucher -->
+    <div class="cart-summary__voucher-form__title d-flex justify-content-between align-items-center">
+        <h4 class="active">Mã phiếu giảm giá</h4>
+        <h4 data-toggle="modal" data-target="#myVoucherWallet" style="cursor: pointer;">Mã của tôi</h4>
+    </div>
+
+    <!-- Modal danh sách voucher -->
+    <div class="modal fade voucher-wallet" id="myVoucherWallet" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Danh sách mã Voucher</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
                 </div>
+                <div class="modal-body box-voucher-wallet">
+                    <p>Rất tiếc, bạn không còn mã giảm giá nào!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thông báo lỗi voucher -->
+    <p id="p_coupon" class="text-center" style="padding-top: 5px; display: none;"></p>
+
+    <!-- Input voucher -->
+    <div class="form-group">
+        <div class="d-flex gap-2 align-items-center" style="position: relative;">
+            <div style="flex: 1; position: relative;">
+                <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Mã giảm giá"
+                    name="coupon_code_text"
+                    id="coupon_code_text"
+                    value="<?php echo e($appliedVoucher->voucher_code ?? ''); ?>"
+                    readonly
+                    style="background-color: #f5f5f5; cursor: pointer;"
+                    autocomplete="off"
+                />
+                <div id="voucherDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #ddd; border-top: none; max-height: 300px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <!-- Danh sách voucher sẽ được load ở đây -->
+                </div>
+            </div>
+
+            <!-- Nút Áp dụng / Bỏ mã -->
+            <button type="button" class="btn btn--large" id="but_coupon_code" style="display: <?php echo e($appliedVoucher ? 'inline-block' : 'none'); ?>;">Áp dụng</button>
+            <button type="button" class="btn btn--large btn-outline-danger" id="but_coupon_delete" style="display: <?php echo e($appliedVoucher ? 'inline-block' : 'none'); ?>;">Bỏ Mã</button>
+        </div>
+    </div>
+
+    <!-- Hiển thị voucher đã áp dụng -->
+    <?php if($appliedVoucher): ?>
+    <div id="appliedVoucherInfo" class="mt-2 p-2" style="background: #e8f5e9; border-radius: 4px;">
+        <strong>Đã áp dụng: <?php echo e($appliedVoucher->voucher_code); ?></strong>
+        <?php if(stripos($appliedVoucher->voucher_code, 'FREESHIP') !== false || stripos($appliedVoucher->description ?? '', 'Miễn phí vận chuyển') !== false): ?>
+            <span> - Miễn phí vận chuyển</span>
+        <?php elseif($appliedVoucher->discount_type === 'percent'): ?>
+            <span> - Giảm <?php echo e($appliedVoucher->discount_value); ?>%</span>
+        <?php elseif($appliedVoucher->discount_type === 'fixed'): ?>
+            <span> - Giảm <?php echo e(number_format($appliedVoucher->discount_value)); ?>₫</span>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+</div>
+
+<!-- Nút Hoàn thành thanh toán -->
+<div class="cart-summary__button mt-3">
+    <button type="submit" id="but-checkout-continue-step2" name="btn_continue_step2" class="btn btn--large btn-primary w-100">
+        Hoàn thành
+    </button>
+</div>
+
                 <div class="check-otp-order"></div>
             </form>
 

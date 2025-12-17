@@ -3,6 +3,8 @@
 <body
   class="wp-singular page-template page-template-templates page-template-fullwidth page-template-templatesfullwidth-php page page-id-11 logged-in wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-account woocommerce-page woocommerce-orders woocommerce-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-kit-6 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active kitify--js-ready body-loaded e--ua-blink e--ua-chrome e--ua-webkit"
   data-elementor-device-mode="laptop">
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+
   <div class="site-wrapper">
     <div class="kitify-site-wrapper elementor-459kitify">
       <?php echo $__env->make('layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
@@ -24,31 +26,44 @@
                   <div class="entry-content">
 
                     <?php
-                    // map trạng thái ĐƠN HÀNG -> class badge
-                    $orderBadgeClass = function($sid) {
-                        return match((int)$sid){
-                            1 => 'badge-on-hold',     // Chờ xác nhận
-                            2 => 'badge-processing',  // Xác nhận
-                            3 => 'badge-shipping',    // Đang giao
-                            4,5 => 'badge-completed', // Đã giao / Hoàn thành
-                            6 => 'badge-cancelled',   // Hủy
-                            7 => 'badge-refunded',    // Hoàn hàng
-                            default => 'badge-default'
-                        };
-                    };
-                    // map trạng thái THANH TOÁN -> class badge
-                    $payBadgeClass = function($pid) {
-                        return match((int)$pid){
-                            1 => 'badge-on-hold',     // Chưa thanh toán
-                            2 => 'badge-completed',   // Đã thanh toán
-                            3 => 'badge-refunded',    // Hoàn tiền
-                            default => 'badge-default'
-                        };
-                    };
-                    // fallback label nếu chưa eager-load quan hệ
-                    $paymentStatusMap = [1=>'Chưa thanh toán', 2=>'Đã thanh toán', 3=>'Hoàn tiền'];
-                    $paymentMethodMap = [1=>'Thanh toán khi nhận hàng', 2=>'VNPAY', 3=>'MoMo'];
-                    ?>
+    // ========= TRẠNG THÁI ĐƠN HÀNG =========
+    $orderBadgeClass = function($id){
+        return match((int)$id){
+            1 => 'badge-on-hold',      // Chờ xác nhận
+            2 => 'badge-processing', // Đã xác nhận
+            3 => 'badge-shipping',   // Đang giao
+            4 => 'badge-completed',  // Đã giao
+            5 => 'badge-completed',  // Hoàn thành
+            6 => 'badge-cancelled',  // Hủy
+            7 => 'badge-refunded',   // Hoàn hàng
+            default => 'badge-default'
+        };
+    };
+
+    // ========= TRẠNG THÁI THANH TOÁN =========
+    $payBadgeClass = function($id){
+        return match((int)$id){
+            1 => 'badge-on-hold',    // Chưa thanh toán
+            2 => 'badge-completed',  // Đã thanh toán
+            3 => 'badge-refunded',   // Hoàn tiền
+            default => 'badge-default'
+        };
+    };
+
+    // ========= LABEL THANH TOÁN =========
+    $paymentStatusMap = [
+        1 => 'Chưa thanh toán',
+        2 => 'Đã thanh toán',
+        3 => 'Hoàn tiền'
+    ];
+
+    // ========= PHƯƠNG THỨC THANH TOÁN =========
+    $paymentMethodMap = [
+        1 => 'Thanh toán khi nhận hàng',
+        2 => 'VNPAY',
+    ];
+?>
+
 
                    <style>
                     /* ==== 1. GIẢM KHOẢNG TRẮNG TỪ HEADER XUỐNG ==== */
@@ -78,6 +93,7 @@
                     body.woocommerce-account.woocommerce-page .entry-content > .woocommerce{
                       margin-top: 0 !important;
                     }
+                    
 
                     /* ==== 3. LAYOUT NAV + CONTENT (không liên quan khoảng trắng trên nhưng cho chuẩn) ==== */
                     @media (min-width: 992px){
@@ -198,64 +214,118 @@
                                 <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><span class="nobr">Mã đơn hàng</span></th>
                                 <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date"><span class="nobr">Ngày mua</span></th>
                                 <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status"><span class="nobr">Trạng thái đơn</span></th>
-                                <th class="woocommerce-orders-table__header"><span class="nobr">Thanh toán</span></th>
+                                <th> tt thanh toán </th>
+                                <th class="woocommerce-orders-table__header"><span class="nobr">pp Thanh toán</span></th>
                                 <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-total"><span class="nobr">Tổng</span></th>
                                 <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions"><span class="nobr">Hành động</span></th>
                               </tr>
                             </thead>
                             <tbody>
-                              <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <?php
-                                  $itemsCount = optional($order->details)->sum('quantity') ?? 0;
+                                 <?php
+// ========= TRẠNG THÁI ĐƠN HÀNG =========
+$orderBadgeClass = function($id){
+    return match((int)$id){
+        1 => 'badge-on-hold',      
+        2 => 'badge-processing',
+        3 => 'badge-shipping',
+        4 => 'badge-completed',
+        5 => 'badge-completed',
+        6 => 'badge-cancelled',
+        7 => 'badge-refunded',
+        default => 'badge-default'
+    };
+};
 
-                                  // order status
-                                  $orderCls   = $orderBadgeClass($order->order_status_id);
-                                  $orderLabel = $order->status?->name ?? '—';
+// ========= TRẠNG THÁI THANH TOÁN =========
+$payBadgeClass = function($id){
+    return match((int)$id){
+        1 => 'badge-on-hold',
+        2 => 'badge-completed',
+        3 => 'badge-refunded',
+        default => 'badge-default'
+    };
+};
 
-                                  // payment status + method (fallback nếu chưa eager-load)
-                                  $pStatusId  = (int)($order->payment_status_id ?? 0);
-                                  $payCls     = $payBadgeClass($pStatusId);
-                                  $payLabel   = $order->paymentStatus->name ?? ($paymentStatusMap[$pStatusId] ?? '—');
+// ========= LABEL THANH TOÁN =========
+$paymentStatusMap = [
+    1 => 'Chưa thanh toán',
+    2 => 'Đã thanh toán',
+    3 => 'Hoàn tiền'
+];
 
-                                  $pmId       = (int)($order->payment_method_id ?? 0);
-                                  $pmLabel    = $order->paymentMethod->name ?? ($paymentMethodMap[$pmId] ?? 'Không xác định');
-                                ?>
-                                <tr class="woocommerce-orders-table__row order">
-                                  <th class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number" data-title="Order" scope="row">
-                                    <a href="<?php echo e(route('orders.show', $order->id)); ?>" aria-label="View order <?php echo e($order->order_code); ?>">
-                                      #<?php echo e($order->order_code); ?>
+// ========= PHƯƠNG THỨC THANH TOÁN =========
+$paymentMethodMap = [
+    1 => 'Thanh toán khi nhận hàng',
+    2 => 'VNPAY',
+];
+?>
 
-                                    </a>
-                                  </th>
-                                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date" data-title="Date">
-                                    <time datetime="<?php echo e(\Carbon\Carbon::parse($order->created_at)->toAtomString()); ?>">
-                                      <?php echo e(\Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i')); ?>
 
-                                    </time>
-                                  </td>
+<tbody>
+<?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status" data-title="Order Status">
-                                    <span class="badge <?php echo e($orderCls); ?>"><?php echo e($orderLabel); ?></span>
-                                  </td>
+<?php
+    // số lượng sản phẩm
+    $itemsCount = optional($order->details)->sum('quantity') ?? 0;
 
-                                  <td class="woocommerce-orders-table__cell" data-title="Payment">
-                                    <span class="badge <?php echo e($payCls); ?>"><?php echo e($payLabel); ?></span>
-                                    <span class="method-pill"><?php echo e($pmLabel); ?></span>
-                                  </td>
+    // trạng thái đơn hàng
+    $orderCls   = $orderBadgeClass($order->order_status_id);
+    $orderLabel = $order->status->name ?? '—';
 
-                                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-total" data-title="Total">
-                                    <span class="woocommerce-Price-amount amount">
-                                      <span class="woocommerce-Price-currencySymbol">₫</span><?php echo e(number_format($order->total_amount)); ?>
+    // thanh toán
+    $pStatusId = (int)($order->payment_status_id ?? 0);
+    $payCls    = $payBadgeClass($pStatusId);
+    $payLabel  = $order->paymentStatus->name ?? ($paymentStatusMap[$pStatusId] ?? '—');
 
-                                    </span>
-                                    <?php if($itemsCount): ?> cho <?php echo e($itemsCount); ?> sản phẩm <?php endif; ?>
-                                  </td>
-                                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions" data-title="Actions">
-                                    <a href="<?php echo e(route('orders.show', $order->id)); ?>" class="woocommerce-button button view" aria-label="View order <?php echo e($order->order_code); ?>">Xem</a>
-                                  </td>
-                                </tr>
-                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </tbody>
+    // phương thức thanh toán
+    $pmId      = (int)($order->payment_method_id ?? 0);
+    $pmLabel   = $order->paymentMethod->name ?? ($paymentMethodMap[$pmId] ?? '—');
+?>
+
+<tr class="woocommerce-orders-table__row order">
+
+    
+    <td>
+        <a href="<?php echo e(route('orders.show', $order->id)); ?>">
+            #<?php echo e($order->order_code); ?>
+
+        </a>
+    </td>
+
+    
+    <td><?php echo e($order->created_at->format('d/m/Y H:i')); ?></td>
+
+    
+    <td>
+        <span class="badge <?php echo e($orderCls); ?>"><?php echo e($orderLabel); ?></span>
+    </td>
+
+    
+    <td>
+        <span class="badge <?php echo e($payCls); ?>"><?php echo e($payLabel); ?></span>
+    </td>
+    <td>  <span class="method-pill"><?php echo e($pmLabel); ?></span></td>
+
+    
+    <td>
+        <?php echo e(number_format($order->total_amount)); ?> ₫
+        <?php if($itemsCount): ?>
+            | <?php echo e($itemsCount); ?> sp
+        <?php endif; ?>
+    </td>
+
+    
+    <td>
+      <a href="<?php echo e(route('orders.show', $order->id)); ?>"
+                                                        class="btn btn-soft-info btn-sm" title="Xem chi tiết"><iconify-icon
+                                                            icon="solar:eye-broken"
+                                                            class="align-middle fs-18"></iconify-icon></a>
+    </td>
+
+</tr>
+
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+</tbody>
                           </table>
 
                           <div class="mt-3">

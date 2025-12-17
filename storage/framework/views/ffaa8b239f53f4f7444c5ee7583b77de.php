@@ -44,6 +44,8 @@
                 </a>
             </li>
 
+
+
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo e(route('admin.products.index')); ?>" role="button" aria-expanded="false"
                     aria-controls="sidebarProducts">
@@ -94,6 +96,16 @@
                         <iconify-icon icon="solar:bag-smile-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Quản Lý Đơn Hàng </span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo e(route('admin.returns.index')); ?>" role="button" aria-expanded="false"
+                    aria-controls="sidebarOrders">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:refresh-square-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Quản Lý hoàn hàng </span>
                 </a>
             </li>
 
@@ -168,6 +180,14 @@
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo e(route('admin.chat')); ?>">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:chat-round-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Chat </span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#sidebarInvoice" role="button" aria-expanded="false"

@@ -1,5 +1,7 @@
 <?php $__env->startSection('content'); ?>
 <div class="container-xxl">
+    
+    <h3 class="fw-bold mb-4">Danh Sách Đơn Hàng</h3>
 
     
     <?php $__currentLoopData = ['success', 'error']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $msg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -18,7 +20,7 @@
         <div class="col-md-6">
             <form method="GET" action="<?php echo e(route('admin.orders.index')); ?>" class="d-flex gap-2">
                 <input type="search" name="keyword" class="form-control" placeholder="Tìm mã đơn / tên KH"
-                       value="<?php echo e(request('keyword')); ?>" style="max-width: 250px;">
+                        value="<?php echo e(request('keyword')); ?>" style="max-width: 250px;">
                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
             </form>
         </div>
@@ -54,6 +56,7 @@
                             <th>Tổng Tiền</th>
                             <th>Thanh Toán</th>
                             <th>Sản Phẩm</th>
+                            <th class="text-center">Hủy Yêu Cầu</th>  
                             <th>Trạng Thái</th>
                             <th>Thao Tác</th>
                         </tr>
@@ -87,6 +90,25 @@
                                     <span class="badge <?php echo e($paymentColor); ?> px-2 py-1 fs-13"><?php echo e($paymentName); ?></span>
                                 </td>
                                 <td><?php echo e($order->details_sum_quantity ?? 0); ?> sản phẩm</td>
+                                
+                                
+                                <td class="text-center">
+                                    <?php if($order->cancelRequest && $order->cancelRequest->status_id == 1): ?>
+                                        
+                                        <a href="<?php echo e(route('admin.order-cancellations.show', $order->cancelRequest->id)); ?>" 
+                                           class="btn btn-warning btn-sm py-1 px-2" 
+                                           title="Có yêu cầu hủy đang chờ duyệt!">
+                                            <iconify-icon icon="solar:bell-bing-broken" class="fs-18 me-1"></iconify-icon> Duyệt
+                                        </a>
+                                    <?php elseif($order->cancelRequest): ?>
+                                        
+                                        <span class="text-success" title="Đã xử lý">
+                                            <iconify-icon icon="solar:document-check-broken" class="fs-18"></iconify-icon>
+                                        </span>
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
 
                                 
                                 <td>
@@ -117,7 +139,7 @@
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">Không có đơn hàng nào.</td>
+                                <td colspan="9" class="text-center py-4 text-muted">Không có đơn hàng nào.</td> 
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -147,6 +169,11 @@ document.addEventListener('DOMContentLoaded', function() {
             select.className = 'form-select form-select-sm w-auto ' + selectedOption.dataset.color;
         }
     });
+    
+    // Lưu trạng thái hiện tại (giá trị ban đầu) của select để reset nếu user cancel
+    document.querySelectorAll('select[name="order_status_id"]').forEach(select => {
+        select.dataset.current = select.value;
+    });
 });
 
 function confirmStatusChange(select){
@@ -154,15 +181,24 @@ function confirmStatusChange(select){
     const form = select.form;
 
     if(confirm(`Bạn có chắc chắn muốn đổi trạng thái sang "${newStatusText}" không?`)) {
+        // Cập nhật màu và gửi form
         const color = select.selectedOptions[0].dataset.color || '';
         select.className = 'form-select form-select-sm w-auto ' + color;
-        select.dataset.current = select.value;
+        
+        // Lưu lại giá trị mới (sau khi đã confirm)
+        select.dataset.current = select.value; 
+        
         form.submit();
     } else {
+        // Đặt lại giá trị ban đầu nếu user hủy
         select.value = select.dataset.current;
+        
+        // Cập nhật lại màu về trạng thái cũ
+        const currentOption = select.querySelector(`option[value="${select.value}"]`);
+        const currentColor = currentOption ? currentOption.dataset.color : '';
+        select.className = 'form-select form-select-sm w-auto ' + currentColor;
     }
 }
 </script>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('admin.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN09\resources\views/admin/orders/index.blade.php ENDPATH**/ ?>

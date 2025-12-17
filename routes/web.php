@@ -26,6 +26,8 @@ use App\Http\Controllers\Admin\AdminAttributeController;
 use App\Http\Controllers\Admin\AdminChatController;
 
 use App\Http\Controllers\ChatsController;
+use App\Http\Controllers\OrderCancelRequestController;
+use App\Http\Controllers\OrderReturnController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VNPayController;
@@ -114,6 +116,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/voucher/apply', [AccountController::class, 'applyVoucher'])->name('checkout.voucher.apply');
         Route::post('/voucher/remove', [AccountController::class, 'removeVoucher'])->name('checkout.voucher.remove');
     });
+
 });
 
 // 🏦 Thanh toán VNPay
@@ -126,8 +129,28 @@ Route::prefix('payment/vnpay')->group(function () {
 Route::prefix('orders')->middleware('auth')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
-    Route::post('/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
     Route::post('/{id}/complete', [OrderController::class, 'complete'])->name('orders.complete');
+
+// Route cho OrderCancelRequestController (Xử lý việc gửi yêu cầu hủy)
+Route::post('orders/{order_id}/cancel', [OrderCancelRequestController::class, 'store'])
+    ->name('orders.cancel')
+    ->middleware('auth'); // Đảm bảo người dùng đã đăng nhập
+    // Route TẠO form đánh giá (GET)
+    Route::get('/reviews/create', [ReviewController::class, 'create'])->name('review.create'); 
+
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+    // Route SỬA đánh giá (GET) và CẬP NHẬT (PUT)
+    Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])->name('review.edit'); 
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('review.update'); 
+
+     // Refunded Orders (đơn đã hoàn tiền)
+    Route::get('/refunded/{id}', [OrderController::class, 'showRefunded'])->name('orders.refunded.show');
+
+    // Order Returns
+    Route::get('/{order}/return', [OrderReturnController::class, 'create'])->name('orders.return.create');
+    Route::post('/{order}/return', [OrderReturnController::class, 'store'])->name('orders.return.store');
+    Route::get('/returns/{return}', [OrderReturnController::class, 'show'])->name('orders.return.show');
 });
 
 // 👤 Tài khoản cá nhân
@@ -240,8 +263,17 @@ Route::prefix('admin')
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
         Route::delete('orders/{id}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
         Route::post('orders/{id}/status', [AdminOrderController::class, 'update'])->name('orders.status');
-        Route::get('orders/{order}/assign', [AdminOrderController::class, 'assignForm'])->name('orders.assignForm');
-        Route::post('orders/{order}/assign', [AdminOrderController::class, 'assignStaff'])->name('orders.assignStaff');
+
+        // 🗃️ Quản lý Yêu cầu Hủy Đơn hàng (ĐÃ ĐƯỢC DI CHUYỂN VÀO ĐÂY)
+        Route::prefix('order-cancellations')->name('order-cancellations.')->group(function () {
+            // Tên route sẽ là: admin.order-cancellations.index
+            Route::get('/', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'index'])->name('index');
+            // Tên route sẽ là: admin.order-cancellations.show
+            Route::get('/{request}', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'show'])->name('show');
+            // Tên route sẽ là: admin.order-cancellations.process
+            Route::post('/{request}/process', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'process'])->name('process'); 
+        });
+
 
         // Người dùng
         Route::resource('users', AdminUserController::class);
@@ -272,7 +304,16 @@ Route::prefix('admin')
             Route::put('/{size}', [AdminAttributeController::class, 'sizesUpdate'])->name('update');
             Route::delete('/{size}', [AdminAttributeController::class, 'sizesDestroy'])->name('destroy');
         });
+
+           // 🔄 Quản lý yêu cầu hoàn hàng
+        Route::get('/returns', [\App\Http\Controllers\Admin\AdminReturnController::class, 'index'])->name('returns.index');
+        Route::get('/returns/{return}', [\App\Http\Controllers\Admin\AdminReturnController::class, 'show'])->name('returns.show');
+        Route::post('/returns/{return}/status', [\App\Http\Controllers\Admin\AdminReturnController::class, 'updateStatus'])->name('returns.updateStatus');
     });
+
+    
+
+    
 
 /*
 |--------------------------------------------------------------------------
