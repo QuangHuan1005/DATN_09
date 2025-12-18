@@ -393,14 +393,15 @@ a.btn-checkout:hover{ opacity:.92; }
                     }
                 }
             @endphp
-
-            <img
-            src="{{ $imgUrl }}"
-            alt="{{ $row['name'] ?? 'Product' }}"
-            class="img-fluid rounded"
-            style="width: 90px; height: 90px; object-fit: cover;"
-            onerror="this.onerror=null;this.src='{{ asset('images/placeholder.png') }}';"
-            />
+<a href="{{ url('products/' . $row['product_id']) }}">
+    <img
+        src="{{ $imgUrl }}"
+        alt="{{ $row['name'] ?? 'Product' }}"
+        class="img-fluid rounded"
+        style="width: 90px; height: 90px; object-fit: cover; cursor: pointer;"
+        onerror="this.onerror=null;this.src='{{ asset('images/placeholder.png') }}';"
+    />
+</a>
 
             {{-- DEBUG (tạm thời, test xong xoá): hiển thị URL thực tế --}}
             {{-- <small style="color:#888">{{ $imgUrl }}</small> --}}

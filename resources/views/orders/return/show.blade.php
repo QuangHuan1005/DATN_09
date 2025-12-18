@@ -1,308 +1,243 @@
 @extends('master')
+
 @section('content')
-    <body class="wp-singular page-template page-template-templates page-template-fullwidth page-template-templatesfullwidth-php page page-id-11 logged-in wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-account woocommerce-page woocommerce-view-order woocommerce-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-kit-6 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active kitify--js-ready body-loaded e--ua-blink e--ua-chrome e--ua-webkit" data-elementor-device-mode="laptop">
+<body class="wp-singular page-template page-template-templates page-template-fullwidth page-template-templatesfullwidth-php page page-id-11 logged-in wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-account woocommerce-page woocommerce-view-order woocommerce-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-kit-6 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active kitify--js-ready body-loaded e--ua-blink e--ua-chrome e--ua-webkit" data-elementor-device-mode="laptop">
 
-        <div class="site-wrapper">
-            <div class="kitify-site-wrapper elementor-459kitify">
-                @include('layouts.header')
+    <div class="site-wrapper">
+        <div class="kitify-site-wrapper elementor-459kitify">
+            @include('layouts.header')
 
-                <div id="site-content" class="site-content-wrapper">
-                    <div class="container">
-                        <div class="grid-x">
-                            <div class="cell small-12">
-                                <div class="site-content">
-                                    <div class="page-header-content">
-                                        <nav class="woocommerce-breadcrumb">
-                                            <a href="{{ url('/') }}">Home</a><span class="delimiter">/</span>
-                                            <a href="{{ route('orders.index') }}">My account</a><span class="delimiter">/</span>
-                                            <a href="{{ route('orders.show', $return->order->id) }}">Order {{ $return->order->order_code }}</a><span class="delimiter">/</span>Yêu cầu hoàn hàng
-                                        </nav>
-                                        <h1 class="page-title">Chi tiết yêu cầu hoàn hàng</h1>
-                                    </div>
+            <div id="site-content" class="site-content-wrapper">
+                <div class="container">
+                    <div class="grid-x">
+                        <div class="cell small-12">
+                            <div class="site-content">
+                                <div class="page-header-content">
+                                    <nav class="woocommerce-breadcrumb">
+                                        <a href="{{ url('/') }}">Home</a><span class="delimiter">/</span>
+                                        <a href="{{ route('orders.index') }}">My account</a><span class="delimiter">/</span>
+                                        <a href="{{ route('orders.show', $return->order->id) }}">Order {{ $return->order->order_code }}</a><span class="delimiter">/</span>Yêu cầu hoàn hàng
+                                    </nav>
+                                    <h1 class="page-title">Chi tiết yêu cầu hoàn hàng</h1>
+                                </div>
 
-                                    <article class="hentry">
-                                        <div class="entry-content">
-                                            <div class="woocommerce">
-                                                @include('account.partials.navigation')
+                                <article class="hentry">
+                                    <div class="entry-content">
+                                        <div class="woocommerce">
+                                            @include('account.partials.navigation')
 
-                                                <div class="woocommerce-MyAccount-content">
-                                                    <div class="woocommerce-order-details">
-                                                        <div class="order-header">
-                                                            <div>
-                                                                <strong>Yêu cầu hoàn hàng cho đơn: {{ $return->order->order_code }}</strong>
-                                                            </div>
-                                                            <div>
-                                                                <span class="badge {{ $return->status_badge_class }}">{{ $return->status_label }}</span>
+                                            <div class="woocommerce-MyAccount-content">
+                                                <div class="woocommerce-order-details">
+                                                    <div class="order-header">
+                                                        <div>
+                                                            <strong>Yêu cầu hoàn hàng cho đơn: {{ $return->order->order_code }}</strong>
+                                                        </div>
+                                                        <div>
+                                                            <span class="badge {{ $return->status_badge_class }}">{{ $return->status_label }}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="return-address-notice">
+                                                        <p>
+                                                            <strong>📍 Thông báo quan trọng:</strong> 
+                                                            Quý khách vui lòng gửi hàng về địa chỉ 
+                                                            <strong>Số nhà 123, đường Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</strong> 
+                                                            để chúng tôi có thể xác nhận và tiến hành hoàn tiền cho quý khách.
+                                                        </p>
+                                                    </div>
+
+                                                    @php
+                                                        $returnStepMeta = [
+                                                            'pending' => ['label' => 'Chờ xác nhận', 'desc' => 'Yêu cầu hoàn hàng đã được gửi'],
+                                                            'approved' => ['label' => 'Đã chấp nhận', 'desc' => 'Yêu cầu đã được chấp nhận'],
+                                                            'waiting_for_return' => ['label' => 'Chờ gửi hàng', 'desc' => 'Vui lòng gửi hàng về Friday'],
+                                                            'returned' => ['label' => 'Đã nhận hàng', 'desc' => 'Friday đã nhận được hàng'],
+                                                            'refunded' => ['label' => 'Đã hoàn tiền', 'desc' => 'Tiền đã được hoàn lại'],
+                                                        ];
+
+                                                        $returnStatusMap = [
+                                                            'pending' => 1,
+                                                            'approved' => 2,
+                                                            'waiting_for_return' => 3,
+                                                            'returned' => 4,
+                                                            'refunded' => 5,
+                                                            'rejected' => 1,
+                                                        ];
+
+                                                        $currentReturnStatus = $return->status;
+                                                        $activeReturnStep = $returnStatusMap[$currentReturnStatus] ?? 1;
+                                                    @endphp
+
+                                                    @if($currentReturnStatus !== 'rejected')
+                                                        <div class="return-progress-container">
+                                                            <h3 style="font-size: 1rem; color: #374151; margin-bottom: 15px;">Trạng thái hoàn hàng</h3>
+                                                            <div class="order-progress" aria-label="Tiến trình hoàn hàng">
+                                                                @foreach ($returnStepMeta as $statusKey => $meta)
+                                                                    @php
+                                                                        $stepNumber = $returnStatusMap[$statusKey];
+                                                                        $isReached = $activeReturnStep >= $stepNumber;
+                                                                    @endphp
+
+                                                                    <div class="step">
+                                                                        <span class="dot {{ $isReached ? 'active' : '' }}"></span>
+                                                                        <div style="display:flex;flex-direction:column;align-items:flex-start">
+                                                                            <span style="font-size:.83rem;color:#374151">{{ $meta['label'] }}</span>
+                                                                            <span style="font-size:.78rem;color:#6b7280">{{ $meta['desc'] }}</span>
+                                                                            @if($isReached)
+                                                                                <span style="font-size:.75rem;color:#9ca3af">
+                                                                                    Hệ thống • 
+                                                                                    {{ ($statusKey === 'pending') ? $return->created_at->format('H:i d/m/Y') : $return->updated_at->format('H:i d/m/Y') }}
+                                                                                </span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                    @if ($stepNumber < 5)
+                                                                        <span class="bar {{ $activeReturnStep > $stepNumber ? 'active' : '' }}"></span>
+                                                                    @endif
+                                                                @endforeach
                                                             </div>
                                                         </div>
-
-                                                        <div class="return-address-notice">
-                                                            <p>
-                                                                <strong>📍 Thông báo quan trọng:</strong> 
-                                                                Quý khách vui lòng gửi hàng về địa chỉ 
-                                                                <strong>Số nhà 123, đường Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</strong> 
-                                                                để chúng tôi có thể xác nhận và tiến hành hoàn tiền cho quý khách.
-                                                            </p>
+                                                    @else
+                                                        <div class="return-rejected-notice">
+                                                            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                                                                <p style="color: #b91c1c; font-weight: 600; font-size: 16px; margin-bottom: 12px;">❌ Yêu cầu hoàn hàng đã bị từ chối</p>
+                                                                @if($return->rejection_reason)
+                                                                    <div style="margin-top: 10px; padding: 12px; background: white; border-radius: 6px; border-left: 3px solid #dc2626;">
+                                                                        <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+                                                                            <strong style="color: #dc2626;">Lý do:</strong> {{ $return->rejection_reason }}
+                                                                        </p>
+                                                                    </div>
+                                                                @endif
+                                                                <p style="margin-top: 15px; margin-bottom: 0; color: #6b7280; font-size: 13px; font-style: italic;">💬 Vui lòng liên hệ CSKH để biết thêm chi tiết!</p>
+                                                            </div>
                                                         </div>
+                                                    @endif
 
-                                                        @php
-                                                            // Thông tin cho từng bước trạng thái hoàn hàng
-                                                            $returnStepMeta = [
-                                                                'pending' => ['label' => 'Chờ xác nhận', 'desc' => 'Yêu cầu hoàn hàng đã được gửi'],
-                                                                'approved' => ['label' => 'Đã chấp nhận', 'desc' => 'Yêu cầu đã được chấp nhận'],
-                                                                'waiting_for_return' => ['label' => 'Chờ gửi hàng', 'desc' => 'Vui lòng gửi hàng về Friday'],
-                                                                'returned' => ['label' => 'Đã nhận hàng', 'desc' => 'Friday đã nhận được hàng'],
-                                                                'refunded' => ['label' => 'Đã hoàn tiền', 'desc' => 'Tiền đã được hoàn lại'],
-                                                            ];
+                                                    <div class="return-details">
+                                                        <div class="detail-row">
+                                                            <span class="label">Sản phẩm:</span>
+                                                            <div class="product-list">
+                                                                @php
+                                                                    $productDetails = $return->product_details ? json_decode($return->product_details, true) : [];
+                                                                @endphp
 
-                                                            // Map trạng thái sang bước (1-5)
-                                                            $returnStatusMap = [
-                                                                'pending' => 1,
-                                                                'approved' => 2,
-                                                                'waiting_for_return' => 3,
-                                                                'returned' => 4,
-                                                                'refunded' => 5,
-                                                                'rejected' => 1, // Từ chối coi như dừng ở bước 1
-                                                            ];
-
-                                                            $currentReturnStatus = $return->status;
-                                                            $activeReturnStep = $returnStatusMap[$currentReturnStatus] ?? 1;
-                                                        @endphp
-
-                                                        {{-- Progress bar trạng thái hoàn hàng --}}
-                                                        @if($currentReturnStatus !== 'rejected')
-                                                            <div class="return-progress-container">
-                                                                <h3 style="font-size: 1rem; color: #374151; margin-bottom: 15px;">Trạng thái hoàn hàng</h3>
-                                                                <div class="order-progress" aria-label="Tiến trình hoàn hàng">
-                                                                    @foreach ($returnStepMeta as $statusKey => $meta)
+                                                                @if(!empty($productDetails))
+                                                                    @foreach($productDetails as $item)
                                                                         @php
-                                                                            $stepNumber = $returnStatusMap[$statusKey];
-                                                                            $isReached = $activeReturnStep >= $stepNumber;
+                                                                            $detailId = $item['order_detail_id'] ?? null;
+                                                                            $variantId = $item['product_variant_id'] ?? null;
+                                                                            $detail = null;
+                                                                            if ($detailId) {
+                                                                                $detail = $return->order->details->where('id', $detailId)->first();
+                                                                            } elseif ($variantId) {
+                                                                                $detail = $return->order->details->where('product_variant_id', $variantId)->first();
+                                                                            }
+
+                                                                            $imageUrl = ($detail && $detail->productVariant && $detail->productVariant->image) 
+                                                                                        ? asset($detail->productVariant->image) 
+                                                                                        : null;
                                                                         @endphp
-
-                                                                        <div class="step">
-                                                                            <span class="dot {{ $isReached ? 'active' : '' }}"></span>
-
-                                                                            <div style="display:flex;flex-direction:column;align-items:flex-start">
-                                                                                <span style="font-size:.83rem;color:#374151">{{ $meta['label'] }}</span>
-                                                                                <span style="font-size:.78rem;color:#6b7280">{{ $meta['desc'] }}</span>
-
-                                                                                @if($isReached)
-                                                                                    <span style="font-size:.75rem;color:#9ca3af">
-                                                                                        Hệ thống
-                                                                                        •
-                                                                                        @if($statusKey === 'pending')
-                                                                                            {{ $return->created_at->format('H:i d/m/Y') }}
-                                                                                        @else
-                                                                                            {{ $return->updated_at->format('H:i d/m/Y') }}
-                                                                                        @endif
-                                                                                    </span>
+                                                                        <div class="product-item">
+                                                                            <div class="product-thumbnail-wrapper">
+                                                                                @if($imageUrl)
+                                                                                    <img src="{{ $imageUrl }}" class="product-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                                                                @else
+                                                                                    <div class="product-thumbnail-placeholder"><span>📦</span></div>
                                                                                 @endif
                                                                             </div>
+                                                                            <div class="product-info">
+                                                                                <strong>{{ $item['product_name'] ?? 'Sản phẩm' }}</strong>
+                                                                                <br>
+                                                                                <small>Số lượng: {{ $item['quantity'] }} | Giá: {{ number_format($item['price'], 0, ',', '.') }}đ</small>
+                                                                            </div>
                                                                         </div>
-
-                                                                        @if ($stepNumber < 5)
-                                                                            <span class="bar {{ $stepNumber < $activeReturnStep ? 'active' : '' }}"></span>
-                                                                        @endif
                                                                     @endforeach
-                                                                </div>
-                                                            </div>
-                                                        @else
-                                                            <div class="return-rejected-notice">
-                                                                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-                                                                    <p style="color: #b91c1c; font-weight: 600; font-size: 16px; margin-bottom: 12px;">
-                                                                        ❌ Yêu cầu hoàn hàng đã bị từ chối
-                                                                    </p>
-                                                                    
-                                                                    @if($return->rejection_reason)
-                                                                        <div style="margin-top: 10px; padding: 12px; background: white; border-radius: 6px; border-left: 3px solid #dc2626;">
-                                                                            <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
-                                                                                <strong style="color: #dc2626;">Lý do:</strong> {{ $return->rejection_reason }}
-                                                                            </p>
+                                                                @else
+                                                                    @foreach($return->order->details as $detail)
+                                                                        <div class="product-item">
+                                                                            <div class="product-info">
+                                                                                <strong>{{ $detail->product->name }}</strong>
+                                                                                <br>
+                                                                                <small>Số lượng: {{ $detail->quantity }}</small>
+                                                                            </div>
                                                                         </div>
-                                                                    @endif
-                                                                    
-                                                                    <p style="margin-top: 15px; margin-bottom: 0; color: #6b7280; font-size: 13px; font-style: italic;">
-                                                                        💬 Vui lòng liên hệ CSKH để biết thêm chi tiết!
-                                                                    </p>
-                                                                </div>
+                                                                    @endforeach
+                                                                @endif
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="detail-row">
+                                                            <span class="label">Ngày yêu cầu:</span>
+                                                            <span>{{ $return->created_at->format('d/m/Y H:i') }}</span>
+                                                        </div>
+
+                                                        <div class="detail-row">
+                                                            <span class="label">Lý do:</span>
+                                                            <span>{{ $return->reason }}</span>
+                                                        </div>
+
+                                                        @if ($return->notes)
+                                                            <div class="detail-row">
+                                                                <span class="label">Ghi chú:</span>
+                                                                <span>{{ $return->notes }}</span>
                                                             </div>
                                                         @endif
 
-                                                        <div class="return-details">
-                                                                <div class="detail-row">
-                                                                <span class="label">Sản phẩm:</span>
-                                                                <div class="product-list">
-                                                                    @php
-                                                                        // Lấy danh sách sản phẩm được chọn để hoàn
-                                                                        $productDetails = $return->product_details ? json_decode($return->product_details, true) : [];
-                                                                    @endphp
-                                                                    
-                                                                    @if(!empty($productDetails))
-                                                                        {{-- ✅ Hiển thị từ product_details (có thông tin quantity chính xác) --}}
-                                                                        @foreach($productDetails as $productDetail)
-                                                                            @php
-                                                                                // Tìm detail tương ứng từ order
-                                                                                $detail = $return->order->details->firstWhere('id', $productDetail['order_detail_id']);
-                                                                                if (!$detail) continue; // Skip nếu không tìm thấy
-                                                                                
-                                                                                // Ưu tiên lấy ảnh từ variant, nếu không có thì lấy từ product
-                                                                                $imageUrl = null;
-                                                                                
-                                                                                if ($detail->productVariant && $detail->productVariant->image) {
-                                                                                    $imageUrl = asset($detail->productVariant->image);
-                                                                                } elseif ($detail->product->thumbnail) {
-                                                                                    $imageUrl = asset($detail->product->thumbnail);
-                                                                                } elseif ($detail->product->images) {
-                                                                                    $images = is_string($detail->product->images) ? json_decode($detail->product->images, true) : $detail->product->images;
-                                                                                    if (!empty($images) && is_array($images)) {
-                                                                                        $imageUrl = asset($images[0]);
-                                                                                    }
-                                                                                }
-                                                                            @endphp
-                                                                            
-                                                                            <div class="product-item">
-                                                                                @if($imageUrl)
-                                                                                    <img src="{{ $imageUrl }}" alt="{{ $detail->product->name }}" class="product-thumbnail">
-                                                                                @else
-                                                                                    <div class="product-thumbnail-placeholder">
-                                                                                        <span>📦</span>
-                                                                                    </div>
-                                                                                @endif
-                                                                                
-                                                                                <div class="product-info">
-                                                                                    <strong>{{ $detail->product->name }}</strong>
-                                                                                    @if($detail->productVariant)
-                                                                                        <br>
-                                                                                        <small>
-                                                                                            Màu: {{ $detail->productVariant->color->name ?? 'N/A' }} - 
-                                                                                            Size: {{ $detail->productVariant->size->name ?? 'N/A' }}
-                                                                                        </small>
-                                                                                    @endif
-                                                                                    <br>
-                                                                                    {{-- ✅ Hiển thị quantity từ product_details (quantity thực tế được chọn) --}}
-                                                                                    <small>Số lượng: {{ $productDetail['quantity'] }}</small>
-                                                                                </div>
-                                                                            </div>
-                                                                        @endforeach
-                                                                    @else
-                                                                        {{-- ✅ Fallback: Hiển thị tất cả sản phẩm (cho đơn cũ không có product_details) --}}
-                                                                        @foreach($return->order->details as $detail)
-                                                                            @php
-                                                                                $imageUrl = null;
-                                                                                
-                                                                                if ($detail->productVariant && $detail->productVariant->image) {
-                                                                                    $imageUrl = asset($detail->productVariant->image);
-                                                                                } elseif ($detail->product->thumbnail) {
-                                                                                    $imageUrl = asset($detail->product->thumbnail);
-                                                                                } elseif ($detail->product->images) {
-                                                                                    $images = is_string($detail->product->images) ? json_decode($detail->product->images, true) : $detail->product->images;
-                                                                                    if (!empty($images) && is_array($images)) {
-                                                                                        $imageUrl = asset($images[0]);
-                                                                                    }
-                                                                                }
-                                                                            @endphp
-                                                                            
-                                                                            <div class="product-item">
-                                                                                @if($imageUrl)
-                                                                                    <img src="{{ $imageUrl }}" alt="{{ $detail->product->name }}" class="product-thumbnail">
-                                                                                @else
-                                                                                    <div class="product-thumbnail-placeholder">
-                                                                                        <span>📦</span>
-                                                                                    </div>
-                                                                                @endif
-                                                                                
-                                                                                <div class="product-info">
-                                                                                    <strong>{{ $detail->product->name }}</strong>
-                                                                                    @if($detail->productVariant)
-                                                                                        <br>
-                                                                                        <small>
-                                                                                            Màu: {{ $detail->productVariant->color->name ?? 'N/A' }} - 
-                                                                                            Size: {{ $detail->productVariant->size->name ?? 'N/A' }}
-                                                                                        </small>
-                                                                                    @endif
-                                                                                    <br>
-                                                                                    <small>Số lượng: {{ $detail->quantity }}</small>
-                                                                                </div>
-                                                                            </div>
-                                                                        @endforeach
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="detail-row">
-                                                                <span class="label">Ngày yêu cầu:</span>
-                                                                <span>{{ $return->created_at->format('d/m/Y H:i') }}</span>
-                                                            </div>
-
-                                                            <div class="detail-row">
-                                                                <span class="label">Lý do:</span>
-                                                                <span>{{ $return->reason }}</span>
-                                                            </div>
-
-                                                            @if ($return->notes)
-                                                                <div class="detail-row">
-                                                                    <span class="label">Ghi chú:</span>
-                                                                    <span>{{ $return->notes }}</span>
-                                                                </div>
-                                                            @endif
-
-                                                            <div class="detail-row">
-                                                                <span class="label">Số tiền hoàn:</span>
-                                                                <span>{{ number_format($return->refund_amount) }}đ</span>
-                                                            </div>
-
-                                                            @if ($return->refundAccount)
-                                                                <div class="detail-row">
-                                                                    <span class="label">Tài khoản nhận tiền:</span>
-                                                                    <span>
-                                                                        {{ $return->refundAccount->bank_name }} - 
-                                                                        {{ $return->refundAccount->masked_account_number }} 
-                                                                        ({{ $return->refundAccount->account_holder }})
-                                                                    </span>
-                                                                </div>
-                                                            @endif
-
-                                                            @if ($return->return_date)
-                                                                <div class="detail-row">
-                                                                    <span class="label">Ngày trả hàng:</span>
-                                                                    <span>{{ $return->return_date->format('d/m/Y') }}</span>
-                                                                </div>
-                                                            @endif
-
-                                                            @php
-                                                                $images = $return->images ? json_decode($return->images, true) : [];
-                                                            @endphp
-                                                            @if (!empty($images))
-                                                                <div class="detail-row">
-                                                                    <span class="label">Hình ảnh:</span>
-                                                                    <div class="return-images">
-                                                                        @foreach ($images as $image)
-                                                                            <img src="{{ asset($image) }}" alt="Return image" style="max-width: 150px; margin: 5px; border-radius: 8px;">
-                                                                        @endforeach
-                                                                    </div>
-                                                                </div>
-                                                            @endif
+                                                        <div class="detail-row">
+                                                            <span class="label">Số tiền hoàn:</span>
+                                                            <span>{{ number_format($return->refund_amount) }}đ</span>
                                                         </div>
 
-                                                        <div class="woocommerce-order-details__actions">
-                                                            <a href="{{ route('orders.show', $return->order->id) }}" class="woocommerce-button button">Quay lại đơn hàng</a>
-                                                        </div>
+                                                        @if ($return->refundAccount)
+                                                            <div class="detail-row">
+                                                                <span class="label">Tài khoản nhận tiền:</span>
+                                                                <span>
+                                                                    {{ $return->refundAccount->bank_name }} - 
+                                                                    {{ $return->refundAccount->masked_account_number }} 
+                                                                    ({{ $return->refundAccount->account_holder }})
+                                                                </span>
+                                                            </div>
+                                                        @endif
+
+                                                        @if ($return->return_date)
+                                                            <div class="detail-row">
+                                                                <span class="label">Ngày trả hàng:</span>
+                                                                <span>{{ $return->return_date->format('d/m/Y') }}</span>
+                                                            </div>
+                                                        @endif
+
+                                                        @php $images = $return->images ? json_decode($return->images, true) : []; @endphp
+                                                        @if (!empty($images))
+                                                            <div class="detail-row">
+                                                                <span class="label">Hình ảnh:</span>
+                                                                <div class="return-images">
+                                                                    @foreach ($images as $image)
+                                                                        <img src="{{ asset($image) }}" alt="Return image" style="max-width: 150px; margin: 5px; border-radius: 8px;">
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+
+                                                    <div class="woocommerce-order-details__actions">
+                                                        <a href="{{ route('orders.show', $return->order->id) }}" class="woocommerce-button button">Quay lại đơn hàng</a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </article>
-                                </div>
+                                    </div>
+                                </article>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                @include('layouts.footer')
-                <div class="nova-overlay-global"></div>
             </div>
+
+            @include('layouts.footer')
+            <div class="nova-overlay-global"></div>
         </div>
+    </div>
+</body>
 
         <style>
             .order-header {
