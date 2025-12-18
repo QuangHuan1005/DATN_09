@@ -388,14 +388,15 @@ a.btn-checkout:hover{ opacity:.92; }
                     }
                 }
             ?>
-
-            <img
-            src="<?php echo e($imgUrl); ?>"
-            alt="<?php echo e($row['name'] ?? 'Product'); ?>"
-            class="img-fluid rounded"
-            style="width: 90px; height: 90px; object-fit: cover;"
-            onerror="this.onerror=null;this.src='<?php echo e(asset('images/placeholder.png')); ?>';"
-            />
+<a href="<?php echo e(url('products/' . $row['product_id'])); ?>">
+    <img
+        src="<?php echo e($imgUrl); ?>"
+        alt="<?php echo e($row['name'] ?? 'Product'); ?>"
+        class="img-fluid rounded"
+        style="width: 90px; height: 90px; object-fit: cover; cursor: pointer;"
+        onerror="this.onerror=null;this.src='<?php echo e(asset('images/placeholder.png')); ?>';"
+    />
+</a>
 
             
             

@@ -949,7 +949,6 @@ $firstImage = $it->photoAlbums->first()?->image;
                         <span class="text-success me-3">
                             <i class="fa fa-check-circle"></i> Đã đánh giá ({{ $existingReview->rating }} sao)
                         </span>
-                        <a href="{{ route('review.edit', $existingReview->id) }}" class="btn btn-sm btn-outline-secondary">Sửa đánh giá</a>
                     @else
                         {{-- Nếu chưa có đánh giá --}}
                        <a href="{{ route('review.create', ['order_id' => $order->id, 'product_id' => $detail->product->id]) }}"

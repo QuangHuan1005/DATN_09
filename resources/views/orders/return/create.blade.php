@@ -50,51 +50,70 @@
                                                                 $shouldShowSelection = $order->details->count() >= 2 || $totalQuantity >= 2;
                                                             @endphp
                                                             
-                                                            @if($shouldShowSelection)
-                                                            <div class="woocommerce-order-details__field">
-                                                                <label>Chọn sản phẩm muốn hoàn <span class="required">*</span></label>
-                                                                <div class="product-selection-container">
-                                                                    @foreach($order->details as $index => $detail)
-                                                                        @php
-                                                                            $variant = $detail->productVariant;
-                                                                            $product = $variant ? $variant->product : $detail->product;
-                                                                            $variantText = [];
-                                                                            if ($variant?->color?->name) $variantText[] = "Màu: {$variant->color->name}";
-                                                                            if ($variant?->size?->name) $variantText[] = "Size: {$variant->size->name}";
-                                                                            $variantDisplay = $variantText ? ' (' . implode(', ', $variantText) . ')' : '';
-                                                                        @endphp
-                                                                        
-                                                                        {{-- ✅ Nếu quantity > 1, tách thành nhiều checkbox riêng biệt --}}
-                                                                        @for($i = 1; $i <= $detail->quantity; $i++)
-                                                                            @php
-                                                                                // ✅ Thêm số thứ tự nếu quantity > 1
-                                                                                $itemNumber = $detail->quantity > 1 ? ' #' . $i : '';
-                                                                            @endphp
-                                                                            <div class="product-select-item">
-                                                                                <label>
-                                                                                    <input type="checkbox" 
-                                                                                           name="product_ids[]" 
-                                                                                           value="{{ $detail->id }}_{{ $i }}" 
-                                                                                           class="product-checkbox"
-                                                                                           data-detail-id="{{ $detail->id }}"
-                                                                                           data-price="{{ $detail->price }}">
-                                                                                    <span class="product-name">{{ $product->name }}{{ $variantDisplay }}{{ $itemNumber }}</span>
-                                                                                    <span class="product-quantity">x1</span>
-                                                                                    <span class="product-price">{{ number_format($detail->price) }}₫</span>
-                                                                                </label>
-                                                                            </div>
-                                                                        @endfor
-                                                                    @endforeach
-                                                                    <div class="select-all-container">
-                                                                        <label>
-                                                                            <input type="checkbox" id="selectAllProducts">
-                                                                            <span>Chọn tất cả sản phẩm</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="error-message" id="product-selection-error"></div>
-                                                            </div>
-                                                            @endif
+                                                                 {{-- ✅ Sử dụng biến $groupedDetails đã được gom nhóm từ Controller --}}
+@if(count($groupedDetails) > 0)
+    <div class="woocommerce-order-details__field">
+        <label style="font-weight: bold; margin-bottom: 15px; display: block;">
+            Chọn sản phẩm muốn hoàn trả <span class="required">*</span>
+        </label>
+        
+        <div class="product-selection-container" style="background: #f9f9f9; padding: 15px; border-radius: 8px;">
+            @foreach($groupedDetails as $variantId => $item)
+    <div class="product-select-item" style="display: flex; align-items: center; background: #fff; margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+        
+        {{-- Checkbox chọn sản phẩm --}}
+        <div style="margin-right: 15px;">
+            <input type="checkbox" 
+                   name="variant_ids[]" 
+                   value="{{ $variantId }}" 
+                   class="product-checkbox"
+                   id="variant_{{ $variantId }}">
+        </div>
+
+        {{-- Ảnh sản phẩm --}}
+        <div style="margin-right: 15px;">
+            <img src="{{ asset('storage/' . $item->image) }}" width="50" height="50" style="object-fit: cover; border-radius: 4px;">
+        </div>
+
+        {{-- Thông tin tên & biến thể --}}
+        <div style="flex: 1;">
+            <label for="variant_{{ $variantId }}" style="margin: 0; cursor: pointer;">
+                <span style="font-weight: 600; display: block; line-height: 1.2;">{{ $item->product_name }}</span>
+                <small class="text-muted">{{ $item->variant_label }}</small>
+            </label>
+            <div style="color: #d63384; font-weight: bold;">{{ number_format($item->price) }}₫</div>
+        </div>
+
+        {{-- Ô nhập số lượng --}}
+        <div style="width: 130px; text-align: right;">
+            <small style="display: block; color: #666; font-size: 11px;">Số lượng hoàn</small>
+            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 5px;">
+                <input type="number" 
+                       name="quantities[{{ $variantId }}]" 
+                       value="1" 
+                       min="1" 
+                       max="{{ $item->max_quantity }}" 
+                       class="input-qty"
+                       id="qty_{{ $variantId }}" {{-- QUAN TRỌNG --}}
+                       data-variant-id="{{ $variantId }}"
+                       data-price="{{ $item->price }}" {{-- QUAN TRỌNG: Script dùng cái này để tính --}}
+                       style="width: 50px; padding: 2px 5px; text-align: center; border: 1px solid #ccc;">
+                <span style="font-size: 12px; color: #999;">/ {{ $item->max_quantity }}</span>
+            </div>
+        </div>
+    </div>
+@endforeach
+
+            <div class="select-all-container" style="margin-top: 10px; padding-left: 10px;">
+                <label style="cursor: pointer; font-size: 14px;">
+                    <input type="checkbox" id="selectAllProducts">
+                    <span style="margin-left: 5px;">Chọn tất cả sản phẩm</span>
+                </label>
+            </div>
+        </div>
+        <div class="error-message" id="product-selection-error" style="color: red; font-size: 12px; margin-top: 5px;"></div>
+    </div>
+@endif
 
                                                             <div class="woocommerce-order-details__field">
                                                                 <label for="reason">Lý do hoàn hàng <span class="required">*</span></label>
@@ -184,330 +203,144 @@
             </div>
         </div>
 
-        <script>
-            // Chạy sau khi tất cả scripts khác đã load
-            window.addEventListener('load', function() {
-                // Đợi thêm 100ms để đảm bảo tất cả scripts khác đã chạy xong
-                setTimeout(function() {
-                    const form = document.querySelector('form[action*="return"]');
+   <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // === CẤU HÌNH BIẾN ===
+    let selectedFiles = []; // Mảng chứa file thực tế để gửi lên server
+    const imageInput = document.getElementById('images');
+    const selectBtn = document.getElementById('selectImagesBtn');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const refundDisplay = document.getElementById('refundAmountDisplay');
 
-                    if (!form) {
-                        return;
-                    }
+    // === PHẦN 1: CHỌN VÀ HIỂN THỊ ẢNH ===
+    if (selectBtn && imageInput) {
+        // Khi bấm nút "Chọn hình ảnh" -> Kích hoạt ô chọn file ẩn
+        selectBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            imageInput.click();
+        });
 
-                    // XÓA TẤT CẢ event listeners cũ trên form
-                    const newForm = form.cloneNode(true);
-                    form.parentNode.replaceChild(newForm, form);
+        imageInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            // Giới hạn tối đa 5 ảnh
+            if (selectedFiles.length + files.length > 5) {
+                alert('Bạn chỉ được chọn tối đa 5 ảnh.');
+                return;
+            }
 
-                    // Tìm lại các elements sau khi clone
-                    const returnForm = document.querySelector('form[action*="return"]');
-                    const reasonSelect = document.getElementById('reason');
-                    const accountSelect = document.getElementById('refund_account_id');
-                    const imageInput = document.getElementById('images');
+            files.forEach(file => {
+                // Kiểm tra định dạng ảnh
+                if (!file.type.startsWith('image/')) return;
 
-                    if (!returnForm || !reasonSelect || !accountSelect || !imageInput) {
-                        return;
-                    }
+                selectedFiles.push(file);
 
-                    // Function to show error
-                    function showError(elementId, message) {
-                        const errorDiv = document.getElementById(elementId + '-error');
-                        if (errorDiv) {
-                            errorDiv.textContent = message;
-                            errorDiv.style.display = 'block';
-                            errorDiv.style.color = '#e74c3c';
-                            errorDiv.style.fontSize = '14px';
-                            errorDiv.style.marginTop = '5px';
-                        }
-                    }
+                // Tạo giao diện Preview
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.style = "display:inline-block; position:relative; margin:10px 10px 0 0;";
+                    div.innerHTML = `
+                        <img src="${event.target.result}" style="width:80px; height:80px; object-fit:cover; border-radius:5px; border:1px solid #ddd;">
+                        <span class="remove-btn" style="position:absolute; top:-10px; right:-10px; background:red; color:white; border-radius:50%; width:20px; height:20px; text-align:center; cursor:pointer; line-height:18px; font-weight:bold;">×</span>
+                    `;
 
-                    // Function to hide error
-                    function hideError(elementId) {
-                        const errorDiv = document.getElementById(elementId + '-error');
-                        if (errorDiv) {
-                            errorDiv.textContent = '';
-                            errorDiv.style.display = 'none';
-                        }
-                    }
-
-                    // Validate reason (required)
-                    function validateReason() {
-                        const currentReason = document.getElementById('reason');
-                        if (!currentReason || !currentReason.value || currentReason.value === '') {
-                            showError('reason', 'Vui lòng chọn lý do hoàn hàng');
-                            return false;
-                        }
-                        hideError('reason');
-                        return true;
-                    }
-
-                    // Validate refund account (required)
-                    function validateRefundAccount() {
-                        const currentAccount = document.getElementById('refund_account_id');
-                        if (!currentAccount || !currentAccount.value || currentAccount.value === '') {
-                            showError('refund_account_id', 'Vui lòng chọn tài khoản nhận hoàn tiền');
-                            return false;
-                        }
-                        hideError('refund_account_id');
-                        return true;
-                    }
-
-                    // Validate images (required at least 1)
-                    function validateImages() {
-                        // Kiểm tra selectedFiles array thay vì input.files
-                        if (!selectedFiles || selectedFiles.length === 0) {
-                            showError('images', 'Vui lòng chọn ít nhất 1 hình ảnh');
-                            return false;
-                        }
-                        hideError('images');
-                        return true;
-                    }
-
-                    // Validate product selection (for orders with 2+ products)
-                    function validateProductSelection() {
-                        const productCheckboxes = document.querySelectorAll('.product-checkbox');
-                        if (productCheckboxes.length > 0) {
-                            const checkedBoxes = document.querySelectorAll('.product-checkbox:checked');
-                            if (checkedBoxes.length === 0) {
-                                showError('product-selection', 'Vui lòng chọn ít nhất 1 sản phẩm muốn hoàn');
-                                return false;
-                            }
-                        }
-                        hideError('product-selection');
-                        return true;
-                    }
-
-                    // Flag to control form submission
-                    let isValidated = false;
-
-                    // Form submit handler
-                    returnForm.addEventListener('submit', function(e) {
-                        // Nếu đã validate thành công rồi, cho phép submit
-                        if (isValidated) {
-                            return true;
-                        }
-
-                        // Chặn submit để validate
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.stopImmediatePropagation();
-
-                        // Validate tất cả các fields
-                        let hasErrors = false;
-
-                        if (!validateReason()) {
-                            hasErrors = true;
-                        }
-                        if (!validateProductSelection()) {
-                            hasErrors = true;
-                        }
-                        if (!validateRefundAccount()) {
-                            hasErrors = true;
-                        }
-                        if (!validateImages()) {
-                            hasErrors = true;
-                        }
-
-                        // Nếu có lỗi, dừng lại
-                        if (hasErrors) {
-                            return false;
-                        }
-
-                        // Update the file input with selected files before submitting
-                        if (selectedFiles.length > 0) {
-                            const dataTransfer = new DataTransfer();
-                            selectedFiles.forEach(file => dataTransfer.items.add(file));
-                            imageInput.files = dataTransfer.files;
-                        }
-
-                        // Đánh dấu đã validate thành công
-                        isValidated = true;
-
-                        // Submit form
-                        returnForm.submit();
-                        
-                        return false;
-                    }, true);
-
-                    // Real-time validation on change - clear errors when user starts interacting
-                    reasonSelect.addEventListener('focus', function() {
-                        hideError('reason');
-                    });
-                    reasonSelect.addEventListener('change', function() {
-                        if (this.value && this.value !== '') {
-                            hideError('reason');
-                        } else {
-                            validateReason();
-                        }
-                    });
-
-                    accountSelect.addEventListener('focus', function() {
-                        hideError('refund_account_id');
-                    });
-                    accountSelect.addEventListener('change', function() {
-                        if (this.value && this.value !== '') {
-                            hideError('refund_account_id');
-                        } else {
-                            validateRefundAccount();
-                        }
-                    });
-
-                    // Image preview functionality
-                    const selectImagesBtn = document.getElementById('selectImagesBtn');
-                    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-                    let selectedFiles = [];
-
-                    if (selectImagesBtn) {
-                        selectImagesBtn.addEventListener('click', function() {
-                            imageInput.click();
-                        });
-                    }
-
-                    imageInput.addEventListener('focus', function() {
-                        hideError('images');
-                    });
-
-                    imageInput.addEventListener('change', function(e) {
-                        const files = Array.from(e.target.files);
-                        
-                        // Giới hạn tối đa 5 ảnh
-                        if (selectedFiles.length + files.length > 5) {
-                            alert('Bạn chỉ có thể chọn tối đa 5 hình ảnh!');
-                            return;
-                        }
-
-                        files.forEach(function(file) {
-                            if (file.type.startsWith('image/')) {
-                                selectedFiles.push(file);
-                                addImagePreview(file);
-                            }
-                        });
-
-                        if (selectedFiles.length > 0) {
-                            hideError('images');
-                        }
-
-                        // Reset input để có thể chọn lại cùng file
-                        e.target.value = '';
-                    });
-
-                    function addImagePreview(file) {
-                        const reader = new FileReader();
-                        const previewId = 'preview-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-
-                        reader.onload = function(e) {
-                            const previewDiv = document.createElement('div');
-                            previewDiv.className = 'image-preview-item';
-                            previewDiv.id = previewId;
-                            previewDiv.innerHTML = `
-                                <img src="${e.target.result}" alt="Preview">
-                                <div class="image-name">${file.name}</div>
-                                <button type="button" class="btn-remove-image" data-preview-id="${previewId}" title="Xóa ảnh">
-                                    <span>&times;</span>
-                                </button>
-                            `;
-                            imagePreviewContainer.appendChild(previewDiv);
-
-                            // Add remove event listener
-                            const removeBtn = previewDiv.querySelector('.btn-remove-image');
-                            removeBtn.addEventListener('click', function() {
-                                removeImage(previewId, file);
-                            });
-                        };
-
-                        reader.readAsDataURL(file);
-                    }
-
-                    function removeImage(previewId, file) {
-                        // Remove from selectedFiles array
-                        const index = selectedFiles.indexOf(file);
-                        if (index > -1) {
-                            selectedFiles.splice(index, 1);
-                        }
-
-                        // Remove preview element
-                        const previewElement = document.getElementById(previewId);
-                        if (previewElement) {
-                            previewElement.remove();
-                        }
-
-                        // Update validation
-                        if (selectedFiles.length === 0) {
-                            validateImages();
-                        }
-                    }
-
-                    // Select All Products functionality và Real-time Refund Amount Update
-                    const selectAllCheckbox = document.getElementById('selectAllProducts');
-                    const productCheckboxes = document.querySelectorAll('.product-checkbox');
-                    const refundAmountDisplay = document.getElementById('refundAmountDisplay');
-
-                    // Function to calculate and update refund amount
-                    function updateRefundAmount() {
-                        let totalRefund = 0;
-                        
-                        if (productCheckboxes.length === 0) {
-                            // Đơn 1 sản phẩm hoặc không có checkbox: hoàn toàn bộ
-                            totalRefund = {{ $order->total_amount }};
-                        } else {
-                            // Đơn nhiều sản phẩm: tính tổng các sản phẩm đã chọn
-                            productCheckboxes.forEach(checkbox => {
-                                if (checkbox.checked) {
-                                    totalRefund += parseFloat(checkbox.dataset.price || 0);
-                                }
-                            });
-                        }
-
-                        // Format và hiển thị
-                        if (refundAmountDisplay) {
-                            refundAmountDisplay.textContent = new Intl.NumberFormat('vi-VN').format(totalRefund) + '₫';
-                        }
-                    }
-
-                    if (selectAllCheckbox && productCheckboxes.length > 0) {
-                        // Handle Select All checkbox
-                        selectAllCheckbox.addEventListener('change', function() {
-                            productCheckboxes.forEach(checkbox => {
-                                checkbox.checked = this.checked;
-                            });
-                            // Hide error when products are selected
-                            if (this.checked) {
-                                hideError('product-selection');
-                            }
-                            // Update refund amount
-                            updateRefundAmount();
-                        });
-
-                        // Handle individual product checkboxes
-                        productCheckboxes.forEach(checkbox => {
-                            checkbox.addEventListener('change', function() {
-                                // Update "Select All" state
-                                const allChecked = Array.from(productCheckboxes).every(cb => cb.checked);
-                                const noneChecked = Array.from(productCheckboxes).every(cb => !cb.checked);
-                                
-                                selectAllCheckbox.checked = allChecked;
-                                selectAllCheckbox.indeterminate = !allChecked && !noneChecked;
-
-                                // Hide error when at least one is selected
-                                if (this.checked) {
-                                    hideError('product-selection');
-                                }
-                                
-                                // Update refund amount
-                                updateRefundAmount();
-                            });
-                        });
-
-                        // Set initial refund amount to 0 (user must select products)
-                        updateRefundAmount();
-                    } else {
-                        // Đơn 1 sản phẩm: hiển thị full amount
-                        updateRefundAmount();
-                    }
-
-                }, 100);
+                    // Xử lý xóa ảnh khi bấm nút x
+                    div.querySelector('.remove-btn').onclick = function() {
+                        selectedFiles = selectedFiles.filter(f => f !== file);
+                        div.remove();
+                    };
+                    previewContainer.appendChild(div);
+                };
+                reader.readAsDataURL(file);
             });
-        </script>
+
+            // Reset giá trị input để có thể chọn lại cùng 1 file vừa xóa
+            imageInput.value = '';
+        });
+    }
+
+    // === PHẦN 2: TÍNH TIỀN & XỬ LÝ SỐ LƯỢNG (Cho phép nhập số 2) ===
+    function updateRefundTotal() {
+        let total = 0;
+        const checkedItems = document.querySelectorAll('.product-checkbox:checked');
+        
+        checkedItems.forEach(cb => {
+            const qtyInput = document.getElementById('qty_' + cb.value);
+            if (qtyInput) {
+                const price = parseFloat(qtyInput.dataset.price.replace(/[^0-9.-]+/g, "")) || 0;
+                const qty = parseInt(qtyInput.value) || 0;
+                total += (price * qty);
+            }
+        });
+
+        if (refundDisplay) {
+            refundDisplay.innerText = new Intl.NumberFormat('vi-VN').format(total) + '₫';
+        }
+    }
+
+    // Lắng nghe sự kiện gõ số lượng (Sửa lỗi không gõ được số 2)
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('input-qty')) {
+            const input = e.target;
+            const max = parseInt(input.getAttribute('max'));
+            
+            if (input.value === "") return; // Để trống cho khách gõ số mới
+
+            let val = parseInt(input.value);
+            if (val > max) input.value = max;
+            if (val < 1) input.value = 1;
+
+            // Tự động check vào sản phẩm
+            const vId = input.dataset.variantId;
+            const cb = document.getElementById('variant_' + vId);
+            if (cb) cb.checked = true;
+
+            updateRefundTotal();
+        }
+    });
+
+    // Khi rời khỏi ô nhập liệu, nếu trống thì về 1
+    document.addEventListener('blur', function(e) {
+        if (e.target.classList.contains('input-qty')) {
+            if (e.target.value === "") {
+                e.target.value = 1;
+                updateRefundTotal();
+            }
+        }
+    }, true);
+
+    // Xử lý Checkbox
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('product-checkbox') || e.target.id === 'selectAllProducts') {
+            if (e.target.id === 'selectAllProducts') {
+                document.querySelectorAll('.product-checkbox').forEach(c => c.checked = e.target.checked);
+            }
+            updateRefundTotal();
+        }
+    });
+
+    // === PHẦN 3: GỬI FORM (Đưa ảnh từ mảng JS vào Form thực tế) ===
+    const form = document.querySelector('form[action*="return"]');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            if (selectedFiles.length === 0) {
+                alert('Vui lòng chọn ít nhất 1 hình ảnh minh họa!');
+                e.preventDefault();
+                return;
+            }
+
+            // Dùng DataTransfer để nén mảng selectedFiles vào input file images[]
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            imageInput.files = dataTransfer.files;
+        });
+    }
+
+    updateRefundTotal();
+});
+</script>
 
         <style>
             .woocommerce-order-details__field {

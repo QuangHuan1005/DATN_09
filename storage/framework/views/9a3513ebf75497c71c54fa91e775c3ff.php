@@ -1,33 +1,5 @@
 <?php $__env->startSection('content'); ?>
 
-    <style>
-        /* Item mặc định */
-        .variable-item.color-variable-item {
-            border: 1px solid #e2e2e2;
-            border-radius: 1px;
-            padding: 3px;
-            transition: all 0.2s ease;
-        }
-
-        /* Hover */
-        .variable-item.color-variable-item:hover {
-            border-color: #c1995a;
-            /* gold theo brand */
-        }
-
-        /* Khi được chọn */
-        .variable-item.color-variable-item.active,
-        .variable-item.color-variable-item[aria-checked="true"] {
-            border-color: #c1995a;
-            box-shadow: 0 0 0 2px rgba(193, 153, 90, 0.3);
-        }
-
-        /* Viền bo cho ô màu */
-        .variable-item-span-color {
-            border-radius: 4px;
-        }
-    </style>
-
     <body
         class="wp-singular product-template-default single single-product postid-1558 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-383 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
         <div class="site-wrapper">
@@ -108,7 +80,6 @@
                                                             data-columns="<?php echo e(min(6, max($images ?? [], 6)) ?? null); ?>"
                                                             style="opacity: 0; transition: opacity .25s ease-in-out;">
                                                             <div class="woocommerce-product-gallery__wrapper">
-
                                                                 <?php $__currentLoopData = $images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                                     <?php
                                                                         $imgUrl = asset('storage/' . $img);
@@ -455,7 +426,8 @@
                                                                         
                                                                         <button type="submit"
                                                                             class="single_add_to_cart_button button btn-primary js-submit-cart"
-                                                                            data-action="buy_now">
+                                                                            data-action="buy_now"
+                                                                            formaction="<?php echo e(route('checkout.buy_now')); ?>">
                                                                             Mua ngay
                                                                         </button>
                                                                     </div>
@@ -985,7 +957,10 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+
                                                                     </div>
+
+
                                                                 </li>
                                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
@@ -1501,9 +1476,10 @@
                             });
                         </script>
                     <?php endif; ?>
+
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
                     <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-                <?php $__env->stopSection(); ?>
 
+                <?php $__env->stopSection(); ?>
 <?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN09\resources\views/products/show.blade.php ENDPATH**/ ?>

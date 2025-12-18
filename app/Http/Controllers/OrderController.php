@@ -201,4 +201,34 @@ class OrderController extends Controller
             ->route('orders.show', $order->id)
             ->with('success', 'Đơn hàng đã chuyển sang trạng thái Hoàn thành.');
     }
+
+    public function review($id)
+    {
+        // 1. Lấy đơn hàng cùng các quan hệ cần thiết
+        $order = Order::with([
+            'details.productVariant.product:id,name',
+            'details.productVariant.color:id,name',
+            'details.productVariant.size:id,name'
+        ])
+        ->where('id', $id)
+        ->where('user_id', Auth::id())
+        ->firstOrFail();
+
+        // 2. Kiểm tra trạng thái: Chỉ cho đánh giá khi đơn đã "Hoàn thành" (status_id = 5)
+        if ((int)$order->order_status_id !== 5) {
+            return redirect()->route('orders.show', $id)
+                             ->with('error', 'Bạn chỉ có thể đánh giá khi đơn hàng đã hoàn thành.');
+        }
+
+        // 3. Xử lý gom nhóm: Nếu khách mua cùng 1 sản phẩm nhưng nhiều biến thể (màu/size)
+        // hoặc mua số lượng > 1, chúng ta chỉ lấy ra các dòng đại diện cho từng Product ID.
+        $uniqueDetails = $order->details->unique(function ($item) {
+            return $item->productVariant->product_id;
+        });
+
+        return view('orders.review', [
+            'order' => $order,
+            'uniqueDetails' => $uniqueDetails
+        ]);
+    }
 }
