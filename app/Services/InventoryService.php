@@ -40,16 +40,23 @@ class InventoryService
     }
 
     /** Hoàn tồn khi đơn bị hủy/hoàn (mỗi dòng chỉ hoàn 1 lần) */
-    public function restoreForOrder(Order $order): void
-    {
-        $order->loadMissing('details.productVariant:id,quantity');
+   public function restoreForOrder(Order $order): void
+{
+    $order->loadMissing('details.productVariant:id,quantity');
 
-        foreach ($order->details as $d) {
-            if ((int)$d->status !== 2) continue; // chỉ hoàn cho dòng đã trừ
-            $v = $d->productVariant; if (!$v) continue;
+    foreach ($order->details as $d) {
+        // SỬA TẠI ĐÂY: Nếu dòng này đã hoàn rồi (status = 3) thì mới bỏ qua.
+        // Còn nếu là 1 (mới) hoặc 2 (đã trừ) thì đều cho phép hoàn nếu đơn bị hủy.
+        if ((int)$d->status === 3) continue; 
+        
+        $v = $d->productVariant; 
+        if (!$v) continue;
 
-            $v->update(['quantity' => (int)$v->quantity + (int)$d->quantity]);
-            $d->update(['status' => 3]); // đánh dấu đã hoàn
-        }
+        // Thực hiện cộng lại kho
+        $v->update(['quantity' => (int)$v->quantity + (int)$d->quantity]);
+        
+        // Đánh dấu đã hoàn để không bị cộng dồn nhiều lần
+        $d->update(['status' => 3]); 
     }
+}
 }
