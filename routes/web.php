@@ -265,14 +265,15 @@ Route::prefix('admin')
         Route::post('orders/{id}/status', [AdminOrderController::class, 'update'])->name('orders.status');
 
         // 🗃️ Quản lý Yêu cầu Hủy Đơn hàng (ĐÃ ĐƯỢC DI CHUYỂN VÀO ĐÂY)
-        Route::prefix('order-cancellations')->name('order-cancellations.')->group(function () {
-            // Tên route sẽ là: admin.order-cancellations.index
-            Route::get('/', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'index'])->name('index');
-            // Tên route sẽ là: admin.order-cancellations.show
-            Route::get('/{request}', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'show'])->name('show');
-            // Tên route sẽ là: admin.order-cancellations.process
-            Route::post('/{request}/process', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'process'])->name('process'); 
-        });
+        // 🗃️ Quản lý Yêu cầu Hủy Đơn hàng (ĐÃ CẬP NHẬT)
+Route::prefix('order-cancellations')->name('order-cancellations.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'index'])->name('index');
+    Route::get('/{request}', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'show'])->name('show');
+    Route::post('/{request}/process', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'process'])->name('process'); 
+    
+    // Thêm Route mới này để xác nhận đã chuyển khoản xong
+    Route::post('/{request}/confirm-refund', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'confirmRefund'])->name('confirm-refund');
+});
 
 
         // Người dùng

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,39 +9,63 @@ class OrderCancelRequest extends Model
 {
     use HasFactory;
 
-    // Tên bảng (Nếu tên bảng không phải là số nhiều của tên Model, bạn cần định nghĩa nó)
-    // Tên bảng của bạn là order_cancel_requests nên đây là tùy chọn, nhưng nên đặt
-    protected $table = 'order_cancel_requests'; 
+    protected $table = 'order_cancel_requests';
 
-    // Các trường được phép lưu dữ liệu qua phương thức create()
     protected $fillable = [
         'order_id',
         'user_id',
-        'reason_user',
-        'reason_admin',
-        'refund_images',
-        'status',
+        'cancel_by',      // customer | admin
+        'reason_user',    
+        'reason_admin',   
+        'refund_image',
+        'status_id',      // Link tới bảng order_cancel_statuses
+        'status',         // Lưu slug: pending, accepted, rejected, refunded
+        'bank_name',       
+        'account_number',  
+        'account_holder',
     ];
-    
-    // =======================================================
-    // 🔗 CÁC QUAN HỆ (RELATIONSHIPS)
-    // =======================================================
 
-    // Quan hệ với đơn hàng (Order)
+    // ============================
+    // 🔗 Quan hệ (Relationships)
+    // ============================
+
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id');
     }
 
-    // Quan hệ với người dùng (User)
     public function user()
     {
-        // Giả định Model User nằm trong App\Models\User
-        return $this->belongsTo(User::class, 'user_id'); 
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function status()
-{
-    return $this->belongsTo(OrderCancelStatus::class, 'status_id');
-}
+    public function cancelStatus()
+    {
+        return $this->belongsTo(OrderCancelStatus::class, 'status_id');
+    }
+
+    // ============================
+    // 🔥 Accessors & Scopes
+    // ============================
+
+    /**
+     * Hiển thị nhãn người hủy đơn
+     */
+    public function getCanceledByLabelAttribute()
+    {
+        // Sử dụng $this->cancel_by để khớp chính xác với cột trong DB
+        return match ($this->cancel_by) { 
+            'customer', 'user' => 'Khách hàng', // Thêm case 'user' nếu DB lưu là user
+            'admin'            => 'Quản trị viên',
+            default            => 'Không xác định',
+        };
+    }
+
+    /**
+     * Kiểm tra xem yêu cầu đã được hoàn tiền chưa
+     */
+    public function isRefunded()
+    {
+        return $this->status === 'refunded' || $this->status_id == 4;
+    }
 }

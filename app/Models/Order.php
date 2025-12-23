@@ -31,7 +31,8 @@ class Order extends Model
         'grand_total',
         'customer_email',
         'payment_method_id',
-        'note'
+        'note',
+        'is_cancel_requested'
     ];
 
     /**
@@ -104,10 +105,10 @@ class Order extends Model
      * Quan hệ 1-1: Đơn hàng có một yêu cầu hủy (hoặc không có).
      */
     public function cancelRequest()
-    {
-        return $this->hasOne(OrderCancelRequest::class, 'order_id'); 
-    }
-    
+{
+    // Lấy yêu cầu hủy mới nhất để hiển thị chính xác trạng thái hiện tại
+    return $this->hasOne(OrderCancelRequest::class, 'order_id')->latestOfMany(); 
+}
 
     /**
      * =====================

@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderStatus;
 use App\Models\OrderStatusLog;
-use Illuminate\Support\Facades\DB; // <--- Cần thêm dòng này
-
+use Illuminate\Support\Facades\DB;
+use App\Models\OrderCancelRequest;
 
 class OrderController extends Controller
 {
-    // Danh sách đơn hàng của user
+    /**
+     * Danh sách đơn hàng của user
+     */
     public function index(Request $request)
     {
         $statusId = (int) $request->query('status_id', 0);
@@ -22,24 +24,26 @@ class OrderController extends Controller
         $statuses = OrderStatus::orderBy('id')->get(['id','name']);
 
         // Đếm số đơn theo trạng thái (để hiện số trên tab)
-        $counts = \App\Models\Order::query()
+        $counts = Order::query()
             ->where('user_id', Auth::id())
             ->selectRaw('order_status_id, COUNT(*) as c')
             ->groupBy('order_status_id')
-            ->pluck('c', 'order_status_id'); // [status_id => count]
+            ->pluck('c', 'order_status_id');
 
-        $orders = \App\Models\Order::query()
-            ->with(['status','paymentStatus','payment.method','details']) // eager để tính SL
+        $orders = Order::query()
+            ->with(['status','paymentStatus','payment.method','details'])
             ->where('user_id', Auth::id())
             ->when($statusId > 0, fn($q) => $q->where('order_status_id', $statusId))
-            ->latest('created_at')                 // mới nhất lên đầu
-            ->paginate(5)                          // <= chỉ 5 đơn mỗi trang
-            ->withQueryString();                   // giữ ?status_id khi next page
+            ->latest('created_at')
+            ->paginate(5)
+            ->withQueryString();
 
         return view('orders.index', compact('orders','statuses','statusId','counts'));
     }
 
-    // Chi tiết đơn hàng
+    /**
+     * Chi tiết đơn hàng
+     */
     public function show($id)
     {
        $order = Order::query()
@@ -69,7 +73,7 @@ class OrderController extends Controller
             return (object)[
                 'product_name' => $v?->product?->name ?? 'Sản phẩm',
                 'variant_text' => $variantText ? implode(' · ', $variantText) : null,
-                'image'        => $v?->image, // chuỗi path lưu trong DB (vd: shirt1-red.jpg)
+                'image'        => $v?->image,
                 'unit_price'   => (int)$d->price,
                 'qty'          => (int)$d->quantity,
                 'line_total'   => (int)($d->price * $d->quantity),
@@ -77,13 +81,9 @@ class OrderController extends Controller
             ];
         });
 
-        // Tính tạm tính/tổng (nếu muốn dựa hoàn toàn DB thì dùng cột đã có)
         $calc_subtotal = $lines->sum('line_total');
         $calc_discount = (int)$order->discount;
         $calc_total    = (int)$order->total_amount;
-        
-        // Tính shipping fee: total_amount = subtotal + shipping_fee - discount
-        // => shipping_fee = total_amount - subtotal + discount
         $calc_shipping_fee = max(0, $calc_total - $calc_subtotal + $calc_discount);
 
         return view('orders.show', [
@@ -96,83 +96,102 @@ class OrderController extends Controller
         ]);
     }
 
-    // (Tuỳ chọn) Hủy đơn – thêm route POST nếu bạn muốn bật thao tác này
-    public function cancel(Request $request, $id)
-    {
-        // Quan hệ chính xác là 'details' và 'productVariant'
-    $order = Order::with('details.productVariant') 
-                    ->where('id',$id)
-                    ->where('user_id',Auth::id())
-                    ->first();
-    
-    // Kiểm tra đơn hàng có tồn tại và thuộc về người dùng hiện tại không
+    /**
+     * Hủy đơn hàng - Phía người dùng
+     */
+   public function cancel(Request $request, $id)
+{
+    $order = Order::with('details.productVariant')
+                  ->where('id', $id)
+                  ->where('user_id', Auth::id())
+                  ->first();
+
     if (!$order) {
-        return back()->with('error','Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập.');
+        return back()->with('error', 'Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập.');
     }
 
-    // Kiểm tra tính hợp lệ của việc hủy đơn (dùng accessor getCancelableAttribute)
     if (!$order->cancelable) {
-        return back()->with('error','Đơn hàng không thể hủy ở trạng thái hiện tại.');
+        return back()->with('error', 'Đơn hàng không thể hủy ở trạng thái hiện tại.');
     }
 
-    // BẮT ĐẦU TRANSACTION
     DB::beginTransaction();
 
     try {
-        // Cập nhật trạng thái và lý do
-        $order->order_status_id = 6; // Hủy
-        
-        // Logic hoàn tiền
-        if ((int)$order->payment_status_id === 2) {
-            $order->payment_status_id = 3; // Hoàn tiền
-            // TODO: ghi nhận giao dịch hoàn về ví nếu bạn có module ví
+        // XỬ LÝ ẢNH MINH CHỨNG (Nếu có)
+        $fileName = null;
+        if ($request->hasFile('refund_image')) {
+            $file = $request->file('refund_image');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/refunds'), $fileName);
         }
+
+        // --- PHÂN TÍCH TRẠNG THÁI THANH TOÁN ---
+        $paymentMethodId = (int) $order->payment_method_id;
+        $paymentStatusId = (int) $order->payment_status_id;
         
-        // Ghi lại lý do hủy
-        $order->note = trim($request->input('reason','Khách yêu cầu hủy'));
+        $newPaymentStatus = 1; // Mặc định là Chưa thanh toán
+        $cancelRequestStatusId = 2; // Mặc định là "Chấp nhận/Đã hủy" (thường là ID 2)
+        $cancelRequestStatusStr = 'accepted';
+
+        // Nếu là Online (không phải COD) và đã trả tiền thành công (ID 2)
+        if ($paymentMethodId !== 1 && $paymentStatusId === 2) {
+            $newPaymentStatus = 3; // Chuyển thành "Đã hoàn tiền" cho đơn Online
+            $cancelRequestStatusId = 4; // ID hiển thị "Đã hoàn tiền" trong bảng yêu cầu
+            $cancelRequestStatusStr = 'refunded';
+        } else {
+            // Nếu là COD hoặc chưa trả tiền: Giữ nguyên "Chưa thanh toán"
+            $newPaymentStatus = 1; 
+            $cancelRequestStatusId = 2; // Chỉ là "Đã hủy" bình thường
+            $cancelRequestStatusStr = 'accepted';
+        }
+
+        // 1) Tạo bản ghi yêu cầu hủy đơn hàng (SỬA TẠI ĐÂY)
+        OrderCancelRequest::create([
+            'order_id'      => $order->id,
+            'user_id'       => Auth::id(),
+            'canceled_by'   => 'customer',
+            'reason_user'   => trim($request->input('reason')),
+            'status'        => $cancelRequestStatusStr,
+            'status_id'     => $cancelRequestStatusId, // Không để cứng số 4 nữa
+            'refund_image'  => $fileName,
+        ]);
+
+        // 2) Cập nhật trạng thái chính của đơn hàng
+        $order->order_status_id = 6; // Hủy
+        $order->payment_status_id = $newPaymentStatus;
+        $order->note = $request->input('reason', 'Khách yêu cầu hủy');
         $order->save();
-        
-        // ===============================================
-        //  🎯 HOÀN TRẢ TỒN KHO SẢN PHẨM
-        // ===============================================
-        // Dùng $order->details và sử dụng collect() để tránh lỗi NULL nếu quan hệ không tải được
-        foreach (collect($order->details) as $item) {
-            // Sửa tên quan hệ để truy cập biến thể
-            $variant = $item->productVariant; 
-            
+
+        // 3) Hoàn lại số lượng sản phẩm vào kho hàng
+        foreach ($order->details as $item) {
+            $variant = $item->productVariant;
             if ($variant) {
-                // Tăng số lượng tồn kho (quantity) của biến thể lên số lượng đã đặt
-                // Giả định Model ProductVariant có cột 'quantity'
                 $variant->increment('quantity', $item->quantity);
             }
         }
-        // ===============================================
 
-        // Ghi log trạng thái
+        // 4) Ghi log lịch sử
         OrderStatusLog::create([
             'order_id'        => $order->id,
             'order_status_id' => 6,
             'actor_type'      => 'user',
+            'note'            => 'Người dùng hủy đơn hàng: ' . trim($request->input('reason'))
         ]);
-        
-        DB::commit(); // Hoàn tất giao dịch
 
-        return redirect()->route('orders.show',$order->id)->with('success','Đã hủy đơn hàng thành công và hoàn lại tồn kho.');
+        DB::commit();
+
+        return redirect()
+            ->route('orders.show', $order->id)
+            ->with('success', 'Đơn hàng của bạn đã được hủy thành công.');
 
     } catch (\Exception $e) {
-        DB::rollBack(); // Quay lại nếu có lỗi
-        
-        // Ghi log chi tiết lỗi để kiểm tra sau này
-        \Illuminate\Support\Facades\Log::error("Cancellation Error for Order #{$id}: " . $e->getMessage()); 
-        
-        // TRẢ VỀ LỖI CHUNG
-        return back()->with('error','Đã xảy ra lỗi hệ thống khi hủy đơn hàng. Vui lòng thử lại.');
+        DB::rollBack();
+        \Log::error("Lỗi hủy đơn hàng của người dùng #{$id}: " . $e->getMessage());
+        return back()->with('error', 'Có lỗi xảy ra trong quá trình hủy đơn.');
     }
-    }
-
+}
     /**
-     * Người dùng xác nhận "Hoàn thành" đơn hàng.
-     * Chỉ cho phép khi trạng thái hiện tại là 4 = ĐÃ GIAO HÀNG.
+     * Người dùng xác nhận "Đã nhận được hàng"
      */
     public function complete(Request $request, $id)
     {
@@ -185,26 +204,30 @@ class OrderController extends Controller
         }
 
         if ((int)$order->order_status_id !== 4) {
-            return back()->with('error', 'Chỉ có thể hoàn thành khi đơn đang ở trạng thái Đã giao hàng.');
+            return back()->with('error', 'Chỉ có thể hoàn thành khi đơn hàng ở trạng thái Đã giao hàng.');
         }
 
         $order->order_status_id = 5; // Hoàn thành
+        $order->payment_status_id = 2; // Đã thanh toán 
         $order->save();
+
         OrderStatusLog::create([
             'order_id'        => $order->id,
             'order_status_id' => 5,
-            'actor_type'      => 'user', // khách nhấn nút "Hoàn thành"
+            'actor_type'      => 'user',
+            'note'            => 'Người dùng xác nhận đã nhận hàng.'
         ]);
-
 
         return redirect()
             ->route('orders.show', $order->id)
-            ->with('success', 'Đơn hàng đã chuyển sang trạng thái Hoàn thành.');
+            ->with('success', 'Đơn hàng đã được cập nhật trạng thái Hoàn thành.');
     }
 
+    /**
+     * Hiển thị trang đánh giá đơn hàng
+     */
     public function review($id)
     {
-        // 1. Lấy đơn hàng cùng các quan hệ cần thiết
         $order = Order::with([
             'details.productVariant.product:id,name',
             'details.productVariant.color:id,name',
@@ -214,14 +237,12 @@ class OrderController extends Controller
         ->where('user_id', Auth::id())
         ->firstOrFail();
 
-        // 2. Kiểm tra trạng thái: Chỉ cho đánh giá khi đơn đã "Hoàn thành" (status_id = 5)
         if ((int)$order->order_status_id !== 5) {
             return redirect()->route('orders.show', $id)
                              ->with('error', 'Bạn chỉ có thể đánh giá khi đơn hàng đã hoàn thành.');
         }
 
-        // 3. Xử lý gom nhóm: Nếu khách mua cùng 1 sản phẩm nhưng nhiều biến thể (màu/size)
-        // hoặc mua số lượng > 1, chúng ta chỉ lấy ra các dòng đại diện cho từng Product ID.
+        // Chỉ hiển thị mỗi sản phẩm một lần để đánh giá
         $uniqueDetails = $order->details->unique(function ($item) {
             return $item->productVariant->product_id;
         });
