@@ -59,7 +59,7 @@ class SendUserMessage implements ShouldBroadcastNow
 
         return [
             'message' => $this->message->message,
-            'image' => $this->message->image ? Storage::url($this->message->image) : null,
+            'image' => $this->message->image ? asset('storage/' . $this->message->image) : null,
             'receiver_id' => $this->message->receiver_id,
             'sender_id' => $this->message->sender_id,
             'user' => $userData,

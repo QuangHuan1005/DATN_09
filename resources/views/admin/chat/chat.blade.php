@@ -505,6 +505,7 @@
         const DEFAULT_AVATAR =
             'https://img.freepik.com/vector-cao-cap/vector-khuon-mat-nguoi-dan-ong_1072857-7641.jpg?semt=ais_hybrid&w=740&q=80';
         const CURRENT_ADMIN_ID = {{ Auth::id() }};
+        let pendingMessageId = 0;
 
         const STORAGE_KEY_ORDER = 'admin_chat_user_order_v2';
         const STORAGE_KEY_UNREAD = 'admin_chat_unread_counts_v2';
@@ -574,39 +575,60 @@
                 });
             }
 
-            $('#messageForm').on('submit', function(e) {
-                e.preventDefault();
-                const message = $("#messageInput")[0].emojioneArea.getText().trim();
-                const receiverId = $('#receiver_id').val();
-                const file = document.getElementById('imageInput').files[0];
+           $('#messageForm').on('submit', function(e) {
+    e.preventDefault();
 
-                if (!message && !file) return toastr.warning('Vui lòng nhập tin nhắn hoặc chọn ảnh');
+    const message = $("#messageInput")[0].emojioneArea.getText().trim();
+    const receiverId = $('#receiver_id').val();
+    const file = document.getElementById('imageInput').files[0];
 
-                const formData = new FormData(this);
-                formData.append('message', message);
-                if (file) formData.append('image', file);
+    if (!message && !file) {
+        toastr.warning('Vui lòng nhập tin nhắn hoặc chọn ảnh');
+        return;
+    }
 
-                $.ajax({
-                    url: '{{ route('admin.sendMessage') }}',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(res) {
-                        if (res.success) {
-                            $("#messageInput")[0].emojioneArea.setText('');
-                            document.getElementById('imageInput').value = "";
-                            document.getElementById('imagePreviewContainer').style.display =
-                                "none";
+    pendingMessageId++;
+    const currentPendingId = 'pending-' + pendingMessageId;
 
-                            appendMessageWithImage(message, res.data?.image, true, 'Bạn', null,
-                                res.data?.created_at);
-                            scrollToBottom();
-                            moveUserToTop(receiverId);
-                        }
-                    }
-                });
-            });
+    appendPendingMessage(message, file ? URL.createObjectURL(file) : null, currentPendingId);
+
+    $("#messageInput")[0].emojioneArea.setText('');
+    document.getElementById('imageInput').value = "";
+    document.getElementById('imagePreviewContainer').style.display = "none";
+
+    const formData = new FormData();
+    formData.append('_token', '{{ csrf_token() }}');
+    formData.append('receiver_id', receiverId);
+    if (message) formData.append('message', message);
+    if (file) formData.append('image', file);
+
+    $.ajax({
+        url: '{{ route('admin.sendMessage') }}',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            if (res.success) {
+                replacePendingMessage(
+                    currentPendingId,
+                    message || '',
+                    res.data?.image || null,
+                    res.data?.created_at || new Date()
+                );
+                scrollToBottom();
+                moveUserToTop(receiverId);
+            } else {
+                removePendingMessage(currentPendingId);
+                toastr.error(res.message || 'Gửi thất bại');
+            }
+        },
+        error: function() {
+            removePendingMessage(currentPendingId);
+            toastr.error('Lỗi kết nối, không thể gửi tin nhắn');
+        }
+    });
+});
 
             const pusher = new Pusher('39863debe06a2e95784f', {
                 cluster: 'us3'
@@ -701,6 +723,62 @@
                     scrollToBottom();
                 }
             }
+
+function appendPendingMessage(text, previewImageUrl, pendingId) {
+    let content = '';
+    if (text) content += `<p>${text.replace(/\n/g, '<br>')}</p>`;
+    if (previewImageUrl) {
+        content += `<img src="${previewImageUrl}" class="chat-image" onclick="window.open(this.src, '_blank')">`;
+    }
+    content += `<div class="timestamp" style="font-style:italic; opacity:0.7;">Đang gửi...</div>`;
+
+    const html = `
+        <div class="chat-message sender" data-pending-id="${pendingId}">
+            <div class="message-content" style="opacity:0.8;">
+                ${content}
+            </div>
+        </div>`;
+
+    $('#chatMessageContainer').append(html);
+    scrollToBottom();
+}
+
+function replacePendingMessage(pendingId, text, realImageUrl, createdAt) {
+    const $pendingMsg = $(`[data-pending-id="${pendingId}"]`);
+    if ($pendingMsg.length === 0) return;
+
+    const timeStr = createdAt ?
+        new Date(createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) :
+        new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+
+    let content = '';
+    if (text) content += `<p>${text.replace(/\n/g, '<br>')}</p>`;
+    if (realImageUrl) {
+        content += `<img src="${realImageUrl}" class="chat-image" onclick="window.open(this.src, '_blank')">`;
+    }
+    content += `<div class="timestamp">${timeStr}</div>`;
+
+    $pendingMsg.find('.message-content')
+        .html(content)
+        .css('opacity', '1');
+
+    $pendingMsg.removeAttr('data-pending-id');
+
+    if (realImageUrl) {
+        const $img = $pendingMsg.find('img.chat-image');
+        $img.one('load', function() {
+            scrollToBottom();
+        }).each(function() {
+            if (this.complete) $(this).trigger('load');
+        });
+    }
+}
+
+function removePendingMessage(pendingId) {
+    $(`[data-pending-id="${pendingId}"]`).fadeOut(300, function() {
+        $(this).remove();
+    });
+}
 
             function loadMessages(userId) {
                 $.get('{{ route('admin.fetchMessages') }}', {
