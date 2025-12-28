@@ -141,12 +141,22 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
                                         <label for="description" class="form-label">Mô Tả</label>
                                         <textarea class="form-control bg-light-subtle" id="description" rows="7"
                                             placeholder="Mô tả sản phẩm..."name="description">{{ old('description', $product->description) }}</textarea>
+                                    </div>
+                                </div>
+                            </div> --}}
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Mô Tả</label>
+                                        <textarea class="form-control bg-light-subtle" id="description" rows="15"
+                                            placeholder="Sử dụng Markdown: ** để in đậm, ## cho tiêu đề, - cho danh sách" name="description">{{ old('description', $product->description) }}</textarea>
+                                        <small class="text-muted">Hỗ trợ Markdown format</small>
                                     </div>
                                 </div>
                             </div>
@@ -171,60 +181,58 @@
     </div>
 @endsection
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const token = '{{ csrf_token() }}';
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = '{{ csrf_token() }}';
 
-        document.querySelectorAll('.btn-delete-album').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                const url = this.dataset.url;
-                const id = this.dataset.id;
+            document.querySelectorAll('.btn-delete-album').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const url = this.dataset.url;
+                    const id = this.dataset.id;
 
-                if (!confirm('Bạn chắc chắn muốn xoá ảnh này?')) {
-                    return;
-                }
-
-                fetch(url, {
-                    method: 'POST', // vì mình spoof DELETE bằng _method
-                    headers: {
-                        'X-CSRF-TOKEN': token,
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({
-                        '_method': 'DELETE'
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Delete response:', data);
-                    if (data.status === 'success') {
-                        const el = document.getElementById('album-' + id);
-                        if (el) el.remove();
-                    } else {
-                        alert(data.message || 'Xoá ảnh thất bại.');
+                    if (!confirm('Bạn chắc chắn muốn xoá ảnh này?')) {
+                        return;
                     }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Có lỗi xảy ra khi xoá ảnh.');
+
+                    fetch(url, {
+                            method: 'POST', // vì mình spoof DELETE bằng _method
+                            headers: {
+                                'X-CSRF-TOKEN': token,
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({
+                                '_method': 'DELETE'
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Delete response:', data);
+                            if (data.status === 'success') {
+                                const el = document.getElementById('album-' + id);
+                                if (el) el.remove();
+                            } else {
+                                alert(data.message || 'Xoá ảnh thất bại.');
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Có lỗi xảy ra khi xoá ảnh.');
+                        });
                 });
             });
         });
-    });
-</script>
-<script>
-    Dropzone.autoDiscover = false;
+    </script>
+    <script>
+        Dropzone.autoDiscover = false;
 
-new Dropzone(".custom-dropzone", {
-    url: "#", // tạm, vì bạn đang dùng submit form Laravel
-    autoProcessQueue: false,
-    uploadMultiple: true,
-    addRemoveLinks: true,
-    parallelUploads: 10,
-});
-
-</script>
+        new Dropzone(".custom-dropzone", {
+            url: "#", // tạm, vì bạn đang dùng submit form Laravel
+            autoProcessQueue: false,
+            uploadMultiple: true,
+            addRemoveLinks: true,
+            parallelUploads: 10,
+        });
+    </script>
 @endsection
-

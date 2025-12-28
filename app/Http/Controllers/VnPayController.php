@@ -145,7 +145,6 @@ class VNPayController extends Controller
             ]);
 
             return response()->json(['RspCode' => '00', 'Message' => 'Payment Failed']);
-
         } catch (\Exception $e) {
             Log::error("VNPay IPN Exception: " . $e->getMessage());
             return response()->json(['RspCode' => '99', 'Message' => 'System error']);

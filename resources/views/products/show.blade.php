@@ -1,6 +1,5 @@
 @extends('master')
 @section('content')
-
     <style>
         /* Item mặc định */
         .variable-item.color-variable-item {
@@ -37,9 +36,9 @@
                 @include('layouts.header')
                 <div id="site-content" class="site-content-wrapper">
                     <div class="woocommerce-notices-wrapper">
-                        @if (session('cart_success'))
+                        @if (session('success'))
                             @php
-                                $cartSuccess = session('cart_success');
+                                $cartSuccess = session('success');
                                 $addedName = $cartSuccess['product_name'] ?? ($product->name ?? 'Sản phẩm');
                             @endphp
                             <div class="woocommerce-message" role="alert" tabindex="-1">
@@ -109,7 +108,6 @@
                                                             data-columns="{{ min(6, max($images ?? [], 6)) ?? null }}"
                                                             style="opacity: 0; transition: opacity .25s ease-in-out;">
                                                             <div class="woocommerce-product-gallery__wrapper">
-
                                                                 @foreach ($images as $index => $img)
                                                                     @php
                                                                         $imgUrl = asset('storage/' . $img);
@@ -582,7 +580,15 @@
                                                                 data-id="5faa12c" data-element_type="widget"
                                                                 data-widget_type="text-editor.default">
                                                                 <div class="elementor-widget-container">
-                                                                    <p>{{ $product->description }}</p>
+                                                                    @php
+                                                                        $parsedown = new \Parsedown();
+                                                                    @endphp
+
+                                                                    <div class="product-description">
+                                                                        {!! $parsedown->text($product->description) !!}
+                                                                    </div>
+
+                                                                    {{-- <p>{{ $product->description }}</p> --}}
                                                                     {{-- <p>In WooCommerce, you can create and manage
                                                                             product descriptions through the
                                                                             WordPress dashboard. Each product has
@@ -1013,7 +1019,10 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+
                                                                     </div>
+
+
                                                                 </li>
                                                             @endforeach
 
@@ -1511,13 +1520,13 @@
                             });
                         }
                     </script>
-                    @if (session('cart_limit_error'))
+                    @if (session('error'))
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
                                 Swal.fire({
                                     icon: 'warning',
                                     title: 'Giới hạn mua hàng',
-                                    text: @json(session('cart_limit_error')),
+                                    text: @json(session('error')),
                                     confirmButtonText: 'OK',
                                     customClass: {
                                         popup: 'custom-variant-alert'
@@ -1529,7 +1538,9 @@
                             });
                         </script>
                     @endif
+
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
                     @include('layouts.js')
+
                 @endsection
