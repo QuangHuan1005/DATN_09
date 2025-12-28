@@ -511,6 +511,7 @@
         const DEFAULT_AVATAR =
             'https://img.freepik.com/vector-cao-cap/vector-khuon-mat-nguoi-dan-ong_1072857-7641.jpg?semt=ais_hybrid&w=740&q=80';
         const CURRENT_USER_ID = {{ Auth::id() }};
+        let pendingMessageId = 0;
 
         $(document).ready(function() {
             const imageInput = document.getElementById('imageInput');
@@ -545,55 +546,59 @@
                 markConversationAsRead(id);
             });
 
-            $('#messageForm').on('submit', function(e) {
-                e.preventDefault();
+         $('#messageForm').on('submit', function(e) {
+    e.preventDefault();
 
-                const message = emojioneArea[0].emojioneArea.getText().trim();
-                const receiverId = $('#receiver_id').val();
-                const file = imageInput.files[0];
+    const message = emojioneArea[0].emojioneArea.getText().trim();
+    const receiverId = $('#receiver_id').val();
+    const file = imageInput.files[0];
 
-                if (!message && !file) {
-                    toastr.warning('Vui lòng nhập tin nhắn hoặc chọn ảnh');
-                    return;
-                }
+    if (!message && !file) {
+        toastr.warning('Vui lòng nhập tin nhắn hoặc chọn ảnh');
+        return;
+    }
 
-                const formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}');
-                formData.append('receiver_id', receiverId);
-                if (message) formData.append('message', message);
-                if (file) formData.append('image', file);
+    pendingMessageId++;
+    const currentPendingId = 'pending-' + pendingMessageId;
 
-                $.ajax({
-                    url: '{{ route('send.Messageofsellertoadmin') }}',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(res) {
-                        if (res.success) {
-                            emojioneArea[0].emojioneArea.setText('');
-                            imageInput.value = "";
-                            previewBox.style.display = "none";
+    appendPendingMessage(message, file ? URL.createObjectURL(file) : null, currentPendingId);
 
-                            appendMessageWithImage(
-                                message || '',
-                                res.data?.image,
-                                true,
-                                'Bạn',
-                                res.sender_image ? '{{ asset('storage') }}/' + res
-                                .sender_image : DEFAULT_AVATAR,
-                                res.data?.created_at || new Date()
-                            );
-                            scrollToBottom();
-                        } else {
-                            toastr.error(res.message || 'Gửi thất bại');
-                        }
-                    },
-                    error: function() {
-                        toastr.error('Lỗi kết nối');
-                    }
-                });
-            });
+    emojioneArea[0].emojioneArea.setText('');
+    imageInput.value = "";
+    previewBox.style.display = "none";
+
+    const formData = new FormData();
+    formData.append('_token', '{{ csrf_token() }}');
+    formData.append('receiver_id', receiverId);
+    if (message) formData.append('message', message);
+    if (file) formData.append('image', file);
+
+    $.ajax({
+        url: '{{ route('send.Messageofsellertoadmin') }}',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            if (res.success) {
+                replacePendingMessage(
+                    currentPendingId,
+                    message || '',
+                    res.data?.image || null,
+                    res.data?.created_at || new Date()
+                );
+                scrollToBottom();
+            } else {
+                removePendingMessage(currentPendingId);
+                toastr.error(res.message || 'Gửi thất bại');
+            }
+        },
+        error: function() {
+            removePendingMessage(currentPendingId);
+            toastr.error('Lỗi kết nối, tin nhắn không gửi được');
+        }
+    });
+});
 
             function appendMessageWithImage(text, imageUrl, isSender, displayName, avatar, time = null) {
                 const timestamp = time ? new Date(time).toLocaleTimeString('vi-VN', {
@@ -797,6 +802,57 @@
             channel.bind('message-seen', function(data) {
                 updateUnreadBadge(data.senderId, 0);
             });
+
+function appendPendingMessage(text, previewImageUrl, pendingId) {
+    let content = '';
+    if (text) content += `<p>${text.replace(/\n/g, '<br>')}</p>`;
+    if (previewImageUrl) {
+        content += `<img src="${previewImageUrl}" class="chat-image" onclick="window.open(this.src, '_blank')">`;
+    }
+    content += `<div class="timestamp" style="font-style:italic; opacity:0.7;">Đang gửi...</div>`;
+
+    const html = `
+        <div class="chat-message sender" data-pending-id="${pendingId}">
+            <div class="message-content" style="opacity:0.8;">
+                ${content}
+            </div>
+        </div>`;
+
+    $('#chatMessageContainer').append(html);
+    scrollToBottom();
+}
+
+function replacePendingMessage(pendingId, text, realImageUrl, createdAt) {
+    const $pendingMsg = $(`[data-pending-id="${pendingId}"]`);
+    if ($pendingMsg.length === 0) return;
+
+    const timestamp = createdAt ? new Date(createdAt).toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit'
+    }) : new Date().toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    let content = '';
+    if (text) content += `<p>${text.replace(/\n/g, '<br>')}</p>`;
+    if (realImageUrl) {
+        content += `<img src="${realImageUrl}" class="chat-image" onclick="window.open(this.src, '_blank')">`;
+    }
+    content += `<div class="timestamp">${timestamp}</div>`;
+
+    $pendingMsg.find('.message-content')
+        .html(content)
+        .css('opacity', '1');
+
+    $pendingMsg.removeAttr('data-pending-id');
+}
+
+function removePendingMessage(pendingId) {
+    $(`[data-pending-id="${pendingId}"]`).fadeOut(300, function() {
+        $(this).remove();
+    });
+}
         });
     </script>
 @endsection

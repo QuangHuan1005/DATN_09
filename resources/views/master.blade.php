@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="vi-VN" prefix="og: http://ogp.me/ns#" class="no-js">
-
-
-
-<!-- Mirrored from mixtas.novaworks.net/home-v3/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Sep 2025 12:52:17 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
 <head>
     <meta charset="UTF-8">
@@ -25,7 +20,6 @@
             contain-intrinsic-size: 3000px 1500px
         }
     </style> --}}
-    <!-- Novaworks Meta Tags -->
     <meta property="description"
         content="Urban Muse City Chic with a Feminine Twist Shop now Travel bags Shop now Urban Muse Classic Beauties for Modern Women Shop now You are innew arrivalsbest sellertrending Add to wishlist Browse wishlist Add to cart Hoodies Dime Classic Remastered Hoodie, black &#036;140.00 Add to wishlist Browse wishlist Select options Men Dime Sunny Tee, forest green &#036;55.00 Add to wishlist…" />
     <meta property="og:locale" content="en_US" />
@@ -44,13 +38,11 @@
     <meta name="twitter:title" content="Home v3 - Mixtas" />
     <meta name="twitter:image" content="https://mixtas.b-cdn.net/wp-content/themes/mixtas/assets/images/logo.svg" />
 
-    <!-- End Novaworks Meta Tags -->
     <style>
         .woocommerce-variation-add-to-cart-disabled {
             opacity: .5;
             pointer-events: none;
         }
-        
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     @include('layouts.css')
@@ -58,7 +50,6 @@
 </head>
 
 @yield('content')
-<!-- .kitify-site-wrapper -->
 @include('layouts.js')
 
 @yield('scripts')
@@ -68,9 +59,4 @@
 
 </body>
 
-<!-- Mirrored from mixtas.novaworks.net/home-v3/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Sep 2025 12:52:44 GMT -->
-
 </html>
-
-
-<!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 06:58:30 -->
