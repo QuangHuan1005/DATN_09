@@ -50,25 +50,47 @@ class AccountController extends Controller
     }
 
     // Cập nhật thông tin hồ sơ
+   // Cập nhật thông tin hồ sơ & Địa chỉ Checkout
     public function update(Request $request)
     {
         $user = Auth::user();
+
+        // TRƯỜNG HỢP 1: Cập nhật nhanh address_id từ trang Checkout
+        if ($request->has('address_id')) {
+            try {
+                // Kiểm tra xem địa chỉ có thuộc về user này không để bảo mật
+                $exists = $user->addresses()->where('id', $request->address_id)->exists();
+                
+                if (!$exists && $request->address_id != 0) {
+                    return response()->json(['success' => false, 'message' => 'Địa chỉ không hợp lệ.'], 403);
+                }
+
+                // Lưu ID địa chỉ vào session để CheckoutController nhận diện
+                session(['checkout_address_id' => $request->address_id]);
+                
+                // (Tùy chọn) Lưu vào database nếu bạn có cột address_id trong bảng users
+                // $user->update(['address_id' => $request->address_id]);
+
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'Đã thay đổi địa chỉ giao hàng.'
+                ]);
+            } catch (\Exception $e) {
+                return response()->json(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()], 500);
+            }
+        }
+
+        // TRƯỜNG HỢP 2: Cập nhật hồ sơ bình thường (Code cũ của bạn)
         $request->validate([
             'username' => [
-                'required',
-                'string',
-                'max:50',
-                // Đảm bảo username là duy nhất, trừ chính user hiện tại, và không bị xóa mềm
+                'required', 'string', 'max:50',
                 Rule::unique('users', 'username')->ignore($user->id)->whereNull('deleted_at'),
-                'regex:/^[a-zA-Z0-9_.-]+$/', // chỉ chữ/số/gạch dưới/gạch nối/dấu chấm
+                'regex:/^[a-zA-Z0-9_.-]+$/',
             ],
-            'name'      => ['required', 'string', 'max:255'],
-            'phone'     => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\-\s()]*$/'],
-            'email'     => [
-                'required',
-                'email',
-                'max:255',
-                // Đảm bảo email là duy nhất, trừ chính user hiện tại
+            'name'  => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\-\s()]*$/'],
+            'email' => [
+                'required', 'email', 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
         ], [
@@ -76,16 +98,13 @@ class AccountController extends Controller
             'phone.regex'    => 'Số điện thoại chỉ chứa 0-9, +, -, khoảng trắng, ().',
         ]);
         
-        $data = $request->all();
+        $data = $request->only(['username', 'name', 'phone', 'email']);
         
         if ($request->hasFile('image')) {
             if ($user->image) {
-                // Xóa ảnh đại diện cũ (nếu có)
                 Storage::delete('public/' . $user->image);
             }
-            // Lưu ảnh mới
-            $imagePath = $request->file('image')->store('avatars', 'public');
-            $data['image'] = $imagePath;
+            $data['image'] = $request->file('image')->store('avatars', 'public');
         }
         
         $user->update($data);

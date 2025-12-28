@@ -135,5 +135,8 @@ class User extends Authenticatable
 {
     return $this->hasMany(Order::class, 'staff_id');
 }
-
+public function vouchers()
+{
+    return $this->hasMany(UserVoucher::class);
+}
 }
