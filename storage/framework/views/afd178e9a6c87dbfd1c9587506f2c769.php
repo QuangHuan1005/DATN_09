@@ -65,6 +65,7 @@
                         </div>
                     </div>
 
+
                     <div class="checkout-products mt-4">
                         <h3 class="checkout-title"><i class="fa fa-shopping-basket me-2 text-success"></i>2. Thông tin sản phẩm</h3>
                         <div class="block-border shadow-sm">
@@ -86,6 +87,7 @@
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
+
 
                     <div class="checkout-payment mt-4">
                         <h3 class="checkout-title"><i class="fa fa-credit-card me-2 text-primary"></i>3. Phương thức thanh toán</h3>
@@ -396,4 +398,5 @@
     }
 </script>
 <?php $__env->stopPush(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN09\resources\views/checkout/index.blade.php ENDPATH**/ ?>
