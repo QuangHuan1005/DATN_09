@@ -226,62 +226,99 @@
                                 </div>
                             </div>
                             
-                            <div class="cart-summary__voucher-form">
-                                <div class="cart-summary__voucher-form__title">
-                                    <h4 class="active">Mã phiếu giảm giá</h4>
-                                    <span> </span>
-                                    <h4 data-toggle="modal" data-target="#myVoucherWallet">Mã của tôi</h4>
-                                    <div class="modal fade voucher-wallet" id="myVoucherWallet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title" id="exampleModalLabel">Danh sách mã Voucher</h4>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body box-voucher-wallet">
-                                                    <p>Rất tiếc, bạn không còn mã giảm giá nào !</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="" id="p_coupon" style="padding-top: 5px; display: none; text-align: center"></p>
-                                <div class="form-group">
-                                    <div class="d-flex gap-2 align-items-center" style="position: relative;">
-                                        <div style="position: relative; flex: 1;">
-                                            <input class="form-control" type="text" placeholder="Mã giảm giá" name="coupon_code_text" id="coupon_code_text" value="{{ $appliedVoucher->voucher_code ?? '' }}" readonly style="background-color: #f5f5f5; cursor: pointer;" autocomplete="off" />
-                                            <div id="voucherDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-top: none; max-height: 300px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                                                <!-- Danh sách voucher sẽ được load ở đây -->
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn btn--large" id="but_coupon_code" style="display: {{ $appliedVoucher ? 'inline-block' : 'none' }};">Áp dụng</button>
-                                        <button type="button" class="btn btn--large btn-outline-danger" id="but_coupon_delete" style="display: {{ $appliedVoucher ? 'inline-block' : 'none' }};">Bỏ Mã</button>
-                                    </div>
-                                </div>
-                                @if($appliedVoucher)
-                                <div id="appliedVoucherInfo" style="padding: 10px; background: #e8f5e9; border-radius: 4px; margin-top: 10px;">
-                                    <strong>Đã áp dụng: {{ $appliedVoucher->voucher_code }}</strong>
-                                    @if(stripos($appliedVoucher->voucher_code, 'FREESHIP') !== false || stripos($appliedVoucher->description ?? '', 'Miễn phí vận chuyển') !== false)
-                                        <span> - Miễn phí vận chuyển</span>
-                                    @elseif($appliedVoucher->discount_type === 'percent')
-                                        <span> - Giảm {{ $appliedVoucher->discount_value }}%</span>
-                                    @elseif($appliedVoucher->discount_type === 'fixed')
-                                        <span> - Giảm {{ number_format($appliedVoucher->discount_value) }}đ</span>
-                                    @endif
-                                </div>
-                                @endif
-                            </div>
-                            
-                            <div class="cart-summary__button">
-                                <button type="submit" id="but-checkout-continue-step2" name="btn_continue_step2" class="btn btn--large">
-                                    Hoàn thành
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                           <div class="cart-summary__voucher-form p-3 border rounded bg-light">
+    <div class="cart-summary__voucher-form__title d-flex justify-content-between align-items-center mb-2">
+        <h4 class="active mb-0" style="font-size: 1.1rem; font-weight: 600;">Mã phiếu giảm giá</h4>
+        <h4 style="cursor: pointer; color: #ff4747; font-size: 0.9rem; margin-bottom: 0;" 
+            data-bs-toggle="modal" 
+            data-bs-target="#myVoucherWallet">
+            <i class="fa fa-ticket"></i> Mã của tôi
+        </h4>
+    </div>
+
+    <p class="small" id="p_coupon" style="display: none; text-align: center; margin-bottom: 10px;"></p>
+
+   <div class="cart-summary__voucher-form">
+    <div class="form-group mb-0">
+        <div class="d-flex align-items-center justify-content-between" style="gap: 10px;">
+            
+            <div id="selected_voucher_display" 
+                 data-bs-toggle="modal" 
+                 data-bs-target="#myVoucherWallet"
+                 style="background-color: #fff; 
+                        border: 1px dashed #ff4747; 
+                        height: 45px; 
+                        cursor: pointer; 
+                        display: flex; 
+                        align-items: center; 
+                        padding: 0 12px; 
+                        border-radius: 6px;
+                        color: #ff4747;
+                        font-weight: 500;
+                        flex: 1; /* Tự co giãn */
+                        min-width: 0; /* Quan trọng để xử lý tràn chữ */
+                        position: relative;">
+                
+                <i class="fa fa-ticket" style="margin-right: 8px; flex-shrink: 0;"></i>
+                
+                <span id="voucher_status_text" style="
+                      white-space: nowrap; 
+                      overflow: hidden; 
+                      text-overflow: ellipsis; 
+                      display: block;
+                      font-size: 0.9rem;">
+                    {{ $appliedVoucher ? $appliedVoucher->voucher_code : 'Chọn mã giảm giá' }}
+                </span>
+            </div>
+
+            <div style="flex-shrink: 0;">
+               <button
+    type="button"
+    class="btn btn-dark"
+    id="but_coupon_code"
+>
+    Áp dụng
+</button>
+
+                <button type="button" class="btn btn-outline-danger" id="but_coupon_delete" 
+                        style="height: 45px; width: 85px; font-size: 0.9rem; font-weight: 600; display: {{ $appliedVoucher ? 'inline-block' : 'none' }}; border-radius: 6px;">
+                    Bỏ Mã
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="coupon_code_text" id="coupon_code_text" value="{{ $appliedVoucher->voucher_code ?? '' }}">
+
+    <div id="appliedVoucherInfoWrapper">
+        @if($appliedVoucher)
+        <div id="appliedVoucherInfo" class="mt-3 p-2 d-flex align-items-center" 
+             style="background: #f0fff4; border: 1px solid #28a745; border-radius: 6px; border-left-width: 4px;">
+            <div class="me-2 text-success" style="margin-right: 10px;">
+                <i class="fa fa-check-circle fa-lg"></i>
+            </div>
+            <div style="line-height: 1.3;">
+                <p class="mb-0 fw-bold text-success" style="font-size: 0.85rem;">Mã: {{ $appliedVoucher->voucher_code }}</p>
+                <small class="text-muted" style="font-size: 0.75rem;">
+                    @if(stripos($appliedVoucher->voucher_code, 'FREESHIP') !== false)
+                        Miễn phí vận chuyển cho đơn hàng này
+                    @else
+                        Ưu đãi: Giảm {{ $appliedVoucher->discount_type === 'percent' ? $appliedVoucher->discount_value.'%' : number_format($appliedVoucher->discount_value).'đ' }}
+                    @endif
+                </small>
+            </div>
+        </div>
+        @endif
+    </div>
+    
+    <div class="cart-summary__button mt-3">
+        <button type="submit" id="but-checkout-continue-step2" name="btn_continue_step2" 
+                class="btn btn-danger w-100 fw-bold" 
+                style="height: 50px; font-size: 1rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+            HOÀN THÀNH THANH TOÁN
+        </button>
+    </div>
+</div>
                 <div class="check-otp-order"></div>
             </form>
 
@@ -3089,6 +3126,62 @@ document.getElementById('toggleCartBtn').addEventListener('click', function() {
         }
     }
 })();
+
+$(document).ready(function() {
+    // Xử lý click cho nút "Mã của tôi"
+    $('[data-target="#myVoucherWallet"], [data-bs-target="#myVoucherWallet"]').on('click', function(e) {
+        e.preventDefault();
+        
+        // Cách 1: Thử với Bootstrap 5 (nếu dùng BS5)
+        var myModalEl = document.getElementById('myVoucherWallet');
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            var modal = bootstrap.Modal.getOrCreateInstance(myModalEl);
+            modal.show();
+        } 
+        // Cách 2: Thử với jQuery (nếu dùng BS4)
+        else if (typeof $.fn.modal !== 'undefined') {
+            $('#myVoucherWallet').modal('show');
+        } else {
+            console.error('Không tìm thấy thư viện Bootstrap JS');
+        }
+    });
+});
+
+// Hàm để khi chọn voucher trong modal thì điền vào input
+function selectVoucher(code) {
+    // Điền mã vào input
+    $('#coupon_code_text').val(code);
+
+    // Hiện nút áp dụng / bỏ mã
+    $('#but_coupon_code').show();
+    $('#but_coupon_delete').show();
+
+    // Đóng modal
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        const modalEl = document.getElementById('myVoucherWallet');
+        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modal.hide();
+    } else {
+        $('#myVoucherWallet').modal('hide');
+    }
+}
+function fillVoucherCode(code) {
+    // 1. Điền mã vào input
+    $('#coupon_code_text').val(code);
+
+    // 2. Hiện nút Áp dụng
+    $('#but_coupon_code').show();
+
+    // 3. Đóng modal
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        const modal = bootstrap.Modal.getInstance(
+            document.getElementById('myVoucherWallet')
+        );
+        modal?.hide();
+    } else {
+        $('#myVoucherWallet').modal('hide');
+    }
+}
 </script>
 
 <style>
@@ -3179,4 +3272,65 @@ textarea.is-invalid {
     }
 }
 </style>
+<div class="modal fade voucher-wallet" id="myVoucherWallet" tabindex="-1" role="dialog" aria-labelledby="voucherModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content" style="border-radius: 12px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            
+            <div class="modal-header" style="border-bottom: 1px solid #f1f1f1; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;">
+                <h5 class="modal-title fw-bold" id="voucherModalLabel" style="font-size: 1.1rem; margin: 0; color: #333;">Kho Voucher của tôi</h5>
+                
+                <button type="button" 
+                        style="background: none; border: none; padding: 0; margin: 0; cursor: pointer; line-height: 1; outline: none; transition: 0.2s;" 
+                        data-dismiss="modal" 
+                        data-bs-dismiss="modal" 
+                        aria-label="Close"
+                        onmouseover="this.style.opacity='1'" 
+                        onmouseout="this.style.opacity='0.5'">
+                    <span aria-hidden="true" style="font-size: 2rem; color: #000; font-weight: 300; opacity: 0.5;">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body box-voucher-wallet" style="background-color: #f8f9fa; max-height: 420px; overflow-y: auto; padding: 15px;">
+                @if(isset($vouchers) && $vouchers->count() > 0)
+                    <div class="voucher-list">
+                        @foreach($vouchers as $voucher)
+                            <div class="voucher-item d-flex mb-3 shadow-sm" style="background: #fff; border-radius: 10px; min-height: 100px; border: 1px solid #eee; overflow: hidden;">
+                                <div class="d-flex flex-column align-items-center justify-content-center" style="width: 85px; background: #ff4747; color: #fff; flex-shrink: 0; position: relative;">
+                                    <i class="fa fa-ticket fa-2x"></i>
+                                    <small class="fw-bold mt-1" style="font-size: 0.6rem; text-transform: uppercase;">Giảm giá</small>
+                                    
+                                    <div style="position: absolute; right: -5px; top: 0; bottom: 0; width: 10px; background-image: radial-gradient(circle at 10px 10px, transparent 0, transparent 5px, #fff 5px, #fff 10px); background-size: 10px 20px;"></div>
+                                </div>
+                                
+                                <div class="p-3 flex-grow-1" style="min-width: 0;">
+                                    <h6 class="fw-bold mb-1 text-dark text-truncate" style="font-size: 0.95rem;">{{ $voucher->voucher_code }}</h6>
+                                    <p class="mb-1 text-danger fw-bold" style="font-size: 0.9rem;">
+                                        Giảm {{ $voucher->discount_type == 'percent' ? $voucher->discount_value . '%' : number_format($voucher->discount_value) . 'đ' }}
+                                    </p>
+                                    <div class="text-muted" style="font-size: 0.7rem;">
+                                        Đơn tối thiểu: {{ number_format($voucher->min_order_value) }}đ
+                                    </div>
+                                </div>
+
+                                <button
+    type="button"
+    class="btn btn-danger btn-sm rounded-pill px-3 fw-bold"
+    onclick="fillVoucherCode('{{ $voucher->voucher_code }}')"
+    style="font-size: 0.75rem; white-space: nowrap;">
+    Dùng
+</button>
+
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-5">
+                        <img src="https://cdn-icons-png.flaticon.com/512/6598/6598519.png" width="60" style="opacity: 0.2;" alt="Empty">
+                        <p class="text-muted mt-2 small">Bạn chưa có mã giảm giá nào</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
