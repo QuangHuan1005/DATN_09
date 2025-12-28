@@ -67,26 +67,26 @@
             </li>
 
             <li class="nav-item">
-               <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}"
-                href="{{ route('admin.inventory.index') }}">
+                    href="{{ route('admin.inventory.index') }}">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Quản Lý Kho </span>
                 </a>
             </li>
-                <div class="collapse" id="sidebarInventory">
-                    <ul class="nav sub-navbar-nav">
+            <div class="collapse" id="sidebarInventory">
+                <ul class="nav sub-navbar-nav">
 
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="inventory-warehouse.html">Warehouse</a>
-                        </li>
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="inventory-received-orders.html">Received Orders</a>
-                        </li>
-                    </ul>
-                </div>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="inventory-warehouse.html">Warehouse</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="inventory-received-orders.html">Received Orders</a>
+                    </li>
+                </ul>
+            </div>
             </li>
 
             <li class="nav-item">
