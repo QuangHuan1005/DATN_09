@@ -112,9 +112,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/user-info/clear-address', [AccountController::class, 'clearAddress'])->name('checkout.user-info.clear-address');
 
         // Voucher
-        Route::get('/vouchers/get', [AccountController::class, 'getVouchers'])->name('checkout.vouchers.get');
-        Route::post('/voucher/apply', [AccountController::class, 'applyVoucher'])->name('checkout.voucher.apply');
-        Route::post('/voucher/remove', [AccountController::class, 'removeVoucher'])->name('checkout.voucher.remove');
+        Route::get('/vouchers/get', [CheckoutController::class, 'getVouchers'])->name('checkout.vouchers.get');
+        Route::post('/voucher/apply', [CheckoutController::class, 'applyVoucher'])->name('checkout.voucher.apply');
+        Route::post('/voucher/remove', [CheckoutController::class, 'removeVoucher'])->name('checkout.voucher.remove');
     });
 
 });
