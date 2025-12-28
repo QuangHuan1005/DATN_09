@@ -39,6 +39,9 @@ use Symfony\Component\HttpFoundation\Request;
 | FRONTEND ROUTES
 |--------------------------------------------------------------------------
 */
+use App\Http\Controllers\ChatbotController;
+
+Route::post('/chatbot/send', [ChatbotController::class, 'chat'])->name('chatbot.send');
 
 // 🏠 Trang chủ
 Route::get('/', [HomeController::class, 'index'])->name('home');
