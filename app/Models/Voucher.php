@@ -23,25 +23,38 @@ class Voucher extends Model
         'end_date',
         'status',
         'description',
+        'points_required', // 👈 QUAN TRỌNG
     ];
 
-    // Thuộc tính ảo để hiển thị trạng thái bằng chữ
+    /**
+     * Trạng thái hiển thị (chuẩn thực tế)
+     */
     public function getDisplayStatusAttribute()
     {
         $now = now();
-        $start = Carbon::parse($this->start_date);
-        $end = Carbon::parse($this->end_date);
-        $remaining = $this->quantity - $this->total_used;
 
-        if ($this->status == 0) return 'stopped'; // Dừng
-        if ($now->gt($end)) return 'expired';    // Hết hạn
-        if ($remaining <= 0) return 'out_of_stock'; // Hết mã
-        if ($now->lt($start)) return 'upcoming'; // Sắp chạy
-        
-        return 'active'; // Hoạt động
+        if ($this->status == 0) {
+            return 'stopped'; // Admin tắt
+        }
+
+        if ($this->start_date && $now->lt($this->start_date)) {
+            return 'upcoming'; // Chưa tới ngày
+        }
+
+        if ($this->end_date && $now->gt($this->end_date)) {
+            return 'expired'; // Hết hạn
+        }
+
+        if ($this->quantity <= 0) {
+            return 'out_of_stock'; // Hết voucher
+        }
+
+        return 'active';
     }
 
-    // Kiểm tra nhanh voucher có thực sự sử dụng được không (Dùng trong Controller)
+    /**
+     * Kiểm tra dùng được hay không
+     */
     public function canBeUsed()
     {
         return $this->display_status === 'active';
@@ -49,6 +62,11 @@ class Voucher extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'voucher_products', 'voucher_id', 'product_id');
+        return $this->belongsToMany(
+            Product::class,
+            'voucher_products',
+            'voucher_id',
+            'product_id'
+        );
     }
 }

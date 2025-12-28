@@ -31,7 +31,7 @@ use App\Http\Controllers\OrderReturnController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\VNPayController;
-use App\Http\Controllers\Staff\StaffController;
+use App\Http\Controllers\RewardController;
 use Symfony\Component\HttpFoundation\Request;
 
 /*
@@ -114,6 +114,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/user-info/update', [AccountController::class, 'update'])->name('checkout.user-info.update');
         Route::post('/user-info/clear-address', [AccountController::class, 'clearAddress'])->name('checkout.user-info.clear-address');
 
+
         // Voucher
         Route::get('/vouchers/get', [CheckoutController::class, 'getVouchers'])->name('checkout.vouchers.get');
         Route::post('/voucher/apply', [CheckoutController::class, 'applyVoucher'])->name('checkout.voucher.apply');
@@ -158,13 +159,36 @@ Route::post('orders/{order_id}/cancel', [OrderCancelRequestController::class, 's
 
 // 👤 Tài khoản cá nhân
 Route::middleware(['auth'])->group(function () {
-    Route::get('/account', [AccountController::class, 'index'])->name('account.dashboard');
-    Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders');
-    Route::get('/account/addresses', [AccountController::class, 'address'])->name('account.addresses');
-    Route::get('/account/profile', [AccountController::class, 'edit'])->name('account.profile');
-    Route::post('/account/update', [AccountController::class, 'update'])->name('account.update');
-    Route::get('/account/change-password', [AccountController::class, 'changePassword'])->name('account.password');
-    Route::post('/account/change-password', [AccountController::class, 'updatePassword'])->name('account.password.update');
+
+    Route::get('/account', [AccountController::class, 'index'])
+        ->name('account.dashboard');
+
+    Route::get('/account/orders', [AccountController::class, 'orders'])
+        ->name('account.orders');
+
+    Route::get('/account/addresses', [AccountController::class, 'address'])
+        ->name('account.addresses');
+
+    Route::get('/account/profile', [AccountController::class, 'edit'])
+        ->name('account.profile');
+
+    Route::post('/account/update', [AccountController::class, 'update'])
+        ->name('account.update');
+
+    Route::get('/account/change-password', [AccountController::class, 'changePassword'])
+        ->name('account.password');
+
+    Route::post('/account/change-password', [AccountController::class, 'updatePassword'])
+        ->name('account.password.update');
+
+    // 🎁 Điểm thưởng
+    Route::get('/account/reward-points', [RewardController::class, 'index'])
+        ->name('account.reward.points');
+
+    Route::post('/account/reward-points/redeem/{id}', [RewardController::class, 'redeem'])
+        ->name('account.reward.redeem');
+});
+
 
     // Địa chỉ
     Route::prefix('addresses')->group(function () {
@@ -182,7 +206,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
         Route::post('/check', [WishlistController::class, 'check'])->name('wishlist.check');
     });
-});
 
 /*
 |--------------------------------------------------------------------------
