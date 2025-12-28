@@ -6,7 +6,107 @@
 <link href="{{ asset('css/checkout.css') }}" rel="stylesheet">
 @endpush
 
+
 @section('content')
+<div id="site-content" class="site-content-wrapper">
+				<div class="nova-container">
+					<div class="grid-x">
+						<div class="cell small-12">
+							<div class="site-content">
+								<div class="page-header-content">
+									<nav class="woocommerce-breadcrumb"><a href="../index.html">Home</a><span
+											class="delimiter">/</span>Checkout</nav>
+									<h1 class="page-title">Checkout</h1>
+								</div>
+								<article id="post-10" class="post-10 page type-page status-publish hentry">
+									<div class="entry-content">
+										<div data-block-name="woocommerce/checkout"
+											class="wp-block-woocommerce-checkout alignwide wc-block-checkout is-loading">
+											<div data-block-name="woocommerce/checkout-fields-block"
+												class="wp-block-woocommerce-checkout-fields-block">
+												<div data-block-name="woocommerce/checkout-express-payment-block"
+													class="wp-block-woocommerce-checkout-express-payment-block"></div>
+
+												<div data-block-name="woocommerce/checkout-contact-information-block"
+													class="wp-block-woocommerce-checkout-contact-information-block">
+												</div>
+
+												<div data-block-name="woocommerce/checkout-shipping-method-block"
+													class="wp-block-woocommerce-checkout-shipping-method-block"></div>
+
+												<div data-block-name="woocommerce/checkout-pickup-options-block"
+													class="wp-block-woocommerce-checkout-pickup-options-block"></div>
+
+												<div data-block-name="woocommerce/checkout-shipping-address-block"
+													class="wp-block-woocommerce-checkout-shipping-address-block"></div>
+
+												<div data-block-name="woocommerce/checkout-billing-address-block"
+													class="wp-block-woocommerce-checkout-billing-address-block"></div>
+
+												<div data-block-name="woocommerce/checkout-shipping-methods-block"
+													class="wp-block-woocommerce-checkout-shipping-methods-block"></div>
+
+												<div data-block-name="woocommerce/checkout-payment-block"
+													class="wp-block-woocommerce-checkout-payment-block"></div>
+
+												<div data-block-name="woocommerce/checkout-additional-information-block"
+													class="wp-block-woocommerce-checkout-additional-information-block">
+												</div>
+
+
+
+												<div data-block-name="woocommerce/checkout-order-note-block"
+													class="wp-block-woocommerce-checkout-order-note-block"></div>
+
+												<div data-block-name="woocommerce/checkout-terms-block"
+													class="wp-block-woocommerce-checkout-terms-block"></div>
+
+												<div data-block-name="woocommerce/checkout-actions-block"
+													class="wp-block-woocommerce-checkout-actions-block"></div>
+											</div>
+
+											<div data-block-name="woocommerce/checkout-totals-block"
+												class="wp-block-woocommerce-checkout-totals-block">
+												<div data-block-name="woocommerce/checkout-order-summary-block"
+													class="wp-block-woocommerce-checkout-order-summary-block">
+													<div data-block-name="woocommerce/checkout-order-summary-cart-items-block"
+														class="wp-block-woocommerce-checkout-order-summary-cart-items-block">
+													</div>
+													<div data-block-name="woocommerce/checkout-order-summary-coupon-form-block"
+														class="wp-block-woocommerce-checkout-order-summary-coupon-form-block">
+													</div>
+													<div data-block-name="woocommerce/checkout-order-summary-totals-block"
+														class="wp-block-woocommerce-checkout-order-summary-totals-block">
+														<div data-block-name="woocommerce/checkout-order-summary-subtotal-block"
+															class="wp-block-woocommerce-checkout-order-summary-subtotal-block">
+														</div>
+														<div data-block-name="woocommerce/checkout-order-summary-discount-block"
+															class="wp-block-woocommerce-checkout-order-summary-discount-block">
+														</div>
+														<div data-block-name="woocommerce/checkout-order-summary-fee-block"
+															class="wp-block-woocommerce-checkout-order-summary-fee-block">
+														</div>
+														<div data-block-name="woocommerce/checkout-order-summary-shipping-block"
+															class="wp-block-woocommerce-checkout-order-summary-shipping-block">
+														</div>
+														<div data-block-name="woocommerce/checkout-order-summary-taxes-block"
+															class="wp-block-woocommerce-checkout-order-summary-taxes-block">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div><!-- .entry-content -->
+
+								</article><!-- #post-## -->
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+
+			</div>
 <main id="main" class="site-main">
     <div class="container">
         <div class="cart pt-40 checkout">
