@@ -181,6 +181,10 @@
                                     <li id="menu-item-84"
                                         class="menu-item menu-item-type-post_type menu-item-object-page"><a
                                             href="<?php echo e(route('contact.index')); ?>"><span>Liên hệ</span></a></li>
+
+                                    <li id="menu-item-84"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page"><a
+                                            href="<?php echo e(route('chat')); ?>"><span>Chat trực tuyến</span></a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -407,17 +411,17 @@
                     document.addEventListener('wishlistUpdated', function() {
                         updateWishlistCount();
                     });
-                }
+                    }
 
-                // Cập nhật khi trang load
-                document.addEventListener('DOMContentLoaded', function() {
-                    updateWishlistCount();
-                });
+                    // Cập nhật khi trang load
+                    document.addEventListener('DOMContentLoaded', function() {
+                        updateWishlistCount();
+                    });
 
-                // Cập nhật khi có thay đổi wishlist
-                document.addEventListener('wishlistUpdated', function() {
-                    updateWishlistCount();
-                });
+                    // Cập nhật khi có thay đổi wishlist
+                    document.addEventListener('wishlistUpdated', function() {
+                        updateWishlistCount();
+                    });
                 </script>
 
                 
@@ -455,7 +459,17 @@
                                                 fill="currentColor"></path>
                                         </svg></span>
                                     <div class="cart-text">
-                                        <div class="count-badge js_count_bag_item">0</div>
+                                        <?php
+                                            $cart = session('cart', []);
+                                            // Đếm số dòng trong giỏ (mỗi dòng là 1 biến thể / 1 “đơn hàng nhỏ”)
+                                            $cartItemCount = is_array($cart) ? count($cart) : 0;
+                                        ?>
+
+                                        <div class="count-badge js_count_bag_item">
+                                            <?php echo e($cartItemCount); ?>
+
+                                        </div>
+
                                     </div>
                                 </div>
                             </a>

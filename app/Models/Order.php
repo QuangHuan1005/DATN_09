@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Models;
+use App\Models\OrderDetail;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\OrderStatusLog;
+use App\Models\OrderCancelRequest; // <--- CẦN DÒNG NÀY ĐỂ SỬ DỤNG MODEL
 
 class Order extends Model
 {
@@ -29,7 +31,8 @@ class Order extends Model
         'grand_total',
         'customer_email',
         'payment_method_id',
-        'note'
+        'note',
+        'is_cancel_requested'
     ];
 
     /**
@@ -96,7 +99,16 @@ class Order extends Model
     {
         return $this->hasOne(Invoice::class, 'order_id');
     }
-
+    
+    // YÊU CẦU HỦY ĐƠN HÀNG (MỚI)
+    /**
+     * Quan hệ 1-1: Đơn hàng có một yêu cầu hủy (hoặc không có).
+     */
+    public function cancelRequest()
+{
+    // Lấy yêu cầu hủy mới nhất để hiển thị chính xác trạng thái hiện tại
+    return $this->hasOne(OrderCancelRequest::class, 'order_id')->latestOfMany(); 
+}
 
     /**
      * =====================
@@ -107,6 +119,8 @@ class Order extends Model
     // Có thể hủy đơn?
     public function getCancelableAttribute(): bool
     {
+        // Giả định: 1=Chờ xác nhận, 2=Xác nhận. 3=Đang giao hàng (không hủy được)
+        // 3=Đã hoàn tiền (không hủy được nữa)
         return in_array($this->order_status_id, [1, 2]) && $this->payment_status_id != 3;
     }
 

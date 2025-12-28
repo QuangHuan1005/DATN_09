@@ -44,6 +44,8 @@
                 </a>
             </li>
 
+
+
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo e(route('admin.products.index')); ?>" role="button" aria-expanded="false"
                     aria-controls="sidebarProducts">
@@ -96,6 +98,37 @@
                     <span class="nav-text"> Quản Lý Đơn Hàng </span>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo e(route('admin.returns.index')); ?>" role="button" aria-expanded="false"
+                    aria-controls="sidebarOrders">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:refresh-square-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Quản Lý hoàn hàng </span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+    <a class="nav-link d-flex align-items-center" href="<?php echo e(route('admin.order-cancellations.index')); ?>" role="button">
+        <span class="nav-icon">
+            <iconify-icon icon="solar:cart-cross-bold-duotone"></iconify-icon>
+        </span>
+        <span class="nav-text"> Quản lý hủy hàng </span>
+        
+        
+        <?php
+            $pendingCancelCount = \App\Models\OrderCancelRequest::where('status', 'pending')->count();
+        ?>
+        
+        <?php if($pendingCancelCount > 0): ?>
+            <span class="badge bg-danger rounded-pill ms-auto" style="font-size: 10px;">
+                <?php echo e($pendingCancelCount); ?>
+
+            </span>
+        <?php endif; ?>
+    </a>
+</li>
 
              <li class="nav-item">
                 <a class="nav-link" href="<?php echo e(route('admin.vouchers.index')); ?>" role="button" aria-expanded="false"
@@ -168,6 +201,14 @@
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo e(route('admin.chat')); ?>">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:chat-round-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Chat </span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#sidebarInvoice" role="button" aria-expanded="false"

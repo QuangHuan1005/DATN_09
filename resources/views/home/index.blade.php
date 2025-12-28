@@ -31,27 +31,26 @@
                                                             {{-- <img decoding="async"
 src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_01.jpg"
                                                                 alt="m5_banner_01" class="kitify-banner__img"> --}}
-                                                            <figcaption class="kitify-banner__content">
-                                                                <div class="kitify-banner__content-wrap">
-                                                                    <div class="kitify-banner__sub-title">Urban Muse</div>
-                                                                    <h2 class="kitify-banner__title">City Chic with a
-                                                                        Feminine Twist
-                                                                    </h2>
-                                                                    <div class="kitify-banner__button"><button
-                                                                            type="button" class="elementor-button"><span
-                                                                                class="elementor-button-text">Shop
-                                                                                now</span></button>
-                                                                    </div>
+                                                        <figcaption class="kitify-banner__content">
+                                                            <div class="kitify-banner__content-wrap">
+                                                                <div class="kitify-banner__sub-title">Urban Muse</div>
+                                                                <h2 class="kitify-banner__title">City Chic with a
+                                                                    Feminine Twist
+                                                                </h2>
+                                                                <div class="kitify-banner__button"><button
+                                                                        type="button" class="elementor-button"><span
+                                                                            class="elementor-button-text">Shop
+                                                                            now</span></button>
                                                                 </div>
-                                                            </figcaption>
-                                                        </a></figure>
-                                                </div>
+                                                            </div>
+                                                        </figcaption>
+                                                    </a></figure>
                                             </div>
                                         </div>
-                                        <!-- END REVOLUTION SLIDER -->
                                     </div>
-
+                                    <!-- END REVOLUTION SLIDER -->
                                 </div>
+
                             </div>
                         </div>
                         <div class="elementor-element elementor-element-0515f8d e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
@@ -407,10 +406,8 @@ data-id="0515f8d" data-element_type="container">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="elementor-element elementor-element-520bb32 custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-invisible kitify-has-entrance-animation elementor-widget kitify elementor-kitify-wooproducts"
-                                    data-id="520bb32" data-element_type="widget"
-                                    data-settings="{&quot;_animation&quot;:&quot;kitifyShortFadeInUp&quot;,&quot;_animation_delay&quot;:500}"
-                                    data-widget_type="kitify-wooproducts.default">
+                                <div class="elementor-element elementor-element-840db58 elementor-widget elementor-widget-heading"
+                                    data-id="840db58" data-element_type="widget" data-widget_type="heading.default">
                                     <div class="elementor-widget-container">
                                         <div class="woocommerce  kitify_wc_widget_520bb32_0">
                                             <div class="kitify-products">
@@ -738,8 +735,8 @@ data-slider_options="{&quot;slidesToScroll&quot;:{&quot;desktop&quot;:&quot;1&qu
                                                                         {{-- Badge giảm giá --}}
                                                                         <div class="product-item__badges">
                                                                             @if ($discountPercent)
-                                                                                <span
-                                                                                    class="onsale">{{ $discountPercent }}%</span>
+                                                                            <span
+                                                                                class="onsale">{{ $discountPercent }}%</span>
                                                                             @endif
                                                                         </div>
 
@@ -753,8 +750,7 @@ data-slider_options="{&quot;slidesToScroll&quot;:{&quot;desktop&quot;:&quot;1&qu
                                                                                 href="{{ route('products.show', ['id' => $item->id]) }}"></a>
 
                                                                             {{-- Các nút action (wishlist / quick view / add to cart...) --}}
-                                                                            <div
-                                                                                class="product-item__description--top-actions">
+                                                                            <div class="product-item__description--top-actions">
                                                                                 <a href="{{ route('products.show', ['id' => $item->id]) }}?add_to_wishlist={{ $item->id }}"
                                                                                     data-product-id="{{ $item->id }}"
                                                                                     data-product-type="variable"
@@ -823,14 +819,13 @@ id="woocommerce_loop_add_to_cart_link_describedby_{{ $item->id }}"
                                                                                 <div class="info-left">
                                                                                     {{-- Danh mục --}}
                                                                                     @if ($item->category)
-                                                                                        <div
-                                                                                            class="product-item__category">
-                                                                                            <a class="content-product-cat"
-                                                                                                href="{{ route('products.category', ['slug' => $item->category->slug]) }}"
-                                                                                                rel="tag">
-                                                                                                {{ $item->category->name }}
-                                                                                            </a>
-                                                                                        </div>
+                                                                                    <div class="product-item__category">
+                                                                                        <a class="content-product-cat"
+                                                                                            href="{{ route('products.category', ['slug' => $item->category->slug]) }}"
+                                                                                            rel="tag">
+                                                                                            {{ $item->category->name }}
+                                                                                        </a>
+                                                                                    </div>
                                                                                     @endif
 
                                                                                     {{-- Tên sản phẩm --}}
@@ -878,20 +873,34 @@ id="woocommerce_loop_add_to_cart_link_describedby_{{ $item->id }}"
                                                                                                     </span>
                                                                                                 </ins>
                                                                                             </span>
-                                                                                        @endif
+                                                                                        </ins>
+                                                                                    </span>
                                                                                     @else
-                                                                                        {{-- Không có biến thể nào (trường hợp hiếm / dữ liệu chưa nhập variant) --}}
-                                                                                        <span class="price">
-                                                                                            <ins aria-hidden="true">
-                                                                                                <span
-                                                                                                    class="woocommerce-Price-amount amount">
-                                                                                                    <bdi>
-                                                                                                        {{-- fallback 0₫ vì bảng products hiện không có cột price --}}
-                                                                                                        0₫
-                                                                                                    </bdi>
-                                                                                                </span>
-                                                                                            </ins>
-                                                                                        </span>
+                                                                                    {{-- Không khuyến mãi --}}
+                                                                                    <span class="price">
+                                                                                        <ins aria-hidden="true">
+                                                                                            <span
+                                                                                                class="woocommerce-Price-amount amount">
+                                                                                                <bdi>
+                                                                                                    {{ number_format($finalPrice ?? 0, 0, ',', '.') }}₫
+                                                                                                </bdi>
+                                                                                            </span>
+                                                                                        </ins>
+                                                                                    </span>
+                                                                                    @endif
+                                                                                    @else
+                                                                                    {{-- Không có biến thể nào (trường hợp hiếm / dữ liệu chưa nhập variant) --}}
+                                                                                    <span class="price">
+                                                                                        <ins aria-hidden="true">
+                                                                                            <span
+                                                                                                class="woocommerce-Price-amount amount">
+                                                                                                <bdi>
+                                                                                                    {{-- fallback 0₫ vì bảng products hiện không có cột price --}}
+                                                                                                    0₫
+                                                                                                </bdi>
+                                                                                            </span>
+                                                                                        </ins>
+                                                                                    </span>
                                                                                     @endif
                                                                                 </div>
                                                                             </div>
@@ -902,6 +911,8 @@ id="woocommerce_loop_add_to_cart_link_describedby_{{ $item->id }}"
                                                             @endforeach
                                                         </ul>
                                                     </div>
+                                                    @endforeach
+
                                                 </div>
                                                 <div class="kitify-carousel__prev-arrow-f97f325_0 kitify-arrow prev-arrow">
 <i aria-hidden="true" class="novaicon-arrow-left"></i>
@@ -1241,6 +1252,7 @@ stroke-linejoin="round"></path>
                                                 </div>
 
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1281,6 +1293,7 @@ d="M33.6677 7.11781L27.2392 4.54638C27.0857 4.48487 26.9144 4.48487 26.7609 4.54
                                                 </div>
 
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1327,6 +1340,7 @@ d="M33.6677 7.11781L27.2392 4.54638C27.0857 4.48487 26.9144 4.48487 26.7609 4.54
                                                 </div>
 
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1389,6 +1403,7 @@ stroke="black" stroke-width="1.5"
                                                 </div>
 
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>

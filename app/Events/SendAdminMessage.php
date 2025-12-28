@@ -60,7 +60,7 @@ class SendAdminMessage implements ShouldBroadcastNow
         return [
             'message' => $this->message->message,
             // Trong broadcastWith() của cả 2 event
-            'image' => $this->message->image ? Storage::url($this->message->image) : null,
+            'image' => $this->message->image ? asset('storage/' . $this->message->image) : null,
             'receiver_id' => $this->message->receiver_id,
             'sender_id' => $this->message->sender_id,
             'admin' => $adminData,

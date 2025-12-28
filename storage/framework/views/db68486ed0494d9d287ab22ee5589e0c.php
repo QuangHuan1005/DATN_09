@@ -174,7 +174,10 @@
                      </a>
 
                      <div class="dropdown-menu dropdown-menu-end">
-                         <h6 class="dropdown-header">Welcome Gaston!</h6>
+                        <?php if(auth()->guard()->check()): ?>
+    Xin chào, <strong><?php echo e(Str::afterLast(Auth::user()->name, ' ')); ?></strong> 👋
+<?php endif; ?>
+
                          <a class="dropdown-item" href="pages-profile.html">
                              <i class="bx bx-user-circle text-muted fs-18 align-middle me-1"></i><span
                                  class="align-middle">Profile</span>

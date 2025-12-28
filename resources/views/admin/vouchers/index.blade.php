@@ -91,12 +91,38 @@
                                 <td class="text-center">{{ \Carbon\Carbon::parse($item->end_date)->format('d-m H:i') }}</td>
 
                                 {{-- Trạng thái (TT) --}}
-                                <td class="text-center">
-                                    <span class="badge px-2 py-1 fs-13 
-                                        {{ $item->status == 1 ? 'bg-success text-light' : 'bg-danger text-light' }}">
-                                        {{ $item->status == 1 ? 'Hoạt động' : 'Ngừng' }}
-                                    </span>
-                                </td>
+                               <td class="text-center">
+    @switch($item->display_status)
+        @case('stopped')
+            <span class="badge bg-danger-subtle text-danger px-2 py-1 border border-danger-subtle">
+                <i class="bi bi-pause-circle-fill me-1"></i> Dừng
+            </span>
+            @break
+
+        @case('expired')
+            <span class="badge bg-secondary-subtle text-secondary px-2 py-1 border border-secondary-subtle">
+                <i class="bi bi-calendar-x-fill me-1"></i> Hết hạn
+            </span>
+            @break
+
+        @case('out_of_stock')
+            <span class="badge bg-warning-subtle text-warning px-2 py-1 border border-warning-subtle">
+                <i class="bi bi-exclamation-octagon-fill me-1"></i> Hết mã
+            </span>
+            @break
+
+        @case('upcoming')
+            <span class="badge bg-info-subtle text-info px-2 py-1 border border-info-subtle">
+                <i class="bi bi-clock-history me-1"></i> Sắp chạy
+            </span>
+            @break
+
+        @default
+            <span class="badge bg-success-subtle text-success px-2 py-1 border border-success-subtle">
+                <i class="bi bi-check-circle-fill me-1"></i> Hoạt động
+            </span>
+    @endswitch
+</td>
                                 
                                 {{-- Sản phẩm áp dụng --}}
                                 <td class="text-center">
