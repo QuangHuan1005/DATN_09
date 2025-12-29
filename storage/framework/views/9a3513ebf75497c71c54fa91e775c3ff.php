@@ -1,4 +1,31 @@
 <?php $__env->startSection('content'); ?>
+    <style>
+        /* Item mặc định */
+        .variable-item.color-variable-item {
+            border: 1px solid #e2e2e2;
+            border-radius: 1px;
+            padding: 3px;
+            transition: all 0.2s ease;
+        }
+
+        /* Hover */
+        .variable-item.color-variable-item:hover {
+            border-color: #c1995a;
+            /* gold theo brand */
+        }
+
+        /* Khi được chọn */
+        .variable-item.color-variable-item.active,
+        .variable-item.color-variable-item[aria-checked="true"] {
+            border-color: #c1995a;
+            box-shadow: 0 0 0 2px rgba(193, 153, 90, 0.3);
+        }
+
+        /* Viền bo cho ô màu */
+        .variable-item-span-color {
+            border-radius: 4px;
+        }
+    </style>
 
     <body
         class="wp-singular product-template-default single single-product postid-1558 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-383 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
@@ -8,9 +35,9 @@
                 <?php echo $__env->make('layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                 <div id="site-content" class="site-content-wrapper">
                     <div class="woocommerce-notices-wrapper">
-                        <?php if(session('cart_success')): ?>
+                        <?php if(session('success')): ?>
                             <?php
-                                $cartSuccess = session('cart_success');
+                                $cartSuccess = session('success');
                                 $addedName = $cartSuccess['product_name'] ?? ($product->name ?? 'Sản phẩm');
                             ?>
                             <div class="woocommerce-message" role="alert" tabindex="-1">
@@ -535,7 +562,16 @@
                                                                 data-id="5faa12c" data-element_type="widget"
                                                                 data-widget_type="text-editor.default">
                                                                 <div class="elementor-widget-container">
-                                                                    <p><?php echo e($product->description); ?></p>
+                                                                    <?php
+                                                                        $parsedown = new \Parsedown();
+                                                                    ?>
+
+                                                                    <div class="product-description">
+                                                                        <?php echo $parsedown->text($product->description); ?>
+
+                                                                    </div>
+
+                                                                    
                                                                     
                                                                 </div>
                                                             </div>
@@ -1458,13 +1494,13 @@
                             });
                         }
                     </script>
-                    <?php if(session('cart_limit_error')): ?>
+                    <?php if(session('error')): ?>
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
                                 Swal.fire({
                                     icon: 'warning',
                                     title: 'Giới hạn mua hàng',
-                                    text: <?php echo json_encode(session('cart_limit_error'), 15, 512) ?>,
+                                    text: <?php echo json_encode(session('error'), 15, 512) ?>,
                                     confirmButtonText: 'OK',
                                     customClass: {
                                         popup: 'custom-variant-alert'
@@ -1482,4 +1518,5 @@
                     <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
                 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN09\resources\views/products/show.blade.php ENDPATH**/ ?>

@@ -17,6 +17,13 @@
             <a href="{{ route('account.profile') }}">
                 Chi tiết tài khoản </a>
         </li>
+
+        <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--rewards {{ request()->routeIs('account.reward-points') ? 'is-active' : '' }}">
+    <a href="{{ route('account.reward.points') }}">
+        <i class="fa fa-gift"></i> Tích điểm đổi quà 
+    </a>
+</li>
+
         <li
             class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--downloads">
             <a href="{{ route('account.password') }}">Đổi mật khẩu</a>

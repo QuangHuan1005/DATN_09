@@ -34,7 +34,7 @@ class RewardController extends Controller
     /**
      * Đổi điểm lấy voucher
      */
-    public function exchange($voucherId)
+    public function redeem($voucherId)
     {
         $user = Auth::user();
 

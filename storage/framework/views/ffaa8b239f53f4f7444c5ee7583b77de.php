@@ -67,26 +67,26 @@
             </li>
 
             <li class="nav-item">
-               <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link <?php echo e(request()->routeIs('admin.inventory.*') ? 'active' : ''); ?>"
-                href="<?php echo e(route('admin.inventory.index')); ?>">
+                    href="<?php echo e(route('admin.inventory.index')); ?>">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Quản Lý Kho </span>
                 </a>
             </li>
-                <div class="collapse" id="sidebarInventory">
-                    <ul class="nav sub-navbar-nav">
+            <div class="collapse" id="sidebarInventory">
+                <ul class="nav sub-navbar-nav">
 
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="inventory-warehouse.html">Warehouse</a>
-                        </li>
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="inventory-received-orders.html">Received Orders</a>
-                        </li>
-                    </ul>
-                </div>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="inventory-warehouse.html">Warehouse</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="inventory-received-orders.html">Received Orders</a>
+                    </li>
+                </ul>
+            </div>
             </li>
 
             <li class="nav-item">
@@ -131,14 +131,27 @@
 </li>
 
              <li class="nav-item">
-                <a class="nav-link" href="<?php echo e(route('admin.vouchers.index')); ?>" role="button" aria-expanded="false"
-                    aria-controls="sidebarOrders">
-                    <span class="nav-icon">
-                        <iconify-icon icon="solar:ticket-bold-duotone"></iconify-icon>
-                    </span>
-                    <span class="nav-text"> Quản Lý Voucher </span>
+    <a class="nav-link menu-arrow" href="#sidebarVouchers" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarVouchers">
+        <span class="nav-icon">
+            <iconify-icon icon="solar:ticket-bold-duotone"></iconify-icon>
+        </span>
+        <span class="nav-text"> Quản Lý Voucher </span>
+    </a>
+    <div class="collapse <?php echo e(request()->routeIs('admin.vouchers.*') ? 'show' : ''); ?>" id="sidebarVouchers">
+        <ul class="nav sub-menu">
+            <li class="nav-item">
+                <a class="nav-link <?php echo e(request()->routeIs('admin.vouchers.index') ? 'active' : ''); ?>" href="<?php echo e(route('admin.vouchers.index')); ?>">
+                    <span class="nav-text">Danh sách Voucher</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo e(request()->routeIs('admin.vouchers.history') ? 'active' : ''); ?>" href="<?php echo e(route('admin.vouchers.history')); ?>">
+                    <span class="nav-text">Lịch sử đổi quà</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
 
             <li class="nav-item">
                 <a class="nav-link" href="#sidebarPurchases" role="button" aria-expanded="false"
@@ -804,5 +817,4 @@
             </li>
         </ul>
     </div>
-</div>
-<?php /**PATH C:\laragon\www\DATN09\resources\views/admin/layouts/menu-nav.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\laragon\www\DATN09\resources\views/admin/layouts/menu-nav.blade.php ENDPATH**/ ?>

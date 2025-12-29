@@ -8,6 +8,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Role;
 use App\Models\Ranking;
+use App\Models\UserAddress;
+use App\Models\UserBankAccount;
+use App\Models\Product;
+use App\Models\Order;
+use App\Models\Voucher;
+use App\Models\UserVoucher;
 
 class User extends Authenticatable
 {
@@ -16,7 +22,7 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
-     * Các cột cho phép gán hàng loạt
+     * Các cột cho phép gán hàng loạt (Mass Assignment)
      */
     protected $fillable = [
         'role_id',
@@ -32,10 +38,11 @@ class User extends Authenticatable
         'verification_token',
         'remember_token',
         'is_locked',
+        'points', // Cột tích điểm bạn vừa thêm trong Database
     ];
 
     /**
-     * Các cột bị ẩn khi trả về JSON (API, response, ...)
+     * Các cột bị ẩn khi trả về JSON
      */
     protected $hidden = [
         'password',
@@ -50,50 +57,27 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'is_verified' => 'boolean',
         'is_locked' => 'boolean',
+        'points' => 'integer',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | QUAN HỆ (RELATIONSHIPS)
+    |--------------------------------------------------------------------------
+    */
+
     /**
-     * Quan hệ với bảng roles
+     * Quan hệ với bảng roles (Mỗi user có 1 vai trò)
      */
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id');
     }
 
-    /**
-     * Quan hệ với bảng rankings
-     */
-    public function ranking()
-    {
-        //   return $this->belongsTo(Ranking::class, 'ranking_id');
-    }
+
 
     /**
-     * Kiểm tra người dùng có phải admin không (role_id == 1)
-     */
-    public function isAdmin(): bool
-    {
-        return $this->role_id === 1;
-    }
-
-    /**
-     * Kiểm tra người dùng có phải nhân viên không (role.name == 'staff')
-     */
-    public function isStaff(): bool
-    {
-        return optional($this->role)->name === 'staff';
-    }
-
-    /**
-     * Kiểm tra tài khoản có bị khóa không
-     */
-    public function isLocked(): bool
-    {
-        return $this->is_locked === true;
-    }
-
-    /**
-     * Quan hệ với UserAddress (nhiều địa chỉ)
+     * Quan hệ với UserAddress (Một user có nhiều địa chỉ)
      */
     public function addresses()
     {
@@ -109,7 +93,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Quan hệ với UserBankAccount (nhiều tài khoản ngân hàng)
+     * Quan hệ với UserBankAccount (Nhiều tài khoản ngân hàng)
      */
     public function bankAccounts()
     {
@@ -124,19 +108,68 @@ class User extends Authenticatable
         return $this->hasOne(UserBankAccount::class)->where('is_default', true);
     }
 
-    // User.php
+    /**
+     * Sản phẩm yêu thích (Nhiều - Nhiều)
+     */
     public function favorites()
     {
         return $this->belongsToMany(Product::class, 'product_favorites');
     }
 
-  // Gán đơn hàng cho staff
+    /**
+     * Gán đơn hàng cho staff (Nếu user là nhân viên)
+     */
     public function assignedOrders()
-{
-    return $this->hasMany(Order::class, 'staff_id');
-}
-public function vouchers()
-{
-    return $this->hasMany(UserVoucher::class);
-}
+    {
+        return $this->hasMany(Order::class, 'staff_id');
+    }
+
+    /**
+     * Danh sách đơn hàng đã mua
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id');
+    }
+
+    /**
+     * Quan hệ Nhiều - Nhiều với bảng Vouchers thông qua bảng trung gian UserVoucher
+     * Giúp quản lý các voucher mà user này ĐÃ ĐỔI
+     */
+    public function ownedVouchers()
+    {
+        return $this->belongsToMany(Voucher::class, 'user_vouchers')
+                    ->withPivot('status', 'code')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Lấy trực tiếp các bản ghi trong bảng trung gian (Dành cho RewardController)
+     */
+    public function userVouchers()
+    {
+        return $this->hasMany(UserVoucher::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CÁC HÀM KIỂM TRA (HELPERS)
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Kiểm tra Admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role_id === 1;
+    }
+
+    /**
+     * Kiểm tra tài khoản bị khóa
+     */
+    public function isLocked(): bool
+    {
+        return $this->is_locked === true;
+    }
 }

@@ -130,14 +130,27 @@
 </li>
 
              <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.vouchers.index') }}" role="button" aria-expanded="false"
-                    aria-controls="sidebarOrders">
-                    <span class="nav-icon">
-                        <iconify-icon icon="solar:ticket-bold-duotone"></iconify-icon>
-                    </span>
-                    <span class="nav-text"> Quản Lý Voucher </span>
+    <a class="nav-link menu-arrow" href="#sidebarVouchers" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarVouchers">
+        <span class="nav-icon">
+            <iconify-icon icon="solar:ticket-bold-duotone"></iconify-icon>
+        </span>
+        <span class="nav-text"> Quản Lý Voucher </span>
+    </a>
+    <div class="collapse {{ request()->routeIs('admin.vouchers.*') ? 'show' : '' }}" id="sidebarVouchers">
+        <ul class="nav sub-menu">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.vouchers.index') ? 'active' : '' }}" href="{{ route('admin.vouchers.index') }}">
+                    <span class="nav-text">Danh sách Voucher</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.vouchers.history') ? 'active' : '' }}" href="{{ route('admin.vouchers.history') }}">
+                    <span class="nav-text">Lịch sử đổi quà</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
 
             <li class="nav-item">
                 <a class="nav-link" href="#sidebarPurchases" role="button" aria-expanded="false"
