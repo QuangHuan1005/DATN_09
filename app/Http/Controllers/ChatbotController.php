@@ -13,23 +13,22 @@ class ChatbotController extends Controller
     {
         $userMessage = $request->input('message');
 
-        // 1. Lấy dữ liệu sản phẩm + Link chi tiết
-        $contextData = $this->getDatabaseContext($userMessage);
+        // 1. Phân tích và lấy dữ liệu đa chiều
+        $contextData = $this->getAdvancedDatabaseContext($userMessage);
 
-        // 2. Prompt nâng cao: Dạy AI cách trả về Link
-        $systemPrompt = "Bạn là trợ lý ảo chuyên nghiệp của 'Mixtas'.
+        // 2. Prompt được tinh chỉnh để xử lý dữ liệu chi tiết
+        $systemPrompt = "Bạn là trợ lý ảo AI của shop thời trang 'Friday'.
         
         NHIỆM VỤ:
-        - Trả lời câu hỏi khách hàng dựa trên [DỮ LIỆU CỬA HÀNG] bên dưới.
-        - Khi liệt kê sản phẩm, BẮT BUỘC phải kèm đường dẫn (Link) để khách xem.
+        - Trả lời khách hàng dựa trên [KẾT QUẢ TÌM KIẾM] bên dưới.
+        - Nếu tìm thấy sản phẩm, BẮT BUỘC cung cấp Link xem chi tiết.
         
-        QUY TẮC ĐỊNH DẠNG (Bắt buộc tuân thủ):
-        - Định dạng danh sách sản phẩm theo kiểu Markdown link: [Tên Sản Phẩm - Giá Tiền](Đường dẫn)
-        - Ví dụ: [Áo Sơ Mi Nam - 250k](http://localhost:8000/products/1)
-        - Không bịa đặt đường dẫn, chỉ dùng đường dẫn có sẵn trong dữ liệu.
-        - Giọng điệu: Nhiệt tình, mời khách nhấn vào link xem chi tiết.
-
-        [DỮ LIỆU CỬA HÀNG]:
+        QUY TẮC ĐỊNH DẠNG:
+        - Luôn dùng định dạng Markdown cho link: [Tên Sản Phẩm](Đường_dẫn)
+        - Ví dụ: [Áo Thun Teelab](http://localhost:8000/products/42) - Giá: 200k
+        - Nếu có thông tin về màu sắc hoặc chất liệu trong dữ liệu, hãy nhắc đến để khách rõ.
+        
+        [KẾT QUẢ TÌM KIẾM TỪ KHO DỮ LIỆU]:
         {$contextData}";
 
         try {
@@ -37,91 +36,118 @@ class ChatbotController extends Controller
                 'Authorization' => 'Bearer ' . env('GROQ_API_KEY'),
                 'Content-Type'  => 'application/json',
             ])->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model' => 'llama-3.3-70b-versatile',
+                'model' => 'llama-3.3-70b-versatile', 
                 'messages' => [
                     ['role' => 'system', 'content' => $systemPrompt],
                     ['role' => 'user', 'content' => $userMessage],
                 ],
                 'temperature' => 0.3,
-                'max_tokens' => 800, // Tăng token để AI trả lời được danh sách dài hơn
+                'max_tokens' => 800,
             ]);
 
             if ($response->successful()) {
-                $botReply = $response->json()['choices'][0]['message']['content'] ?? 'Xin lỗi, tôi chưa tìm thấy thông tin.';
-                return response()->json(['reply' => $botReply]);
+                return response()->json(['reply' => $response->json()['choices'][0]['message']['content']]);
             } else {
-                Log::error('Groq API Error: ' . $response->body());
-                return response()->json(['reply' => 'Hệ thống đang quá tải, vui lòng thử lại sau giây lát.']);
+                return response()->json(['reply' => 'Hệ thống đang bận, vui lòng thử lại sau.']);
             }
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['reply' => 'Lỗi kết nối server.'], 500);
+            return response()->json(['reply' => 'Lỗi kết nối.'], 500);
         }
     }
 
-    private function getDatabaseContext($userMessage)
+    // --- HÀM XỬ LÝ LOGIC TÌM KIẾM NÂNG CAO ---
+    private function getAdvancedDatabaseContext($message)
     {
-        // Tách từ khóa để tìm kiếm
-        $keywords = array_filter(explode(' ', $userMessage), function ($w) {
-            return strlen($w) > 1; // Lấy từ có trên 1 ký tự
+        // 1. XỬ LÝ GIÁ (Price Parser)
+        // Tìm các con số đi kèm chữ 'k' hoặc 'trăm', 'triệu' (ví dụ: 200k, 500000)
+        $priceFilter = null;
+        if (preg_match('/(\d+)[.,]?(\d+)?\s*(k|nghìn|vnd|đ|trăm|triệu)?/i', $message, $matches)) {
+            // Logic đơn giản hóa: Lấy số đầu tiên tìm thấy làm mốc giá
+            $number = intval(preg_replace('/[^0-9]/', '', $matches[0]));
+            if ($number < 1000) $number *= 1000; // Hiểu 200 là 200.000
+            
+            // Nếu câu hỏi có từ "dưới", "nhỏ hơn"
+            if (preg_match('/(dưới|nhỏ hơn|tầm|khoảng)/i', $message)) {
+                $priceFilter = ['operator' => '<=', 'value' => $number];
+            } 
+            // Nếu câu hỏi có từ "trên", "hơn"
+            elseif (preg_match('/(trên|hơn|lớn hơn)/i', $message)) {
+                $priceFilter = ['operator' => '>=', 'value' => $number];
+            }
+        }
+
+        // 2. TÁCH TỪ KHÓA (Keyword Extraction)
+        // Loại bỏ các từ nối vô nghĩa để tìm kiếm chính xác hơn
+        $stopWords = ['là', 'của', 'những', 'cái', 'chiếc', 'shop', 'có', 'không', 'với', 'tìm', 'cho', 'tôi', 'mình', 'em', 'anh', 'chị', 'xem'];
+        $cleanMessage = str_replace($stopWords, '', mb_strtolower($message));
+        $keywords = array_filter(explode(' ', $cleanMessage), function($w) {
+            return mb_strlen($w) > 1; 
         });
 
-        // Query sản phẩm
+        // 3. XÂY DỰNG QUERY
         $query = DB::table('products')
             ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+            ->leftJoin('categories', 'products.category_id', '=', 'categories.id') // Join danh mục
+            ->leftJoin('colors', 'product_variants.color_id', '=', 'colors.id')     // Join màu sắc
             ->select(
                 'products.id',
                 'products.name',
-                'products.product_code',
-                // Lấy giá thấp nhất nếu có nhiều biến thể giá
-                DB::raw('MIN(product_variants.sale) as min_sale'),
+                'categories.name as category_name',
+                'products.material',
                 DB::raw('MIN(product_variants.price) as min_price'),
-                // Tổng tồn kho của tất cả các size/màu
-                DB::raw('SUM(product_variants.quantity) as total_qty')
+                DB::raw('GROUP_CONCAT(DISTINCT colors.name SEPARATOR ", ") as colors_list') // Gộp danh sách màu
             )
-            ->groupBy('products.id', 'products.name', 'products.product_code');
+            ->groupBy('products.id', 'products.name', 'categories.name', 'products.material');
 
-        // Logic tìm kiếm "OR": Chỉ cần tên chứa 1 trong các từ khóa
+        // Áp dụng bộ lọc Giá (nếu có)
+        if ($priceFilter) {
+            $query->having('min_price', $priceFilter['operator'], $priceFilter['value']);
+        }
+
+        // Áp dụng bộ lọc Từ khóa đa năng (Tìm trong Tên, Danh mục, Màu, Mô tả)
         if (!empty($keywords)) {
-            $query->where(function ($q) use ($keywords) {
+            $query->where(function($q) use ($keywords) {
                 foreach ($keywords as $word) {
                     $q->orWhere('products.name', 'LIKE', "%{$word}%");
-                    $q->orWhere('products.product_code', 'LIKE', "%{$word}%");
+                    $q->orWhere('products.description', 'LIKE', "%{$word}%"); // Tìm trong mô tả
+                    $q->orWhere('categories.name', 'LIKE', "%{$word}%");      // Tìm trong danh mục (ví dụ: quần, áo)
+                    $q->orWhere('colors.name', 'LIKE', "%{$word}%");          // Tìm trong màu (ví dụ: đỏ, xanh)
+                    $q->orWhere('products.material', 'LIKE', "%{$word}%");    // Tìm trong chất liệu
                 }
             });
         }
 
-        // Tăng giới hạn lên 20 sản phẩm để liệt kê được nhiều hơn
-        $products = $query->limit(20)->get();
+        // Lấy kết quả (Tăng giới hạn lên 15)
+        $products = $query->limit(15)->get();
 
-        // Format dữ liệu gửi cho AI
-        $productListString = $products->map(function ($p) {
-            // TẠO ĐƯỜNG DẪN CHI TIẾT (Giả sử route xem chi tiết là /products/{id})
-            // Bạn hãy đổi 'products.show' thành tên route thực tế trong web.php của bạn nếu khác
-            // Hoặc dùng cứng: $url = url("/products/{$p->id}");
-            $url = url("/products/{$p->id}");
-
-            $sale = number_format($p->min_sale);
+        // 4. FORMAT DỮ LIỆU TRẢ VỀ CHO AI
+        $resultString = $products->map(function($p) {
+            $url = url("/products/{$p->id}"); // Link sản phẩm
             $price = number_format($p->min_price);
-            $discount = ($price - $sale);
+            $colors = $p->colors_list ? "Màu: {$p->colors_list}" : "Nhiều màu";
+            $cat = $p->category_name ?? 'Khác';
+            $mat = $p->material ? "| Chất: {$p->material}" : "";
 
-            return "- Tên: {$p->name} | Giá từ: {$price} VND | Kho: {$p->total_qty} | Link: {$url}";
+            return "- [{$cat}] {$p->name} | Giá: {$price} đ | {$colors} {$mat} | Link: {$url}";
         })->implode("\n");
 
-        if (empty($productListString)) {
-            return "Không tìm thấy sản phẩm nào khớp với từ khóa trong câu hỏi.";
+        // Fallback: Nếu không tìm thấy gì (và không lọc giá), trả về hàng mới nhất
+        if (empty($resultString) && !$priceFilter) {
+            $newArrivals = DB::table('products')
+                ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+                ->select('products.id', 'products.name', DB::raw('MIN(product_variants.price) as price'))
+                ->groupBy('products.id', 'products.name')
+                ->orderBy('products.created_at', 'desc')
+                ->limit(5)->get();
+            
+            $resultString = "Không tìm thấy sản phẩm chính xác theo yêu cầu. Gợi ý hàng mới về:\n" . 
+                $newArrivals->map(fn($p) => "- {$p->name} (" . number_format($p->price) . "đ): " . url("/products/{$p->id}"))->implode("\n");
+        } elseif (empty($resultString) && $priceFilter) {
+            $resultString = "Không tìm thấy sản phẩm nào trong khoảng giá này.";
         }
 
-        // Lấy thêm Voucher để chatbot tư vấn luôn
-        $vouchers = DB::table('vouchers')
-            ->where('status', 1)
-            ->where('end_date', '>=', now())
-            ->limit(3)
-            ->get()
-            ->map(function ($v) {
-                return "- Voucher {$v->voucher_code}: {$v->description}";
-            })->implode("\n");
-
-        return "DANH SÁCH SẢN PHẨM TÌM THẤY:\n{$productListString}\n\nKHUYẾN MÃI HIỆN CÓ:\n{$vouchers}";
+        return $resultString;
     }
 }
