@@ -267,6 +267,7 @@
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // --- 1. KHAI BÁO BIẾN DOM ---
         const toggleBtn = document.getElementById('chatbot-toggle');
         const closeBtn = document.getElementById('chatbot-close');
         const chatWindow = document.getElementById('chatbot-window');
@@ -274,92 +275,154 @@
         const inputField = document.getElementById('chat-input');
         const messageContainer = document.getElementById('chat-messages');
 
-        // Toggle Chat Window
-        function toggleChat() {
-            chatWindow.classList.toggle('hidden');
-            if (!chatWindow.classList.contains('hidden')) {
-                inputField.focus();
-            }
-        }
-        toggleBtn.addEventListener('click', toggleChat);
-        closeBtn.addEventListener('click', toggleChat);
+        // --- 2. CẤU HÌNH STORAGE KEY ---
+        const STORAGE_KEY = 'mixtas_chat_history';
+        const STATE_KEY = 'mixtas_chat_open';
 
-        // Hàm xử lý Markdown Link thành thẻ A HTML
+        // --- 3. CÁC HÀM XỬ LÝ STORAGE (LƯU/ĐỌC) ---
+
+        // Hàm lưu tin nhắn vào Session Storage
+        function saveMessageToStorage(text, sender) {
+            let history = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]');
+            history.push({ text: text, sender: sender });
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+        }
+
+        // Hàm lưu trạng thái đóng/mở cửa sổ
+        function saveWindowState(isOpen) {
+            sessionStorage.setItem(STATE_KEY, isOpen);
+        }
+
+        // Hàm xử lý Link (Xóa target="_blank" để mở ở tab hiện tại)
         function formatLinks(text) {
-            // Regex tìm kiếm dạng [Text](Url)
             const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-            return text.replace(linkRegex,
-                '<a href="$2" target="_blank" style="color: blue; text-decoration: underline;">$1</a>');
+            return text.replace(linkRegex, '<a href="$2" style="color: blue; text-decoration: underline; font-weight: bold;">$1</a>');
         }
 
-        // Hàm thêm tin nhắn vào giao diện
-        function appendMessage(text, sender) {
+        // --- 4. CÁC HÀM XỬ LÝ GIAO DIỆN (UI) ---
+
+        // Hàm hiển thị tin nhắn ra màn hình
+        function renderMessageToUI(text, sender) {
             const div = document.createElement('div');
             div.classList.add('message', sender === 'user' ? 'user-msg' : 'bot-msg');
-            // Nếu là tin nhắn từ Bot, xử lý link
+            
             if (sender === 'bot') {
-                div.innerHTML = formatLinks(text);
+                div.innerHTML = formatLinks(text); // Bot thì format link
             } else {
                 div.textContent = text;
             }
-
+            
             messageContainer.appendChild(div);
             messageContainer.scrollTop = messageContainer.scrollHeight;
         }
 
-        // Hàm gửi tin nhắn
+        // Hàm khôi phục trạng thái khi Load trang
+        function loadChatSession() {
+            // Khôi phục tin nhắn cũ
+            const savedHistory = sessionStorage.getItem(STORAGE_KEY);
+            if (savedHistory) {
+                const messages = JSON.parse(savedHistory);
+                if (messages.length > 0) {
+                    messageContainer.innerHTML = ''; // Xóa tin nhắn chào mặc định
+                    messages.forEach(msg => {
+                        renderMessageToUI(msg.text, msg.sender);
+                    });
+                }
+            }
+
+            // Khôi phục trạng thái cửa sổ (Mở hay Đóng)
+            const isOpen = sessionStorage.getItem(STATE_KEY) === 'true';
+            if (isOpen) {
+                chatWindow.classList.remove('hidden');
+                // Cuộn xuống cuối khi mở lại
+                setTimeout(() => {
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                }, 100);
+            }
+        }
+
+        // --- 5. HÀM LOGIC CHÍNH ---
+
+        // Hàm Toggle (Đóng/Mở)
+        function toggleChat() {
+            chatWindow.classList.toggle('hidden');
+            const isOpen = !chatWindow.classList.contains('hidden');
+            
+            // Lưu trạng thái ngay lập tức
+            saveWindowState(isOpen);
+
+            if (isOpen) {
+                inputField.focus();
+                setTimeout(() => {
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                }, 100);
+            }
+        }
+
+        // Hàm Gửi tin nhắn
         async function sendMessage() {
             const text = inputField.value.trim();
             if (!text) return;
 
-            // 1. Hiển thị tin nhắn user
-            appendMessage(text, 'user');
+            // B1: Hiện tin User & LƯU vào Storage
+            renderMessageToUI(text, 'user');
+            saveMessageToStorage(text, 'user');
             inputField.value = '';
 
-            // 2. Hiển thị loading
+            // B2: Hiện Loading
             const loadingDiv = document.createElement('div');
             loadingDiv.classList.add('message', 'bot-msg');
-            loadingDiv.innerHTML =
-                '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            loadingDiv.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
             messageContainer.appendChild(loadingDiv);
             messageContainer.scrollTop = messageContainer.scrollHeight;
             sendBtn.disabled = true;
 
             try {
-                // 3. Gửi request đến Laravel
+                // B3: Gọi API Laravel
                 const response = await fetch("{{ route('chatbot.send') }}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}" // Laravel Token bảo mật
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
-                    body: JSON.stringify({
-                        message: text
-                    })
+                    body: JSON.stringify({ message: text })
                 });
 
                 const data = await response.json();
-
-                // 4. Xóa loading và hiện câu trả lời
-                messageContainer.removeChild(loadingDiv);
-
-                // Format xuống dòng từ AI
+                
+                // B4: Xóa loading
+                if(messageContainer.contains(loadingDiv)){
+                    messageContainer.removeChild(loadingDiv);
+                }
+                
+                // B5: Hiện tin Bot & LƯU vào Storage
                 const formattedReply = data.reply.replace(/\n/g, '<br>');
-                appendMessage(formattedReply, 'bot');
+                renderMessageToUI(formattedReply, 'bot');
+                saveMessageToStorage(formattedReply, 'bot');
 
             } catch (error) {
                 console.error('Error:', error);
-                messageContainer.removeChild(loadingDiv);
-                appendMessage('Có lỗi xảy ra, vui lòng thử lại.', 'bot');
+                if(messageContainer.contains(loadingDiv)){
+                    messageContainer.removeChild(loadingDiv);
+                }
+                const errorMsg = 'Có lỗi kết nối, vui lòng thử lại.';
+                renderMessageToUI(errorMsg, 'bot');
             } finally {
                 sendBtn.disabled = false;
+                inputField.focus();
             }
         }
 
-        // Event Listeners
+        // --- 6. GÁN SỰ KIỆN (Events) ---
+        toggleBtn.addEventListener('click', toggleChat);
+        closeBtn.addEventListener('click', toggleChat);
+
         sendBtn.addEventListener('click', sendMessage);
         inputField.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') sendMessage();
         });
+
+        // --- 7. CHẠY KHI KHỞI ĐỘNG ---
+        loadChatSession();
     });
 </script>
