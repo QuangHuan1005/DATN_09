@@ -19,7 +19,7 @@
         ?? ($order->payment_method_id ?? $order->payment_method ?? null);
 
     // Trạng thái thanh toán (nếu có relation paymentStatus -> name)
-    $paymentStatusText = optional($order->paymentStatus)->name ?? ('#' . ($order->payment_status_id ?? 'Chưa thanh toán'));
+    $paymentStatusText = optional($order->paymentStatus)->name ?? ('#' . ($order->payment_status_id ?? '—'));
 @endphp
 
 <div style="font-family: Arial, Helvetica, sans-serif; color:#222; line-height:1.6">
@@ -56,7 +56,7 @@
         </p>
 
         <p style="margin:0;">
-            <b>Trạng thái thanh toán:</b> {{ ($paymentStatusText ) }}
+            <b>Trạng thái thanh toán:</b> {{ ($paymentStatusText ?? 'Chưa thanh toán') }}
         </p>
     </div>
 

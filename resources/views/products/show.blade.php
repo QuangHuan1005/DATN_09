@@ -451,7 +451,8 @@
                                                                         {{-- NÚT MUA NGAY --}}
                                                                         <button type="submit"
                                                                             class="single_add_to_cart_button button btn-primary js-submit-cart"
-                                                                            data-action="buy_now">
+                                                                            data-action="buy_now"
+                                                                            formaction="{{ route('checkout.buy_now') }}">
                                                                             Mua ngay
                                                                         </button>
                                                                     </div>

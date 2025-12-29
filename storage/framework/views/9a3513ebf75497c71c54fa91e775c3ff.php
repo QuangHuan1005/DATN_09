@@ -1,921 +1,1522 @@
 <?php $__env->startSection('content'); ?>
-
-<body
-    class="wp-singular product-template-default single single-product postid-164 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-383 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
-    <div class="site-wrapper">
-
-        <div class="kitify-site-wrapper elementor-459kitify">
-            <?php echo $__env->make('layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-            <div class="container py-5">
-
-
-
-    <div class="row align-items-start">
-    <!-- Hình ảnh sản phẩm -->
-    <div class="col-md-6 text-center pe-md-5"> 
-        
-
-     <div class="main-image mb-4">
-    <img
-        src="<?php echo e(asset('storage/' . $product->photoAlbums->first()->image)); ?>"
-        data-default="<?php echo e(asset('storage/' . $product->photoAlbums->first()->image)); ?>"
-        alt="<?php echo e($product->name); ?>"
-        class="img-fluid rounded shadow"
-        style="max-height: 500px; object-fit: cover;">
-</div>
-
-
-
-
-        
-        <?php if(isset($albums) && $albums->count()): ?>
-        <div class="album-images d-flex justify-content-center gap-3 flex-wrap mt-3">
-            <?php $__currentLoopData = $albums; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <img
-                src="<?php echo e(Storage::disk('public')->url('product_images/'.$img->image)); ?>"
-                alt=""
-                width="100" height="100"
-                class="img-thumbnail border border-secondary"
-                style="object-fit: cover; border-radius: 6px;">
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </div>
-        <?php endif; ?>
-    </div>
-
-    <!-- Thông tin sản phẩm -->
-    <div class="col-md-6 ps-md-5"> 
-        <h2 class="mb-3"><?php echo e($product->name); ?></h2>
-        <p class="text-muted"><?php echo e($product->material); ?></p>
-        <p><?php echo e($product->description); ?></p>
-
-        <?php if(isset($variants) && $variants->count() > 0): ?>
-            <h4 class="mt-4 mb-2">Chọn thuộc tính</h4>
-
-
-<form method="POST" action="<?php echo e(route('cart.add')); ?>" id="addToCartForm" class="border p-3 rounded">
-    <?php echo csrf_field(); ?>
-    <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
-    
-    <input type="hidden" name="product_variant_id" id="variantId" value="">
-
-    
-    <div class="mb-3">
-        <label for="selectColor" class="form-label fw-semibold">Màu sắc</label>
-
-        <?php
-            // Lấy các color_id còn hàng từ $variants của chính product này
-            $inStockColorIds = $variants
-                ->filter(fn($v) => ($v->quantity ?? 0) > 0 && !empty($v->color_id))
-                ->pluck('color_id')
-                ->unique()
-                ->values()
-                ->all();
-        ?>
-
-        <select id="selectColor" class="form-select">
-            <option value="" selected>— Chọn màu —</option>
-            <?php $__currentLoopData = $colors->whereIn('id', $inStockColorIds); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <option value="<?php echo e($c->id); ?>"><?php echo e($c->name); ?></option>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </select>
-
-        
-        <?php if(empty($inStockColorIds)): ?>
-            <small class="text-danger d-block mt-1">Sản phẩm tạm hết hàng.</small>
-        <?php endif; ?>
-    </div>
-
-    
-    <div class="mb-3">
-        <label for="selectSize" class="form-label fw-semibold">Kích cỡ</label>
-        <select id="selectSize" class="form-select" disabled>
-            <option value="" selected>— Chọn size —</option>
-        </select>
-    </div>
-
-    
-    <div class="mb-3">
-    <label class="form-label fw-semibold">Giá Tiền</label>
-    <div id="priceBox">
-    <?php
-        // Lấy giá gốc và giá sale
-        $allVariants = collect($variants ?? []);
-        
-        // Giá hiển thị: ưu tiên sale, nếu không có thì price
-        $displayPrices = $allVariants->map(fn($v) => (float)($v->sale > 0 ? $v->sale : $v->price));
-        $minDisplay = $displayPrices->min();
-        $maxDisplay = $displayPrices->max();
-        
-        // Giá gốc (để gạch ngang nếu có sale)
-        $originalPrices = $allVariants->map(fn($v) => (float)$v->price);
-        $minOriginal = $originalPrices->min();
-        $maxOriginal = $originalPrices->max();
-        
-        // Kiểm tra có sale không
-        $hasSale = $allVariants->some(fn($v) => $v->sale > 0 && $v->sale < $v->price);
-    ?>
-
-    <?php if(!is_null($minDisplay)): ?>
-        <div class="price">
-            <?php if($hasSale): ?>
-                
-                <span class="text-muted text-decoration-line-through me-2">
-                    <?php echo e(number_format($minOriginal, 0, ',', '.')); ?>₫
-                    <?php if($maxOriginal > $minOriginal): ?>
-                        – <?php echo e(number_format($maxOriginal, 0, ',', '.')); ?>₫
-                    <?php endif; ?>
-                </span>
-            <?php endif; ?>
-            
-            <span class="price--normal" style="color: <?php echo e($hasSale ? '#e74c3c' : 'inherit'); ?>; font-weight: bold;">
-                <?php echo e(number_format($minDisplay, 0, ',', '.')); ?>₫
-                <?php if($maxDisplay > $minDisplay): ?>
-                    – <?php echo e(number_format($maxDisplay, 0, ',', '.')); ?>₫
-                <?php endif; ?>
-            </span>
-        </div>
-    <?php else: ?>
-        <div class="price"><span class="price--normal">Đang cập nhật</span></div>
-    <?php endif; ?>
-    </div>
-    </div>
-
-    <!-- Tồn kho -->
-    <div class="mb-3">
-    <label class="form-label fw-semibold">Tồn Kho</label>
-    <span id="stockBox" class="text-muted">Vui lòng chọn màu & size</span>
-    </div>
-
-    
-
-        <div class="mb-3">
-        <label for="quantity" class="form-label fw-semibold m-0">Số lượng</label>
-        <div class="qty-pill" id="qtyBox">
-            <button type="button" class="qty-btn" id="qtyMinus" aria-label="Giảm">−</button>
-            <input type="number" id="quantity" name="quantity" class="qty-input" value="1" min="1" inputmode="numeric" pattern="\d*">
-            <button type="button" class="qty-btn" id="qtyPlus" aria-label="Tăng">+</button>
-        </div>
-        </div>
-
-        
-        <button type="submit"
-                class="btn btn-dark d-inline-block"
-                style="margin-top:8px; display:block"
-                id="btnAddToCart" >
-        Thêm Vào Giỏ Hàng
-        </button>
-
-        <button type="submit"
-                class="btn btn-primary"
-                id="btnBuyNow"
-                style="margin-top:8px"
-                formaction="<?php echo e(route('checkout.buy_now')); ?>">
-        Mua Ngay
-        </button>
-</form>
-
-
-<script>
-    // Popup dạng modal trung tâm
-function showWarnModal(message, title = 'Thông báo') {
-  Swal.fire({
-    icon: 'warning',
-    title: title,
-    text: message,
-    confirmButtonColor: '#3085d6',
-    confirmButtonText: 'Đã hiểu',
-  });
-}
-
-// Popup dạng toast góc phải, tự ẩn
-function showWarnToast(message) {
-  Swal.fire({
-    toast: true,
-    position: 'top-end',
-    icon: 'warning',
-    title: message,
-    showConfirmButton: false,
-    timer: 2200,
-    timerProgressBar: true,
-  });
-}
-    // map "colorId-sizeId" -> data
-    const VARIANTS = <?php echo json_encode($variantMap, 15, 512) ?>;
-
-    // xây index: colorId -> [{size_id, size_name}]
-    const COLOR_SIZES = {};
-    <?php $__currentLoopData = $variants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <?php if($v->color_id && $v->size_id && ($v->quantity ?? 0) > 0): ?>
-            COLOR_SIZES[<?php echo e($v->color_id); ?>] = COLOR_SIZES[<?php echo e($v->color_id); ?>] || [];
-            COLOR_SIZES[<?php echo e($v->color_id); ?>].push({
-                id: <?php echo e($v->size_id); ?>,
-                name: "<?php echo e($v->size?->name); ?>"
-            });
-        <?php endif; ?>
-    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-    const fmt = (n) => new Intl.NumberFormat('vi-VN').format(n) + '₫';
-
-    const selectColor = document.getElementById('selectColor');
-    const selectSize  = document.getElementById('selectSize');
-    const priceBox    = document.getElementById('priceBox');
-    const variantId   = document.getElementById('variantId');
-    const btnAdd      = document.getElementById('btnAddToCart');
-    const btnBuy      = document.getElementById('btnBuyNow');
-    const stockBox    = document.getElementById('stockBox');
-
-
-    // === ẢNH: luôn lấy được ảnh gốc & chuẩn bị base URL ===
-    const mainImg          = document.querySelector('.main-image img');
-    const DEFAULT_SRC      = mainImg ? (mainImg.getAttribute('data-default') || mainImg.src) : null;
-    const urlProductImages = `<?php echo e(Storage::disk('public')->url('product_images')); ?>`;
-    const urlProducts      = `<?php echo e(Storage::disk('public')->url('products')); ?>`;
-    const storageBase      = `<?php echo e(asset('storage')); ?>`; // => /storage
-
-    // helper: thử tải 1 url, resolve(true/false)
-    function canLoad(url) {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-            img.src = url;
-        });
-    }
-
-    // helper: từ v.image -> danh sách URL thử lần lượt
-    function buildCandidateUrls(vImage) {
-        const list = [];
-        if (!vImage) return list;
-
-        const trimmed = (vImage + '').trim();
-
-        // URL tuyệt đối
-        if (/^https?:\/\//i.test(trimmed)) {
-            list.push(trimmed);
-            return list;
+    <style>
+        /* Item mặc định */
+        .variable-item.color-variable-item {
+            border: 1px solid #e2e2e2;
+            border-radius: 1px;
+            padding: 3px;
+            transition: all 0.2s ease;
         }
 
-        if (trimmed.startsWith('/storage') || trimmed.startsWith('storage/')) {
-        list.push(trimmed.startsWith('/') ? trimmed : `/${trimmed}`);
-        return list;
-}
-
-        // đã có thư mục (ví dụ "products/xxx.jpg" hoặc "product_images/xxx.jpg")
-        if (trimmed.includes('/')) {
-            // ghép với /storage (Laravel public disk)
-            list.push(`${storageBase}/${trimmed}`);
-        } else {
-            // chỉ là tên file -> thử 2 thư mục quen dùng
-           // chỉ là tên file -> thử 2 thư mục (ưu tiên 'products')
-list.push(`${urlProducts}/${trimmed}`);
-list.push(`${urlProductImages}/${trimmed}`);
-
+        /* Hover */
+        .variable-item.color-variable-item:hover {
+            border-color: #c1995a;
+            /* gold theo brand */
         }
 
-        return list;
-    }
-
-    // khi chọn màu -> nạp danh sách size hợp lệ và trả ảnh về mặc định
-    selectColor.addEventListener('change', () => {
-        const colorId = selectColor.value;
-        selectSize.innerHTML = '<option value="" selected>— Chọn size —</option>';
-        variantId.value = '';
-        btnAdd.disabled = true;
-        if (btnBuy) btnBuy.disabled = true;
-        priceBox.innerHTML = '<span class="text-muted">Chọn size để xem giá</span>';
-
-        if (stockBox) {
-        stockBox.textContent = 'Vui lòng chọn màu & size';
-        stockBox.classList.remove('text-success','text-danger');
-        }
-        // Bỏ giới hạn số lượng khi chưa chọn đủ biến thể (MAX_QTY sẽ set lại khi chọn size)
-        if (typeof MAX_QTY !== 'undefined') {
-        MAX_QTY = null;
-        qtyInput.value = clampQty(qtyInput.value);
-        syncQtyButtons();
-        }
-        // if (mainImg && DEFAULT_SRC) mainImg.src = DEFAULT_SRC;
-
-        if (!colorId) {
-            selectSize.disabled = true;
-            return;
+        /* Khi được chọn */
+        .variable-item.color-variable-item.active,
+        .variable-item.color-variable-item[aria-checked="true"] {
+            border-color: #c1995a;
+            box-shadow: 0 0 0 2px rgba(193, 153, 90, 0.3);
         }
 
-        const sizes = (COLOR_SIZES[colorId] || []).reduce((acc, s) => {
-            if (!acc.some(x => x.id === s.id)) acc.push(s); // tránh trùng size
-            return acc;
-        }, []);
-
-        sizes.forEach(s => {
-            const op = document.createElement('option');
-            op.value = s.id;
-            op.textContent = s.name;
-            selectSize.appendChild(op);
-        });
-
-        selectSize.disabled = sizes.length === 0;
-        if (sizes.length === 0) {
-            priceBox.innerHTML = '<span class="text-danger">Màu này tạm hết size</span>';
+        /* Viền bo cho ô màu */
+        .variable-item-span-color {
+            border-radius: 4px;
         }
-    });
+    </style>
 
-    const BASE_STORAGE_URL = "<?php echo e(asset('storage')); ?>";
-    // khi chọn size -> tìm biến thể, hiện giá, ĐỔI ẢNH CÓ KIỂM TRA TẢI
-    selectSize.addEventListener('change', async () => {
-        const colorId = selectColor.value || '0';
-        const sizeId  = selectSize.value  || '0';
-        const key = `${colorId}-${sizeId}`;
-        const v = VARIANTS[key];
+    <body
+        class="wp-singular product-template-default single single-product postid-1558 wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce woocommerce-page woocommerce-no-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-383 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active  kitify--enabled">
+        <div class="site-wrapper">
 
-        if (!v) {
-            variantId.value = '';
-            btnAdd.disabled = true;
-            if (btnBuy) btnBuy.disabled = true;
-            priceBox.innerHTML = '<span class="text-danger">Biến thể không tồn tại</span>';
-            if (mainImg && DEFAULT_SRC) mainImg.src = DEFAULT_SRC;
-            return;
-        }
-
-        variantId.value = v.id;
-        btnAdd.disabled = false;
-        if (btnBuy) btnBuy.disabled = false;
-
-        // hiện giá (ưu tiên sale)
-        if (v.sale && Number(v.sale) > 0) {
-        priceBox.innerHTML =
-            `<div class="price">
-                <span class="price--sale">${fmt(v.sale)}</span>
-                <span class="price--original">${fmt(v.price)}</span>
-            </div>`;
-        } else {
-        priceBox.innerHTML =
-            `<div class="price">
-                <span class="price--normal">${fmt(v.price)}</span>
-            </div>`;
-        }
-
-        // --- TỒN KHO & GIỚI HẠN SỐ LƯỢNG ---
-        if (typeof v.stock !== 'undefined' && v.stock !== null) {
-        const s = parseInt(v.stock, 10) || 0;
-
-        if (stockBox) {
-            if (s > 0) {
-            stockBox.textContent = `${s} sản phẩm`;
-            stockBox.classList.remove('text-danger');
-            stockBox.classList.add('text-success');
-            } else {
-            stockBox.textContent = 'Hết hàng';
-            stockBox.classList.remove('text-success');
-            stockBox.classList.add('text-danger');
-            }
-        }
-
-        // Khoá/mở nút Thêm vào giỏ
-        btnAdd.disabled = s <= 0;
-        if (btnBuy) btnBuy.disabled = s <= 0;
-
-        // Giới hạn số lượng theo tồn kho
-        MAX_QTY = s > 0 ? s : null;
-        qtyInput.value = clampQty(qtyInput.value);
-        syncQtyButtons();
-        } else {
-        if (stockBox) {
-            stockBox.textContent = 'Vui lòng chọn màu & size';
-            stockBox.classList.remove('text-success','text-danger');
-        }
-        MAX_QTY = null;
-        btnAdd.disabled = false;
-        if (btnBuy) btnBuy.disabled = false; // hoặc true nếu muốn bắt buộc stock > 0 mới cho thêm
-        qtyInput.value = clampQty(qtyInput.value);
-        syncQtyButtons();
-        }
-
-
-        // === ĐỔI ẢNH: chỉ set src khi chắc chắn có URL load được ===
-        if (mainImg) {
-            const candidates = buildCandidateUrls(v.image);
-
-            let loadedUrl = null;
-            for (const url of candidates) {
-                // eslint-disable-next-line no-await-in-loop
-                if (await canLoad(url)) { loadedUrl = url; break; }
-            }
-
-            if (loadedUrl) {
-                // Bổ sung tiền tố /storage/products nếu là tên file tương đối
-                if (!loadedUrl.startsWith('http') && !loadedUrl.startsWith('/storage')) {
-                    loadedUrl = `${BASE_STORAGE_URL}/${loadedUrl.replace(/^\/?/, '')}`;
-                }
-                mainImg.src = loadedUrl;
-
-            } else if (v.image) {
-                // Có tên file nhưng không load được theo candidates -> tự build URL tuyệt đối
-                mainImg.src = v.image.startsWith('http')
-                ? v.image
-                : (v.image.startsWith('/storage') || v.image.startsWith('storage/'))
-                ? (v.image.startsWith('/') ? v.image : `/${v.image}`)
-                : `${BASE_STORAGE_URL}/${(v.image+'').replace(/^\/?/, '')}`;
-
-
-            } else if (mainImg.src && mainImg.src.trim() !== '' && !mainImg.src.includes('undefined') && !mainImg.src.includes('null')) {
-                // ✅ GIỮ NGUYÊN ẢNH HIỆN TẠI nếu variant không có ảnh riêng
-                mainImg.src = mainImg.src;
-
-            } else if (DEFAULT_SRC) {
-                // fallback cuối cùng
-                mainImg.src = DEFAULT_SRC;
-            }
-        }
-
-
-
-    });
-
-    // chặn submit nếu chưa có variant
-    document.getElementById('addToCartForm').addEventListener('submit', (e) => {
-        if (!variantId.value) {
-            e.preventDefault();
-            showWarnModal('Vui lòng chọn màu và size trước khi thêm vào giỏ hàng.');
-        }
-    });
-
-    // --- SỐ LƯỢNG: – / + ---
-    const qtyInput = document.getElementById('quantity');
-    const btnMinus = document.getElementById('qtyMinus');
-    const btnPlus  = document.getElementById('qtyPlus');
-
-    const MIN_QTY = parseInt(qtyInput?.min || '1', 10) || 1;
-    let MAX_QTY = null; // sẽ set theo tồn kho nếu bạn có (v.stock)
-
-    // đồng bộ trạng thái nút
-    function syncQtyButtons() {
-    const val = parseInt(qtyInput.value || '1', 10);
-    btnMinus.disabled = val <= MIN_QTY;
-    btnPlus.disabled  = (MAX_QTY && val >= MAX_QTY) ? true : false;
-    }
-    function clampQty(v) {
-    let n = parseInt(v || '1', 10);
-    if (isNaN(n) || n < MIN_QTY) n = MIN_QTY;
-    if (MAX_QTY && n > MAX_QTY) n = MAX_QTY;
-    return n;
-    }
-
-    btnMinus.addEventListener('click', () => {
-    let val = parseInt(qtyInput.value || '1', 10);
-    val = Math.max(MIN_QTY, val - 1);
-    qtyInput.value = val;
-    syncQtyButtons();
-    });
-
-    btnPlus.addEventListener('click', () => {
-        let val = parseInt(qtyInput.value || '1', 10);
-        val += 1;
-
-        if (MAX_QTY && val > MAX_QTY) {
-            val = MAX_QTY;
-            // ⚠️ Hiển thị cảnh báo
-            Swal.fire({
-            icon: 'warning',
-            title: 'Vượt quá số lượng tồn kho!',
-            text: `Sản phẩm chỉ còn ${MAX_QTY} sản phẩm trong kho.`,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Đã hiểu',
-    });
-        }
-
-        qtyInput.value = val;
-        syncQtyButtons();
-    });
-
-    // Khi người dùng gõ tay
-    qtyInput.addEventListener('input', () => {
-        let val = parseInt(qtyInput.value || '1', 10);
-
-        if (isNaN(val) || val < MIN_QTY) val = MIN_QTY;
-        if (MAX_QTY && val > MAX_QTY) {
-            val = MAX_QTY;
-            showWarnToast(`Chỉ còn ${MAX_QTY} sản phẩm trong kho`);
-        }
-
-        qtyInput.value = val;
-        syncQtyButtons();
-    });
-
-    syncQtyButtons();
-
-</script>
-
-
-        <?php endif; ?>
-
-        
-    </div>
-</div>
-
-    <!-- Đánh giá sản phẩm -->
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <h3>Đánh giá sản phẩm</h3>
-            <?php if(isset($reviews) && $reviews->count() > 0): ?>
-                <?php $__currentLoopData = $reviews; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <div class="border-bottom py-3">
-                        <strong>⭐ <?php echo e($r->rating); ?>/5</strong>
-                        <p class="mb-0"><?php echo e($r->content); ?></p>
-                    </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-            <?php else: ?>
-                <p>Chưa có đánh giá nào cho sản phẩm này.</p>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    
-    <?php if(isset($relatedProducts) && $relatedProducts->count()): ?>
-        <div class="row mt-5">
-            <div class="col-12">
-                <h3 class="mb-4">Sản phẩm cùng danh mục</h3>
-            </div>
-
-            <?php $__currentLoopData = $relatedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <div class="col-6 col-md-3 mb-4">
-                    <a href="<?php echo e(route('products.show', $item->id)); ?>"
-                       class="text-decoration-none text-dark">
-                        <div class="card h-100 border-0 shadow-sm">
-                            
+            <div class="kitify-site-wrapper elementor-459kitify">
+                <?php echo $__env->make('layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                <div id="site-content" class="site-content-wrapper">
+                    <div class="woocommerce-notices-wrapper">
+                        <?php if(session('success')): ?>
                             <?php
-                                $thumb = optional($item->photoAlbums->first())->image;
+                                $cartSuccess = session('success');
+                                $addedName = $cartSuccess['product_name'] ?? ($product->name ?? 'Sản phẩm');
                             ?>
-                            <div class="ratio ratio-4x3">
-                                <img
-                                    src="<?php echo e($thumb
-                                            ? asset('storage/' . $thumb)
-                                            : 'https://via.placeholder.com/400x400?text=No+Image'); ?>"
-                                    alt="<?php echo e($item->name); ?>"
-                                    class="card-img-top"
-                                    style="object-fit: cover; border-radius: 8px 8px 0 0;">
+                            <div class="woocommerce-message" role="alert" tabindex="-1">
+                                <p class="with-button">
+                                    “<?php echo e($addedName); ?>” đã được thêm vào giỏ hàng.
+                                    <a href="<?php echo e(route('cart.index')); ?>" class="button wc-forward">
+                                        Xem giỏ hàng
+                                    </a>
+                                </p>
                             </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="woocommerce-notices-wrapper"></div>
+                    <div data-elementor-type="product" data-elementor-id="383"
+                        class="elementor elementor-383 elementor-location-single post-1558 product type-product status-publish has-post-thumbnail product_cat-jackets product_cat-men product_cat-tshirts product_tag-clothing product_tag-etc product_tag-fashion product_tag-m81 product_tag-men product_tag-products first instock shipping-taxable purchasable product-type-variable has-default-attributes product">
+                        <div class="elementor-element elementor-element-39b316d e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                            data-id="39b316d" data-element_type="container">
+                            <div class="e-con-inner">
+                                <div class="elementor-element elementor-element-58d624c5 elementor-widget kitify elementor-kitify-breadcrumbs"
+                                    data-id="58d624c5" data-element_type="widget"
+                                    data-widget_type="kitify-breadcrumbs.default">
+                                    <div class="elementor-widget-container">
 
-                            <div class="card-body p-2">
-                                
-                                <div class="fw-semibold text-truncate" title="<?php echo e($item->name); ?>">
-                                    <?php echo e($item->name); ?>
-
-                                </div>
-
-                                
-                                <?php
-                                    $prices = $item->variants->map(function ($v) {
-                                        return (float)($v->sale ?? $v->price);
-                                    })->filter(fn($p) => $p > 0);
-
-                                    $min = $prices->min();
-                                    $max = $prices->max();
-                                ?>
-
-                                <?php if($min): ?>
-                                    <div class="text-danger fw-bold small mt-1">
-                                        <?php echo e(number_format($min, 0, ',', '.')); ?>₫
-                                        <?php if($max && $max > $min): ?>
-                                            - <?php echo e(number_format($max, 0, ',', '.')); ?>₫
-                                        <?php endif; ?>
+                                        <div class="kitify-breadcrumbs">
+                                            <div class="kitify-breadcrumbs__content">
+                                                <div class="kitify-breadcrumbs__wrap">
+                                                    <div class="kitify-breadcrumbs__item"><a href="/"
+                                                            class="kitify-breadcrumbs__item-link is-home" rel="home"
+                                                            title="Trang Chủ">Trang Chủ</a></div>
+                                                    <div class="kitify-breadcrumbs__item">
+                                                        <div class="kitify-breadcrumbs__item-sep"><span>/</span></div>
+                                                    </div>
+                                                    <div class="kitify-breadcrumbs__item"><a
+                                                            href="<?php echo e(route('products.index')); ?>"
+                                                            class="kitify-breadcrumbs__item-link" rel="tag"
+                                                            title="Sản Phẩm">Sản Phẩm</a></div>
+                                                    <div class="kitify-breadcrumbs__item">
+                                                        <div class="kitify-breadcrumbs__item-sep"><span>/</span></div>
+                                                    </div>
+                                                    <div class="kitify-breadcrumbs__item"><span
+                                                            class="kitify-breadcrumbs__item-target"><?php echo e($product->name); ?></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                <?php endif; ?>
+                                </div>
                             </div>
                         </div>
-                    </a>
-                </div>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </div>
-    <?php endif; ?>
-</div> 
-<?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                        <div class="elementor-element elementor-element-2e5f5a67 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                            data-id="2e5f5a67" data-element_type="container">
+                            <div class="e-con-inner">
+                                <div class="elementor-element elementor-element-7f1d1720 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                    data-id="7f1d1720" data-element_type="container">
+                                    <div class="elementor-element elementor-element-951389e e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                        data-id="951389e" data-element_type="container"
+                                        data-settings="{&quot;sticky&quot;:&quot;top&quot;,&quot;sticky_on&quot;:[&quot;desktop&quot;,&quot;tablet_extra&quot;,&quot;laptop&quot;],&quot;sticky_offset&quot;:1,&quot;sticky_parent&quot;:&quot;yes&quot;,&quot;sticky_effects_offset&quot;:0}">
+                                        <div class="e-con-inner">
+                                            <div class="elementor-element elementor-element-1f95cbfc elementor-widget kitify elementor-kitify-wooproduct-images"
+                                                data-id="1f95cbfc" data-element_type="widget"
+                                                data-widget_type="kitify-wooproduct-images.default">
+                                                <div class="elementor-widget-container">
+                                                    <div class="kitify-product-images layout-type-1">
+                                                        <div class="woocommerce-product-gallery
+                                                                    woocommerce-product-gallery--with-images
+                                                                    woocommerce-product-gallery--columns-6 images"
+                                                            data-columns="<?php echo e(min(6, max($images ?? [], 6)) ?? null); ?>"
+                                                            style="opacity: 0; transition: opacity .25s ease-in-out;">
+                                                            <div class="woocommerce-product-gallery__wrapper">
+                                                                <?php $__currentLoopData = $images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                    <?php
+                                                                        $imgUrl = asset('storage/' . $img);
+                                                                        $alt =
+                                                                            $product->name . '- Image' . ($index + 1);
+                                                                    ?>
 
-                <div class="nova-overlay-global"></div>
-            </div><!-- .kitify-site-wrapper -->
-            <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                                    <div data-thumb="<?php echo e($imgUrl); ?>"
+                                                                        data-thumb-alt="<?php echo e($alt); ?>"
+                                                                        data-thumb-srcset="<?php echo e($imgUrl); ?> 250w,
+                                                                            <?php echo e($imgUrl); ?> 300w,
+                                                                            <?php echo e($imgUrl); ?> 150w,
+                                                                            <?php echo e($imgUrl); ?> 768w,
+                                                                            <?php echo e($imgUrl); ?> 700w,
+                                                                            <?php echo e($imgUrl); ?> 50w,
+                                                                            <?php echo e($imgUrl); ?> 100w,
+                                                                            <?php echo e($imgUrl); ?> 1000w"
+                                                                        data-thumb-sizes="(max-width: 250px) 100vw, 250px"
+                                                                        class="woocommerce-product-gallery__image">
 
-            <!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 06:58:27 -->
+                                                                        <a href="<?php echo e($imgUrl); ?>">
+                                                                            <img fetchpriority="high" width="1000"
+                                                                                height="1000" src="<?php echo e($imgUrl); ?>"
+                                                                                class="<?php echo e($index == 0 ? 'wp-post-image' : ''); ?>"
+                                                                                alt="<?php echo e($alt); ?>" data-caption=""
+                                                                                data-src="<?php echo e($imgUrl); ?>"
+                                                                                data-large_image="<?php echo e($imgUrl); ?>"
+                                                                                data-large_image_width="1000"
+                                                                                data-large_image_height="1000"
+                                                                                decoding="async"
+                                                                                srcset="<?php echo e($imgUrl); ?> 1000w,
+                                                                            <?php echo e($imgUrl); ?> 300w,
+                                                                            <?php echo e($imgUrl); ?> 150w,
+                                                                            <?php echo e($imgUrl); ?> 768w,
+                                                                            <?php echo e($imgUrl); ?> 700w,
+                                                                            <?php echo e($imgUrl); ?> 250w,
+                                                                            <?php echo e($imgUrl); ?> 50w,
+                                                                            <?php echo e($imgUrl); ?> 100w"
+                                                                                sizes="(max-width: 1000px) 100vw, 1000px"
+                                                                                <?php if($index === 0): ?> id="js-main-image"
+                                                                                        data-image-base="<?php echo e(asset('storage')); ?>" <?php endif; ?> />
+                                                                        </a>
+                                                                    </div>
+                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-        <style>
-        .main-image img {
-            max-width: 100%;
-            height: 500px;           /* Tăng kích thước ảnh chính */
-            object-fit: cover;       /* Giữ tỉ lệ hợp lý, cắt viền nếu cần */
-            border-radius: 10px;
-        }
+                                <div class="elementor-element elementor-element-7c6682b4 e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-con e-child"
+                                    data-id="7c6682b4" data-element_type="container">
+                                    <div class="elementor-element elementor-element-757ccde elementor-widget kitify elementor-kitify-wooproduct-title"
+                                        data-id="757ccde" data-element_type="widget"
+                                        data-widget_type="kitify-wooproduct-title.default">
+                                        <div class="elementor-widget-container">
+                                            <h1 class="kitify-post-title "><?php echo e($product->name); ?></h1>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-4176e03d elementor-widget elementor-widget-spacer"
+                                        data-id="4176e03d" data-element_type="widget" data-widget_type="spacer.default">
+                                        <div class="elementor-widget-container">
+                                            <div class="elementor-spacer">
+                                                <div class="elementor-spacer-inner"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-22a6034f elementor-widget kitify elementor-kitify-wooproduct-rating"
+                                        data-id="22a6034f" data-element_type="widget"
+                                        data-widget_type="kitify-wooproduct-rating.default">
+                                        <div class="elementor-widget-container">
+                                            <div class="woocommerce-product-rating">
+                                                <?php
+                                                    $percent = ($avgRating / 5) * 100;
+                                                    $total_stock = $product->variants->sum('quantity');
+                                                    $total_sold = $product->orderDetails->sum('quantity');
 
-        .album-images {
-            margin-top: 20px;        /* Cách ảnh chính 1 khoảng */
-            gap: 15px !important;    /* Khoảng cách giữa các ảnh nhỏ */
-        }
+                                                    $stock = (int) ($total_stock ?? 0) - (int) ($total_sold ?? 0);
+                                                    if ($stock < 0) {
+                                                        $stock = 0;
+                                                    }
+                                                    $sold = (int) ($total_sold ?? 0);
+                                                ?>
 
-        .album-images img {
-            width: 100px;            /* Ảnh nhỏ to hơn một chút */
-            height: 100px;
-            object-fit: cover;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: transform 0.2s ease-in-out, border-color 0.2s;
-        }
+                                                <div class="star-rating" role="img"
+                                                    aria-label="Rated <?php echo e($avgRating); ?> out of 5">
+                                                    <span style="width:<?php echo e($percent); ?>%">Rated <strong
+                                                            class="rating"><?php echo e($avgRating); ?></strong>
+                                                        out of
+                                                        5 based on <span class="rating">1</span> customer rating</span>
+                                                </div><a href="#reviews" class="woocommerce-review-link" rel="nofollow">
+                                                    (<?php echo e($avgRating); ?>) |
+                                                    <span class="count"><?php echo e($ratingCount); ?></span> đánh
+                                                    giá | <span class="count">đã bán <?php echo e($sold); ?></span></a>
+                                            </div>
 
-        .album-images img:hover {
-            transform: scale(1.05);   /* Hiệu ứng phóng nhẹ khi hover */
-            border-color: #000;
-        }
-        </style>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-42e852fe elementor-widget elementor-widget-spacer"
+                                        data-id="42e852fe" data-element_type="widget" data-widget_type="spacer.default">
+                                        <div class="elementor-widget-container">
+                                            <div class="elementor-spacer">
+                                                <div class="elementor-spacer-inner"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-4fae2f47 elementor-widget kitify elementor-kitify-wooproduct-price"
+                                        data-id="4fae2f47" data-element_type="widget"
+                                        data-widget_type="kitify-wooproduct-price.default">
+                                        <div class="elementor-widget-container">
+                                            <p class="price position-relative">
+                                                <ins aria-hidden="true">
+                                                    <span class="woocommerce-Price-amount amount">
+                                                        <bdi>
+                                                            <span class="woocommerce-Price-currencySymbol"
+                                                                id="js-product-price" data-product-price>
+                                                                <?php echo e(number_format($displayPrice, 0, ',', '.')); ?>₫
+                                                            </span>
+                                                        </bdi>
 
-        <style>
-        /* Giãn khoảng giữa 2 cột (ảnh và thông tin) */
-        .row > .col-md-6:first-child {
-            padding-right: 60px !important; /* ép khoảng cách bên phải ảnh */
-        }
+                                                    </span>
 
-        .row > .col-md-6:last-child {
-            padding-left: 60px !important;  /* ép khoảng cách bên trái nội dung */
-        }
+                                                </ins>
+                                                <span class="screen-reader-text" id="js-product-price" data-product-price>
+                                                    Original price was: <?php echo e(number_format($displayPrice, 0, ',', '.')); ?>₫.
+                                                </span>
 
-        /* Cho ảnh chính to hơn, rõ hơn */
-        .main-image img {
-            width: 100%;
-            max-width: 500px;
-            height: 500px;
-            object-fit: cover;
-            border-radius: 12px;
-        }
+                                                <del aria-hidden="true">
+                                                    <span class="woocommerce-Price-amount amount">
+                                                        <bdi>
+                                                            <span class="woocommerce-Price-currencySymbol"
+                                                                id="js-product-original-price"
+                                                                data-product-original-price><?php echo e(number_format($originalPrice, 0, ',', '.')); ?>₫
+                                                            </span>
+                                                        </bdi>
+                                                    </span>
+                                                </del>
 
-        /* Cách ảnh chính và album ra xa */
-        .album-images {
-            margin-top: 20px;
-            gap: 15px !important;
-        }
+                                                <span class="screen-reader-text" id="js-product-original-price"
+                                                    data-product-original-price>
+                                                    Current price is: <?php echo e(number_format($originalPrice, 0, ',', '.')); ?>₫.
+                                                </span>
 
-        /* Ảnh nhỏ trong album */
-        .album-images img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            transition: transform 0.2s ease-in-out;
-        }
-        .album-images img:hover {
-            transform: scale(1.05);
-        }
-        </style>
+                                                
+                                                <span
+                                                    class="badge bg-danger price-discount-badge <?php echo e($discountPercent ? '' : 'd-none'); ?>"
+                                                    id="js-product-discount" data-product-discount>
+                                                    -<?php echo e($discountPercent); ?>%
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-6233891c elementor-widget elementor-widget-spacer"
+                                        data-id="6233891c" data-element_type="widget" data-widget_type="spacer.default">
+                                        <div class="elementor-widget-container">
+                                            <div class="elementor-spacer">
+                                                <div class="elementor-spacer-inner"></div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-       <style>
-            /* Thu nhỏ pill */
-            .qty-pill{
-            display:inline-flex; align-items:center; gap:8px;
-            border:1px solid #e5e5e5; border-radius:999px; padding:4px 8px;
-            background:#fff;
-            }
+                                    <div class="elementor-element elementor-element-53d89609 elementor-widget kitify elementor-kitify-wooproduct-addtocart"
+                                        data-id="53d89609" data-element_type="widget"
+                                        data-widget_type="kitify-wooproduct-addtocart.default">
+                                        <div class="elementor-widget-container">
 
-            /* Nút – / + luôn hiện rõ */
-            .qty-btn{
-            background:transparent !important; border:none !important;
-            width:24px; height:24px; line-height:24px;
-            font-size:16px; font-weight:600;
-            color:#222 !important; cursor:pointer; user-select:none;
-            display:flex; align-items:center; justify-content:center;
-            }
-            .qty-btn:disabled{opacity:.35; cursor:not-allowed;}
+                                            <div class="elementor-add-to-cart elementor-product-variable">
 
-            /* Ô số lượng nhỏ gọn */
-            .qty-input{
-            width:34px; text-align:center;
-            border:none; outline:none; box-shadow:none;
-            background:transparent; color:#222;
-            font-size:14px; padding:0;
-            }
 
-            /* Ẩn spinner */
-            .qty-input::-webkit-outer-spin-button,
-            .qty-input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
-            .qty-input[type=number]{ -moz-appearance:textfield; }
+                                                <?php if(isset($variantMap) && $variantMap->count() > 0): ?>
+                                                    <form class="variations_form cart" action="<?php echo e(route('cart.add')); ?>"
+                                                        method="post" id="addToCartForm" enctype='multipart/form-data'
+                                                        data-product_id="<?php echo e($product->id); ?>">
+                                                        <?php echo csrf_field(); ?>
+                                                        <div data-product_id="<?php echo e($product->id); ?>">
+                                                            <table class="variations" cellspacing="0"
+                                                                role="presentation">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <th class="label"><label for="pa_color">Màu
+                                                                                sắc</label>
+                                                                        </th>
+                                                                        <td class="value">
+                                                                            <select style="display:none" id="pa_color"
+                                                                                class=" woo-variation-raw-select"
+                                                                                name="color_id"
+                                                                                data-attribute_name="color_id"
+                                                                                data-show_option_none="yes">
+                                                                                <option value="">Choose an option
+                                                                                </option>
+                                                                                <?php $__currentLoopData = $colors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                                    <option value="<?php echo e($color->id); ?>">
+                                                                                        <?php echo e($color->name); ?>
 
-            /* Focus đẹp một chút */
-            .qty-pill:focus-within{ box-shadow:0 0 0 3px rgba(0,0,0,.05); }
+                                                                                    </option>
+                                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                                            </select>
+                                                                            <ul role="radiogroup" aria-label="Color"
+                                                                                class="variable-items-wrapper color-variable-items-wrapper wvs-style-squared"
+                                                                                data-attribute_name="color_id">
+                                                                                <?php $__currentLoopData = $colors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                                    <li aria-checked="false"
+                                                                                        tabindex="0"
+                                                                                        data-attribute_name="color_id"
+                                                                                        data-wvstooltip="<?php echo e($color->name); ?>"
+                                                                                        class="variable-item color-variable-item js-color-item"
+                                                                                        title="<?php echo e($color->name); ?>"
+                                                                                        data-title="<?php echo e($color->name); ?>"
+                                                                                        data-color-id="<?php echo e($color->id); ?>"
+                                                                                        data-value="<?php echo e($color->id); ?>"
+                                                                                        role="radio">
+                                                                                        <div
+                                                                                            class="variable-item-contents">
+                                                                                            <span
+                                                                                                class="variable-item-span variable-item-span-color"
+                                                                                                style="background-color:<?php echo e($color->color_code ?? '#cccccc'); ?>;"></span>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                                            </ul>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th class="label"><label
+                                                                                for="pa_size">Size</label>
+                                                                        </th>
+                                                                        <td class="value">
+                                                                            <select style="display:none" id="pa_size"
+                                                                                class=" woo-variation-raw-select"
+                                                                                name="size_id"
+                                                                                data-attribute_name="size_id"
+                                                                                data-show_option_none="yes">
+                                                                                <option value="">Choose an option
+                                                                                </option>
+                                                                                <?php $__currentLoopData = $sizes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $size): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                                    <option value="<?php echo e($size->id); ?>">
+                                                                                        <?php echo e($size->name); ?>
 
-            #priceBox .price{ display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; }
-            #priceBox .price--sale{ font-size:20px; font-weight:700; color:#d0021b; }   /* sale to & đỏ */
-            #priceBox .price--original{
-            font-size:14px; color:#777; text-decoration: line-through;
-            }
-            #priceBox .price--normal{ font-size:18px; font-weight:600; }
-            </style>
+                                                                                    </option>
+                                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                                            </select>
+                                                                            <ul role="radiogroup" aria-label="Size"
+                                                                                class="variable-items-wrapper button-variable-items-wrapper wvs-style-squared"
+                                                                                data-attribute_name="size_id">
+                                                                                <?php $__currentLoopData = $sizes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $size): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                                    <li aria-checked="false"
+                                                                                        tabindex="0"
+                                                                                        data-attribute_name="size_id"
+                                                                                        data-wvstooltip="<?php echo e($size->name); ?>"
+                                                                                        class="variable-item button-variable-item js-size-item"
+                                                                                        title="<?php echo e($size->name); ?>"
+                                                                                        data-title="<?php echo e($size->name); ?>"
+                                                                                        data-size-id="<?php echo e($size->id); ?>"
+                                                                                        data-value="<?php echo e($size->id); ?>"
+                                                                                        role="radio">
+                                                                                        <div
+                                                                                            class="variable-item-contents">
+                                                                                            <span
+                                                                                                class="variable-item-span variable-item-span-button"><?php echo e($size->size_code); ?></span>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                                            </ul><a class="reset_variations"
+                                                                                href="#" id="js-reset-variations"
+                                                                                aria-label="Clear options">Clear</a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <div class="reset_variations_alert screen-reader-text"
+                                                                role="alert" aria-live="polite" aria-relevant="all">
+                                                                <div class="single_variation_wrap">
+                                                                    <div class="woocommerce-variation single_variation">
+                                                                        <div class="woocommerce-variation-description">
+                                                                        </div>
+                                                                        <div class="woocommerce-variation-price"></div>
+                                                                        <div class="woocommerce-variation-availability">
+                                                                            <p class="stock out-of-stock">Hết hàng</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
-            <script>
-                (function () {
-                // —— Cấu hình tối thiểu ——
-                const BASE_STORAGE_URL = "<?php echo e(asset('storage')); ?>"; // /storage
-                const imgEl      = document.getElementById('productMainImg');
-                const sizeSel    = document.getElementById('selectSize');
-                const colorSel   = document.getElementById('selectColor'); // nếu không có thì vẫn OK
-                if (!imgEl || !sizeSel) return; // không có element -> thoát, không phá gì khác
+                                                            <div class="single_variation_wrap">
+                                                                <div class="woocommerce-variation single_variation"></div>
+                                                                <div
+                                                                    class="woocommerce-variation-add-to-cart variations_button ">
+                                                                    <div class="woocommerce-product-details__add-to-cart">
+                                                                        <div class="quantity">
+                                                                            <span
+                                                                                class="nova-minicart-qty-button decrease">
+                                                                                <svg class="icon">
+                                                                                    <use xlink:href="#mini-cart-delete">
+                                                                                    </use>
+                                                                                </svg>
+                                                                            </span>
+                                                                            <label class="screen-reader-text"
+                                                                                for="quantity_input_<?php echo e($product->id); ?>">
+                                                                                Số lượng <?php echo e($product->name); ?>
 
-                const DEFAULT_SRC = imgEl.dataset.default || imgEl.src || '';
+                                                                            </label>
+                                                                            <input type="number"
+                                                                                id="quantity_input_<?php echo e($product->id); ?>"
+                                                                                class="input-text qty text"
+                                                                                name="quantity" value="1"
+                                                                                aria-label="Product quantity"
+                                                                                min="" max=""
+                                                                                step="1" placeholder=""
+                                                                                inputmode="numeric" autocomplete="off" />
+                                                                            <span
+                                                                                class="nova-minicart-qty-button increase">
+                                                                                <svg class="icon">
+                                                                                    <use xlink:href="#mini-cart-add"></use>
+                                                                                </svg>
+                                                                            </span>
+                                                                        </div>
 
-                // Chuẩn hoá URL ảnh để KHÔNG lặp /storage/ và hỗ trợ http(s)
-                function normalizeUrl(u) {
-                    if (!u) return '';
-                    let x = String(u).trim();
+                                                                        
 
-                    // Nếu là URL tuyệt đối
-                    if (/^https?:\/\//i.test(x)) return x;
+                                                                        <p class="mb-2">
+                                                                            <span id="js-variant-stock"
+                                                                                class="fw-medium text-body-secondary">
+                                                                                Vui lòng chọn màu và size
+                                                                            </span>
+                                                                        </p>
+                                                                        
+                                                                        <input type="hidden" name="product_id"
+                                                                            value="<?php echo e($product->id); ?>">
+                                                                        <input type="hidden" name="product_variant_id"
+                                                                            id="js-variant-id" value="">
+                                                                        <input type="hidden" name="action_type"
+                                                                            id="js-action-type" value="add_to_cart">
 
-                    // Nếu đã là /storage/... hoặc storage/...
-                    if (x.startsWith('/storage/')) return x;
-                    if (x.startsWith('storage/'))  return '/' + x;
+                                                                        
+                                                                        <button type="submit"
+                                                                            class="single_add_to_cart_button button alt me-2 js-submit-cart"
+                                                                            data-action="add_to_cart">
+                                                                            Thêm vào giỏ hàng
+                                                                        </button>
 
-                    // Còn lại: ghép với /storage
-                    x = x.replace(/^\/+/, ''); // bỏ / đầu nếu có
-                    return BASE_STORAGE_URL.replace(/\/+$/, '') + '/' + x;
-                }
+                                                                        
+                                                                        <button type="submit"
+                                                                            class="single_add_to_cart_button button btn-primary js-submit-cart"
+                                                                            data-action="buy_now"
+                                                                            formaction="<?php echo e(route('checkout.buy_now')); ?>">
+                                                                            Mua ngay
+                                                                        </button>
+                                                                    </div>
 
-                // Tải thử trước khi set src; lỗi thì rơi về default
-                function loadWithFallback(url) {
-                    const finalUrl = normalizeUrl(url);
-                    if (!finalUrl) {
-                    imgEl.src = DEFAULT_SRC;
-                    return;
-                    }
-                    const probe = new Image();
-                    probe.onload  = () => { imgEl.src = finalUrl; };
-                    probe.onerror = () => { imgEl.src = DEFAULT_SRC; };
-                    probe.src = finalUrl;
-                }
 
-                // Lấy ảnh cho biến thể hiện tại từ nhiều nguồn khả dĩ
-                function getVariantImage() {
-                    // 1) Ưu tiên data-image trên option size
-                    const opt = sizeSel.options[sizeSel.selectedIndex];
-                    if (opt && opt.dataset && opt.dataset.image) {
-                    return opt.dataset.image;
-                    }
+                                                                </div>
+                                                            </div>
 
-                    // 2) Nếu có map toàn cục VARIANTS hoặc variantMap
-                    //    Kỳ vọng key dạng "colorId-sizeId" hoặc chỉ "sizeId" tuỳ bạn đang lưu
-                    const sizeId  = sizeSel.value;
-                    const colorId = colorSel ? colorSel.value : null;
+                                                        </div>
+                                                    </form>
+                                                <?php endif; ?>
 
-                    const maps = [window.VARIANTS, window.variantMap, window.variant_map];
-                    for (const M of maps) {
-                    if (!M) continue;
+                                            </div>
 
-                    if (colorId && M[`${colorId}-${sizeId}`]?.image) {
-                        return M[`${colorId}-${sizeId}`].image;
-                    }
-                    if (M[sizeId]?.image) {
-                        return M[sizeId].image;
-                    }
-                    }
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-6685eeb6 elementor-widget elementor-widget-spacer"
+                                        data-id="6685eeb6" data-element_type="widget" data-widget_type="spacer.default">
+                                        <div class="elementor-widget-container">
+                                            <div class="elementor-spacer">
+                                                <div class="elementor-spacer-inner"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-3aedd8b5 elementor-widget kitify elementor-kitify-wishlist-button"
+                                        data-id="3aedd8b5" data-element_type="widget"
+                                        data-widget_type="kitify-wishlist-button.default">
+                                        <div class="elementor-widget-container">
 
-                    // 3) Không tìm thấy -> để trống (sẽ fallback)
-                    return '';
-                }
+                                            <div class="yith-wcwl-add-to-wishlist add-to-wishlist-1558 yith-wcwl-add-to-wishlist--link-style yith-wcwl-add-to-wishlist--single wishlist-fragment on-first-load"
+                                                data-fragment-ref="1558"
+                                                data-fragment-options="{&quot;base_url&quot;:&quot;&quot;,&quot;product_id&quot;:1558,&quot;parent_product_id&quot;:0,&quot;product_type&quot;:&quot;variable&quot;,&quot;is_single&quot;:true,&quot;in_default_wishlist&quot;:false,&quot;show_view&quot;:true,&quot;browse_wishlist_text&quot;:&quot;Browse wishlist&quot;,&quot;already_in_wishslist_text&quot;:&quot;The product is already in your wishlist!&quot;,&quot;product_added_text&quot;:&quot;Product added!&quot;,&quot;available_multi_wishlist&quot;:false,&quot;disable_wishlist&quot;:false,&quot;show_count&quot;:false,&quot;ajax_loading&quot;:false,&quot;loop_position&quot;:&quot;after_add_to_cart&quot;,&quot;item&quot;:&quot;add_to_wishlist&quot;}">
 
-                function onSizeOrColorChange() {
-                    const img = getVariantImage();
-                    if (img) {
-                    loadWithFallback(img);
-                    } else {
-                    // Không có ảnh riêng cho biến thể -> dùng ảnh mặc định
-                    imgEl.src = DEFAULT_SRC;
-                    }
-                }
+                                                <!-- ADD TO WISHLIST -->
 
-                sizeSel.addEventListener('change', onSizeOrColorChange);
-                if (colorSel) colorSel.addEventListener('change', onSizeOrColorChange);
+                                                
+                                                <!-- COUNT TEXT -->
 
-                // Khởi tạo (khi trang load xong)
-                document.addEventListener('DOMContentLoaded', onSizeOrColorChange);
-                })();
-                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="elementor-element elementor-element-55b36d48 elementor-woo-meta--view-table elementor-widget kitify elementor-kitify-wooproduct-meta"
+                                        data-id="55b36d48" data-element_type="widget"
+                                        data-widget_type="kitify-wooproduct-meta.default">
+                                        <div class="elementor-widget-container">
+                                            <div class="product_meta">
 
-                <script>
-                    (function () {
-                    const mainImg = document.getElementById('productMainImg');
-                    if (!mainImg) return;
 
-                    const defaultSrc = mainImg.getAttribute('data-default');
+                                                <span class="sku_wrapper detail-container"><span
+                                                        class="detail-label">SKU</span> <span
+                                                        class="sku"><?php echo e($product->product_code); ?></span></span>
 
-                    // Hàm luôn ép ảnh về ảnh chính
-                    function keepMainImage() {
-                        if (mainImg.src !== defaultSrc) {
-                        mainImg.src = defaultSrc;
-                        }
-                    }
+                                                <span class="posted_in detail-container">
+                                                    <span class="detail-label">Danh mục</span>
+                                                    <span class="detail-content">
+                                                        <a href="../../product-category/jackets/index.html"
+                                                            rel="categories"><?php echo e($product->category->name); ?>
 
-                    // Nếu có nơi khác set ảnh sai → tự hồi về ảnh chính
-                    mainImg.addEventListener('error', keepMainImage);
+                                                        </a>
+                                                    </span>
+                                                </span>
 
-                    // Gắn vào các select màu/size (đặt nhiều selector để “bắt” được dù bạn đặt id/name khác)
-                    const selectors = [
-                        '#colorSelect', '#sizeSelect',
-                        'select[name="color_id"]', 'select[name="size_id"]',
-                        'select[name="color"]', 'select[name="size"]'
-                    ];
+                                                <span class="material detail-container">
+                                                    <span class="detail-label">Chất liệu</span>
+                                                    <span class="detail-content">
+                                                        <a href="#" rel="material"><?php echo e($product->material); ?></a>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="elementor-element elementor-element-6faf664c elementor-widget elementor-widget-spacer"
+                                        data-id="6faf664c" data-element_type="widget" data-widget_type="spacer.default">
+                                        <div class="elementor-widget-container">
+                                            <div class="elementor-spacer">
+                                                <div class="elementor-spacer-inner"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="elementor-element elementor-element-6cf878e4 elementor-widget kitify elementor-kitify-wooproduct-datatabs"
+                            data-id="6cf878e4" data-element_type="widget"
+                            data-widget_type="kitify-wooproduct-datatabs.default">
+                            <div class="container">
+                                <div class="kitify-product-tabs layout-type-accordion">
+                                    <div class="nova-woocommerce-tabs">
 
-                    document.querySelectorAll(selectors.join(',')).forEach(el => {
-                        el.addEventListener('change', keepMainImage);
-                    });
+                                        <ul class="tabs"
+                                            data-responsive-accordion-tabs="tabs small-accordion medium-accordion large-accordion"
+                                            data-allow-all-closed="true" id="single_product_tab">
+                                            <li class="title"><span>Mô tả sản phẩm</span></a></li>
+                                            
+                                        </ul>
+                                        <div class="tabs-content">
+                                            <div class="tabs-panel is-active" id="panel_description">
+                                                <div data-elementor-type="container" data-elementor-id="121"
+                                                    class="elementor elementor-121">
+                                                    <div class="elementor-element elementor-element-bae4132 e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                                                        data-id="bae4132" data-element_type="container">
+                                                        <div class="e-con-inner">
+                                                            <div class="elementor-element elementor-element-5faa12c elementor-widget elementor-widget-text-editor"
+                                                                data-id="5faa12c" data-element_type="widget"
+                                                                data-widget_type="text-editor.default">
+                                                                <div class="elementor-widget-container">
+                                                                    <?php
+                                                                        $parsedown = new \Parsedown();
+                                                                    ?>
 
-                    // Nếu code cũ có hàm đổi ảnh theo biến thể, ta vô hiệu hoá nhẹ nhàng:
-                    window.updateVariantImage = function () {
-                        // No-op: luôn giữ ảnh chính
-                        keepMainImage();
-                    };
+                                                                    <div class="product-description">
+                                                                        <?php echo $parsedown->text($product->description); ?>
 
-                    // Một số dự án đổi ảnh trong updateBySelection/updatePrice..., ta “bọc” lại:
-                    const origUpdateBySelection = window.updateBySelection;
-                    if (typeof origUpdateBySelection === 'function') {
-                        window.updateBySelection = function () {
-                        const ret = origUpdateBySelection.apply(this, arguments);
-                        keepMainImage();
-                        return ret;
-                        };
-                    }
-                    })();
-                    </script>
+                                                                    </div>
 
+                                                                    
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <ul class="tabs"
+                                            data-responsive-accordion-tabs="tabs small-accordion medium-accordion large-accordion"
+                                            data-allow-all-closed="true" id="single_product_tab">
+                                            
+                                            <li class="title"><span>Đánh giá</span></a></li>
+                                        </ul>
+                                        <div class="tabs-content ">
+                                            <div id="reviews" class="woocommerce-Reviews">
+                                                <div id="comments">
+                                                    <?php if($ratingCount > 0): ?>
+                                                        <ol class="commentlist">
+                                                            <?php $__currentLoopData = $reviews; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $review): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                <?php
+                                                                    $user = optional(optional($review->order)->user);
+                                                                    $name = $user->name ?? 'Khách ẩn danh';
+                                                                    $avatar = $user->image
+                                                                        ? asset('storage/' . $user->image)
+                                                                        : asset('assets/images/users/avatar-1.jpg'); // avatar mặc định
+                                                                    $ratingPercent = max(
+                                                                        0,
+                                                                        min(100, ($review->rating / 5) * 100),
+                                                                    );
+                                                                ?>
+
+                                                                <li class="review even thread-even depth-1"
+                                                                    id="li-comment-<?php echo e($review->id); ?>">
+                                                                    <div id="comment-<?php echo e($review->id); ?>"
+                                                                        class="comment_container">
+                                                                        <img alt="<?php echo e($name); ?>"
+                                                                            src="<?php echo e($avatar); ?>"
+                                                                            class="avatar avatar-60 photo" height="60"
+                                                                            width="60" />
+
+                                                                        <div class="comment-text">
+
+                                                                            
+                                                                            <div class="star-rating" role="img"
+                                                                                aria-label="Rated <?php echo e($review->rating); ?> out of 5">
+                                                                                <span style="width:<?php echo e($ratingPercent); ?>%">
+                                                                                    Rated
+                                                                                    <strong
+                                                                                        class="rating"><?php echo e($review->rating); ?></strong>
+                                                                                    out of 5
+                                                                                </span>
+                                                                            </div>
+
+                                                                            <p class="meta">
+                                                                                <strong class="woocommerce-review__author">
+                                                                                    <?php echo e($name); ?>
+
+                                                                                </strong>
+                                                                                <span
+                                                                                    class="woocommerce-review__dash">&ndash;</span>
+                                                                                <time
+                                                                                    class="woocommerce-review__published-date"
+                                                                                    datetime="<?php echo e($review->created_at->toIso8601String()); ?>">
+                                                                                    <?php echo e($review->created_at->format('d/m/Y H:i')); ?>
+
+                                                                                </time>
+                                                                            </p>
+
+                                                                            <div class="description">
+                                                                                <p><?php echo e($review->content); ?></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                        </ol>
+                                                        <div id="review_form_wrapper" class="mt-4">
+                                                            <div id="review_form">
+                                                                <div id="respond" class="comment-respond">
+                                                                    <span id="reply-title" class="comment-reply-title"
+                                                                        role="heading" aria-level="3">
+                                                                        Thêm đánh giá
+                                                                    </span>
+
+                                                                    <?php if(auth()->guard()->check()): ?>
+                                                                        <?php if($canReview): ?>
+                                                                            
+                                                                            <form
+                                                                                action="<?php echo e(route('reviews.store', $product->id)); ?>"
+                                                                                method="post" id="commentform"
+                                                                                class="comment-form">
+                                                                                <?php echo csrf_field(); ?>
+
+                                                                                <p class="comment-notes">
+                                                                                    <span class="required-field-message">
+                                                                                        Các trường có dấu <span
+                                                                                            class="required">*</span> là bắt
+                                                                                        buộc.
+                                                                                    </span>
+                                                                                </p>
+
+                                                                                
+                                                                                <div class="comment-form-rating mb-3">
+                                                                                    <label for="rating"
+                                                                                        id="comment-form-rating-label">
+                                                                                        Đánh giá của bạn&nbsp;<span
+                                                                                            class="required">*</span>
+                                                                                    </label>
+                                                                                    <select name="rating" id="rating"
+                                                                                        required class="form-select">
+                                                                                        <option value="">Chọn đánh giá…
+                                                                                        </option>
+                                                                                        <option value="5">Rất tốt (5★)
+                                                                                        </option>
+                                                                                        <option value="4">Tốt (4★)
+                                                                                        </option>
+                                                                                        <option value="3">Bình thường (3★)
+                                                                                        </option>
+                                                                                        <option value="2">Tạm được (2★)
+                                                                                        </option>
+                                                                                        <option value="1">Tệ (1★)</option>
+                                                                                    </select>
+                                                                                </div>
+
+                                                                                
+                                                                                <p class="comment-form-comment mb-3">
+                                                                                    <label for="comment">
+                                                                                        Nội dung đánh giá&nbsp;<span
+                                                                                            class="required">*</span>
+                                                                                    </label>
+                                                                                    <textarea id="comment" name="content" cols="45" rows="5" class="form-control" required><?php echo e(old('content')); ?></textarea>
+                                                                                </p>
+
+                                                                                
+                                                                                <p class="comment-form-author mb-3">
+                                                                                    <label for="author">Tên</label>
+                                                                                    <input id="author" type="text"
+                                                                                        class="form-control"
+                                                                                        value="<?php echo e(auth()->user()->name); ?>"
+                                                                                        readonly />
+                                                                                </p>
+                                                                                <p class="comment-form-email mb-3">
+                                                                                    <label for="email">Email</label>
+                                                                                    <input id="email" type="email"
+                                                                                        class="form-control"
+                                                                                        value="<?php echo e(auth()->user()->email); ?>"
+                                                                                        readonly />
+                                                                                </p>
+
+                                                                                <p class="form-submit mb-0">
+                                                                                    <button type="submit" id="submit"
+                                                                                        class="btn btn-primary">
+                                                                                        Gửi đánh giá
+                                                                                    </button>
+                                                                                </p>
+                                                                            </form>
+                                                                        <?php elseif($hasReviewed): ?>
+                                                                            <p class="mt-2 text-muted">
+                                                                                Bạn đã gửi đánh giá cho sản phẩm này trước đó.
+                                                                            </p>
+                                                                        <?php else: ?>
+                                                                            <p class="mt-2 text-muted">
+                                                                                Chỉ khách đã mua sản phẩm này mới có thể gửi
+                                                                                đánh giá.
+                                                                            </p>
+                                                                        <?php endif; ?>
+                                                                    <?php else: ?>
+                                                                        <p class="mt-2">
+                                                                            Vui lòng <a href="<?php echo e(route('login')); ?>">đăng
+                                                                                nhập</a> để viết đánh giá.
+                                                                        </p>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        
+                                                        <div class="mt-3">
+                                                            <?php echo e($reviews->links()); ?>
+
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <p class="woocommerce-noreviews mb-0">
+                                                            Chưa có đánh giá nào cho sản phẩm này.
+                                                        </p>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="elementor-element elementor-element-3b561aea e-con-full e-flex kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
+                                data-id="3b561aea" data-element_type="container">
+                                <div class="elementor-element elementor-element-56e87309 elementor-widget elementor-widget-heading"
+                                    data-id="56e87309" data-element_type="widget" data-widget_type="heading.default">
+                                    <div class="elementor-widget-container">
+                                        <h2 class="elementor-heading-title elementor-size-default">Sản Phẩm Liên
+                                            Quan</h2>
+                                    </div>
+                                </div>
+                                <div class="elementor-element elementor-element-eef8dba custom-carousel-preset-default kitify-carousel-item-effect-slide elementor-widget kitify elementor-kitify-wooproducts"
+                                    data-id="eef8dba" data-element_type="widget"
+                                    data-widget_type="kitify-wooproducts.default">
+                                    <div class="elementor-widget-container">
+                                        <div class="woocommerce  kitify_wc_widget_eef8dba_0">
+                                            <div class="kitify-products kitify-carousel"
+                                                data-slider_options="{&quot;slidesToScroll&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;rows&quot;:{&quot;desktop&quot;:&quot;1&quot;,&quot;laptop&quot;:&quot;1&quot;,&quot;tablet&quot;:&quot;1&quot;,&quot;mobile_extra&quot;:&quot;1&quot;},&quot;autoplaySpeed&quot;:5000,&quot;autoplay&quot;:true,&quot;infinite&quot;:false,&quot;centerMode&quot;:false,&quot;pauseOnHover&quot;:false,&quot;pauseOnInteraction&quot;:false,&quot;reverseDirection&quot;:false,&quot;infiniteEffect&quot;:false,&quot;speed&quot;:500,&quot;arrows&quot;:true,&quot;dots&quot;:false,&quot;variableWidth&quot;:false,&quot;prevArrow&quot;:&quot;.kitify-carousel__prev-arrow-eef8dba_0&quot;,&quot;nextArrow&quot;:&quot;.kitify-carousel__next-arrow-eef8dba_0&quot;,&quot;dotsElm&quot;:&quot;.kitify-carousel__dots_eef8dba_0&quot;,&quot;rtl&quot;:false,&quot;effect&quot;:&quot;slide&quot;,&quot;coverflowEffect&quot;:{&quot;rotate&quot;:null,&quot;stretch&quot;:null,&quot;depth&quot;:null,&quot;modifier&quot;:null,&quot;slideShadows&quot;:null},&quot;dotType&quot;:&quot;bullets&quot;,&quot;direction&quot;:&quot;horizontal&quot;,&quot;uniqueID&quot;:&quot;kitify_carousel_eef8dba_0&quot;,&quot;asFor&quot;:&quot;&quot;,&quot;autoHeight&quot;:false,&quot;slidesToShow&quot;:{&quot;desktop&quot;:4,&quot;mobile&quot;:1,&quot;mobile_extra&quot;:2,&quot;tablet&quot;:3,&quot;tablet_extra&quot;:3,&quot;laptop&quot;:4}}"
+                                                dir="ltr">
+                                                <div class="kitify-carousel-inner">
+                                                    <div class="kitify-products__list_wrapper swiper-container">
+                                                        <ul
+                                                            class="products ul_products kitify-products__list products-grid products-grid-1 swiper-wrapper columns-4">
+                                                            <?php $__currentLoopData = $relatedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                <?php
+                                                                    // Lấy biến thể rẻ nhất để tính giá hiển thị
+                                                                    $sortedVariants = $item->variants->sortBy(function (
+                                                                        $v,
+                                                                    ) {
+                                                                        // Ưu tiên giá sale nếu có sale < price, nếu không dùng price
+                                                                        $effectivePrice =
+                                                                            $v->sale !== null && $v->sale < $v->price
+                                                                                ? $v->sale
+                                                                                : $v->price;
+                                                                        return $effectivePrice;
+                                                                    });
+
+                                                                    $bestVariant = $sortedVariants->first(); // có thể null nếu chưa có biến thể
+
+                                                                    // Chuẩn bị giá
+                                                                    $hasSale =
+                                                                        $bestVariant &&
+                                                                        $bestVariant->sale !== null &&
+                                                                        $bestVariant->sale < $bestVariant->price;
+
+                                                                    $originalPrice = $bestVariant->price ?? null;
+                                                                    $salePrice = $hasSale ? $bestVariant->sale : null;
+                                                                    $finalPrice = $hasSale
+                                                                        ? $bestVariant->sale
+                                                                        : $bestVariant->price ?? null;
+
+                                                                    // Tính % giảm
+                                                                    $discountPercent = null;
+                                                                    if ($hasSale && $originalPrice > 0) {
+                                                                        $discountPercent = round(
+                                                                            (($originalPrice - $salePrice) /
+                                                                                $originalPrice) *
+                                                                                100,
+                                                                        );
+                                                                    }
+
+                                                                    // Ảnh chính
+                                                                    $mainImage = $item->firstPhoto?->image
+                                                                        ? asset('storage/' . $item->firstPhoto->image)
+                                                                        : 'https://via.placeholder.com/700x700?text=No+Image';
+
+                                                                    // Ảnh hover (second image). Nếu có album khác thì lấy ảnh kế tiếp
+                                                                    $secondPhoto = $item->photoAlbums
+                                                                        ->skip(1) // bỏ ảnh đầu tiên
+                                                                        ->first();
+
+                                                                    $hoverImage = $secondPhoto?->image
+                                                                        ? asset('storage/' . $secondPhoto->image)
+                                                                        : $mainImage; // fallback chính nó
+                                                                ?>
+                                                                <li
+                                                                    class="product_item product-grid-item product type-product post-960 status-publish instock product_cat-hoodies product_cat-tshirts product_cat-women product_tag-clothing product_tag-etc product_tag-fashion product_tag-m41 product_tag-products product_tag-women has-post-thumbnail sale shipping-taxable purchasable product-type-variable has-default-attributes kitify-product swiper-slide">
+
+
+                                                                    <div class="product-item">
+                                                                        <div class="product-item__badges">
+
+                                                                            <?php if($discountPercent): ?>
+                                                                                <span
+                                                                                    class="onsale"><?php echo e($discountPercent); ?>%</span>
+                                                                            <?php endif; ?>
+                                                                        </div>
+                                                                        <div class="product-item__thumbnail">
+                                                                            <div class="product-item__thumbnail_overlay">
+                                                                            </div>
+                                                                            <a class="product-item-link"
+                                                                                href="<?php echo e(route('products.show', ['id' => $item->id])); ?>"></a>
+                                                                            <div
+                                                                                class="product-item__description--top-actions">
+
+                                                                                <a href="<?php echo e(route('products.show', ['id' => $item->id])); ?>?add_to_wishlist=<?php echo e($item->id); ?>"
+                                                                                    data-product-id="<?php echo e($item->id); ?>"
+                                                                                    data-product-type="variable"
+                                                                                    data-browse-wishlist-text="Browse wishlist"
+                                                                                    class="nova_product_wishlist_btn add_to_wishlist"
+                                                                                    rel="nofollow">
+                                                                                    <i class="inova ic-favorite"></i>
+                                                                                    <span class="hidden add-text">Add to
+                                                                                        wishlist</span>
+                                                                                    <span class="hidden added-text">Browse
+                                                                                        wishlist</span>
+                                                                                </a>
+
+                                                                                <a href="#"
+                                                                                    class="nova_product_quick_view_btn"
+                                                                                    data-product-id="<?php echo e($item->id); ?>"
+                                                                                    rel="nofollow"><i
+                                                                                        class="inova ic-zoom"></i></a>
+                                                                                <a href="<?php echo e(route('products.show', ['id' => $item->id])); ?>"
+                                                                                    data-quantity="1"
+                                                                                    class="button product_type_variable add_to_cart_button"
+                                                                                    data-product_id="<?php echo e($item->id); ?>"
+                                                                                    data-product_sku=""
+                                                                                    aria-label="Select options for <?php echo e($item->name); ?>"
+                                                                                    rel="nofollow"><svg
+                                                                                        class="mixtas-addtocart">
+                                                                                        <use xlink:href="#mixtas-addtocart"
+                                                                                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                                                        </use>
+                                                                                    </svg><span class="text">Select
+                                                                                        options</span></a> <span
+                                                                                    id="woocommerce_loop_add_to_cart_link_describedby_<?php echo e($item->id); ?>"
+                                                                                    class="screen-reader-text">
+                                                                                    This product has multiple variants. The
+                                                                                    options
+                                                                                    may be chosen on the product page
+                                                                                </span>
+                                                                            </div>
+
+
+                                                                            <div
+                                                                                class="product-item__thumbnail-placeholder second_image_enabled">
+                                                                                <a
+                                                                                    href="<?php echo e(route('products.show', ['id' => $item->id])); ?>">
+                                                                                    <img loading="lazy" width="700"
+                                                                                        height="700"
+                                                                                        src="<?php echo e($mainImage); ?>"
+                                                                                        class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail"
+                                                                                        alt="<?php echo e($item->name); ?>"
+                                                                                        decoding="async"
+                                                                                        srcset="<?php echo e($mainImage); ?> 700w,
+                                                                                                                                                                                                                                                     <?php echo e($mainImage); ?> 300w, <?php echo e($mainImage); ?> 150w, <?php echo e($mainImage); ?> 768w, <?php echo e($mainImage); ?> 250w, <?php echo e($mainImage); ?> 50w, <?php echo e($mainImage); ?> 100w, <?php echo e($mainImage); ?> 1000w"
+                                                                                        sizes="(max-width: 700px) 100vw, 700px" /><span
+                                                                                        class="product_second_image"
+                                                                                        style="background-image: url('<?php echo e($hoverImage); ?>')"></span>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="product-item__description">
+
+                                                                            <div class="product-item__description--info">
+                                                                                <div class="info-left">
+                                                                                    <?php if($item->category): ?>
+                                                                                        <div
+                                                                                            class="product-item__category">
+                                                                                            <a class="content-product-cat"
+                                                                                                href="<?php echo e(route('products.category', ['slug' => $item->category->slug])); ?>"
+                                                                                                rel="tag"><?php echo e($item->category->name); ?></a>
+                                                                                        </div>
+                                                                                    <?php endif; ?>
+                                                                                    <a href="<?php echo e(route('products.show', ['id' => $item->id])); ?>"
+                                                                                        class="title">
+                                                                                        <h3
+                                                                                            class="woocommerce-loop-product__title">
+                                                                                            <?php echo e($item->name); ?>
+
+                                                                                        </h3>
+                                                                                    </a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="info-right">
+                                                                                    <?php if($bestVariant): ?>
+                                                                                        <?php if($hasSale): ?>
+                                                                                            
+                                                                                            <span class="price">
+                                                                                                <del aria-hidden="true">
+                                                                                                    <span
+                                                                                                        class="woocommerce-Price-amount amount">
+                                                                                                        <bdi>
+                                                                                                            <?php echo e(number_format($originalPrice, 0, ',', '.')); ?>₫
+                                                                                                        </bdi>
+                                                                                                    </span>
+                                                                                                </del>
+                                                                                                <ins aria-hidden="true">
+                                                                                                    <span
+                                                                                                        class="woocommerce-Price-amount amount m-2">
+                                                                                                        <bdi>
+                                                                                                            <?php echo e(number_format($salePrice, 0, ',', '.')); ?>₫
+                                                                                                        </bdi>
+                                                                                                    </span>
+                                                                                                </ins>
+                                                                                            </span>
+                                                                                        <?php else: ?>
+                                                                                            
+                                                                                            <span class="price">
+                                                                                                <ins aria-hidden="true">
+                                                                                                    <span
+                                                                                                        class="woocommerce-Price-amount amount">
+                                                                                                        <bdi>
+                                                                                                            <?php echo e(number_format($finalPrice ?? 0, 0, ',', '.')); ?>₫
+                                                                                                        </bdi>
+                                                                                                    </span>
+                                                                                                </ins>
+                                                                                            </span>
+                                                                                        <?php endif; ?>
+                                                                                    <?php else: ?>
+                                                                                        
+                                                                                        <span class="price">
+                                                                                            <ins aria-hidden="true">
+                                                                                                <span
+                                                                                                    class="woocommerce-Price-amount amount">
+                                                                                                    <bdi>
+                                                                                                        
+                                                                                                        0₫
+                                                                                                    </bdi>
+                                                                                                </span>
+                                                                                            </ins>
+                                                                                        </span>
+                                                                                    <?php endif; ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                </li>
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="kitify-carousel__prev-arrow-eef8dba_0 kitify-arrow prev-arrow">
+                                                    <i aria-hidden="true" class="novaicon-arrow-left"></i>
+                                                </div>
+                                                <div class="kitify-carousel__next-arrow-eef8dba_0 kitify-arrow next-arrow">
+                                                    <i aria-hidden="true" class="novaicon-arrow-right"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- .site-content-wrapper -->
+                        <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                        <div class="nova-overlay-global"></div>
+                    </div>
                     <script>
-                    (function(){
-                    const form      = document.getElementById('addToCartForm');
-                    if (!form) return;
-                    const btnAdd    = document.getElementById('btnAddToCart');
-                    const btnBuyNow = document.getElementById('btnBuyNow');
-                    const miniCartCount = document.getElementById('miniCartCount');
+                        const variantMap = <?php echo json_encode($variantMap, 15, 512) ?>;
 
-                    // Lấy CSRF token
-                    function getCsrfToken(){
-                        const meta = document.querySelector('meta[name="csrf-token"]');
-                        if (meta && meta.content) return meta.content;
-                        const inp  = form.querySelector('input[name="_token"]');
-                        return inp ? inp.value : '';
-                    }
+                        // Giá mặc định ban đầu (Blade đổ xuống)
+                        const defaultPrice = <?php echo e((float) $displayPrice); ?>;
+                        const defaultOriginal = <?php echo e((float) $originalPrice); ?>;
+                        const defaultHasDiscount = <?php echo e($discountPercent ? 'true' : 'false'); ?>;
+                        const defaultDiscount = <?php echo e((int) ($discountPercent ?? 0)); ?>;
 
-                    form.addEventListener('submit', async function(e){
-                        // Chỉ “bắt” khi nhấn nút Thêm Vào Giỏ Hàng; nút Mua Ngay giữ nguyên hành vi
-                        const submitter = e.submitter || document.activeElement;
-                        if (!submitter || submitter.id !== 'btnAddToCart') return;
+                        let selectedColorId = null;
+                        let selectedSizeId = null;
+                        let currentVariantStock = null; // <<=== STOCK CỦA BIẾN THỂ HIỆN TẠI
 
-                        e.preventDefault();
+                        const priceEl = document.getElementById('js-product-price');
+                        const originalEl = document.getElementById('js-product-original-price');
+                        const discountEl = document.getElementById('js-product-discount');
+                        const stockEl = document.getElementById('js-variant-stock');
 
-                        // Yêu cầu chọn biến thể nếu có
-                        const variantId = document.getElementById('variantId');
-                        if (variantId && !variantId.value) {
-                        Swal.fire({icon:'warning', title:'Thiếu lựa chọn', text:'Vui lòng chọn màu & size trước khi thêm vào giỏ.'});
-                        return;
+                        const colorSelect = document.getElementById('pa_color');
+                        const sizeSelect = document.getElementById('pa_size');
+
+                        const variantIdInput = document.getElementById('js-variant-id');
+                        const actionTypeInput = document.getElementById('js-action-type');
+                        const addToCartForm = document.getElementById('addToCartForm');
+
+                        const colorItems = document.querySelectorAll('.js-color-item');
+                        const sizeItems = document.querySelectorAll('.js-size-item');
+
+                        // Ô số lượng + form lỗi
+                        const quantityInput = document.getElementById('quantity_input_<?php echo e($product->id); ?>');
+                        const qtyErrorEl = document.getElementById('js-qty-error');
+
+                        function formatCurrency(value) {
+                            if (!value) return '0₫';
+                            return new Intl.NumberFormat('vi-VN', {
+                                style: 'currency',
+                                currency: 'VND',
+                                maximumFractionDigits: 0
+                            }).format(value);
                         }
 
-                        btnAdd.disabled = true;
-                        const oldText = btnAdd.innerHTML;
-                        btnAdd.innerHTML = 'Đang thêm...';
+                        // ====== FORM THÔNG BÁO LỖI SỐ LƯỢNG ======
+                        function showQtyError(message) {
+                            if (!qtyErrorEl) return;
+                            qtyErrorEl.textContent = message;
+                            qtyErrorEl.style.display = 'block';
+                        }
 
-                        try {
-                        const res = await fetch(form.getAttribute('action'), {
-                            method: 'POST',
-                            headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': getCsrfToken(),
-                            'Accept': 'application/json'
-                            },
-                            body: new FormData(form)
+                        function clearQtyError() {
+                            if (!qtyErrorEl) return;
+                            qtyErrorEl.textContent = '';
+                            qtyErrorEl.style.display = 'none';
+                        }
+
+                        function resetPriceAndStock() {
+                            // Reset giá
+                            priceEl.textContent = formatCurrency(defaultPrice);
+
+                            if (defaultHasDiscount === true || defaultHasDiscount === 'true') {
+                                originalEl.textContent = formatCurrency(defaultOriginal);
+                                originalEl.classList.remove('d-none');
+
+                                discountEl.textContent = `-${defaultDiscount}%`;
+                                discountEl.classList.remove('d-none');
+                            } else {
+                                originalEl.classList.add('d-none');
+                                discountEl.classList.add('d-none');
+                            }
+
+                            // Reset stock + variant id
+                            if (stockEl) {
+                                stockEl.textContent = 'Vui lòng chọn màu và size';
+                                stockEl.classList.remove('text-danger');
+                                stockEl.classList.add('text-body-secondary');
+                            }
+
+                            if (variantIdInput) {
+                                variantIdInput.value = '';
+                            }
+                        }
+
+                        // Cập nhật UI theo 1 biến thể cụ thể
+                        function updateUIByVariant(variant) {
+                            const originalPrice = Number(variant.price);
+                            const salePrice = variant.sale && variant.sale > 0 ? Number(variant.sale) : null;
+
+                            if (salePrice && salePrice < originalPrice) {
+                                priceEl.textContent = formatCurrency(salePrice);
+                                originalEl.textContent = formatCurrency(originalPrice);
+
+                                const percent = Math.round((originalPrice - salePrice) / originalPrice * 100);
+
+                                originalEl.classList.remove('d-none');
+                                discountEl.classList.remove('d-none');
+                                discountEl.textContent = `-${percent}%`;
+                            } else {
+                                priceEl.textContent = formatCurrency(originalPrice);
+                                originalEl.classList.add('d-none');
+                                discountEl.classList.add('d-none');
+                            }
+
+                            if (variantIdInput) {
+                                variantIdInput.value = variant.id;
+                            }
+                            currentVariantStock = Number(variant.stock ?? 0); // <<=== LƯU LẠI STOCK HIỆN TẠI
+
+                            if (stockEl) {
+                                if (variant.stock > 0) {
+                                    stockEl.textContent = `Còn ${variant.stock} sản phẩm`;
+                                    stockEl.classList.remove('text-danger');
+                                    stockEl.classList.add('text-body-secondary');
+                                } else {
+                                    stockEl.textContent = 'Hết hàng';
+                                    stockEl.classList.remove('text-body-secondary');
+                                    stockEl.classList.add('text-danger');
+                                }
+                            }
+                            clearQtyError();
+                            if (quantityInput && currentVariantStock > 0 && quantityInput.value > currentVariantStock) {
+                                quantityInput.value = currentVariantStock;
+                            }
+                        }
+
+                        function updatePriceByVariant() {
+                            if (!selectedColorId || !selectedSizeId) {
+                                resetPriceAndStock();
+                                return;
+                            }
+
+                            const key = `${selectedColorId}_${selectedSizeId}`;
+                            const variant = variantMap[key];
+
+                            if (!variant) {
+                                if (stockEl) {
+                                    stockEl.textContent = 'Biến thể này hiện không có sẵn';
+                                    stockEl.classList.add('text-danger');
+                                }
+                                if (variantIdInput) {
+                                    variantIdInput.value = '';
+                                }
+                                currentVariantStock = null;
+                                clearQtyError();
+                                return;
+                            }
+
+                            updateUIByVariant(variant);
+                        }
+
+                        // ===== LỌC CHÉO: SIZE THEO MÀU =====
+                        function updateAvailableSizes() {
+                            sizeItems.forEach(item => {
+                                const sizeId = item.dataset.sizeId;
+
+                                if (!selectedColorId) {
+                                    item.classList.remove('is-disabled');
+                                    item.setAttribute('aria-disabled', 'false');
+                                    return;
+                                }
+
+                                const key = `${selectedColorId}_${sizeId}`;
+                                const variant = variantMap[key];
+
+                                if (!variant || variant.stock <= 0) {
+                                    item.classList.add('is-disabled');
+                                    item.setAttribute('aria-disabled', 'true');
+
+                                    if (item.classList.contains('selected')) {
+                                        item.classList.remove('selected');
+                                        item.setAttribute('aria-checked', 'false');
+                                        selectedSizeId = null;
+                                        if (sizeSelect) sizeSelect.value = '';
+                                    }
+                                } else {
+                                    item.classList.remove('is-disabled');
+                                    item.setAttribute('aria-disabled', 'false');
+                                }
+                            });
+                        }
+
+                        // ===== LỌC CHÉO: MÀU THEO SIZE =====
+                        function updateAvailableColors() {
+                            colorItems.forEach(item => {
+                                const colorId = item.dataset.colorId;
+
+                                if (!selectedSizeId) {
+                                    item.classList.remove('is-disabled');
+                                    item.setAttribute('aria-disabled', 'false');
+                                    return;
+                                }
+
+                                const key = `${colorId}_${selectedSizeId}`;
+                                const variant = variantMap[key];
+
+                                if (!variant || variant.stock <= 0) {
+                                    item.classList.add('is-disabled');
+                                    item.setAttribute('aria-disabled', 'true');
+
+                                    if (item.classList.contains('selected')) {
+                                        item.classList.remove('selected');
+                                        item.setAttribute('aria-checked', 'false');
+                                        selectedColorId = null;
+                                        if (colorSelect) colorSelect.value = '';
+                                    }
+                                } else {
+                                    item.classList.remove('is-disabled');
+                                    item.setAttribute('aria-disabled', 'false');
+                                }
+                            });
+                        }
+
+                        function clearSelection() {
+                            selectedColorId = null;
+                            selectedSizeId = null;
+
+                            if (colorSelect) colorSelect.value = '';
+                            if (sizeSelect) sizeSelect.value = '';
+
+                            colorItems.forEach(item => {
+                                item.classList.remove('selected', 'is-disabled');
+                                item.setAttribute('aria-checked', 'false');
+                                item.setAttribute('aria-disabled', 'false');
+                            });
+
+                            sizeItems.forEach(item => {
+                                item.classList.remove('selected', 'is-disabled');
+                                item.setAttribute('aria-checked', 'false');
+                                item.setAttribute('aria-disabled', 'false');
+                            });
+
+                            resetPriceAndStock();
+                        }
+
+                        // ===== EVENT: CHỌN / BỎ CHỌN MÀU =====
+                        colorItems.forEach(item => {
+                            item.addEventListener('click', function() {
+                                if (this.classList.contains('is-disabled')) return;
+
+                                const colorId = this.dataset.colorId;
+
+                                // Nếu đang được chọn -> click lần 2 để HUỶ CHỌN màu
+                                if (this.classList.contains('selected')) {
+                                    this.classList.remove('selected');
+                                    this.setAttribute('aria-checked', 'false');
+                                    selectedColorId = null;
+                                    if (colorSelect) colorSelect.value = '';
+
+                                    // Khi không còn màu được chọn, enable lại size theo logic hiện tại
+                                    updateAvailableSizes();
+
+                                    // Không đủ cặp color+size -> reset giá/stock
+                                    updatePriceByVariant();
+                                    return;
+                                }
+
+                                // Chọn màu mới
+                                selectedColorId = colorId;
+
+                                if (colorSelect) {
+                                    colorSelect.value = colorId;
+                                }
+
+                                colorItems.forEach(i => {
+                                    i.classList.remove('selected');
+                                    i.setAttribute('aria-checked', 'false');
+                                });
+                                this.classList.add('selected');
+                                this.setAttribute('aria-checked', 'true');
+
+                                updateAvailableSizes();
+                                updatePriceByVariant();
+                            });
                         });
 
-                        const data = await res.json().catch(() => ({}));
-                        if (!res.ok || !data.ok) {
-                            const msg = (data && (data.message || data.error)) || 'Không thể thêm vào giỏ hàng.';
-                            throw new Error(msg);
-                        }
+                        // ===== EVENT: CHỌN / BỎ CHỌN SIZE =====
+                        sizeItems.forEach(item => {
+                            item.addEventListener('click', function() {
+                                if (this.classList.contains('is-disabled')) return;
 
-                        // Cập nhật badge số lượng (nếu có phần tử này ở header)
-                        if (miniCartCount && typeof data.cart_count !== 'undefined') {
-                            miniCartCount.textContent = data.cart_count;
-                        }
+                                const sizeId = this.dataset.sizeId;
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Đã thêm vào giỏ!',
-                            text: data.message || 'Sản phẩm đã được thêm.',
-                            timer: 1500,
-                            showConfirmButton: false
+                                // Nếu đang được chọn -> click lần 2 để HUỶ CHỌN size
+                                if (this.classList.contains('selected')) {
+                                    this.classList.remove('selected');
+                                    this.setAttribute('aria-checked', 'false');
+                                    selectedSizeId = null;
+                                    if (sizeSelect) sizeSelect.value = '';
+
+                                    updateAvailableColors();
+                                    updatePriceByVariant();
+                                    return;
+                                }
+
+                                // Chọn size mới
+                                selectedSizeId = sizeId;
+
+                                if (sizeSelect) {
+                                    sizeSelect.value = sizeId;
+                                }
+
+                                sizeItems.forEach(i => {
+                                    i.classList.remove('selected');
+                                    i.setAttribute('aria-checked', 'false');
+                                });
+                                this.classList.add('selected');
+                                this.setAttribute('aria-checked', 'true');
+
+                                updateAvailableColors();
+                                updatePriceByVariant();
+                            });
                         });
-                        } catch (err) {
-                        Swal.fire({icon:'error', title:'Lỗi', text: err.message || 'Đã xảy ra lỗi.'});
-                        } finally {
-                        btnAdd.disabled = false;
-                        btnAdd.innerHTML = oldText;
+
+                        // Nút Clear
+                        const resetBtn = document.getElementById('js-reset-variations');
+                        if (resetBtn) {
+                            resetBtn.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                clearSelection();
+                            });
                         }
-                    });
-                    })();
+
+                        // Bắt action_type cho 2 nút submit (Add to cart / Mua ngay)
+                        document.querySelectorAll('.js-submit-cart').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                if (actionTypeInput) {
+                                    actionTypeInput.value = this.dataset.action;
+                                }
+                            });
+                        });
+
+                        function showFormAlert(message) {
+                            const box = document.getElementById('js-form-alert');
+                            const text = document.getElementById('js-form-alert-text');
+                            if (!box || !text) return;
+
+                            text.textContent = message;
+                            box.style.display = 'block';
+
+                            // Auto hide sau 3s
+                            setTimeout(() => {
+                                box.style.display = 'none';
+                            }, 3000);
+                        }
+
+                        // Tắt khi ấn nút X
+                        document.getElementById('js-form-alert-close')?.addEventListener('click', () => {
+                            document.getElementById('js-form-alert').style.display = 'none';
+                        });
+
+                        // Validate trước khi submit form
+                        if (addToCartForm) {
+                            addToCartForm.addEventListener('submit', function(e) {
+                                // 1. Bắt buộc chọn biến thể
+                                if (!variantIdInput || !variantIdInput.value) {
+                                    e.preventDefault();
+                                    showMissingVariantAlert();
+                                    return;
+                                }
+
+                                // 2. Check số lượng
+                                if (!validateQuantity()) {
+                                    e.preventDefault();
+                                    showQtyAlert();
+                                    return;
+                                }
+                            });
+                        }
+
+                        function validateQuantity() {
+                            if (!quantityInput) return;
+
+                            let qty = parseInt(quantityInput.value, 10);
+                            if (isNaN(qty)) qty = 1;
+
+                            clearQtyError();
+
+                            // 1. Không cho nhỏ hơn 1
+                            if (qty <= 0) {
+                                qty = 1;
+                                quantityInput.value = 1;
+                                showQtyError('Số lượng không thể nhỏ hơn 1');
+                                return false;
+                            }
+
+                            // 2. Không vượt quá stock của biến thể (nếu có)
+                            if (currentVariantStock !== null && currentVariantStock >= 0 && qty > currentVariantStock) {
+                                qty = currentVariantStock || 1;
+                                quantityInput.value = qty;
+                                showQtyError('Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này');
+                                return false;
+                            }
+
+                            // Hợp lệ
+                            quantityInput.value = qty;
+                            return true;
+                        }
+
+                        // Lắng nghe thay đổi số lượng (gõ tay)
+                        if (quantityInput) {
+                            quantityInput.addEventListener('change', validateQuantity);
+                            quantityInput.addEventListener('blur', validateQuantity);
+                            quantityInput.addEventListener('keyup', function() {
+                                // Không spam thông báo quá nhiều, chỉ kiểm tra logic số học
+                                let val = parseInt(this.value, 10);
+                                if (isNaN(val) || val <= 0) return; // để cho user gõ xong rồi mới báo
+                            });
+                        }
+
+                        // Bắt sự kiện nút +/- nếu có (giữ nguyên class của bạn)
+                        document.querySelectorAll('.quantity').forEach(qtyBox => {
+                            const input = qtyBox.querySelector('input[name="quantity"]');
+                            const decBtn = qtyBox.querySelector('.nova-minicart-qty-button.decrease');
+                            const incBtn = qtyBox.querySelector('.nova-minicart-qty-button.increase');
+
+                            if (!input) return;
+
+                            if (decBtn) {
+                                decBtn.addEventListener('click', function() {
+                                    let val = parseInt(input.value, 10);
+                                    if (isNaN(val)) val = 1;
+                                    val = val - 1;
+                                    input.value = val;
+                                    validateQuantity();
+                                });
+                            }
+
+                            if (incBtn) {
+                                incBtn.addEventListener('click', function() {
+                                    let val = parseInt(input.value, 10);
+                                    if (isNaN(val)) val = 1;
+                                    val = val + 1;
+                                    input.value = val;
+                                    validateQuantity();
+                                });
+                            }
+                        });
+
+                        // Bắt action_type cho 2 nút submit (Add to cart / Mua ngay) – GIỮ NGUYÊN
+                        document.querySelectorAll('.js-submit-cart').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                if (actionTypeInput) {
+                                    actionTypeInput.value = this.dataset.action;
+                                }
+                            });
+                        });
                     </script>
+                    <script>
+                        function showMissingVariantAlert() {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Thiếu lựa chọn',
+                                text: 'Vui lòng chọn màu & size trước khi thêm vào giỏ.',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    popup: 'custom-variant-alert'
+                                },
+                                buttonsStyling: true,
+                                allowOutsideClick: true,
+                                allowEscapeKey: true
+                            });
+                        }
 
+                        function showQtyAlert() {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Số lượng không hợp lệ',
+                                text: 'Vui lòng kiểm tra lại số lượng, không được vượt quá tồn kho.',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    popup: 'custom-variant-alert'
+                                },
+                                buttonsStyling: true,
+                                allowOutsideClick: true,
+                                allowEscapeKey: true
+                            });
+                        }
+                    </script>
+                    <?php if(session('error')): ?>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Giới hạn mua hàng',
+                                    text: <?php echo json_encode(session('error'), 15, 512) ?>,
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        popup: 'custom-variant-alert'
+                                    },
+                                    buttonsStyling: true,
+                                    allowOutsideClick: true,
+                                    allowEscapeKey: true
+                                });
+                            });
+                        </script>
+                    <?php endif; ?>
 
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+                    <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-<!-- Page cached by LiteSpeed Cache 6.5.2 on 2025-09-30 07:13:29 -->
-<?php $__env->stopSection(); ?>
+                <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN09\resources\views/products/show.blade.php ENDPATH**/ ?>

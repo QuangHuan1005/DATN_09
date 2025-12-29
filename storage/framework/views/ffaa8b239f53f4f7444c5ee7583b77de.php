@@ -44,6 +44,8 @@
                 </a>
             </li>
 
+
+
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo e(route('admin.products.index')); ?>" role="button" aria-expanded="false"
                     aria-controls="sidebarProducts">
@@ -65,26 +67,26 @@
             </li>
 
             <li class="nav-item">
-               <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link <?php echo e(request()->routeIs('admin.inventory.*') ? 'active' : ''); ?>"
-                href="<?php echo e(route('admin.inventory.index')); ?>">
+                    href="<?php echo e(route('admin.inventory.index')); ?>">
                     <span class="nav-icon">
                         <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Quản Lý Kho </span>
                 </a>
             </li>
-                <div class="collapse" id="sidebarInventory">
-                    <ul class="nav sub-navbar-nav">
+            <div class="collapse" id="sidebarInventory">
+                <ul class="nav sub-navbar-nav">
 
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="inventory-warehouse.html">Warehouse</a>
-                        </li>
-                        <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="inventory-received-orders.html">Received Orders</a>
-                        </li>
-                    </ul>
-                </div>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="inventory-warehouse.html">Warehouse</a>
+                    </li>
+                    <li class="sub-nav-item">
+                        <a class="sub-nav-link" href="inventory-received-orders.html">Received Orders</a>
+                    </li>
+                </ul>
+            </div>
             </li>
 
             <li class="nav-item">
@@ -97,15 +99,59 @@
                 </a>
             </li>
 
-             <li class="nav-item">
-                <a class="nav-link" href="<?php echo e(route('admin.vouchers.index')); ?>" role="button" aria-expanded="false"
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo e(route('admin.returns.index')); ?>" role="button" aria-expanded="false"
                     aria-controls="sidebarOrders">
                     <span class="nav-icon">
-                        <iconify-icon icon="solar:ticket-bold-duotone"></iconify-icon>
+                        <iconify-icon icon="solar:refresh-square-bold-duotone"></iconify-icon>
                     </span>
-                    <span class="nav-text"> Quản Lý Voucher </span>
+                    <span class="nav-text"> Quản Lý hoàn hàng </span>
                 </a>
             </li>
+
+            <li class="nav-item">
+    <a class="nav-link d-flex align-items-center" href="<?php echo e(route('admin.order-cancellations.index')); ?>" role="button">
+        <span class="nav-icon">
+            <iconify-icon icon="solar:cart-cross-bold-duotone"></iconify-icon>
+        </span>
+        <span class="nav-text"> Quản lý hủy hàng </span>
+        
+        
+        <?php
+            $pendingCancelCount = \App\Models\OrderCancelRequest::where('status', 'pending')->count();
+        ?>
+        
+        <?php if($pendingCancelCount > 0): ?>
+            <span class="badge bg-danger rounded-pill ms-auto" style="font-size: 10px;">
+                <?php echo e($pendingCancelCount); ?>
+
+            </span>
+        <?php endif; ?>
+    </a>
+</li>
+
+             <li class="nav-item">
+    <a class="nav-link menu-arrow" href="#sidebarVouchers" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarVouchers">
+        <span class="nav-icon">
+            <iconify-icon icon="solar:ticket-bold-duotone"></iconify-icon>
+        </span>
+        <span class="nav-text"> Quản Lý Voucher </span>
+    </a>
+    <div class="collapse <?php echo e(request()->routeIs('admin.vouchers.*') ? 'show' : ''); ?>" id="sidebarVouchers">
+        <ul class="nav sub-menu">
+            <li class="nav-item">
+                <a class="nav-link <?php echo e(request()->routeIs('admin.vouchers.index') ? 'active' : ''); ?>" href="<?php echo e(route('admin.vouchers.index')); ?>">
+                    <span class="nav-text">Danh sách Voucher</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo e(request()->routeIs('admin.vouchers.history') ? 'active' : ''); ?>" href="<?php echo e(route('admin.vouchers.history')); ?>">
+                    <span class="nav-text">Lịch sử đổi quà</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
 
             <li class="nav-item">
                 <a class="nav-link" href="#sidebarPurchases" role="button" aria-expanded="false"
@@ -168,6 +214,14 @@
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo e(route('admin.chat')); ?>">
+                    <span class="nav-icon">
+                        <iconify-icon icon="solar:chat-round-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Chat </span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#sidebarInvoice" role="button" aria-expanded="false"
@@ -763,5 +817,4 @@
             </li>
         </ul>
     </div>
-</div>
-<?php /**PATH C:\laragon\www\DATN09\resources\views/admin/layouts/menu-nav.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\laragon\www\DATN09\resources\views/admin/layouts/menu-nav.blade.php ENDPATH**/ ?>

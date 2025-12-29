@@ -1,286 +1,158 @@
 <?php $__env->startSection('content'); ?>
 
-<body
-  class="wp-singular page-template page-template-templates page-template-fullwidth page-template-templatesfullwidth-php page page-id-11 logged-in wp-embed-responsive wp-theme-mixtas ltr theme-mixtas woocommerce-account woocommerce-page woocommerce-orders woocommerce-js woo-variation-swatches wvs-behavior-blur wvs-theme-mixtas wvs-show-label wvs-tooltip elementor-default elementor-kit-6 blog-sidebar-active blog-sidebar-right single-blog-sidebar-active kitify--js-ready body-loaded e--ua-blink e--ua-chrome e--ua-webkit"
-  data-elementor-device-mode="laptop">
+<body class="wp-singular page-template-fullwidth woocommerce-account woocommerce-page woocommerce-orders ltr" data-elementor-device-mode="laptop">
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+
   <div class="site-wrapper">
     <div class="kitify-site-wrapper elementor-459kitify">
       <?php echo $__env->make('layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
       <div id="site-content" class="site-content-wrapper">
-        <div class="container">
+        <div class="container py-4">
           <div class="grid-x">
             <div class="cell small-12">
               <div class="site-content">
-                <div class="page-header-content">
+                
+                <div class="page-header-content mb-4">
                   <nav class="woocommerce-breadcrumb">
                     <a href="<?php echo e(url('/')); ?>">Home</a><span class="delimiter">/</span>
-                    <a href="<?php echo e(route('orders.index')); ?>">My account</a><span class="delimiter">/</span>Orders
+                    <a href="<?php echo e(route('account.dashboard')); ?>">My account</a><span class="delimiter">/</span>Orders
                   </nav>
-                  <h1 class="page-title">My account</h1>
+                  <h1 class="page-title" style="font-size: 28px; font-weight: 700;">Đơn hàng của tôi</h1>
                 </div>
 
                 <article class="hentry">
                   <div class="entry-content">
-
-                    <?php
-                    // map trạng thái ĐƠN HÀNG -> class badge
-                    $orderBadgeClass = function($sid) {
-                        return match((int)$sid){
-                            1 => 'badge-on-hold',     // Chờ xác nhận
-                            2 => 'badge-processing',  // Xác nhận
-                            3 => 'badge-shipping',    // Đang giao
-                            4,5 => 'badge-completed', // Đã giao / Hoàn thành
-                            6 => 'badge-cancelled',   // Hủy
-                            7 => 'badge-refunded',    // Hoàn hàng
-                            default => 'badge-default'
-                        };
-                    };
-                    // map trạng thái THANH TOÁN -> class badge
-                    $payBadgeClass = function($pid) {
-                        return match((int)$pid){
-                            1 => 'badge-on-hold',     // Chưa thanh toán
-                            2 => 'badge-completed',   // Đã thanh toán
-                            3 => 'badge-refunded',    // Hoàn tiền
-                            default => 'badge-default'
-                        };
-                    };
-                    // fallback label nếu chưa eager-load quan hệ
-                    $paymentStatusMap = [1=>'Chưa thanh toán', 2=>'Đã thanh toán', 3=>'Hoàn tiền'];
-                    $paymentMethodMap = [1=>'Thanh toán khi nhận hàng', 2=>'VNPAY', 3=>'MoMo'];
-                    ?>
-
-                   <style>
-                    /* ==== 1. GIẢM KHOẢNG TRẮNG TỪ HEADER XUỐNG ==== */
-                    body.woocommerce-account.woocommerce-page #site-content.site-content-wrapper{
-                      padding-top: 0px !important;   /* thay vì 40–80px của theme */
-                      margin-top: 0 !important;
-                    }
-
-                    body.woocommerce-account.woocommerce-page .site-content{
-                      padding-top: 0 !important;
-                      margin-top: 0 !important;
-                    }
-
-                    body.woocommerce-account.woocommerce-page .page-header-content{
-                      padding-top: 0px !important;
-                      padding-bottom: 8px !important;
-                      margin-top: 0 !important;
-                      margin-bottom: 0px !important;  /* sát xuống danh sách hơn */
-                    }
-
-                    body.woocommerce-account.woocommerce-page .page-header-content .page-title{
-                      margin-top: 4px !important;
-                      margin-bottom: 0 !important;
-                    }
-
-                    /* ==== 2. GIẢM KHOẢNG TRẮNG GIỮA TIÊU ĐỀ & DANH SÁCH ==== */
-                    body.woocommerce-account.woocommerce-page .entry-content > .woocommerce{
-                      margin-top: 0 !important;
-                    }
-
-                    /* ==== 3. LAYOUT NAV + CONTENT (không liên quan khoảng trắng trên nhưng cho chuẩn) ==== */
-                    @media (min-width: 992px){
-                      .woocommerce-account .entry-content > .woocommerce{
-                        max-width: none;
-                      }
-
-                      .woocommerce-account .woocommerce{
-                        display: flex;
-                        align-items: flex-start;
-                        gap: 32px;
-                      }
-
-                      .woocommerce-account .woocommerce-MyAccount-navigation{
-                        flex: 0 0 230px;
-                      }
-
-                      .woocommerce-account .woocommerce-MyAccount-content{
-                        flex: 1;
-                        margin: 0;
-                        max-width: none;
-                      }
-                    }
-
-                    /* ========= POLISH: Filter select ========= */
-                    .orders-filter-select-wrap{ display:flex; justify-content:flex-end; margin:0 0 12px; }
-                    .orders-select{
-                        appearance:none; -webkit-appearance:none; -moz-appearance:none;
-                        padding:10px 38px 10px 14px; border:1px solid #e5e7eb; border-radius:999px;
-                        background:#fff url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6 8l4 4 4-4" stroke="%236b7280" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat right 12px center/16px;
-                        font-size:.95rem; color:#111827; cursor:pointer;
-                        box-shadow:0 1px 0 rgba(17,24,39,.04);
-                    }
-                    .orders-select:focus{ outline:none; border-color:#111827; box-shadow:0 0 0 3px rgba(17,24,39,.06); }
-
-                    /* ========= POLISH: Table as clean card ========= */
-                    .account-orders-table{ border:1px solid #eceff3; border-radius:12px; overflow:hidden; background:#fff; width:100%; }
-                    .account-orders-table thead th{ background:#fafafa; font-weight:600; letter-spacing:.2px; padding:14px 16px; }
-                    .account-orders-table tbody td,
-                    .account-orders-table tbody th{ padding:14px 16px; vertical-align:middle; border-top:1px solid #f2f4f6; }
-                    .account-orders-table tbody tr{ transition:background .15s ease, transform .05s ease; }
-                    .account-orders-table tbody tr:hover{ background:#fcfcfd; }
-
-                    /* ========= POLISH: Badges ========= */
-                    .badge{ display:inline-flex; align-items:center; gap:.4rem; padding:.25rem .6rem; border-radius:999px; font-size:.78rem; font-weight:700 }
-                    .badge::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor; opacity:.85}
-                    .badge-processing{background:#eaf3ff;color:#1d4ed8}
-                    .badge-shipping{background:#e9fdf4;color:#047857}
-                    .badge-completed{background:#eafaf0;color:#166534}
-                    .badge-cancelled{background:#fff1f1;color:#b91c1c}
-                    .badge-on-hold{background:#fff6ea;color:#9a3412}
-                    .badge-refunded{background:#f3efff;color:#6d28d9}
-                    .badge-default{background:#f3f4f6;color:#374151}
-
-                    /* ========= POLISH: Method pill ========= */
-                    .method-pill{ display:inline-block; margin-left:8px; padding:.12rem .5rem; border-radius:999px; font-size:.72rem; background:#f3f4f6; color:#374151; font-weight:600 }
-
-                    /* ========= POLISH: Order code / amount ========= */
-                    .woocommerce-orders-table__cell-order-number a{ font-weight:700; text-decoration:none; }
-                    .woocommerce-orders-table__cell-order-number a:hover{ text-decoration:underline; }
-                    .woocommerce-orders-table__cell-order-total .amount{ font-weight:700; }
-
-                    /* ========= POLISH: Action button ========= */
-                    .woocommerce-orders-table__cell-order-actions .button.view{
-                      display:inline-flex; align-items:center; gap:6px;
-                      padding:8px 12px; border-radius:8px; border:1px solid #e5e7eb;
-                      text-decoration:none; font-weight:600;
-                    }
-                    .woocommerce-orders-table__cell-order-actions .button.view:hover{
-                      border-color:#111827; box-shadow:0 1px 0 rgba(17,24,39,.06);
-                    }
-
-                    /* ========= POLISH: Pagination ========= */
-                    nav[role="navigation"] { display:flex; justify-content:center; margin-top:12px }
+                    
+                    <style>
+                      body.woocommerce-account.woocommerce-page #site-content.site-content-wrapper{ padding-top: 10px !important; }
+                      .woocommerce-account .woocommerce{ display: flex; gap: 30px; margin-top: 10px; }
+                      .woocommerce-MyAccount-navigation{ flex: 0 0 250px; background: #fff; border-radius: 12px; }
+                      .woocommerce-MyAccount-content{ flex: 1; background: #fff; border-radius: 12px; }
+                      
+                      /* Table Layout tối ưu */
+                      .account-orders-table{ width:100%; border-collapse: separate; border-spacing: 0; border: 1px solid #f0f2f5; border-radius: 12px; overflow: hidden; }
+                      .account-orders-table thead th{ background:#f8fafc; font-weight:600; padding:16px; text-align: left; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+                      .account-orders-table tbody td{ padding:16px; vertical-align:middle; border-top:1px solid #f1f5f9; font-size: 14px; }
+                      
+                      /* Giữ nguyên màu sắc badge của bạn */
+                      .badge{ display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .8rem; border-radius:8px; font-size:.75rem; font-weight:700 }
+                      .badge::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor; opacity:.85}
+                      .badge-processing{background:#eaf3ff;color:#1d4ed8}
+                      .badge-shipping{background:#e9fdf4;color:#047857}
+                      .badge-completed{background:#eafaf0;color:#166534}
+                      .badge-cancelled{background:#fff1f1;color:#b91c1c}
+                      .badge-on-hold{background:#fff6ea;color:#9a3412}
+                      .badge-refunded{background:#f3efff;color:#6d28d9}
+                      
+                      .method-pill{ display:inline-block; padding:.2rem .6rem; border-radius:6px; font-size:.7rem; background:#f1f5f9; color:#475569; font-weight:600; border: 1px solid #e2e8f0; }
+                      
+                      /* Header Filter đồng bộ Admin */
+                      .orders-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; flex-wrap: wrap; }
+                      .orders-search-box { position: relative; flex: 1; max-width: 400px; }
+                      .orders-search-box input { width: 100%; padding: 10px 15px 10px 40px !important; border-radius: 10px !important; border: 1px solid #e2e8f0 !important; font-size: 14px; }
+                      .orders-search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+                      .orders-select { padding: 10px 35px 10px 15px !important; border-radius: 10px !important; border: 1px solid #e2e8f0 !important; background-color: #fff !important; font-size: 14px; min-width: 200px; }
                     </style>
-
 
                     <div class="woocommerce">
                       <?php echo $__env->make('account.partials.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
                       <div class="woocommerce-MyAccount-content">
+                        
                         <div class="woocommerce-notices-wrapper">
-                          <?php if(session('error')): ?> <div class="woocommerce-error"><?php echo e(session('error')); ?></div> <?php endif; ?>
-                          <?php if(session('success')): ?> <div class="woocommerce-message"><?php echo e(session('success')); ?></div> <?php endif; ?>
+                          <?php if(session('error')): ?> <div class="woocommerce-error" style="background: #fef2f2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px;"><?php echo e(session('error')); ?></div> <?php endif; ?>
+                          <?php if(session('success')): ?> <div class="woocommerce-message" style="background: #ecfdf5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px;"><?php echo e(session('success')); ?></div> <?php endif; ?>
                         </div>
 
                         
-                        <div class="orders-filter-select-wrap">
-                          <form id="order-filter-form" method="GET" action="<?php echo e(route('orders.index')); ?>">
+                        <div class="orders-header-bar">
+                          <div class="orders-search-box">
+                            <i class="iconify" data-icon="solar:magnifer-linear"></i>
+                            <form method="GET" action="<?php echo e(route('orders.index')); ?>">
+                                <input type="text" name="keyword" placeholder="Tìm theo mã đơn hàng..." value="<?php echo e(request('keyword')); ?>">
+                            </form>
+                          </div>
+                          
+                          <form method="GET" action="<?php echo e(route('orders.index')); ?>">
                             <select name="status_id" class="orders-select" onchange="this.form.submit()">
-                              <option value="0" <?php echo e((int)$statusId === 0 ? 'selected' : ''); ?>>
-                                Tất cả (<?php echo e($orders->total()); ?>)
-                              </option>
+                              <option value="0" <?php echo e((int)$statusId === 0 ? 'selected' : ''); ?>>Tất cả đơn hàng</option>
                               <?php $__currentLoopData = $statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $st): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($st->id); ?>" <?php echo e((int)$statusId === (int)$st->id ? 'selected' : ''); ?>>
-                                  <?php echo e($st->name); ?> (<?php echo e($counts[$st->id] ?? 0); ?>)
-                                </option>
+                                <option value="<?php echo e($st->id); ?>" <?php echo e((int)$statusId === (int)$st->id ? 'selected' : ''); ?>><?php echo e($st->name); ?> (<?php echo e($counts[$st->id] ?? 0); ?>)</option>
                               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                           </form>
                         </div>
 
-                        
                         <?php if($orders->isEmpty()): ?>
-                          <div class="woocommerce-info">
-                            <?php if($statusId>0): ?>
-                              Không có đơn ở trạng thái này.
-                              <a class="woocommerce-Button wc-forward button" href="<?php echo e(route('orders.index')); ?>">Xem tất cả</a>
-                            <?php else: ?>
-                              Chưa có đơn hàng nào.
-                              <a class="woocommerce-Button wc-forward button" href="<?php echo e(route('products.index')); ?>">Xem sản phẩm</a>
-                            <?php endif; ?>
+                          <div class="text-center py-5" style="background: #f8fafc; border-radius: 12px; border: 2px dashed #e2e8f0;">
+                            <iconify-icon icon="solar:box-minimalistic-linear" style="font-size: 64px; color: #94a3b8;"></iconify-icon>
+                            <p class="text-muted mt-3">Không tìm thấy đơn hàng nào phù hợp.</p>
+                            <a href="<?php echo e(route('products.index')); ?>" class="btn btn-primary btn-sm rounded-pill px-4">Mua sắm ngay</a>
                           </div>
                         <?php else: ?>
-                          <table class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
+                          <table class="account-orders-table">
                             <thead>
                               <tr>
-                                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><span class="nobr">Mã đơn hàng</span></th>
-                                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date"><span class="nobr">Ngày mua</span></th>
-                                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status"><span class="nobr">Trạng thái đơn</span></th>
-                                <th class="woocommerce-orders-table__header"><span class="nobr">Thanh toán</span></th>
-                                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-total"><span class="nobr">Tổng</span></th>
-                                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions"><span class="nobr">Hành động</span></th>
+                                <th>Mã đơn</th>
+                                <th>Ngày mua</th>
+                                <th>Trạng thái</th>
+                                <th>Thanh toán</th>
+                                <th>Phương thức</th>
+                                <th>Tổng cộng</th>
+                                <th class="text-center">Chi tiết</th>
                               </tr>
                             </thead>
                             <tbody>
                               <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <?php
-                                  $itemsCount = optional($order->details)->sum('quantity') ?? 0;
-
-                                  // order status
-                                  $orderCls   = $orderBadgeClass($order->order_status_id);
-                                  $orderLabel = $order->status?->name ?? '—';
-
-                                  // payment status + method (fallback nếu chưa eager-load)
-                                  $pStatusId  = (int)($order->payment_status_id ?? 0);
-                                  $payCls     = $payBadgeClass($pStatusId);
-                                  $payLabel   = $order->paymentStatus->name ?? ($paymentStatusMap[$pStatusId] ?? '—');
-
-                                  $pmId       = (int)($order->payment_method_id ?? 0);
-                                  $pmLabel    = $order->paymentMethod->name ?? ($paymentMethodMap[$pmId] ?? 'Không xác định');
+                                  $orderCls = match((int)$order->order_status_id){
+                                      1 => 'badge-on-hold', 2 => 'badge-processing', 3 => 'badge-shipping',
+                                      4, 5 => 'badge-completed', 6 => 'badge-cancelled', 7 => 'badge-refunded',
+                                      default => 'badge-default'
+                                  };
+                                  $pStatusId = (int)$order->payment_status_id;
+                                  $payCls = ($pStatusId === 2) ? 'badge-completed' : (($pStatusId === 3) ? 'badge-refunded' : 'badge-on-hold');
+                                  $payLabel = $order->paymentStatus->name ?? ($pStatusId === 2 ? 'Đã thanh toán' : 'Chưa thanh toán');
                                 ?>
-                                <tr class="woocommerce-orders-table__row order">
-                                  <th class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number" data-title="Order" scope="row">
-                                    <a href="<?php echo e(route('orders.show', $order->id)); ?>" aria-label="View order <?php echo e($order->order_code); ?>">
-                                      #<?php echo e($order->order_code); ?>
-
+                                <tr>
+                                  <td class="fw-bold"><a href="<?php echo e(route('orders.show', $order->id)); ?>" style="color: #2563eb;">#<?php echo e($order->order_code); ?></a></td>
+                                  <td>
+                                    <div class="text-dark"><?php echo e($order->created_at->format('d/m/Y')); ?></div>
+                                    <div class="text-muted small"><?php echo e($order->created_at->format('H:i')); ?></div>
+                                  </td>
+                                  <td><span class="badge <?php echo e($orderCls); ?>"><?php echo e($order->status->name ?? '—'); ?></span></td>
+                                  <td><span class="badge <?php echo e($payCls); ?>"><?php echo e($payLabel); ?></span></td>
+                                  <td><span class="method-pill"><?php echo e($order->paymentMethod->name ?? '—'); ?></span></td>
+                                  <td class="fw-bold text-dark"><?php echo e(number_format($order->total_amount)); ?>₫</td>
+                                  <td class="text-center">
+                                    <a href="<?php echo e(route('orders.show', $order->id)); ?>" class="btn-view-order">
+                                      <iconify-icon icon="solar:eye-broken" style="font-size:22px; color:#64748b"></iconify-icon>
                                     </a>
-                                  </th>
-                                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date" data-title="Date">
-                                    <time datetime="<?php echo e(\Carbon\Carbon::parse($order->created_at)->toAtomString()); ?>">
-                                      <?php echo e(\Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i')); ?>
-
-                                    </time>
-                                  </td>
-
-                                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status" data-title="Order Status">
-                                    <span class="badge <?php echo e($orderCls); ?>"><?php echo e($orderLabel); ?></span>
-                                  </td>
-
-                                  <td class="woocommerce-orders-table__cell" data-title="Payment">
-                                    <span class="badge <?php echo e($payCls); ?>"><?php echo e($payLabel); ?></span>
-                                    <span class="method-pill"><?php echo e($pmLabel); ?></span>
-                                  </td>
-
-                                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-total" data-title="Total">
-                                    <span class="woocommerce-Price-amount amount">
-                                      <span class="woocommerce-Price-currencySymbol">₫</span><?php echo e(number_format($order->total_amount)); ?>
-
-                                    </span>
-                                    <?php if($itemsCount): ?> cho <?php echo e($itemsCount); ?> sản phẩm <?php endif; ?>
-                                  </td>
-                                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions" data-title="Actions">
-                                    <a href="<?php echo e(route('orders.show', $order->id)); ?>" class="woocommerce-button button view" aria-label="View order <?php echo e($order->order_code); ?>">Xem</a>
                                   </td>
                                 </tr>
                               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                           </table>
-
-                          <div class="mt-3">
+                          
+                          <div class="d-flex justify-content-center mt-4">
                             <?php echo e($orders->links()); ?>
 
                           </div>
                         <?php endif; ?>
-
-                      </div><!-- /.woocommerce-MyAccount-content -->
-                    </div><!-- /.woocommerce -->
-
-                  </div><!-- .entry-content -->
+                      </div>
+                    </div>
+                  </div>
                 </article>
-
               </div>
             </div>
           </div>
         </div>
-      </div><!-- .site-content-wrapper -->
-
+      </div>
       <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-      <div class="nova-overlay-global"></div>
-    </div><!-- .kitify-site-wrapper -->
+    </div>
     <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </div>
+</body>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\DATN09\resources\views/orders/index.blade.php ENDPATH**/ ?>

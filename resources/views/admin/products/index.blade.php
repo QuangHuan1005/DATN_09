@@ -62,13 +62,20 @@
                                                             <img src="{{ asset('images/no-image.png') }}" alt="Không có ảnh"
                                                                 class="avatar-md">
                                                         @endif --}}
-                                                        @if ($product->photoAlbums->isNotEmpty())
-                                                            <img src="{{ asset('storage/' . $product->photoAlbums->first()->image) }}"alt="Ảnh Sản Phẩm"
-                                                                class="avatar-md">
-                                                        @else
-                                                            <img src="{{ asset('images/no-image.png') }}" alt="Không có ảnh"
-                                                                class="avatar-md text-muted">
-                                                        @endif
+                                                    
+                                                    
+                                                      @php
+    // Tìm biến thể có ảnh
+    $firstVariantWithImage = $product->variants->firstWhere('image', '!=', null);
+    $productImage = $firstVariantWithImage ? $firstVariantWithImage->image : null;
+@endphp
+
+@if ($productImage)
+    <img src="{{ asset('storage/' . $productImage) }}" alt="Ảnh Biến Thể" class="avatar-md">
+@else
+    <img src="{{ asset('images/no-image.png') }}" alt="Không có ảnh" class="avatar-md">
+@endif
+                                                 
 
 
 
