@@ -284,6 +284,19 @@ Route::prefix('admin')
 
         // Voucher
         Route::resource('vouchers', AdminVoucherController::class);
+        // --- Quản lý Voucher & Lịch sử đổi thưởng ---
+Route::prefix('vouchers')->name('vouchers.')->group(function () {
+    // Route Lịch sử đổi quà (Phải đặt TRÊN resource để tránh bị nhầm với id)
+    Route::get('history', [AdminVoucherController::class, 'history'])->name('history');
+    
+    // Các route CRUD mặc định
+    Route::get('/', [AdminVoucherController::class, 'index'])->name('index');
+    Route::get('/create', [AdminVoucherController::class, 'create'])->name('create');
+    Route::post('/', [AdminVoucherController::class, 'store'])->name('store');
+    Route::get('/{voucher}/edit', [AdminVoucherController::class, 'edit'])->name('edit');
+    Route::put('/{voucher}', [AdminVoucherController::class, 'update'])->name('update');
+    Route::delete('/{voucher}', [AdminVoucherController::class, 'destroy'])->name('destroy');
+});
 
         // Đơn hàng
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);

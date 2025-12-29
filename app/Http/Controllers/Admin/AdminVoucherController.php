@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Voucher;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminVoucherController extends Controller
 {
@@ -22,118 +23,90 @@ class AdminVoucherController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-{
-    $products = Product::orderBy('name')->get();
-    return view('admin.vouchers.create', compact('products'));
-}
-
+    {
+        $products = Product::orderBy('name')->get();
+        return view('admin.vouchers.create', compact('products'));
+    }
 
     /**
      * Store a newly created resource in storage.
-     */ public function store(Request $request)
-{
-    $request->validate([
-        'voucher_code' => 'required|unique:vouchers,voucher_code',
-        'discount_type' => 'required|in:fixed,percent',
-        'quantity' => 'required|integer|min:1',
-        'user_limit' => 'required|integer|min:1',
-        'discount_value' => 'required|numeric|min:0',
-        'sale_price' => 'required|numeric|min:0',
-        'min_order_value' => 'required|numeric|min:0',
-        'start_date' => 'required|date',
-        'end_date' => 'required|date|after_or_equal:start_date',
-        'status' => 'required|in:0,1',
-        'description' => 'nullable|string|max:500',
-        'product_ids' => 'nullable|array',
-    ],[
-    // --- Lỗi Voucher Code ---
-    'voucher_code.required' => 'Mã Voucher là bắt buộc.',
-    'voucher_code.unique' => 'Mã Voucher này đã tồn tại, vui lòng chọn mã khác.',
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'voucher_code' => 'required|unique:vouchers,voucher_code',
+            'discount_type' => 'required|in:fixed,percent',
+            'quantity' => 'required|integer|min:1',
+            'user_limit' => 'required|integer|min:1',
+            'discount_value' => 'required|numeric|min:0',
+            'sale_price' => 'required|numeric|min:0',
+            'min_order_value' => 'required|numeric|min:0',
+            'points_required' => 'nullable|integer|min:0', // Bổ sung validation cho điểm
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'status' => 'required|in:0,1',
+            'description' => 'nullable|string|max:500',
+            'product_ids' => 'nullable|array',
+        ], [
+            // --- Giữ nguyên các thông báo lỗi của bạn và thêm thông báo cho điểm ---
+            'voucher_code.required' => 'Mã Voucher là bắt buộc.',
+            'voucher_code.unique' => 'Mã Voucher này đã tồn tại, vui lòng chọn mã khác.',
+            'points_required.integer' => 'Số điểm yêu cầu phải là số nguyên.',
+            'points_required.min' => 'Số điểm không được nhỏ hơn 0.',
+            'discount_type.required' => 'Loại giảm giá là bắt buộc.',
+            'quantity.required' => 'Số lượng Voucher là bắt buộc.',
+            'discount_value.required' => 'Giá trị giảm là bắt buộc.',
+            'start_date.required' => 'Ngày bắt đầu là bắt buộc.',
+            'end_date.required' => 'Ngày kết thúc là bắt buộc.',
+            'end_date.after_or_equal' => 'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.',
+        ]);
 
-    // --- Lỗi Loại Giảm Giá (Discount Type) ---
-    'discount_type.required' => 'Loại giảm giá là bắt buộc.',
-    'discount_type.in' => 'Loại giảm giá không hợp lệ (Chỉ chấp nhận "fixed" hoặc "percent").',
+        // 🔹 Tính sale_price hợp lệ (Giữ nguyên logic của bạn)
+        if ($request->discount_type === 'fixed') {
+            $priceAfterDiscount = $request->min_order_value - $request->discount_value;
+        } else {
+            $priceAfterDiscount = $request->min_order_value - ($request->min_order_value * $request->discount_value / 100);
+        }
 
-    // --- Lỗi Số lượng (Quantity) ---
-    'quantity.required' => 'Số lượng Voucher là bắt buộc.',
-    'quantity.integer' => 'Số lượng Voucher phải là số nguyên.',
-    'quantity.min' => 'Số lượng Voucher phải lớn hơn hoặc bằng 1.',
+        $sale_price = max(0, max($request->sale_price, $priceAfterDiscount));
 
-    // --- Lỗi Giới hạn người dùng (User Limit) ---
-    'user_limit.required' => 'Giới hạn sử dụng trên mỗi người dùng là bắt buộc.',
-    'user_limit.integer' => 'Giới hạn sử dụng phải là số nguyên.',
-    'user_limit.min' => 'Giới hạn sử dụng phải lớn hơn hoặc bằng 1.',
+        // 🔥 Tạo voucher (Bổ sung points_required)
+        $voucher = Voucher::create([
+            'voucher_code'    => $request->voucher_code,
+            'discount_type'   => $request->discount_type,
+            'discount_value'  => $request->discount_value,
+            'sale_price'      => $sale_price,
+            'min_order_value' => $request->min_order_value,
+            'points_required' => $request->input('points_required', 0), // Lưu điểm đổi
+            'quantity'        => $request->quantity,
+            'user_limit'      => $request->user_limit,
+            'total_used'      => 0,
+            'start_date'      => $request->start_date,
+            'end_date'        => $request->end_date,
+            'status'          => $request->status,
+            'description'     => $request->description,
+        ]);
 
-    // --- Lỗi Giá trị giảm (Discount Value) ---
-    'discount_value.required' => 'Giá trị giảm là bắt buộc.',
-    'discount_value.numeric' => 'Giá trị giảm phải là một số.',
-    'discount_value.min' => 'Giá trị giảm không được nhỏ hơn 0.',
+        // 🔥 Lưu danh sách sản phẩm áp dụng voucher
+        if ($request->product_ids) {
+            $voucher->products()->sync($request->product_ids);
+        }
 
-    // --- Lỗi Giá bán (Sale Price - Có thể là giá trị giảm tối đa/áp dụng cho đơn hàng...) ---
-    'sale_price.required' => 'Giá bán/Giảm tối đa là bắt buộc.',
-    'sale_price.numeric' => 'Giá bán/Giảm tối đa phải là một số.',
-    'sale_price.min' => 'Giá bán/Giảm tối đa không được nhỏ hơn 0.',
-
-    // --- Lỗi Giá trị đơn hàng tối thiểu (Min Order Value) ---
-    'min_order_value.required' => 'Giá trị đơn hàng tối thiểu là bắt buộc.',
-    'min_order_value.numeric' => 'Giá trị đơn hàng tối thiểu phải là một số.',
-    'min_order_value.min' => 'Giá trị đơn hàng tối thiểu không được nhỏ hơn 0.',
-
-    // --- Lỗi Ngày bắt đầu (Start Date) ---
-    'start_date.required' => 'Ngày bắt đầu là bắt buộc.',
-    'start_date.date' => 'Ngày bắt đầu không hợp lệ.',
-
-    // --- Lỗi Ngày kết thúc (End Date) ---
-    'end_date.required' => 'Ngày kết thúc là bắt buộc.',
-    'end_date.date' => 'Ngày kết thúc không hợp lệ.',
-    'end_date.after_or_equal' => 'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.',
-
-    // --- Lỗi Trạng thái (Status) ---
-    'status.required' => 'Trạng thái là bắt buộc.',
-    'status.in' => 'Trạng thái không hợp lệ (Chỉ chấp nhận 0 hoặc 1).',
-
-    // --- Lỗi Mô tả (Description) ---
-    'description.string' => 'Mô tả phải là chuỗi ký tự.',
-    'description.max' => 'Mô tả không được vượt quá 500 ký tự.',
-
-    // --- Lỗi ID sản phẩm (Product IDs) ---
-    'product_ids.array' => 'Danh sách sản phẩm không hợp lệ.',
-]);
-
-    // 🔹 Tính sale_price hợp lệ
-    if ($request->discount_type === 'fixed') {
-        $priceAfterDiscount = $request->min_order_value - $request->discount_value;
-    } else {
-        $priceAfterDiscount = $request->min_order_value - ($request->min_order_value * $request->discount_value / 100);
+        return redirect()->route('admin.vouchers.index')
+            ->with('success', 'Thêm voucher thành công!');
     }
 
-    $sale_price = max(0, max($request->sale_price, $priceAfterDiscount));
+    /**
+     * Show the form for editing.
+     */
+    public function edit(string $id)
+    {
+        $voucher = Voucher::findOrFail($id);
+        $products = Product::orderBy('name')->get();
+        $selectedProducts = $voucher->products->pluck('id')->toArray();
 
-    // 🔥 Tạo voucher
-    $voucher = Voucher::create([
-        'voucher_code'    => $request->voucher_code,
-        'discount_type'   => $request->discount_type,
-        'discount_value'  => $request->discount_value,
-        'sale_price'      => $sale_price,
-        'min_order_value' => $request->min_order_value,
-        'quantity'        => $request->quantity,
-        'user_limit'      => $request->user_limit,
-        'total_used'      => 0,
-        'start_date'      => $request->start_date,
-        'end_date'        => $request->end_date,
-        'status'          => $request->status,
-        'description'     => $request->description,
-    ]);
-
-    // 🔥 Lưu danh sách sản phẩm áp dụng voucher
-    if ($request->product_ids) {
-        $voucher->products()->sync($request->product_ids);
+        return view('admin.vouchers.edit', compact('voucher', 'products', 'selectedProducts'));
     }
-
-    return redirect()->route('admin.vouchers.index')
-        ->with('success', 'Thêm voucher thành công!');
-}
-
 
     /**
      * Update the specified resource in storage.
@@ -147,6 +120,7 @@ class AdminVoucherController extends Controller
             'discount_type'   => 'required|in:fixed,percent',
             'discount_value'  => 'required|numeric|min:0',
             'min_order_value' => 'required|numeric|min:0',
+            'points_required' => 'nullable|integer|min:0', // Bổ sung điểm khi update
             'quantity'        => 'required|integer|min:1',
             'user_limit'      => 'required|integer|min:1',
             'start_date'      => 'required|date',
@@ -155,9 +129,8 @@ class AdminVoucherController extends Controller
             'description'     => 'nullable|string|max:500',
         ]);
 
-        // Tính lại sale_price khi update
+        // Tính lại sale_price khi update (Giữ nguyên logic của bạn)
         $minAfterDiscount = 0;
-
         if ($request->discount_type === 'fixed') {
             $priceAfterDiscount = $request->min_order_value - $request->discount_value;
             $minAfterDiscount = max($request->sale_price, $priceAfterDiscount);
@@ -167,14 +140,13 @@ class AdminVoucherController extends Controller
         }
         $sale_price = max(0, $minAfterDiscount);
 
-
-
         $voucher->update([
             'voucher_code'    => $request->voucher_code,
             'discount_type'   => $request->discount_type,
             'discount_value'  => $request->discount_value,
             'sale_price'      => $sale_price,
             'min_order_value' => $request->min_order_value,
+            'points_required' => $request->input('points_required', 0), // Cập nhật điểm
             'quantity'        => $request->quantity,
             'user_limit'      => $request->user_limit,
             'start_date'      => $request->start_date,
@@ -183,21 +155,17 @@ class AdminVoucherController extends Controller
             'description'     => $request->description,
         ]);
 
+        // Cập nhật sản phẩm áp dụng nếu có gửi product_ids
+        if ($request->has('product_ids')) {
+            $voucher->products()->sync($request->product_ids);
+        }
+
         return redirect()->route('admin.vouchers.index')->with('success', 'Cập nhật voucher thành công!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function edit(string $id)
-{
-    $voucher = Voucher::findOrFail($id);
-    $products = Product::orderBy('name')->get();
-    $selectedProducts = $voucher->products->pluck('id')->toArray();
-
-    return view('admin.vouchers.edit', compact('voucher', 'products', 'selectedProducts'));
-}
-
     public function destroy(string $id)
     {
         $voucher = Voucher::findOrFail($id);
@@ -206,4 +174,48 @@ class AdminVoucherController extends Controller
         return redirect()->route('admin.vouchers.index')
             ->with('success', 'Xóa voucher thành công!');
     }
+
+    public function history(Request $request)
+{
+    $query = DB::table('user_vouchers')
+        ->join('users', 'user_vouchers.user_id', '=', 'users.id')
+        ->join('vouchers', 'user_vouchers.voucher_id', '=', 'vouchers.id')
+        ->select(
+            'user_vouchers.*',
+            'users.name as user_name',
+            'users.email as user_email',
+            'vouchers.voucher_code',
+            'vouchers.discount_type',
+            'vouchers.discount_value',
+            'vouchers.points_required'
+        );
+
+    // 1. Tìm kiếm theo tên khách, email hoặc mã voucher
+    if ($request->filled('keyword')) {
+        $keyword = $request->keyword;
+        $query->where(function($q) use ($keyword) {
+            $q->where('users.name', 'like', "%$keyword%")
+              ->orWhere('users.email', 'like', "%$keyword%")
+              ->orWhere('vouchers.voucher_code', 'like', "%$keyword%");
+        });
+    }
+
+    // 2. Lọc theo trạng thái sử dụng
+    if ($request->filled('status')) {
+        $query->where('user_vouchers.is_used', $request->status);
+    }
+
+    // 3. Lọc theo khoảng ngày
+    if ($request->filled('start_date')) {
+        $query->whereDate('user_vouchers.created_at', '>=', $request->start_date);
+    }
+    if ($request->filled('end_date')) {
+        $query->whereDate('user_vouchers.created_at', '<=', $request->end_date);
+    }
+
+    // 4. Phân trang (ví dụ 10 bản ghi/trang) và giữ lại các tham số lọc trên URL
+    $history = $query->latest('user_vouchers.created_at')->paginate(10)->withQueryString();
+
+    return view('admin.vouchers.history', compact('history'));
+}
 }

@@ -16,7 +16,7 @@
                             {{-- Mã Voucher --}}
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Mã Voucher <span class="text-danger">*</span></label>
-                                <input type="text" name="voucher_code" class="form-control @error('voucher_code') is-invalid @enderror" value="{{ old('voucher_code') }}" placeholder="Ví Gụ: KM2024">
+                                <input type="text" name="voucher_code" class="form-control @error('voucher_code') is-invalid @enderror" value="{{ old('voucher_code') }}" placeholder="Ví dụ: KM2024">
                                 @error('voucher_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
@@ -35,6 +35,27 @@
                                 <label class="form-label">Giá trị giảm <span class="text-danger">*</span></label>
                                 <input type="number" name="discount_value" class="form-control @error('discount_value') is-invalid @enderror" value="{{ old('discount_value') }}">
                                 @error('discount_value') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+
+                            {{-- CỘT MỚI: PHÂN LOẠI VÀ ĐIỂM ĐỔI --}}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-primary">Hình thức phát hành <span class="text-danger">*</span></label>
+                                <select id="is_reward_selector" class="form-select border-primary">
+                                    <option value="0" {{ old('points_required') == 0 ? 'selected' : '' }}>Voucher công khai (Tặng mọi người)</option>
+                                    <option value="1" {{ old('points_required') > 0 ? 'selected' : '' }}>Voucher đổi thưởng (Dùng điểm để đổi)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3" id="points_required_group" style="{{ old('points_required') > 0 ? '' : 'display: none;' }}">
+                                <label class="form-label">Số điểm cần để đổi <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-warning text-dark"><i class="bi bi-coin"></i></span>
+                                    <input type="number" name="points_required" id="points_required_input" 
+                                           class="form-control @error('points_required') is-invalid @enderror" 
+                                           value="{{ old('points_required', 0) }}" min="0">
+                                </div>
+                                <small class="text-muted">Khách hàng sẽ dùng điểm tích lũy để đổi lấy mã này.</small>
+                                @error('points_required') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
                             {{-- Số lượng --}}
@@ -115,4 +136,24 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selector = document.getElementById('is_reward_selector');
+        const pointsGroup = document.getElementById('points_required_group');
+        const pointsInput = document.getElementById('points_required_input');
+
+        selector.addEventListener('change', function() {
+            if (this.value === '1') {
+                pointsGroup.style.display = 'block';
+                if(pointsInput.value == 0) pointsInput.value = 100; // Giá trị gợi ý
+            } else {
+                pointsGroup.style.display = 'none';
+                pointsInput.value = 0;
+            }
+        });
+    });
+</script>
 @endsection

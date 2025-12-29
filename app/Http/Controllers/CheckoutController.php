@@ -17,7 +17,13 @@ class CheckoutController extends Controller
     /**
      * Hiển thị trang thanh toán
      */
-   public function index()
+  /**
+ * Hiển thị trang thanh toán
+ */
+/**
+ * Hiển thị trang thanh toán
+ */
+public function index()
 {
     $user = Auth::user();
     $buyNow = Session::get('buy_now');
@@ -62,8 +68,6 @@ class CheckoutController extends Controller
     $addresses = $user->addresses()->orderBy('is_default', 'desc')->get();
     
     // Ưu tiên 1: Lấy ID từ session (Nếu người dùng vừa chọn ở Modal thay đổi địa chỉ)
-    // Ưu tiên 2: Lấy địa chỉ mặc định từ Database
-    // Ưu tiên 3: Lấy địa chỉ đầu tiên có trong danh sách
     $selectedAddressId = session('checkout_address_id'); 
 
     if ($selectedAddressId) {
@@ -77,7 +81,7 @@ class CheckoutController extends Controller
 
     $addressCount = $addresses->count();
 
-    /** ================= XỬ LÝ VOUCHER ================= */
+    /** ================= XỬ LÝ VOUCHER ĐÃ ÁP DỤNG ================= */
     $voucherData = session('applied_voucher');
     $appliedVoucher = null;
     $discountAmount = 0;
@@ -86,24 +90,38 @@ class CheckoutController extends Controller
         $tempVoucher = Voucher::with('products')->find($voucherData['id']);
         
         if ($tempVoucher && $tempVoucher->status == 1 && now()->between($tempVoucher->start_date, $tempVoucher->end_date)) {
-            $eligibleAmount = 0;
-            foreach ($cartItems as $item) {
-                $isApplicable = ($tempVoucher->products->count() == 0 || $tempVoucher->products->pluck('id')->contains($item['variant']->product_id));
-                if ($isApplicable) $eligibleAmount += $item['itemTotal'];
+            
+            // Kiểm tra tính hợp lệ nếu là voucher đổi điểm (phải còn trong ví user)
+            $isValidRewardVoucher = true;
+            if ($tempVoucher->points_required > 0) {
+                $isValidRewardVoucher = DB::table('user_vouchers')
+                    ->where('user_id', $user->id)
+                    ->where('voucher_id', $tempVoucher->id)
+                    ->where('is_used', 0)
+                    ->exists();
             }
 
-            if ($totalAmount >= $tempVoucher->min_order_value && $eligibleAmount > 0) {
-                $appliedVoucher = $tempVoucher;
-                
-                if ($tempVoucher->discount_type === 'percent') {
-                    $rawDiscount = $eligibleAmount * ($tempVoucher->discount_value / 100);
-                    // Chặn trần giảm giá nếu có sale_price (max_discount_value)
-                    $discountAmount = ($tempVoucher->sale_price > 0) ? min($rawDiscount, $tempVoucher->sale_price) : $rawDiscount;
-                } else {
-                    $discountAmount = min($tempVoucher->discount_value, $eligibleAmount);
+            if ($isValidRewardVoucher) {
+                $eligibleAmount = 0;
+                foreach ($cartItems as $item) {
+                    $isApplicable = ($tempVoucher->products->count() == 0 || $tempVoucher->products->pluck('id')->contains($item['variant']->product_id));
+                    if ($isApplicable) $eligibleAmount += $item['itemTotal'];
                 }
-                
-                Session::put('applied_voucher', ['id' => $tempVoucher->id, 'discount_amount' => round($discountAmount)]);
+
+                if ($totalAmount >= $tempVoucher->min_order_value && $eligibleAmount > 0) {
+                    $appliedVoucher = $tempVoucher;
+                    
+                    if ($tempVoucher->discount_type === 'percent') {
+                        $rawDiscount = $eligibleAmount * ($tempVoucher->discount_value / 100);
+                        $discountAmount = ($tempVoucher->sale_price > 0) ? min($rawDiscount, $tempVoucher->sale_price) : $rawDiscount;
+                    } else {
+                        $discountAmount = min($tempVoucher->discount_value, $eligibleAmount);
+                    }
+                    
+                    Session::put('applied_voucher', ['id' => $tempVoucher->id, 'discount_amount' => round($discountAmount)]);
+                } else {
+                    Session::forget('applied_voucher');
+                }
             } else {
                 Session::forget('applied_voucher');
             }
@@ -113,7 +131,6 @@ class CheckoutController extends Controller
     }
 
     /** ================= PHÍ VẬN CHUYỂN & TỔNG CỘNG ================= */
-    // Logic: Miễn phí vận chuyển cho đơn trên 300k
     $shippingFee = $totalAmount > 300000 ? 0 : 30000;
     
     if ($appliedVoucher && stripos($appliedVoucher->voucher_code, 'FREESHIP') !== false) {
@@ -122,11 +139,26 @@ class CheckoutController extends Controller
 
     $grandTotal = max(0, $totalAmount + $shippingFee - $discountAmount);
 
-    // Lấy danh sách Voucher khả dụng để hiển thị modal chọn mã
+    /** ================= LẤY DANH SÁCH VOUCHER KHẢ DỤNG (ẨN VOUCHER KO DÙNG ĐƯỢC) ================= */
     $vouchers = Voucher::where('status', 1)
         ->where('start_date', '<=', now())
         ->where('end_date', '>=', now())
         ->whereColumn('total_used', '<', 'quantity')
+        ->where('min_order_value', '<=', $totalAmount) // Ẩn voucher nếu đơn hàng ko đủ giá trị tối thiểu
+        ->where(function($q) use ($user) {
+            // Điều kiện 1: Voucher công khai (ai cũng dùng được)
+            $q->where(function($subQ) {
+    $subQ->where('points_required', 0)
+         ->orWhereNull('points_required');
+})
+            // Điều kiện 2: Hoặc là voucher đổi điểm mà User này ĐÃ SỞ HỮU trong ví (is_used = 0)
+              ->orWhereIn('id', function($sub) use ($user) {
+                  $sub->select('voucher_id')
+                      ->from('user_vouchers')
+                      ->where('user_id', $user->id)
+                      ->where('is_used', 0);
+              });
+        })
         ->get();
 
     return view('checkout.index', compact(
@@ -135,7 +167,6 @@ class CheckoutController extends Controller
         'defaultAddress', 'vouchers', 'addressCount'
     ));
 }
-
     /**
      * Xử lý Mua Ngay từ trang chi tiết
      */
@@ -279,12 +310,16 @@ class CheckoutController extends Controller
     /**
  * Áp dụng Voucher
  */
- public function applyVoucher(Request $request)
+/**
+ * Áp dụng Voucher
+ */
+public function applyVoucher(Request $request)
 {
     $request->validate([
         'voucher_code' => 'required|string'
     ]);
 
+    // 1. Tìm voucher hợp lệ trong hệ thống
     $voucher = Voucher::with('products')
         ->where('voucher_code', $request->voucher_code)
         ->where('status', 1)
@@ -296,9 +331,29 @@ class CheckoutController extends Controller
     if (!$voucher) {
         return response()->json([
             'success' => false,
-            'message' => 'Voucher không hợp lệ'
+            'message' => 'Voucher không hợp lệ hoặc đã hết lượt sử dụng'
         ]);
     }
+
+    /** --- PHẦN THÊM MỚI: KIỂM TRA QUYỀN SỞ HỮU VOUCHER ĐỔI ĐIỂM --- **/
+    // Nếu voucher yêu cầu điểm (points_required > 0), chỉ ai đã đổi mới được dùng
+    if ($voucher->points_required > 0) {
+        $user = Auth::user();
+        
+        $hasOwned = DB::table('user_vouchers')
+            ->where('user_id', $user->id)
+            ->where('voucher_id', $voucher->id)
+            ->where('is_used', 0) // Phải chưa được sử dụng
+            ->exists();
+
+        if (!$hasOwned) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Bạn chưa đổi điểm để nhận voucher này hoặc mã đã được sử dụng.'
+            ]);
+        }
+    }
+    /** --- KẾT THÚC PHẦN KIỂM TRA MỚI --- **/
 
     $buyNow = session('buy_now');
     $cart   = session('cart', []);
@@ -356,13 +411,15 @@ class CheckoutController extends Controller
     // ✅ Tính giảm giá
     if ($voucher->discount_type === 'percent') {
         $rawDiscount = $eligibleAmount * $voucher->discount_value / 100;
-        $discountAmount = $voucher->max_discount_value > 0
-            ? min($rawDiscount, $voucher->max_discount_value)
+        // Kiểm tra trần giảm giá (max_discount_value hoặc sale_price tùy db của bạn)
+        $discountAmount = ($voucher->sale_price > 0)
+            ? min($rawDiscount, $voucher->sale_price)
             : $rawDiscount;
     } else {
         $discountAmount = min($voucher->discount_value, $eligibleAmount);
     }
 
+    // Lưu vào session để trang Checkout hiển thị và hàm Store sử dụng
     session([
         'applied_voucher' => [
             'id' => $voucher->id,

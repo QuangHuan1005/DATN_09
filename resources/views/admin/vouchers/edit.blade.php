@@ -20,7 +20,7 @@
     @endif
 
     {{-- Form chỉnh sửa Voucher --}}
-    <div class="card">
+    <div class="card shadow-sm border-0">
         <div class="card-body p-4">
             <form action="{{ route('admin.vouchers.update', $voucher->id) }}" method="POST">
                 @csrf
@@ -44,7 +44,27 @@
                     </div>
                 </div>
 
-                {{-- Hàng 2: Số lượng & Giới hạn mỗi người --}}
+                {{-- Hàng 2: Hình thức phát hành & Điểm đổi (MỚI BỔ SUNG) --}}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-primary">Hình thức phát hành <span class="text-danger">*</span></label>
+                        <select id="is_reward_selector" class="form-select border-primary">
+                            <option value="0" {{ old('points_required', $voucher->points_required) == 0 ? 'selected' : '' }}>Voucher công khai (Tặng mọi người)</option>
+                            <option value="1" {{ old('points_required', $voucher->points_required) > 0 ? 'selected' : '' }}>Voucher đổi thưởng (Dùng điểm để đổi)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6" id="points_required_group" style="{{ old('points_required', $voucher->points_required) > 0 ? '' : 'display: none;' }}">
+                        <label class="form-label fw-bold">Số điểm cần đổi <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-warning text-dark"><i class="bi bi-coin"></i></span>
+                            <input type="number" name="points_required" id="points_required_input" 
+                                class="form-control" value="{{ old('points_required', $voucher->points_required ?? 0) }}" min="0">
+                        </div>
+                        <small class="text-muted">Cần số điểm này để đổi lấy mã giảm giá.</small>
+                    </div>
+                </div>
+
+                {{-- Hàng 3: Số lượng & Giới hạn mỗi người --}}
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Số lượng (Tổng cộng)</label>
@@ -58,7 +78,7 @@
                     </div>
                 </div>
                 
-                {{-- Hàng 3: Giá trị giảm, Đơn tối thiểu, Giảm tối đa --}}
+                {{-- Hàng 4: Giá trị giảm, Đơn tối thiểu, Giảm tối đa --}}
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label class="form-label fw-bold">
@@ -76,15 +96,14 @@
                         <label class="form-label fw-bold">Giá trị giảm tối đa (Sale Price)</label>
                         <input type="number" name="sale_price" value="{{ old('sale_price', $voucher->sale_price) }}"
                             class="form-control" step="1000" min="0">
-                        <small class="text-muted">Đặt giới hạn tối đa cho mức giảm (chỉ áp dụng nếu Loại giảm giá là %) </small>
+                        <small class="text-muted">Chặn mức giảm tối đa khi dùng %</small>
                     </div>
                 </div>
 
-                {{-- Hàng 4: Ngày bắt đầu và Ngày kết thúc --}}
+                {{-- Hàng 5: Ngày bắt đầu và Ngày kết thúc --}}
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Ngày bắt đầu <span class="text-danger">*</span></label>
-                        {{-- Laravel date field chỉ lấy được Y-m-d, nên cần substr --}}
                         <input type="date" name="start_date"
                             value="{{ old('start_date', substr($voucher->start_date, 0, 10)) }}" class="form-control" required>
                     </div>
@@ -107,7 +126,7 @@
                 {{-- Mô tả --}}
                 <div class="mb-4">
                     <label class="form-label fw-bold">Mô tả</label>
-                    <textarea name="description" rows="3" class="form-control" placeholder="Mô tả chi tiết về điều kiện áp dụng nếu cần">{{ old('description', $voucher->description) }}</textarea>
+                    <textarea name="description" rows="3" class="form-control" placeholder="Mô tả chi tiết">{{ old('description', $voucher->description) }}</textarea>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
@@ -127,21 +146,30 @@
 
 @section('script')
 <script>
-    // Cập nhật nhãn đơn vị giảm giá khi thay đổi Loại giảm giá
     document.addEventListener('DOMContentLoaded', function() {
+        // Logic 1: Cập nhật nhãn VNĐ/%
         const typeSelect = document.getElementById('discount_type');
         const label = document.getElementById('discount_label');
         
-        // Hàm cập nhật nhãn
         function updateDiscountLabel() {
             label.textContent = typeSelect.value === 'fixed' ? 'VNĐ' : '%';
         }
-
-        // Cập nhật ngay khi tải trang (để đảm bảo trạng thái old() hoặc $voucher ban đầu là đúng)
         updateDiscountLabel(); 
-        
-        // Thêm sự kiện thay đổi
         typeSelect.addEventListener('change', updateDiscountLabel);
+
+        // Logic 2: Ẩn/Hiện ô nhập điểm (MỚI)
+        const rewardSelector = document.getElementById('is_reward_selector');
+        const pointsGroup = document.getElementById('points_required_group');
+        const pointsInput = document.getElementById('points_required_input');
+
+        rewardSelector.addEventListener('change', function() {
+            if (this.value === '1') {
+                pointsGroup.style.display = 'block';
+            } else {
+                pointsGroup.style.display = 'none';
+                pointsInput.value = 0;
+            }
+        });
     });
 </script>
 @endsection
