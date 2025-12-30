@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 
 class AdminAttributeController extends Controller
 {
-    // ==================== COLOR MANAGEMENT ====================
+    // ==================== COLOR MANAGEMENT (QUẢN LÝ MÀU SẮC) ====================
     
     /**
-     * Display a listing of colors.
+     * Danh sách màu sắc.
      */
     public function colorsIndex()
     {
@@ -21,7 +21,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Show the form for creating a new color.
+     * Form thêm mới màu sắc.
      */
     public function colorsCreate()
     {
@@ -29,7 +29,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Store a newly created color in storage.
+     * Lưu màu sắc mới vào Database.
      */
     public function colorsStore(Request $request)
     {
@@ -54,7 +54,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Show the form for editing the specified color.
+     * Form chỉnh sửa màu sắc.
      */
     public function colorsEdit(Color $color)
     {
@@ -62,7 +62,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Update the specified color in storage.
+     * Cập nhật màu sắc.
      */
     public function colorsUpdate(Request $request, Color $color)
     {
@@ -87,7 +87,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Remove the specified color from storage.
+     * Xóa màu sắc (có kiểm tra ràng buộc biến thể).
      */
     public function colorsDestroy(Color $color)
     {
@@ -103,10 +103,10 @@ class AdminAttributeController extends Controller
             ->with('success', 'Xóa màu sắc thành công!');
     }
 
-    // ==================== SIZE MANAGEMENT ====================
+    // ==================== SIZE MANAGEMENT (QUẢN LÝ KÍCH THƯỚC) ====================
     
     /**
-     * Display a listing of sizes.
+     * Danh sách kích thước.
      */
     public function sizesIndex()
     {
@@ -115,7 +115,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Show the form for creating a new size.
+     * Form thêm mới kích thước.
      */
     public function sizesCreate()
     {
@@ -123,7 +123,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Store a newly created size in storage.
+     * Lưu kích thước mới.
      */
     public function sizesStore(Request $request)
     {
@@ -147,7 +147,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Show the form for editing the specified size.
+     * Form chỉnh sửa kích thước.
      */
     public function sizesEdit(Size $size)
     {
@@ -155,7 +155,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Update the specified size in storage.
+     * Cập nhật kích thước.
      */
     public function sizesUpdate(Request $request, Size $size)
     {
@@ -179,7 +179,7 @@ class AdminAttributeController extends Controller
     }
 
     /**
-     * Remove the specified size from storage.
+     * Xóa kích thước (có kiểm tra ràng buộc biến thể).
      */
     public function sizesDestroy(Size $size)
     {
@@ -195,4 +195,3 @@ class AdminAttributeController extends Controller
             ->with('success', 'Xóa kích thước thành công!');
     }
 }
-
