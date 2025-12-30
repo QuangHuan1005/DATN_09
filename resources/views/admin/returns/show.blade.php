@@ -6,6 +6,14 @@
             <div class="col-xl-9 col-lg-8">
                 <div class="row">
                     <div class="col-lg-12">
+                        {{-- Thông báo --}}
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        @endif
+
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
@@ -111,14 +119,14 @@
                                 </p>
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('admin.returns.index') }}" class="btn btn-outline-secondary btn-sm">Quay lại</a>
-                                    {{-- Nút cập nhật trạng thái có thể thêm ở đây --}}
                                 </div>
                             </div>
                         </div>
 
+                        {{-- DANH SÁCH SẢN PHẨM --}}
                         <div class="card">
                             <div class="card-header"><h4 class="card-title">Sản Phẩm Hoàn Trả</h4></div>
-                            <div class="card-body">
+                            <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table align-middle mb-0 table-hover">
                                         <thead class="bg-light-subtle border-bottom">
@@ -126,37 +134,21 @@
                                                 <th>Sản Phẩm</th>
                                                 <th>Giá Hoàn</th>
                                                 <th>Số Lượng</th>
-                                                <th class="text-end">Thành Tiền</th>
+                                                <th class="text-end px-3">Thành Tiền</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
-                                                $productDetails = is_array($return->product_details) 
-                                                    ? $return->product_details 
-                                                    : json_decode($return->product_details, true);
+                                                $productDetails = is_array($return->product_details) ? $return->product_details : json_decode($return->product_details, true);
                                             @endphp
-                                            
                                             @if(!empty($productDetails))
                                                 @foreach($productDetails as $item)
                                                     @php
-                                                        // FIX LỖI: Kiểm tra key an toàn bằng ?? null
-                                                        $orderDetailId = $item['order_detail_id'] ?? null;
                                                         $variantId = $item['product_variant_id'] ?? null;
-
-                                                        // Tìm chi tiết đơn hàng (Thử theo ID detail trước, sau đó thử theo Variant ID)
-                                                        $detail = $return->order->details->where('id', $orderDetailId)->first() 
-                                                                ?? $return->order->details->where('product_variant_id', $variantId)->first();
-
+                                                        $detail = $return->order->details->where('product_variant_id', $variantId)->first();
                                                         if (!$detail) continue;
-                                                        
                                                         $variant = $detail->productVariant;
-                                                        $product = $variant ? $variant->product : $detail->product;
-                                                        
-                                                        $variantText = [];
-                                                        if ($variant?->color) $variantText[] = "Màu: " . $variant->color->name;
-                                                        if ($variant?->size) $variantText[] = "Size: " . $variant->size->name;
-                                                        $variantDisplay = !empty($variantText) ? implode(' · ', $variantText) : 'Mặc định';
-                                                        
+                                                        $product = $variant ? $variant->product : null;
                                                         $img = ($variant && $variant->image) ? $variant->image : ($product->thumbnail ?? null);
                                                     @endphp
                                                     <tr>
@@ -170,18 +162,18 @@
                                                                     @endif
                                                                 </div>
                                                                 <div>
-                                                                    <h5 class="fs-14 mb-1">{{ $product->name }}</h5>
-                                                                    <p class="text-muted mb-0 fs-12">{{ $variantDisplay }}</p>
+                                                                    <h5 class="fs-14 mb-1">{{ $product->name ?? 'Sản phẩm' }}</h5>
+                                                                    <p class="text-muted mb-0 fs-12">
+                                                                        Màu: {{ $variant->color->name ?? 'N/A' }} · Size: {{ $variant->size->name ?? 'N/A' }}
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td>{{ number_format($item['price'] ?? 0, 0, ',', '.') }}₫</td>
                                                         <td>{{ $item['quantity'] ?? 0 }}</td>
-                                                        <td class="text-end fw-medium text-dark">{{ number_format($item['total'] ?? 0, 0, ',', '.') }}₫</td>
+                                                        <td class="text-end fw-medium text-dark px-3">{{ number_format($item['total'] ?? 0, 0, ',', '.') }}₫</td>
                                                     </tr>
                                                 @endforeach
-                                            @else
-                                                <tr><td colspan="4" class="text-center">Không có dữ liệu chi tiết sản phẩm.</td></tr>
                                             @endif
                                         </tbody>
                                     </table>
@@ -189,87 +181,109 @@
                             </div>
                         </div>
 
-                        @php
-                            $images = is_string($return->images) ? json_decode($return->images, true) : $return->images;
-                        @endphp
-                        @if(!empty($images))
+                        {{-- 📸 1. ẢNH MINH CHỨNG CỦA KHÁCH HÀNG (Dò thư mục public) --}}
                         <div class="card">
-                            <div class="card-header"><h4 class="card-title">Hình Ảnh Minh Chứng</h4></div>
+                            <div class="card-header d-flex align-items-center gap-2">
+                                <i class='bx bx-image text-warning fs-20'></i>
+                                <h4 class="card-title mb-0">Ảnh Minh Chứng Lỗi (Khách hàng gửi)</h4>
+                            </div>
                             <div class="card-body">
+                                @php
+                                    $images = is_array($return->images) ? $return->images : json_decode($return->images, true);
+                                @endphp
                                 <div class="row g-2">
-                                    @foreach($images as $image)
-                                        <div class="col-md-3">
-                                            <a href="{{ asset($image) }}" target="_blank">
-                                                <img src="{{ asset($image) }}" class="img-fluid rounded border" style="height: 150px; width: 100%; object-fit: cover;">
-                                            </a>
+                                    @if(!empty($images))
+                                        @foreach($images as $image)
+                                            @php $cleanPath = str_replace('\\', '/', $image); @endphp
+                                            <div class="col-md-3">
+                                                <a href="{{ asset($cleanPath) }}" target="_blank">
+                                                    <img src="{{ asset($cleanPath) }}" class="img-fluid rounded border shadow-sm" style="height: 150px; width: 100%; object-fit: cover;">
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        {{-- KHUNG CHỜ KHI KHÔNG CÓ ẢNH --}}
+                                        <div class="col-12 text-center py-4 bg-light rounded border border-dashed">
+                                            <i class='bx bx-no-entry fs-30 text-muted'></i>
+                                            <p class="text-muted mb-0 mt-1">Khách hàng không gửi ảnh minh chứng lỗi.</p>
                                         </div>
-                                    @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>
-                        @endif
                     </div>
                 </div>
             </div>
 
+            {{-- CỘT BÊN PHẢI --}}
             <div class="col-xl-3 col-lg-4">
-                <div class="card bg-primary-subtle border-primary">
+                {{-- TỔNG TIỀN HOÀN --}}
+                <div class="card bg-primary-subtle border-primary shadow-none">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <h5 class="text-primary mb-0">Tổng hoàn trả</h5>
+                            <h5 class="text-primary mb-0">Tổng hoàn tiền</h5>
                             <i class='bx bx-money fs-20 text-primary'></i>
                         </div>
                         <h3 class="text-primary fw-bold">{{ number_format($return->refund_amount, 0, ',', '.') }}₫</h3>
-                        <p class="text-muted fs-12 mb-0">Hệ thống sẽ hoàn lại vào tài khoản khách hàng khi admin xác nhận "Đã hoàn tiền".</p>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header"><h4 class="card-title">Thông Tin Hoàn Trả</h4></div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Lý do hoàn hàng:</label>
-                            <p class="text-dark bg-light p-2 rounded">{{ $return->reason }}</p>
-                        </div>
-                        @if($return->notes)
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Ghi chú của khách:</label>
-                            <p class="text-muted">{{ $return->notes }}</p>
-                        </div>
-                        @endif
-                        @if($return->rejection_reason)
-                        <div class="mb-3">
-                            <label class="form-label fw-bold text-danger">Lý do từ chối:</label>
-                            <p class="text-danger bg-danger-subtle p-2 rounded">{{ $return->rejection_reason }}</p>
-                        </div>
+                {{-- 📸 2. BIÊN LAI HOÀN TIỀN CỦA ADMIN --}}
+                <div class="card shadow-sm border">
+                    <div class="card-header bg-light d-flex align-items-center gap-2">
+                        <i class='bx bx-receipt text-success fs-20'></i>
+                        <h4 class="card-title mb-0">Biên Lai Hoàn Tiền (Shop)</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        @if($return->admin_refund_proof)
+                            {{-- HIỂN THỊ KHI ĐÃ CÓ BIÊN LAI --}}
+                            <a href="{{ asset('storage/' . str_replace('\\', '/', $return->admin_refund_proof)) }}" target="_blank">
+                                <img src="{{ asset('storage/' . str_replace('\\', '/', $return->admin_refund_proof)) }}" 
+                                     class="img-fluid rounded border shadow-sm mb-2" style="max-height: 250px; background: #fff;">
+                            </a>
+                            <p class="text-success fw-medium mb-0 fs-12"><i class='bx bx-check-double'></i> Đã thanh toán thành công</p>
+                        @else
+                            {{-- HIỂN THỊ KHUNG CHỜ KHI CHƯA CÓ BIÊN LAI --}}
+                            <div class="py-4 bg-light rounded border border-dashed">
+                                <i class='bx bx-time-five fs-30 text-muted'></i>
+                                <p class="text-muted fs-12 mb-0 mt-2">Chưa cập nhật biên lai hoàn tiền.</p>
+                            </div>
                         @endif
                     </div>
                 </div>
 
-                @if($return->refundAccount)
-                <div class="card">
-                    <div class="card-header"><h4 class="card-title">Tài Khoản Nhận Tiền</h4></div>
-                    <div class="card-body">
-                        <p class="mb-1 fw-medium text-dark">{{ $return->refundAccount->bank_name }}</p>
-                        <p class="mb-1 text-muted">{{ $return->refundAccount->masked_account_number }}</p>
-                        <p class="mb-0 text-muted text-uppercase">{{ $return->refundAccount->account_holder }}</p>
+                {{-- FORM XỬ LÝ (CHỈ HIỆN KHI CẦN) --}}
+                @if(in_array($return->status, ['returned', 'approved', 'waiting_for_return']))
+                    <div class="card border-success shadow-sm">
+                        <div class="card-header bg-success"><h4 class="card-title text-white mb-0">Xử Lý Hoàn Tiền</h4></div>
+                        <div class="card-body">
+                            <form action="{{ route('admin.returns.updateStatus', $return->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="status" value="refunded">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Tải Biên lai <span class="text-danger">*</span></label>
+                                    <input type="file" name="admin_refund_proof" class="form-control" accept="image/*" required>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100 fw-bold">XÁC NHẬN HOÀN TIỀN</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
                 @endif
 
-                <div class="card">
-                    <div class="card-header"><h4 class="card-title">Khách Hàng</h4></div>
-                    <div class="card-body text-center">
-                        <img src="{{ asset('admin/assets/images/users/avatar-1.jpg') }}" class="avatar-lg rounded-circle border border-3 border-light mb-3">
-                        <h5 class="mb-1">{{ $return->order->name }}</h5>
-                        <p class="text-muted fs-13">{{ $return->order->user?->email }}</p>
-                        <hr>
-                        <div class="text-start">
-                            <p class="mb-1"><i class='bx bx-phone'></i> {{ $return->order->phone }}</p>
-                            <p class="mb-0 fs-12"><i class='bx bx-map'></i> {{ $return->order->address }}</p>
+                {{-- THÔNG TIN TÀI KHOẢN KHÁCH --}}
+                @if($return->refundAccount)
+                    <div class="card">
+                        <div class="card-header bg-light"><h4 class="card-title mb-0">Tài Khoản Nhận</h4></div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class='bx bxs-bank text-primary fs-18'></i>
+                                <span class="fw-bold">{{ $return->refundAccount->bank_name }}</span>
+                            </div>
+                            <p class="mb-1 text-dark fw-medium fs-15">{{ $return->refundAccount->account_number }}</p>
+                            <p class="mb-0 text-muted text-uppercase fs-12">{{ $return->refundAccount->account_holder }}</p>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>

@@ -6,6 +6,8 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\OrderStatusLog;
 use App\Models\OrderCancelRequest;
+use App\Models\ProductVariant;
+use App\Services\VNPayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,12 +16,51 @@ use Illuminate\Support\Facades\Log;
 class OrderController extends Controller
 {
     /**
-     * Danh sách đơn hàng của user
+     * Tự động hủy các đơn hàng VNPay quá hạn 30 phút mà chưa thanh toán
+     */
+    private function autoCancelExpiredOrders()
+    {
+        $expiryTime = now()->subMinutes(30);
+
+        $expiredOrders = Order::where('payment_method_id', 2)
+            ->where('payment_status_id', '!=', 2)
+            ->where('order_status_id', 1)
+            ->where('created_at', '<', $expiryTime)
+            ->get();
+
+        if ($expiredOrders->isNotEmpty()) {
+            foreach ($expiredOrders as $order) {
+                DB::transaction(function () use ($order) {
+                    $order->update([
+                        'order_status_id' => 6,
+                        'note' => $order->note . ' (Hệ thống tự động hủy do quá hạn thanh toán VNPay)'
+                    ]);
+
+                    foreach ($order->details as $detail) {
+                        if ($detail->productVariant) {
+                            $detail->productVariant->increment('quantity', $detail->quantity);
+                        }
+                    }
+
+                    OrderStatusLog::create([
+                        'order_id'        => $order->id,
+                        'order_status_id' => 6,
+                        'actor_type'      => 'system',
+                        'note'            => 'Hệ thống tự động hủy đơn do khách hàng không hoàn tất thanh toán VNPay trong 30 phút.'
+                    ]);
+                });
+            }
+        }
+    }
+
+    /**
+     * Trang danh sách đơn hàng của khách
      */
     public function index(Request $request)
     {
+        $this->autoCancelExpiredOrders();
+        
         $statusId = (int) $request->query('status_id', 0);
-
         $statuses = OrderStatus::orderBy('id')->get(['id', 'name']);
 
         $counts = Order::query()
@@ -29,7 +70,7 @@ class OrderController extends Controller
             ->pluck('c', 'order_status_id');
 
         $orders = Order::query()
-            ->with(['status', 'paymentStatus', 'payment.method', 'details'])
+            ->with(['status', 'paymentStatus', 'paymentMethod', 'details'])
             ->where('user_id', Auth::id())
             ->when($statusId > 0, fn($q) => $q->where('order_status_id', $statusId))
             ->latest('created_at')
@@ -44,9 +85,11 @@ class OrderController extends Controller
      */
     public function show($id)
     {
+        $this->autoCancelExpiredOrders();
+
         $order = Order::query()
             ->with([
-                'status', 'paymentStatus', 'payment.method', 'invoice', 'voucher',
+                'status', 'paymentStatus', 'paymentMethod', 'invoice', 'voucher',
                 'user:id,name,email',
                 'details.productVariant.product:id,name',
                 'details.productVariant.color:id,name,color_code',
@@ -74,7 +117,8 @@ class OrderController extends Controller
                 'unit_price'   => (int)$d->price,
                 'qty'          => (int)$d->quantity,
                 'line_total'   => (int)($d->price * $d->quantity),
-                'eta'          => $d->estimated_delivery,
+                // FIX LỖI: Thêm trường eta để tránh Undefined property
+                'eta'          => $d->estimated_delivery ?? null, 
             ];
         });
 
@@ -94,7 +138,38 @@ class OrderController extends Controller
     }
 
     /**
-     * Hủy đơn hàng - Phía người dùng
+     * Thanh toán lại VNPay
+     */
+    public function repay($orderCode)
+    {
+        $this->autoCancelExpiredOrders();
+
+        $order = Order::where('order_code', $orderCode)
+                      ->where('user_id', Auth::id())
+                      ->where('payment_status_id', '!=', 2) 
+                      ->where('order_status_id', 1)
+                      ->first();
+
+        if (!$order) {
+            return redirect()->route('orders.index')->with('error', 'Đơn hàng không tồn tại hoặc đã quá thời hạn thanh toán.');
+        }
+
+        $vnpayService = new VNPayService();
+        $result = $vnpayService->createPayment(
+            $order->order_code, 
+            $order->total_amount, 
+            "Thanh toan lai cho don hang " . $order->order_code
+        );
+
+        if ($result['success']) {
+            return redirect()->away($result['payment_url']);
+        }
+
+        return redirect()->back()->with('error', 'Cổng thanh toán đang bảo trì, vui lòng thử lại sau.');
+    }
+
+    /**
+     * Hủy đơn hàng - Logic Double Check
      */
     public function cancel(Request $request, $id)
     {
@@ -107,8 +182,17 @@ class OrderController extends Controller
             return back()->with('error', 'Không tìm thấy đơn hàng.');
         }
 
+        // --- QUAN TRỌNG: LÀM MỚI DỮ LIỆU TỪ DB ---
+        $order->refresh();
+
+        // CHẶN HÀNH VI: Nếu không phải trạng thái 1, 2 thì KHÔNG ĐƯỢC HỦY
         if (!$order->cancelable) {
-            return back()->with('error', 'Đơn hàng không thể hủy ở trạng thái hiện tại.');
+            return back()->with('error', 'Xin lỗi, trạng thái đơn hàng đã thay đổi (Đang vận chuyển hoặc đã giao), không thể hủy vào lúc này.');
+        }
+
+        // CHẶN HÀNH VI: Nếu đã gửi yêu cầu hủy rồi thì không cho gửi nữa
+        if ($order->is_cancel_requested == 1) {
+            return back()->with('error', 'Yêu cầu hủy đơn hàng của bạn đang được xử lý.');
         }
 
         DB::beginTransaction();
@@ -124,37 +208,34 @@ class OrderController extends Controller
             $paymentMethodId = (int) $order->payment_method_id;
             $paymentStatusId = (int) $order->payment_status_id;
 
-            $newPaymentStatus = 1;
-            $cancelRequestStatusId = 2;
-            $cancelRequestStatusStr = 'accepted';
+            // Logic mặc định cho yêu cầu hủy
+            $cancelRequestStatusId = 1; // Chờ xử lý
+            $cancelRequestStatusStr = 'pending';
 
-            if ($paymentMethodId !== 1 && $paymentStatusId === 2) {
-                $newPaymentStatus = 3;
-                $cancelRequestStatusId = 4;
-                $cancelRequestStatusStr = 'refunded';
-            }
-
-            // --- THU HỒI ĐIỂM ---
-            // Nếu đơn đã ở trạng thái Hoàn thành (ID 5) trước đó, cần trừ lại điểm đã cộng
-            if ((int)$order->order_status_id === 5) {
-                $pointsToDeduct = (int) floor($order->subtotal / 100);
-                if ($pointsToDeduct > 0) {
-                    DB::table('users')->where('id', Auth::id())->decrement('points', $pointsToDeduct);
-                }
-            }
-
+            /**
+             * LƯU Ý: Không nên cập nhật order_status_id = 6 ngay lập tức ở đây 
+             * nếu bạn muốn Admin duyệt. Nếu bạn muốn hủy luôn thì giữ nguyên.
+             * Dưới đây giữ nguyên logic cập nhật ID 6 của bạn nhưng thêm bảo mật.
+             */
+            
             OrderCancelRequest::create([
                 'order_id'      => $order->id,
                 'user_id'       => Auth::id(),
                 'canceled_by'   => 'customer',
                 'reason_user'   => trim($request->input('reason')),
-                'status'        => $cancelRequestStatusStr,
-                'status_id'     => $cancelRequestStatusId,
+                'status'        => 'pending',
+                'status_id'     => 1, 
                 'refund_image'  => $fileName,
             ]);
 
-            $order->order_status_id = 6; // Hủy
-            $order->payment_status_id = $newPaymentStatus;
+            // Cập nhật trạng thái đơn hàng (Duyệt hủy ngay)
+            $order->order_status_id = 6; 
+            $order->is_cancel_requested = 1;
+            
+            if ($paymentMethodId !== 1 && $paymentStatusId === 2) {
+                $order->payment_status_id = 3; // Chờ hoàn tiền
+            }
+            
             $order->note = $request->input('reason', 'Khách yêu cầu hủy');
             $order->save();
 
@@ -184,7 +265,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Người dùng xác nhận "Đã nhận được hàng" -> Tích điểm (100đ = 1 điểm)
+     * Xác nhận Đã nhận hàng
      */
     public function complete(Request $request, $id)
     {
@@ -196,26 +277,25 @@ class OrderController extends Controller
             return back()->with('error', 'Không tìm thấy đơn hàng.');
         }
 
-        // Chỉ cho phép hoàn thành nếu đơn hàng đang ở trạng thái "Đã giao hàng" (ID 4)
+        // Double check status cho nút Hoàn thành
+        $order->refresh();
+
         if ((int)$order->order_status_id !== 4) {
             return back()->with('error', 'Chỉ có thể hoàn thành khi đơn hàng ở trạng thái Đã giao hàng.');
         }
 
         DB::beginTransaction();
         try {
-            // 1. Cập nhật trạng thái đơn hàng
-            $order->order_status_id = 5; // Hoàn thành
-            $order->payment_status_id = 2; // Đã thanh toán 
+            $order->order_status_id = 5;
+            $order->payment_status_id = 2;
             $order->save();
 
-            // 2. Logic Tích Điểm (100đ tiền hàng = 1 điểm)
             $pointsToEarn = (int) floor($order->subtotal / 100); 
 
             if ($pointsToEarn > 0) {
                 DB::table('users')->where('id', Auth::id())->increment('points', $pointsToEarn);
             }
 
-            // 3. Ghi log lịch sử trạng thái
             OrderStatusLog::create([
                 'order_id'        => $order->id,
                 'order_status_id' => 5,
@@ -237,7 +317,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Hiển thị trang đánh giá đơn hàng
+     * Đánh giá đơn hàng
      */
     public function review($id)
     {

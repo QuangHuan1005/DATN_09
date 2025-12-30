@@ -124,18 +124,13 @@
 
                                     {{-- Cập nhật trạng thái --}}
                                     <td>
-                                        <form action="{{ route('admin.returns.updateStatus', $return->id) }}" method="POST" class="status-form" data-return-id="{{ $return->id }}">
+                                        <form action="{{ route('admin.returns.updateStatus', $return->id) }}" method="POST" class="status-form" data-return-id="{{ $return->id }}" enctype="multipart/form-data">
                                             @csrf
                                             <input type="hidden" name="rejection_reason" class="rejection-reason-input">
                                             @php
-                                                // Logic: chỉ cho phép chọn bước tiếp theo hoặc từ chối
-                                                // Thứ tự: pending -> approved -> waiting_for_return -> returned -> refunded
                                                 $statusOrder = ['pending', 'approved', 'waiting_for_return', 'returned', 'refunded'];
                                                 $currentIndex = array_search($return->status, $statusOrder);
-                                                
-                                                // Nếu đã từ chối thì không thay đổi được nữa
                                                 $isRejected = $return->status === 'rejected';
-                                                // Nếu đã hoàn tiền thì không thay đổi được nữa
                                                 $isRefunded = $return->status === 'refunded';
                                             @endphp
                                             <select name="status" 
@@ -236,8 +231,6 @@
                             Vui lòng chọn lý do từ chối!
                         </div>
                     </div>
-                    
-                    {{-- Input text chỉ hiện khi chọn "Khác" --}}
                     <div class="mb-3 d-none" id="otherReasonContainer">
                         <label for="otherReasonInput" class="form-label">Nhập lý do cụ thể <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="otherReasonInput" rows="3" placeholder="Vui lòng nhập lý do cụ thể..."></textarea>
@@ -254,7 +247,35 @@
         </div>
     </div>
 
-    {{-- Script --}}
+    {{-- Modal: Upload minh chứng hoàn tiền (BẮT BUỘC) --}}
+    <div class="modal fade" id="refundModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title text-white"><i class='bx bx-money-withdraw me-1'></i> Xác Nhận Hoàn Tiền</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="refundForm" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="alert alert-info fs-13">
+                            <i class='bx bx-info-circle'></i> Vui lòng tải lên <strong>ảnh minh chứng chuyển khoản</strong> (Bill ngân hàng) để hoàn tất trạng thái hoàn tiền cho đơn hàng này.
+                        </div>
+                        <input type="hidden" name="status" value="refunded">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ảnh minh chứng <span class="text-danger">*</span></label>
+                            <input type="file" name="admin_refund_proof" class="form-control" accept="image/*" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-success">Tải lên & Xác nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentFormToSubmit = null;
         let currentSelect = null;
@@ -265,7 +286,7 @@
                 setTimeout(() => alert.classList.add('d-none'), 3000);
             });
 
-            // Set màu select trạng thái khi load và lưu giá trị hiện tại
+            // Set màu select trạng thái
             document.querySelectorAll('select[name="status"]').forEach(select => {
                 const selectedOption = select.selectedOptions[0];
                 if (selectedOption && selectedOption.dataset.color) {
@@ -274,118 +295,58 @@
                 select.dataset.current = select.value;
             });
 
-            // Xử lý khi chọn lý do từ dropdown
             const reasonSelect = document.getElementById('rejectionReasonSelect');
             const otherReasonContainer = document.getElementById('otherReasonContainer');
             const otherReasonInput = document.getElementById('otherReasonInput');
 
             reasonSelect.addEventListener('change', function() {
-                // Ẩn lỗi khi chọn
                 reasonSelect.classList.remove('is-invalid');
                 document.getElementById('rejectionSelectError').classList.add('d-none');
-
-                // Nếu chọn "Khác", hiện input text
                 if (this.value === 'other') {
                     otherReasonContainer.classList.remove('d-none');
                     otherReasonInput.focus();
                 } else {
                     otherReasonContainer.classList.add('d-none');
                     otherReasonInput.value = '';
-                    otherReasonInput.classList.remove('is-invalid');
-                    document.getElementById('otherReasonError').classList.add('d-none');
                 }
             });
 
-            // Ẩn lỗi khi người dùng bắt đầu nhập vào textarea "Khác"
-            otherReasonInput.addEventListener('input', function() {
-                if (this.value.trim() !== '') {
-                    this.classList.remove('is-invalid');
-                    document.getElementById('otherReasonError').classList.add('d-none');
-                }
-            });
-
-            // Xử lý nút xác nhận từ chối trong modal
             document.getElementById('confirmRejectionBtn').addEventListener('click', function() {
                 const selectedReason = reasonSelect.value;
                 let finalReason = '';
                 let hasError = false;
 
-                // Validate: phải chọn lý do
-                if (!selectedReason || selectedReason === '') {
+                if (!selectedReason) {
                     reasonSelect.classList.add('is-invalid');
                     document.getElementById('rejectionSelectError').classList.remove('d-none');
                     hasError = true;
-                } else {
-                    reasonSelect.classList.remove('is-invalid');
-                    document.getElementById('rejectionSelectError').classList.add('d-none');
                 }
 
-                // Nếu chọn "Khác", phải nhập lý do cụ thể
                 if (selectedReason === 'other') {
-                    const otherReason = otherReasonInput.value.trim();
-                    if (otherReason === '') {
+                    if (otherReasonInput.value.trim() === '') {
                         otherReasonInput.classList.add('is-invalid');
-                        document.getElementById('otherReasonError').classList.remove('d-none');
-                        hasError = true;
-                    } else if (otherReason.length < 10) {
-                        otherReasonInput.classList.add('is-invalid');
-                        document.getElementById('otherReasonError').textContent = 'Lý do phải có ít nhất 10 ký tự!';
                         document.getElementById('otherReasonError').classList.remove('d-none');
                         hasError = true;
                     } else {
-                        otherReasonInput.classList.remove('is-invalid');
-                        document.getElementById('otherReasonError').classList.add('d-none');
-                        finalReason = otherReason;
+                        finalReason = otherReasonInput.value.trim();
                     }
-                } else {
-                    // Lấy text của option đã chọn
+                } else if (selectedReason) {
                     finalReason = reasonSelect.selectedOptions[0].text;
                 }
 
-                // Nếu có lỗi, dừng lại
-                if (hasError) {
-                    return;
-                }
+                if (hasError) return;
 
-                // Thêm lý do vào form và submit
                 if (currentFormToSubmit) {
-                    const hiddenInput = currentFormToSubmit.querySelector('.rejection-reason-input');
-                    if (hiddenInput) {
-                        hiddenInput.value = finalReason;
-                    }
-                    
-                    // Đổi màu select
-                    if (currentSelect) {
-                        const color = currentSelect.selectedOptions[0].dataset.color || '';
-                        currentSelect.className = 'form-select form-select-sm ' + color;
-                        currentSelect.dataset.current = currentSelect.value;
-                    }
-
-                    // Đóng modal và submit form
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('rejectionModal'));
-                    modal.hide();
+                    currentFormToSubmit.querySelector('.rejection-reason-input').value = finalReason;
                     currentFormToSubmit.submit();
                 }
             });
 
-            // Reset validation khi đóng modal
-            document.getElementById('rejectionModal').addEventListener('hidden.bs.modal', function() {
-                // Reset dropdown
-                reasonSelect.value = '';
-                reasonSelect.classList.remove('is-invalid');
-                document.getElementById('rejectionSelectError').classList.add('d-none');
-                
-                // Ẩn và reset textarea "Khác"
-                otherReasonContainer.classList.add('d-none');
-                otherReasonInput.value = '';
-                otherReasonInput.classList.remove('is-invalid');
-                document.getElementById('otherReasonError').classList.add('d-none');
-                document.getElementById('otherReasonError').textContent = 'Vui lòng nhập lý do cụ thể!';
-                
-                // Reset về trạng thái cũ nếu không submit
-                if (currentSelect && currentFormToSubmit && !currentFormToSubmit.querySelector('.rejection-reason-input').value) {
-                    currentSelect.value = currentSelect.dataset.current;
-                }
+            // Reset select khi đóng modal
+            ['rejectionModal', 'refundModal'].forEach(id => {
+                document.getElementById(id).addEventListener('hidden.bs.modal', function() {
+                    if (currentSelect) currentSelect.value = currentSelect.dataset.current;
+                });
             });
         });
 
@@ -394,26 +355,27 @@
             const newStatusText = select.selectedOptions[0].text;
             const form = select.form;
 
-            // Nếu chọn "Từ chối", hiện modal để nhập lý do
+            // 1. Nếu từ chối -> Modal lý do
             if (newStatus === 'rejected') {
                 currentFormToSubmit = form;
                 currentSelect = select;
-                
-                // Hiện modal
-                const modal = new bootstrap.Modal(document.getElementById('rejectionModal'));
-                modal.show();
+                new bootstrap.Modal(document.getElementById('rejectionModal')).show();
                 return;
             }
 
-            // Các trạng thái khác, xác nhận bình thường
+            // 2. Nếu hoàn tiền -> Modal upload ảnh
+            if (newStatus === 'refunded') {
+                currentSelect = select;
+                const refundForm = document.getElementById('refundForm');
+                refundForm.action = form.action;
+                new bootstrap.Modal(document.getElementById('refundModal')).show();
+                return;
+            }
+
+            // 3. Các trạng thái khác -> Confirm
             if (confirm(`Bạn có chắc chắn muốn đổi trạng thái sang "${newStatusText}" không?`)) {
-                // Nếu đồng ý, đổi màu và submit
-                const color = select.selectedOptions[0].dataset.color || '';
-                select.className = 'form-select form-select-sm ' + color;
-                select.dataset.current = select.value;
                 form.submit();
             } else {
-                // Nếu cancel, trả về trạng thái cũ
                 select.value = select.dataset.current;
             }
         }
