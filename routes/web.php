@@ -133,6 +133,7 @@ Route::prefix('payment/vnpay')->group(function () {
 Route::prefix('orders')->middleware('auth')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/repay/{orderCode}', [OrderController::class, 'repay'])->name('orders.repay');
     Route::post('/{id}/complete', [OrderController::class, 'complete'])->name('orders.complete');
 
 // Route cho OrderCancelRequestController (Xử lý việc gửi yêu cầu hủy)

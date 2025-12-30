@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Services\VNPayService;
 use App\Models\Order;
 use App\Models\Payment;
@@ -19,129 +20,124 @@ class VNPayController extends Controller
     }
 
     /**
-     * ============================================
-     *  📌 1. RETURN URL (User Redirect After Payment)
-     * ============================================
+     * 📌 1. RETURN URL (Xử lý khi khách được redirect về từ VNPay)
      */
     public function return(Request $request)
     {
         Log::info("VNPay RETURN Callback", [$request->all()]);
 
-        // Kiểm tra chữ ký
-     //   if (!$this->vnpayService->verifyCallback($request->all())) {
-      //      return redirect()->route('checkout.success')->with('error', 'Sai chữ ký VNPay!');
-       // }
+        // QUAN TRỌNG: Mở lại kiểm tra chữ ký để tránh bị fake URL
+        if (!$this->vnpayService->verifyCallback($request->all())) {
+             return redirect()->route('checkout.success')->with('error', 'Chữ ký không hợp lệ!');
+        }
 
         $orderCode = $request->get('vnp_TxnRef');
-       $responseCode = trim($request->get('vnp_ResponseCode')); 
+        $responseCode = trim($request->get('vnp_ResponseCode')); 
 
-        // Lấy đơn hàng
         $order = Order::where('order_code', $orderCode)->first();
 
         if (!$order) {
-            return redirect()->route('checkout.success')->with('error', 'Không tìm thấy đơn hàng!');
+            return redirect()->route('home')->with('error', 'Không tìm thấy đơn hàng!');
         }
 
-        // VNPay ResponseCode == "00" => thanh toán thành công
         if ($responseCode === "00") {
-            $order->update([
-                'payment_status_id' => 2, // Đã thanh toán
-                'order_status_id'    => 2  // Đã xác nhận
-            ]);
-
-            OrderStatusLog::create([
-                'order_id' => $order->id,
-                'order_status_id' => 2,
-                'actor_type' => 'system'
-            ]);
-
+            // Lưu ý: Việc cập nhật DB chính nên để ở IPN. 
+            // Return URL chủ yếu để hiển thị thông báo cho khách.
             return redirect()->route('checkout.success')->with('success', 'Thanh toán VNPay thành công!');
         }
 
-        // Ngược lại thất bại
-        return redirect()->route('checkout.success')->with('error', 'Thanh toán thất bại hoặc bị hủy!');
+        // Nếu thất bại hoặc hủy ngang
+        return redirect()->route('orders.index')->with('error', 'Thanh toán thất bại hoặc bạn đã hủy giao dịch.');
     }
 
 
     /**
-     * ============================================
-     *  📌 2. IPN URL (Server → Server, Quan trọng nhất)
-     * ============================================
+     * 📌 2. IPN URL (Server-to-Server - Cập nhật dữ liệu chính xác)
      */
     public function ipn(Request $request)
-{
-    try {
-        Log::info("VNPay IPN Callback", [$request->all()]);
+    {
+        try {
+            Log::info("VNPay IPN Callback", [$request->all()]);
 
-        $orderCode = $request->get('vnp_TxnRef');
-        $amount = $request->get('vnp_Amount');
-        $responseCode = trim($request->get('vnp_ResponseCode')); // trim khoảng trắng
+            // 1. Kiểm tra chữ ký (Bắt buộc)
+            if (!$this->vnpayService->verifyCallback($request->all())) {
+                return response()->json(['RspCode' => '97', 'Message' => 'Invalid signature']);
+            }
 
-        $order = Order::where('order_code', $orderCode)->first();
+            $orderCode = $request->get('vnp_TxnRef');
+            $vnpAmount = $request->get('vnp_Amount');
+            $responseCode = trim($request->get('vnp_ResponseCode'));
 
-        if (!$order) {
-            Log::error("VNPay IPN: Order not found", ['order_code' => $orderCode]);
-            return response()->json(['RspCode' => '01', 'Message' => 'Order not found']);
+            $order = Order::where('order_code', $orderCode)->first();
+
+            // 2. Kiểm tra đơn hàng tồn tại
+            if (!$order) {
+                return response()->json(['RspCode' => '01', 'Message' => 'Order not found']);
+            }
+
+            // 3. Kiểm tra số tiền (Tránh bị sửa số tiền khi thanh toán)
+            if (($order->total_amount * 100) != $vnpAmount) {
+                return response()->json(['RspCode' => '04', 'Message' => 'Invalid amount']);
+            }
+
+            // 4. Kiểm tra trạng thái đơn hàng (Tránh cập nhật trùng lặp)
+            if ($order->payment_status_id == 2) {
+                return response()->json(['RspCode' => '02', 'Message' => 'Order already confirmed']);
+            }
+
+            // THỰC HIỆN CẬP NHẬT
+            DB::beginTransaction();
+
+            if ($responseCode === "00") {
+                // ✅ THANH TOÁN THÀNH CÔNG
+                $order->update([
+                    'payment_status_id' => 2, // Đã thanh toán
+                    'order_status_id' => 2    // Đã xác nhận (Processing)
+                ]);
+
+                Payment::updateOrCreate(
+                    ['order_id' => $order->id],
+                    [
+                        'payment_method_id' => 2,
+                        'payment_code' => $request->get('vnp_TransactionNo'),
+                        'payment_amount' => $vnpAmount / 100,
+                        'status' => 1
+                    ]
+                );
+
+                OrderStatusLog::create([
+                    'order_id' => $order->id,
+                    'order_status_id' => 2,
+                    'actor_type' => 'system',
+                    'note' => 'VNPay xác nhận thanh toán thành công.'
+                ]);
+
+                DB::commit();
+                return response()->json(['RspCode' => '00', 'Message' => 'Confirm Success']);
+
+            } else {
+                // ❌ THANH TOÁN THẤT BẠI
+                // Lưu ý: Không nên hủy đơn ngay tại đây nếu khách vẫn còn thời gian 30p để "Thanh toán lại"
+                // Chỉ ghi log hoặc cập nhật trạng thái lỗi thanh toán.
+                
+                Payment::updateOrCreate(
+                    ['order_id' => $order->id],
+                    [
+                        'payment_method_id' => 2,
+                        'payment_code' => $request->get('vnp_TransactionNo'),
+                        'payment_amount' => $vnpAmount / 100,
+                        'status' => 0
+                    ]
+                );
+
+                DB::commit();
+                return response()->json(['RspCode' => '00', 'Message' => 'Payment Failed Recorded']);
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("VNPay IPN Exception: " . $e->getMessage());
+            return response()->json(['RspCode' => '99', 'Message' => 'System error']);
         }
-
-        // Nếu đã thanh toán
-        if ($order->payment_status_id == 2) {
-            return response()->json(['RspCode' => '00', 'Message' => 'Order already confirmed']);
-        }
-
-        if ($responseCode === "00") {
-            // Thanh toán thành công
-            $order->update([
-                'payment_status_id' => 2,
-                'order_status_id' => 2
-            ]);
-
-            Payment::updateOrCreate(
-                ['order_id' => $order->id],
-                [
-                    'payment_method_id' => 2,
-                    'payment_code' => $request->get('vnp_TransactionNo'),
-                    'payment_amount' => is_numeric($amount) ? ($amount / 100) : 0,
-                    'status' => 1
-                ]
-            );
-
-            OrderStatusLog::create([
-                'order_id' => $order->id,
-                'order_status_id' => 2,
-                'actor_type' => 'system'
-            ]);
-
-            Log::info("VNPay IPN: Payment successful", ['order_code' => $orderCode]);
-
-            return response()->json(['RspCode' => '00', 'Message' => 'Confirm Success']);
-        } else {
-            // Thanh toán thất bại
-            $order->update([
-                'order_status_id' => 6,
-                'payment_status_id' => 3
-            ]);
-
-            Payment::updateOrCreate(
-                ['order_id' => $order->id],
-                [
-                    'payment_method_id' => 2,
-                    'payment_code' => $request->get('vnp_TransactionNo'),
-                    'payment_amount' => is_numeric($amount) ? ($amount / 100) : 0,
-                    'status' => 0
-                ]
-            );
-
-            Log::info("VNPay IPN: Payment failed", ['order_code' => $orderCode, 'response_code' => $responseCode]);
-
-            return response()->json(['RspCode' => '00', 'Message' => 'Payment Failed']);
-        }
-
-    } catch (\Exception $e) {
-        Log::error("VNPay IPN Exception: " . $e->getMessage());
-        return response()->json(['RspCode' => '99', 'Message' => 'System error']);
     }
-}
-
-
 }

@@ -71,7 +71,9 @@
                         <div class="block-border shadow-sm">
                             @foreach($cartItems as $item)
                                 <div class="product-item">
-                                    <img src="{{ asset('storage/' . ($item['variant']->product->image)) }}" class="product-img" alt="Product">
+                                  <img src="{{ $item['image_url'] }}" 
+     alt="{{ $item['variant']->product->name }}" 
+     style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
                                     <div class="product-info">
                                         <div class="product-name">{{ $item['variant']->product->name }}</div>
                                         <div class="product-meta">
@@ -170,67 +172,111 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content" style="border-radius: 20px;">
             <div class="modal-header border-0 pb-0"> <h5 class="modal-title fw-bold">Thêm địa chỉ mới</h5> <button type="button" class="btn-close" data-bs-dismiss="modal"></button> </div>
-            <form id="formAddressAction">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="small fw-bold">Họ tên<span class="text-danger-star">*</span></label>
-                            <input type="text" class="form-control" id="addr_name" required>
-                            <div class="invalid-feedback-custom"></div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="small fw-bold">Số điện thoại<span class="text-danger-star">*</span></label>
-                            <input type="text" class="form-control" id="addr_phone" required>
-                            <div class="invalid-feedback-custom"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="small fw-bold">Tỉnh/Thành<span class="text-danger-star">*</span></label>
-                            <select class="form-select" id="addr_province" required><option value="">Chọn Tỉnh/Thành</option></select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="small fw-bold">Quận/Huyện<span class="text-danger-star">*</span></label>
-                            <select class="form-select" id="addr_district" disabled required><option value="">Chọn Quận/Huyện</option></select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="small fw-bold">Phường/Xã<span class="text-danger-star">*</span></label>
-                            <select class="form-select" id="addr_ward" disabled required><option value="">Chọn Phường/Xã</option></select>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="small fw-bold">Địa chỉ chi tiết<span class="text-danger-star">*</span></label>
-                        <textarea class="form-control" id="addr_detail" rows="2" required></textarea>
-                    </div>
-                    <div class="form-check"> 
-                        <input class="form-check-input" type="checkbox" id="addr_default"> 
-                        <label class="form-check-label small">Đặt làm mặc định</label> 
-                    </div>
-                </div>
-                <div class="modal-footer border-0"> <button type="submit" class="btn btn-danger w-100 fw-bold py-2 rounded-pill" id="btnSaveAddress">LƯU ĐỊA CHỈ</button> </div>
-            </form>
+           <form id="formAddressAction" novalidate> {{-- Thêm novalidate để tắt validation mặc định --}}
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="small fw-bold">Họ tên<span class="text-danger-star">*</span></label>
+                <input type="text" class="form-control" id="addr_name">
+                <div id="error_addr_name" class="invalid-feedback-custom">Vui lòng nhập họ tên</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="small fw-bold">Số điện thoại<span class="text-danger-star">*</span></label>
+                <input type="text" class="form-control" id="addr_phone">
+                <div id="error_addr_phone" class="invalid-feedback-custom">Số điện thoại không hợp lệ</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="small fw-bold">Tỉnh/Thành<span class="text-danger-star">*</span></label>
+                <select class="form-select" id="addr_province">
+                    <option value="">Chọn Tỉnh/Thành</option>
+                </select>
+                <div id="error_addr_province" class="invalid-feedback-custom">Vui lòng chọn Tỉnh/Thành</div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="small fw-bold">Quận/Huyện<span class="text-danger-star">*</span></label>
+                <select class="form-select" id="addr_district" disabled>
+                    <option value="">Chọn Quận/Huyện</option>
+                </select>
+                <div id="error_addr_district" class="invalid-feedback-custom">Vui lòng chọn Quận/Huyện</div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="small fw-bold">Phường/Xã<span class="text-danger-star">*</span></label>
+                <select class="form-select" id="addr_ward" disabled>
+                    <option value="">Chọn Phường/Xã</option>
+                </select>
+                <div id="error_addr_ward" class="invalid-feedback-custom">Vui lòng chọn Phường/Xã</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="small fw-bold">Địa chỉ chi tiết<span class="text-danger-star">*</span></label>
+            <textarea class="form-control" id="addr_detail" rows="2"></textarea>
+            <div id="error_addr_detail" class="invalid-feedback-custom">Vui lòng nhập địa chỉ chi tiết</div>
+        </div>
+        <div class="form-check"> 
+            <input class="form-check-input" type="checkbox" id="addr_default"> 
+            <label class="form-check-label small">Đặt làm mặc định</label> 
+        </div>
+    </div>
+    <div class="modal-footer border-0"> 
+        <button type="submit" class="btn btn-danger w-100 fw-bold py-2 rounded-pill" id="btnSaveAddress">LƯU ĐỊA CHỈ</button> 
+    </div>
+</form>
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="myVoucherWallet" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 20px;">
-            <div class="modal-header border-0 pb-0"> <h5 class="modal-title fw-bold">Kho Voucher ưu đãi</h5> <button type="button" class="btn-close" data-bs-dismiss="modal"></button> </div>
-            <div class="modal-body bg-light mt-3" style="max-height: 400px; overflow-y: auto;">
+        <div class="modal-content" style="border-radius: 20px; border: none; overflow: hidden;">
+            <div class="modal-header border-0 pb-0"> 
+                <h5 class="modal-title fw-bold">Kho Voucher ưu đãi</h5> 
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button> 
+            </div>
+            <div class="modal-body bg-light mt-3" style="max-height: 500px; overflow-y: auto; padding: 15px;">
                 @forelse($vouchers as $v)
-                    <div class="voucher-item-modal">
-                        <div class="voucher-left"> <i class="fa fa-ticket-alt fa-2x"></i> </div>
-                        <div class="p-3 flex-grow-1">
-                            <h6 class="fw-bold mb-1">{{ $v->voucher_code }}</h6>
-                            <p class="text-danger small fw-bold mb-0">Giảm {{ $v->discount_type == 'percent' ? $v->discount_value.'%' : number_format($v->discount_value).'đ' }}</p>
+                    <div class="voucher-item-modal mb-3 shadow-sm d-flex bg-white" style="border-radius: 12px; border: 1px solid #eee; min-height: 110px;">
+                        <div class="voucher-left d-flex flex-column align-items-center justify-content-center text-white" 
+                             style="width: 100px; background: linear-gradient(135deg, #ff4747, #ff6b6b); border-right: 2px dashed #f8fafc;">
+                            <i class="fa fa-ticket-alt fa-2x mb-1"></i>
+                            <small class="fw-bold text-uppercase" style="font-size: 0.65rem;">{{ $v->discount_type == 'percent' ? 'Giảm %' : 'Giảm tiền' }}</small>
                         </div>
-                        <div class="p-3 d-flex align-items-center">
-                            <button type="button" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold" onclick="pickVoucher('{{ $v->voucher_code }}')">Dùng</button>
+
+                        <div class="p-3 flex-grow-1 position-relative">
+                            <h6 class="fw-bold mb-1 text-dark">{{ $v->voucher_code }}</h6>
+                            
+                            <p class="text-danger small fw-bold mb-1">
+                                Giảm {{ $v->discount_type == 'percent' ? $v->discount_value.'%' : number_format($v->discount_value).'đ' }}
+                            </p>
+
+                            <div class="text-muted mb-1" style="font-size: 0.75rem;">
+                                <i class="fa fa-info-circle me-1"></i>Đơn tối thiểu: <b>{{ number_format($v->min_order_value ?? 0) }}đ</b>
+                            </div>
+
+                            <div class="text-muted" style="font-size: 0.75rem;">
+                                <i class="fa fa-clock me-1"></i>HSD: {{ $v->end_date ? \Carbon\Carbon::parse($v->end_date)->format('d/m/Y') : 'Không giới hạn' }}
+                            </div>
+                            
+                            @if($v->description)
+                            <div class="mt-2 pt-2 border-top text-secondary small" style="font-size: 0.7rem; font-style: italic;">
+                                {{ $v->description }}
+                            </div>
+                            @endif
+                        </div>
+
+                        <div class="p-3 d-flex align-items-center bg-white" style="border-radius: 0 12px 12px 0;">
+                            @if(isset($totalAmount) && $totalAmount < ($v->min_order_value ?? 0))
+                                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3 fw-bold opacity-50" style="font-size: 0.75rem;" disabled>Chưa đủ ĐK</button>
+                            @else
+                                <button type="button" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm" style="font-size: 0.75rem;" onclick="pickVoucher('{{ $v->voucher_code }}')">Dùng ngay</button>
+                            @endif
                         </div>
                     </div>
                 @empty
-                    <p class="text-center py-5 text-muted">Trống</p>
+                    <div class="text-center py-5">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4076/4076432.png" width="80" class="opacity-25 mb-3">
+                        <p class="text-muted">Bạn chưa có voucher nào trong kho</p>
+                    </div>
                 @endforelse
             </div>
         </div>
@@ -242,15 +288,47 @@
 
 @push('scripts')
 <script>
-    // --- TỈNH THÀNH API ---
+    // --- KHỞI TẠO CÁC PHẦN TỬ ---
     const provinceSelect = document.getElementById('addr_province');
     const districtSelect = document.getElementById('addr_district');
     const wardSelect = document.getElementById('addr_ward');
+    const addressForm = document.getElementById('formAddressAction');
 
+    // --- HÀM VALIDATION HELPER ---
+    function setFieldError(fieldId, message) {
+        const input = document.getElementById(fieldId);
+        const errorDiv = document.getElementById('error_' + fieldId);
+        if (input) input.classList.add('is-invalid-custom');
+        if (errorDiv) {
+            errorDiv.innerText = message;
+            errorDiv.style.display = 'block';
+        }
+    }
+
+    function clearErrors() {
+        document.querySelectorAll('.is-invalid-custom').forEach(el => el.classList.remove('is-invalid-custom'));
+        document.querySelectorAll('.invalid-feedback-custom').forEach(el => {
+            el.innerText = '';
+            el.style.display = 'none';
+        });
+    }
+
+    // Tự động xóa lỗi khi người dùng bắt đầu nhập lại
+    document.querySelectorAll('#formAddressAction .form-control, #formAddressAction .form-select').forEach(el => {
+        el.addEventListener('input', function() {
+            this.classList.remove('is-invalid-custom');
+            const errorDiv = document.getElementById('error_' + this.id);
+            if (errorDiv) errorDiv.style.display = 'none';
+        });
+    });
+
+    // --- TỈNH THÀNH API ---
     async function loadProvinces() {
-        const res = await fetch('https://provinces.open-api.vn/api/p/');
-        const data = await res.json();
-        data.forEach(p => provinceSelect.innerHTML += `<option value="${p.name}" data-code="${p.code}">${p.name}</option>`);
+        try {
+            const res = await fetch('https://provinces.open-api.vn/api/p/');
+            const data = await res.json();
+            data.forEach(p => provinceSelect.innerHTML += `<option value="${p.name}" data-code="${p.code}">${p.name}</option>`);
+        } catch (err) { console.error("Lỗi tải tỉnh thành:", err); }
     }
     loadProvinces();
 
@@ -279,20 +357,45 @@
         }
     };
 
-    // --- LƯU ĐỊA CHỈ (FIXED) ---
-    document.getElementById('formAddressAction').onsubmit = function(e) {
+    // --- LƯU ĐỊA CHỈ VỚI VALIDATION CHI TIẾT ---
+    addressForm.onsubmit = function(e) {
         e.preventDefault();
+        clearErrors();
+
+        const name = document.getElementById('addr_name').value.trim();
+        const phone = document.getElementById('addr_phone').value.trim();
+        const province = provinceSelect.value;
+        const district = districtSelect.value;
+        const ward = wardSelect.value;
+        const detail = document.getElementById('addr_detail').value.trim();
+        
+        let isValid = true;
+
+        // Validation Logic
+        if (!name) { setFieldError('addr_name', 'Vui lòng nhập họ tên'); isValid = false; }
+        
+        const phoneRegex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+        if (!phone) { setFieldError('addr_phone', 'Vui lòng nhập số điện thoại'); isValid = false; }
+        else if (!phoneRegex.test(phone)) { setFieldError('addr_phone', 'Số điện thoại không đúng định dạng'); isValid = false; }
+
+        if (!province) { setFieldError('addr_province', 'Vui lòng chọn Tỉnh/Thành'); isValid = false; }
+        if (!district) { setFieldError('addr_district', 'Vui lòng chọn Quận/Huyện'); isValid = false; }
+        if (!ward) { setFieldError('addr_ward', 'Vui lòng chọn Phường/Xã'); isValid = false; }
+        if (!detail) { setFieldError('addr_detail', 'Vui lòng nhập địa chỉ cụ thể'); isValid = false; }
+
+        if (!isValid) return;
+
         const saveBtn = document.getElementById('btnSaveAddress');
         saveBtn.disabled = true;
         saveBtn.innerText = 'Đang xử lý...';
 
         const data = {
-            name: document.getElementById('addr_name').value,
-            phone: document.getElementById('addr_phone').value,
-            province: provinceSelect.value,
-            district: districtSelect.value,
-            ward: wardSelect.value,
-            address: document.getElementById('addr_detail').value,
+            name: name,
+            phone: phone,
+            province: province,
+            district: district,
+            ward: ward,
+            address: detail,
             is_default: document.getElementById('addr_default').checked ? 1 : 0,
             _token: '{{ csrf_token() }}'
         };
@@ -310,12 +413,20 @@
             } else {
                 saveBtn.disabled = false;
                 saveBtn.innerText = 'LƯU ĐỊA CHỈ';
-                showToast(res.message || "Lỗi lưu địa chỉ", "error");
+                if (res.errors) {
+                    // Hiển thị lỗi từ Laravel Backend nếu có
+                    Object.keys(res.errors).forEach(key => setFieldError('addr_' + key, res.errors[key][0]));
+                } else {
+                    showToast(res.message || "Lỗi lưu địa chỉ", "error");
+                }
             }
+        }).catch(() => {
+            saveBtn.disabled = false;
+            showToast("Lỗi kết nối hệ thống", "error");
         });
     };
 
-    // --- THAY ĐỔI ĐỊA CHỈ (FIXED) ---
+    // --- THAY ĐỔI ĐỊA CHỈ ---
     document.getElementById('btn_confirm_addr').onclick = function() {
         const selected = document.querySelector('input[name="modal_addr"]:checked');
         if (selected) {
@@ -362,28 +473,37 @@
             headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": "{{ csrf_token() }}", "Accept": "application/json" },
             body: JSON.stringify({ voucher_code: code })
         }).then(res => res.json()).then(data => {
-            if(data.success) { showToast("Áp dụng thành công!", "success"); setTimeout(() => location.reload(), 800); }
-            else { showToast(data.message, "error"); }
+            if(data.success) { 
+                showToast("Áp dụng thành công!", "success"); 
+                setTimeout(() => location.reload(), 800); 
+            } else { 
+                showToast(data.message, "error"); 
+            }
         });
     }
 
     const btnDel = document.getElementById('btn_remove_coupon');
     if(btnDel) {
         btnDel.onclick = function() {
-            fetch("{{ route('checkout.voucher.remove') }}", { method: "POST", headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" } }).then(() => location.reload());
+            fetch("{{ route('checkout.voucher.remove') }}", { 
+                method: "POST", 
+                headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" } 
+            }).then(() => location.reload());
         };
     }
 
     // --- UI HELPERS ---
     function openAddAddressModal() {
-        document.getElementById('formAddressAction').reset();
+        addressForm.reset();
+        clearErrors();
         bootstrap.Modal.getOrCreateInstance(document.getElementById('addressModal')).hide();
         new bootstrap.Modal(document.getElementById('editAddressModal')).show();
     }
 
     function uiSelectAddress(el, id) {
         document.querySelectorAll('.address-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active'); el.querySelector('input').checked = true;
+        el.classList.add('active'); 
+        el.querySelector('input').checked = true;
     }
 
     function showToast(msg, type) {
@@ -392,7 +512,10 @@
         t.className = `custom-toast p-3 mb-2 rounded shadow-lg text-white ${type === 'success' ? 'bg-success' : 'bg-danger'}`;
         t.innerText = msg;
         box.appendChild(t);
-        setTimeout(() => t.remove(), 3000);
+        setTimeout(() => {
+            t.style.opacity = '0';
+            setTimeout(() => t.remove(), 500);
+        }, 3000);
     }
 </script>
 @endpush

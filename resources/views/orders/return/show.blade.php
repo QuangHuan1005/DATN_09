@@ -28,6 +28,8 @@
 
                                             <div class="woocommerce-MyAccount-content">
                                                 <div class="woocommerce-order-details">
+                                                    
+                                                    {{-- Header tóm tắt --}}
                                                     <div class="order-header">
                                                         <div>
                                                             <strong>Yêu cầu hoàn hàng cho đơn: {{ $return->order->order_code }}</strong>
@@ -37,6 +39,7 @@
                                                         </div>
                                                     </div>
 
+                                                    {{-- Thông báo địa chỉ --}}
                                                     <div class="return-address-notice">
                                                         <p>
                                                             <strong>📍 Thông báo quan trọng:</strong> 
@@ -68,6 +71,7 @@
                                                         $activeReturnStep = $returnStatusMap[$currentReturnStatus] ?? 1;
                                                     @endphp
 
+                                                    {{-- Thanh tiến trình --}}
                                                     @if($currentReturnStatus !== 'rejected')
                                                         <div class="return-progress-container">
                                                             <h3 style="font-size: 1rem; color: #374151; margin-bottom: 15px;">Trạng thái hoàn hàng</h3>
@@ -85,7 +89,6 @@
                                                                             <span style="font-size:.78rem;color:#6b7280">{{ $meta['desc'] }}</span>
                                                                             @if($isReached)
                                                                                 <span style="font-size:.75rem;color:#9ca3af">
-                                                                                    Hệ thống • 
                                                                                     {{ ($statusKey === 'pending') ? $return->created_at->format('H:i d/m/Y') : $return->updated_at->format('H:i d/m/Y') }}
                                                                                 </span>
                                                                             @endif
@@ -108,39 +111,31 @@
                                                                         </p>
                                                                     </div>
                                                                 @endif
-                                                                <p style="margin-top: 15px; margin-bottom: 0; color: #6b7280; font-size: 13px; font-style: italic;">💬 Vui lòng liên hệ CSKH để biết thêm chi tiết!</p>
                                                             </div>
                                                         </div>
                                                     @endif
 
+                                                    {{-- Chi tiết yêu cầu --}}
                                                     <div class="return-details">
                                                         <div class="detail-row">
                                                             <span class="label">Sản phẩm:</span>
                                                             <div class="product-list">
                                                                 @php
-                                                                    $productDetails = $return->product_details ? json_decode($return->product_details, true) : [];
+                                                                    $productDetails = is_array($return->product_details) ? $return->product_details : json_decode($return->product_details, true);
                                                                 @endphp
 
                                                                 @if(!empty($productDetails))
                                                                     @foreach($productDetails as $item)
                                                                         @php
                                                                             $detailId = $item['order_detail_id'] ?? null;
-                                                                            $variantId = $item['product_variant_id'] ?? null;
-                                                                            $detail = null;
-                                                                            if ($detailId) {
-                                                                                $detail = $return->order->details->where('id', $detailId)->first();
-                                                                            } elseif ($variantId) {
-                                                                                $detail = $return->order->details->where('product_variant_id', $variantId)->first();
-                                                                            }
-
+                                                                            $detail = $detailId ? $return->order->details->where('id', $detailId)->first() : null;
                                                                             $imageUrl = ($detail && $detail->productVariant && $detail->productVariant->image) 
-                                                                                        ? asset($detail->productVariant->image) 
-                                                                                        : null;
+                                                                                        ? asset($detail->productVariant->image) : null;
                                                                         @endphp
                                                                         <div class="product-item">
                                                                             <div class="product-thumbnail-wrapper">
                                                                                 @if($imageUrl)
-                                                                                    <img src="{{ $imageUrl }}" class="product-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                                                                    <img src="{{ $imageUrl }}" class="product-thumbnail">
                                                                                 @else
                                                                                     <div class="product-thumbnail-placeholder"><span>📦</span></div>
                                                                                 @endif
@@ -148,17 +143,7 @@
                                                                             <div class="product-info">
                                                                                 <strong>{{ $item['product_name'] ?? 'Sản phẩm' }}</strong>
                                                                                 <br>
-                                                                                <small>Số lượng: {{ $item['quantity'] }} | Giá: {{ number_format($item['price'], 0, ',', '.') }}đ</small>
-                                                                            </div>
-                                                                        </div>
-                                                                    @endforeach
-                                                                @else
-                                                                    @foreach($return->order->details as $detail)
-                                                                        <div class="product-item">
-                                                                            <div class="product-info">
-                                                                                <strong>{{ $detail->product->name }}</strong>
-                                                                                <br>
-                                                                                <small>Số lượng: {{ $detail->quantity }}</small>
+                                                                                <small>Số lượng: {{ $item['quantity'] }} | Giá: {{ number_format($item['price']) }}đ</small>
                                                                             </div>
                                                                         </div>
                                                                     @endforeach
@@ -176,48 +161,83 @@
                                                             <span>{{ $return->reason }}</span>
                                                         </div>
 
-                                                        @if ($return->notes)
-                                                            <div class="detail-row">
-                                                                <span class="label">Ghi chú:</span>
-                                                                <span>{{ $return->notes }}</span>
-                                                            </div>
-                                                        @endif
-
                                                         <div class="detail-row">
                                                             <span class="label">Số tiền hoàn:</span>
-                                                            <span>{{ number_format($return->refund_amount) }}đ</span>
+                                                            <strong style="color: #b91c1c;">{{ number_format($return->refund_amount) }}đ</strong>
                                                         </div>
 
                                                         @if ($return->refundAccount)
                                                             <div class="detail-row">
-                                                                <span class="label">Tài khoản nhận tiền:</span>
+                                                                <span class="label">Tài khoản nhận:</span>
                                                                 <span>
                                                                     {{ $return->refundAccount->bank_name }} - 
-                                                                    {{ $return->refundAccount->masked_account_number }} 
+                                                                    {{ $return->refundAccount->account_number }} 
                                                                     ({{ $return->refundAccount->account_holder }})
                                                                 </span>
                                                             </div>
                                                         @endif
+{{-- 📸 PHẦN 1: HÌNH ẢNH MINH CHỨNG CỦA KHÁCH HÀNG --}}
+<div class="detail-row" style="flex-direction: column;">
+    <span class="label" style="margin-bottom: 10px;">📸 Hình ảnh minh chứng (Bạn gửi):</span>
+    <div class="return-images" style="display: flex; gap: 10px; flex-wrap: wrap;">
+        @php
+            // 1. Giải mã JSON (Vì DB lưu dạng ["refunds\/..."])
+            $userImages = is_string($return->images) ? json_decode($return->images, true) : $return->images;
+        @endphp
 
-                                                        @if ($return->return_date)
-                                                            <div class="detail-row">
-                                                                <span class="label">Ngày trả hàng:</span>
-                                                                <span>{{ $return->return_date->format('d/m/Y') }}</span>
-                                                            </div>
-                                                        @endif
+        @if(!empty($userImages) && count($userImages) > 0)
+            @foreach ($userImages as $image)
+                @php
+                    // 2. Lấy tên file gốc (Bỏ phần 'refunds/' đi)
+                    $fileName = basename(str_replace('\\', '/', $image));
+                    
+                    // 3. Vì bạn xác nhận ảnh nằm ở public/uploads/returns
+                    // Ta sẽ ép đường dẫn về đúng thực tế vật lý
+                    $fixedPath = 'uploads/returns/' . $fileName;
+                    $imageUrl = asset($fixedPath);
+                @endphp
+                <div style="text-align: center;">
+                    <a href="{{ $imageUrl }}" target="_blank">
+                        <img src="{{ $imageUrl }}" 
+                             style="width: 140px; height: 140px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"
+                             onerror="this.src='https://placehold.co/140x140?text=File+Not+Found';">
+                    </a>
+                    <div style="font-size: 10px; color: #666; margin-top: 5px;">{{ $fileName }}</div>
+                </div>
+            @endforeach
+        @else
+            {{-- HIỂN THỊ KHI NULL --}}
+            <div style="width: 120px; height: 120px; background: #f3f4f6; border: 1px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #9ca3af;">
+                <span style="font-size: 24px;">📷</span>
+                <span style="font-size: 10px;">Chưa có ảnh</span>
+            </div>
+        @endif
+    </div>
+</div>
 
-                                                        @php $images = $return->images ? json_decode($return->images, true) : []; @endphp
-                                                        @if (!empty($images))
-                                                            <div class="detail-row">
-                                                                <span class="label">Hình ảnh:</span>
-                                                                <div class="return-images">
-                                                                    @foreach ($images as $image)
-                                                                        <img src="{{ asset($image) }}" alt="Return image" style="max-width: 150px; margin: 5px; border-radius: 8px;">
-                                                                    @endforeach
-                                                                </div>
-                                                            </div>
-                                                        @endif
-                                                    </div>
+    {{-- 🧾 PHẦN 2: BIÊN LAI HOÀN TIỀN CỦA ADMIN --}}
+    <div class="detail-row" style="flex-direction: column; margin-top: 20px;">
+        <span class="label" style="margin-bottom: 10px;">🧾 Biên lai hoàn tiền (Từ cửa hàng):</span>
+        
+        @if($return->admin_refund_proof)
+            {{-- HIỂN THỊ KHI CÓ ẢNH --}}
+            <div style="padding: 15px; background: #f0fdf4; border-radius: 10px; border: 1px solid #bbf7d0;">
+                <a href="{{ asset('storage/' . str_replace('\\', '/', $return->admin_refund_proof)) }}" target="_blank">
+                    <img src="{{ asset('storage/' . str_replace('\\', '/', $return->admin_refund_proof)) }}" 
+                         style="max-width: 250px; border-radius: 6px; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                </a>
+                <p style="font-size: 12px; color: #166534; margin-top: 5px; font-style: italic;">Đã xác nhận hoàn tiền thành công.</p>
+            </div>
+        @else
+            {{-- HIỂN THỊ KHI NULL (VẪN HIỆN KHUNG ĐỂ BIẾT) --}}
+            <div style="padding: 20px; background: #f9fafb; border-radius: 10px; border: 1px dashed #d1d5db; text-align: center; color: #9ca3af;">
+                <div style="font-size: 30px; margin-bottom: 5px;">🧾</div>
+                <p style="font-size: 13px; margin: 0;">Shop chưa cập nhật ảnh biên lai hoàn tiền.</p>
+                <small style="font-size: 11px;">(Trạng thái hiện tại: <strong>{{ $return->status_label }}</strong>)</small>
+            </div>
+        @endif
+    </div>
+</div>
 
                                                     <div class="woocommerce-order-details__actions">
                                                         <a href="{{ route('orders.show', $return->order->id) }}" class="woocommerce-button button">Quay lại đơn hàng</a>
@@ -239,225 +259,150 @@
     </div>
 </body>
 
-        <style>
-            .order-header {
-                background: #f8f9fa;
-                padding: 15px;
-                border-radius: 8px;
-                margin-bottom: 20px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
+<style>
+    .order-header {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-            .return-address-notice {
-                background: #fef3c7;
-                border-left: 4px solid #f59e0b;
-                padding: 15px 20px;
-                margin-bottom: 25px;
-                border-radius: 8px;
-            }
+    .return-address-notice {
+        background: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        border-radius: 8px;
+    }
 
-            .return-address-notice p {
-                margin: 0;
-                line-height: 1.6;
-                color: #78350f;
-                font-size: 14px;
-            }
+    .return-address-notice p {
+        margin: 0;
+        line-height: 1.6;
+        color: #78350f;
+        font-size: 14px;
+    }
 
-            .return-address-notice strong {
-                color: #92400e;
-            }
+    .return-progress-container {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
 
-            /* Progress bar trạng thái hoàn hàng */
-            .return-progress-container {
-                background: #fff;
-                border: 1px solid #e5e7eb;
-                border-radius: 12px;
-                padding: 20px;
-                margin-bottom: 25px;
-            }
+    .order-progress {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0 0;
+    }
 
-            .order-progress {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin: 10px 0 0;
-            }
+    .order-progress .step {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-            .order-progress .step {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
+    .order-progress .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #e5e7eb;
+    }
 
-            .order-progress .dot {
-                width: 10px;
-                height: 10px;
-                border-radius: 50%;
-                background: #e5e7eb;
-            }
+    .order-progress .dot.active {
+        background: #111827;
+    }
 
-            .order-progress .dot.active {
-                background: #111827;
-            }
+    .order-progress .bar {
+        height: 2px;
+        width: 46px;
+        background: #e5e7eb;
+    }
 
-            .order-progress .bar {
-                height: 2px;
-                width: 46px;
-                background: #e5e7eb;
-            }
+    .order-progress .bar.active {
+        background: #111827;
+    }
 
-            .order-progress .bar.active {
-                background: #111827;
-            }
+    .return-details {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
 
-            .return-rejected-notice {
-                background: #fef2f2;
-                border-left: 4px solid #b91c1c;
-                padding: 15px 20px;
-                margin-bottom: 25px;
-                border-radius: 8px;
-            }
+    .detail-row {
+        display: flex;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f3f4f6;
+    }
 
-            .return-details {
-                background: #fff;
-                border: 1px solid #e5e7eb;
-                border-radius: 8px;
-                padding: 20px;
-                margin-bottom: 20px;
-            }
+    .detail-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
 
-            .detail-row {
-                display: flex;
-                margin-bottom: 15px;
-                padding-bottom: 10px;
-                border-bottom: 1px solid #f3f4f6;
-            }
+    .detail-row .label {
+        font-weight: 600;
+        min-width: 160px;
+        color: #374151;
+        margin-right: 15px;
+    }
 
-            .detail-row:last-child {
-                border-bottom: none;
-                margin-bottom: 0;
-                padding-bottom: 0;
-            }
+    .product-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px 0;
+    }
 
-            .detail-row .label {
-                font-weight: 600;
-                min-width: 120px;
-                color: #374151;
-                margin-right: 15px;
-            }
+    .product-thumbnail {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+    }
 
-            .detail-row span:last-child {
-                flex: 1;
-            }
+    .product-thumbnail-placeholder {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3f4f6;
+        border-radius: 8px;
+        font-size: 24px;
+    }
 
-            .product-list {
-                flex: 1;
-            }
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .25rem .6rem;
+        border-radius: 999px;
+        font-size: .78rem;
+        font-weight: 700;
+    }
 
-            .product-item {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-                padding: 10px 0;
-            }
+    .badge-on-hold { background: #fff6ea; color: #9a3412; }
+    .badge-processing { background: #eaf3ff; color: #1d4ed8; }
+    .badge-completed { background: #eafaf0; color: #166534; }
+    .badge-cancelled { background: #fff1f1; color: #b91c1c; }
+    .badge-shipping { background: #e9fdf4; color: #047857; }
 
-            .product-item:not(:last-child) {
-                border-bottom: 1px solid #f3f4f6;
-                margin-bottom: 10px;
-                padding-bottom: 15px;
-            }
-
-            .product-thumbnail {
-                width: 60px;
-                height: 60px;
-                object-fit: cover;
-                border-radius: 8px;
-                border: 1px solid #e5e7eb;
-                flex-shrink: 0;
-            }
-
-            .product-thumbnail-placeholder {
-                width: 60px;
-                height: 60px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #f3f4f6;
-                border-radius: 8px;
-                border: 1px solid #e5e7eb;
-                flex-shrink: 0;
-                font-size: 24px;
-            }
-
-            .product-info {
-                flex: 1;
-            }
-
-            .product-info strong {
-                color: #111827;
-                font-size: 14px;
-            }
-
-            .product-info small {
-                color: #6b7280;
-                font-size: 13px;
-            }
-
-            .return-images {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-
-            .return-images img {
-                border: 1px solid #ddd;
-                border-radius: 4px;
-            }
-
-            .badge {
-                display: inline-flex;
-                align-items: center;
-                gap: .4rem;
-                padding: .25rem .6rem;
-                border-radius: 999px;
-                font-size: .78rem;
-                font-weight: 700;
-            }
-
-            .badge-on-hold {
-                background: #fff6ea;
-                color: #9a3412;
-            }
-
-            .badge-processing {
-                background: #eaf3ff;
-                color: #1d4ed8;
-            }
-
-            .badge-completed {
-                background: #eafaf0;
-                color: #166534;
-            }
-
-            .badge-cancelled {
-                background: #fff1f1;
-                color: #b91c1c;
-            }
-
-            .badge-shipping {
-                background: #e9fdf4;
-                color: #047857;
-            }
-
-            .badge::before {
-                content: "";
-                width: 6px;
-                height: 6px;
-                border-radius: 50%;
-                background: currentColor;
-                opacity: .85;
-            }
-        </style>
-    @endsection
+    .badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+</style>
+@endsection

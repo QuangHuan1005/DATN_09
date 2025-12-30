@@ -1,12 +1,19 @@
 <?php
 
 namespace App\Models;
-use App\Models\OrderDetail;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\OrderDetail;
 use App\Models\OrderStatusLog;
-use App\Models\OrderCancelRequest; // <--- CẦN DÒNG NÀY ĐỂ SỬ DỤNG MODEL
+use App\Models\OrderCancelRequest;
+use App\Models\User;
+use App\Models\OrderStatus;
+use App\Models\PaymentStatus;
+use App\Models\PaymentMethod;
+use App\Models\Voucher;
+use App\Models\Payment;
+use App\Models\Invoice;
 
 class Order extends Model
 {
@@ -53,7 +60,7 @@ class Order extends Model
         return $this->belongsTo(User::class, 'staff_id');
     }
 
-    // Trạng thái đơn hàng
+    // Trạng thái đơn hàng (1-7)
     public function status()
     {
         return $this->belongsTo(OrderStatus::class, 'order_status_id');
@@ -83,80 +90,83 @@ class Order extends Model
         return $this->hasMany(OrderDetail::class, 'order_id');
     }
 
+    // Lịch sử thay đổi trạng thái
     public function statusLogs()
     {
         return $this->hasMany(OrderStatusLog::class)->orderBy('created_at');
     }
 
-    // Thông tin thanh toán
+    // Thông tin giao dịch thanh toán
     public function payment()
     {
         return $this->hasOne(Payment::class, 'order_id');
     }
 
-    // Hóa đơn
+    // Hóa đơn đơn hàng
     public function invoice()
     {
         return $this->hasOne(Invoice::class, 'order_id');
     }
     
-    // YÊU CẦU HỦY ĐƠN HÀNG (MỚI)
-    /**
-     * Quan hệ 1-1: Đơn hàng có một yêu cầu hủy (hoặc không có).
-     */
+    // Yêu cầu hủy đơn hàng
     public function cancelRequest()
-{
-    // Lấy yêu cầu hủy mới nhất để hiển thị chính xác trạng thái hiện tại
-    return $this->hasOne(OrderCancelRequest::class, 'order_id')->latestOfMany(); 
-}
-
-    /**
-     * =====================
-     * 🧠 Logic
-     * =====================
-     */
-
-    // Có thể hủy đơn?
-    public function getCancelableAttribute(): bool
     {
-        // Giả định: 1=Chờ xác nhận, 2=Xác nhận. 3=Đang giao hàng (không hủy được)
-        // 3=Đã hoàn tiền (không hủy được nữa)
-        return in_array($this->order_status_id, [1, 2]) && $this->payment_status_id != 3;
+        return $this->hasOne(OrderCancelRequest::class, 'order_id')->latestOfMany(); 
     }
 
-    // Đơn đã hoàn thành?
+    /**
+     * =====================
+     * 🧠 Logic Accessors
+     * =====================
+     */
+
+    /**
+     * Kiểm tra đơn hàng có thể hủy được hay không
+     * Theo DB của bạn: 1=Chờ xác nhận, 2=Xác nhận -> Được hủy
+     * 3=Đang giao, 4=Đã giao, 5=Hoàn thành, 6=Hủy, 7=Hoàn hàng -> Không được hủy
+     */
+    public function getCancelableAttribute(): bool
+    {
+        // Chỉ cho phép hủy nếu đơn đang ở bước Chờ xác nhận hoặc Đã xác nhận
+        $allowedToCancel = [1, 2];
+
+        return in_array($this->order_status_id, $allowedToCancel) 
+               && $this->payment_status_id != 3; // Không hủy đơn đang chờ hoàn tiền
+    }
+
+    // Kiểm tra đơn đã giao hàng thành công
+    public function getIsDeliveredAttribute(): bool
+    {
+        return $this->order_status_id == 4;
+    }
+
+    // Đơn đã hoàn thành (Khách đã ấn xác nhận)
     public function getIsCompletedAttribute(): bool
     {
         return $this->order_status_id == 5;
     }
 
-    // Tổng số lượng sản phẩm
+    // Tổng số lượng sản phẩm trong đơn
     public function getTotalQuantityAttribute(): int
     {
         return $this->details->sum('quantity');
     }
 
-    // Tính subtotal động
+    // Tính subtotal (tiền hàng chưa giảm giá)
     public function getCalcSubtotalAttribute(): int
     {
         return $this->details->sum(fn($d) => $d->price * $d->quantity);
     }
 
-    // Tổng sau giảm giá
-    public function getCalcTotalAttribute(): int
-    {
-        return $this->grand_total ?? ($this->subtotal - $this->discount + $this->shipping_fee);
-    }
-
+    // Định dạng ngày tháng hiển thị
     public function getFormattedDateAttribute(): string
     {
         return $this->created_at ? $this->created_at->format('d/m/Y H:i') : '';
     }
 
-
     /**
      * =====================
-     * 🔍 Scopes
+     * 🔍 Query Scopes
      * =====================
      */
 

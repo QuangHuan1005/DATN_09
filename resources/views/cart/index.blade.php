@@ -775,7 +775,7 @@ document.querySelectorAll('a.btn-checkout').forEach(a => {
       return;
     }
     // (tuỳ chọn) đính kèm danh sách chọn lên URL để xử lý ở trang checkout
-    this.href = this.href.split('?')[0] + '?items=' + encodeURIComponent(chosen.join(','));
+    this.href = this.href.split('?')[0] + '?selected_items=' + encodeURIComponent(chosen.join(','));
   });
 });
 

@@ -23,19 +23,18 @@
 
                 <article class="hentry">
                   <div class="entry-content">
-                    
                     <style>
                       body.woocommerce-account.woocommerce-page #site-content.site-content-wrapper{ padding-top: 10px !important; }
                       .woocommerce-account .woocommerce{ display: flex; gap: 30px; margin-top: 10px; }
                       .woocommerce-MyAccount-navigation{ flex: 0 0 250px; background: #fff; border-radius: 12px; }
                       .woocommerce-MyAccount-content{ flex: 1; background: #fff; border-radius: 12px; }
                       
-                      /* Table Layout tối ưu */
+                      /* Table Layout */
                       .account-orders-table{ width:100%; border-collapse: separate; border-spacing: 0; border: 1px solid #f0f2f5; border-radius: 12px; overflow: hidden; }
                       .account-orders-table thead th{ background:#f8fafc; font-weight:600; padding:16px; text-align: left; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
                       .account-orders-table tbody td{ padding:16px; vertical-align:middle; border-top:1px solid #f1f5f9; font-size: 14px; }
                       
-                      /* Giữ nguyên màu sắc badge của bạn */
+                      /* Badges */
                       .badge{ display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .8rem; border-radius:8px; font-size:.75rem; font-weight:700 }
                       .badge::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor; opacity:.85}
                       .badge-processing{background:#eaf3ff;color:#1d4ed8}
@@ -47,12 +46,17 @@
                       
                       .method-pill{ display:inline-block; padding:.2rem .6rem; border-radius:6px; font-size:.7rem; background:#f1f5f9; color:#475569; font-weight:600; border: 1px solid #e2e8f0; }
                       
-                      /* Header Filter đồng bộ Admin */
+                      /* Toolbar */
                       .orders-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; flex-wrap: wrap; }
                       .orders-search-box { position: relative; flex: 1; max-width: 400px; }
                       .orders-search-box input { width: 100%; padding: 10px 15px 10px 40px !important; border-radius: 10px !important; border: 1px solid #e2e8f0 !important; font-size: 14px; }
                       .orders-search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
                       .orders-select { padding: 10px 35px 10px 15px !important; border-radius: 10px !important; border: 1px solid #e2e8f0 !important; background-color: #fff !important; font-size: 14px; min-width: 200px; }
+
+                      /* Button Repay */
+                      .btn-repay { background: #2563eb; color: #fff !important; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; transition: 0.3s; margin-top: 8px; text-decoration: none; }
+                      .btn-repay:hover { background: #1d4ed8; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+                      .expired-label { font-size: 11px; color: #94a3b8; font-style: italic; margin-top: 5px; display: block; }
                     </style>
 
                     <div class="woocommerce">
@@ -100,7 +104,7 @@
                                 <th>Thanh toán</th>
                                 <th>Phương thức</th>
                                 <th>Tổng cộng</th>
-                                <th class="text-center">Chi tiết</th>
+                                <th class="text-center">Hành động</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -116,13 +120,26 @@
                                   $payLabel = $order->paymentStatus->name ?? ($pStatusId === 2 ? 'Đã thanh toán' : 'Chưa thanh toán');
                                 ?>
                                 <tr>
-                                  <td class="fw-bold"><a href="<?php echo e(route('orders.show', $order->id)); ?>" style="color: #2563eb;">#<?php echo e($order->order_code); ?></a></td>
+                                  <td class="fw-bold">
+                                    <a href="<?php echo e(route('orders.show', $order->id)); ?>" style="color: #2563eb;">#<?php echo e($order->order_code); ?></a>
+                                  </td>
                                   <td>
                                     <div class="text-dark"><?php echo e($order->created_at->format('d/m/Y')); ?></div>
                                     <div class="text-muted small"><?php echo e($order->created_at->format('H:i')); ?></div>
                                   </td>
                                   <td><span class="badge <?php echo e($orderCls); ?>"><?php echo e($order->status->name ?? '—'); ?></span></td>
-                                  <td><span class="badge <?php echo e($payCls); ?>"><?php echo e($payLabel); ?></span></td>
+                                  <td>
+                                    <span class="badge <?php echo e($payCls); ?>"><?php echo e($payLabel); ?></span>
+                                    
+                                    
+                                    <?php if($order->payment_method_id == 2 && $pStatusId != 2 && $order->order_status_id == 1): ?>
+                                      <a href="<?php echo e(route('orders.repay', $order->order_code)); ?>" class="btn-repay">
+                                        <iconify-icon icon="solar:card-send-bold"></iconify-icon> Thanh toán lại
+                                      </a>
+                                    <?php elseif($order->order_status_id == 6 && $order->payment_method_id == 2 && $pStatusId != 2): ?>
+                                      <span class="expired-label">Hết hạn thanh toán</span>
+                                    <?php endif; ?>
+                                  </td>
                                   <td><span class="method-pill"><?php echo e($order->paymentMethod->name ?? '—'); ?></span></td>
                                   <td class="fw-bold text-dark"><?php echo e(number_format($order->total_amount)); ?>₫</td>
                                   <td class="text-center">

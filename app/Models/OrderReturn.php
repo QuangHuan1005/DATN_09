@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-
 class OrderReturn extends Model
 {
     use HasFactory;
@@ -24,10 +23,12 @@ class OrderReturn extends Model
         'product_details',
         'refund_amount',
         'return_date',
+        'admin_refund_proof', // <-- THÊM TRƯỜNG NÀY
     ];
 
     protected $casts = [
         'images' => 'array',
+        'product_details' => 'array', // <-- THÊM CAST NÀY ĐỂ TRÁNH LỖI ARRAY TO STRING
         'refund_amount' => 'decimal:2',
         'return_date' => 'date',
     ];
@@ -68,9 +69,9 @@ class OrderReturn extends Model
         return match ($this->status) {
             self::STATUS_PENDING => 'Chờ xử lý',
             self::STATUS_APPROVED => 'Đã duyệt',
-            self::STATUS_WAITING_FOR_RETURN => 'Chờ người dùng gửi hàng',
+            self::STATUS_WAITING_FOR_RETURN => 'Chờ khách gửi hàng',
             self::STATUS_REJECTED => 'Từ chối',
-            self::STATUS_RETURNED => 'Đã trả hàng',
+            self::STATUS_RETURNED => 'Đã nhận hàng',
             self::STATUS_REFUNDED => 'Đã hoàn tiền',
             self::STATUS_EXCHANGED => 'Đã đổi hàng',
             default => 'Không xác định',
@@ -80,14 +81,14 @@ class OrderReturn extends Model
     public function getStatusBadgeClassAttribute(): string
     {
         return match ($this->status) {
-            self::STATUS_PENDING => 'badge-on-hold',
-            self::STATUS_APPROVED => 'badge-processing',
-            self::STATUS_WAITING_FOR_RETURN => 'badge-processing',
-            self::STATUS_REJECTED => 'badge-cancelled',
-            self::STATUS_RETURNED => 'badge-shipping',
-            self::STATUS_REFUNDED => 'badge-completed',
-            self::STATUS_EXCHANGED => 'badge-completed',
-            default => 'badge-default',
+            self::STATUS_PENDING => 'badge border border-warning text-warning',
+            self::STATUS_APPROVED => 'badge border border-info text-info',
+            self::STATUS_WAITING_FOR_RETURN => 'badge border border-primary text-primary',
+            self::STATUS_REJECTED => 'badge border border-danger text-danger',
+            self::STATUS_RETURNED => 'badge border border-success text-success',
+            self::STATUS_REFUNDED => 'badge border border-success text-success',
+            self::STATUS_EXCHANGED => 'badge border border-success text-success',
+            default => 'badge border border-secondary text-secondary',
         };
     }
 }

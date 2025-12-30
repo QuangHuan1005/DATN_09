@@ -5,34 +5,37 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderReturn;
 use App\Models\UserBankAccount;
+use App\Models\OrderStatusLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage; // Đã thêm để xử lý Storage
 
 class OrderReturnController extends Controller
 {
     /**
-     * Form tạo yêu cầu hoàn hàng
+     * Form tạo yêu cầu hoàn hàng (Trả hàng)
      */
     public function create(Order $order)
     {
-        // Kiểm tra quyền sở hữu đơn hàng
+        // 1. Kiểm tra quyền sở hữu
         if ($order->user_id !== Auth::id()) abort(403);
 
-        // Chỉ cho phép hoàn hàng nếu đơn đã Giao (4) hoặc Hoàn thành (5)
+        // 2. Kiểm tra trạng thái: Chỉ 4 (Đã giao) hoặc 5 (Hoàn thành) mới được trả hàng
         if (!in_array((int)$order->order_status_id, [4, 5])) {
-            abort(403, 'Đơn hàng không ở trạng thái cho phép hoàn hàng');
+            return redirect()->route('orders.show', $order->id)
+                             ->with('error', 'Đơn hàng không ở trạng thái cho phép hoàn hàng (Phải đã giao hàng).');
         }
 
-        // Kiểm tra xem đã tồn tại yêu cầu cho đơn này chưa
+        // 3. Kiểm tra xem đã tồn tại yêu cầu trả hàng chưa
         $existingReturn = OrderReturn::where('order_id', $order->id)->first();
         if ($existingReturn) {
-            return redirect()->route('orders.return.show', $existingReturn)
-                             ->with('error', 'Bạn đã gửi yêu cầu cho đơn này rồi');
+            return redirect()->route('orders.show', $order->id)
+                             ->with('error', 'Bạn đã gửi yêu cầu hoàn hàng cho đơn này rồi.');
         }
 
-        // Group sản phẩm theo variant để khách chọn số lượng cần trả
+        // 4. Group sản phẩm để khách chọn số lượng
         $groupedDetails = $order->details->groupBy('product_variant_id')->map(function ($items) {
             $firstItem = $items->first();
             return (object)[
@@ -42,19 +45,19 @@ class OrderReturnController extends Controller
                 'price'              => $firstItem->price,
                 'max_quantity'       => $items->sum('quantity'),
                 'image'              => $firstItem->productVariant->image ?? $firstItem->productVariant->product->image,
-                'detail_ids'         => $items->pluck('id')->toArray(),
             ];
         });
 
+        // 5. Lấy danh sách tài khoản ngân hàng để hoàn tiền
         $userBankAccounts = UserBankAccount::where('user_id', Auth::id())
-                                          ->orderBy('is_default', 'desc')
-                                          ->get();
+                                           ->orderBy('is_default', 'desc')
+                                           ->get();
 
         return view('orders.return.create', compact('order', 'groupedDetails', 'userBankAccounts'));
     }
 
     /**
-     * Lưu yêu cầu hoàn hàng và thực hiện Thu hồi điểm ngay lập tức
+     * Lưu yêu cầu hoàn hàng vào Database
      */
     public function store(Request $request, Order $order)
     {
@@ -63,83 +66,83 @@ class OrderReturnController extends Controller
             'refund_account_id' => 'required|exists:user_bank_accounts,id',
             'variant_ids'       => 'required|array',
             'quantities'        => 'required|array',
+            'images'            => 'required|array|min:1',
+            'images.*'          => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         DB::beginTransaction();
         try {
-            // 1. Xử lý upload ảnh minh chứng (lưu vào public/uploads/returns)
+            // 1. Xử lý upload ảnh minh chứng vào storage/app/public/refunds
             $imagePaths = [];
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $path = 'uploads/returns/' . time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path('uploads/returns'), basename($path));
+                    // Lưu file vào storage/app/public/refunds
+                    $path = $image->store('refunds', 'public');
                     $imagePaths[] = $path;
                 }
             }
 
-            // 2. Tính toán số tiền hoàn dựa trên sản phẩm khách chọn
+            // 2. Tính toán chi tiết sản phẩm và tiền hoàn
             $productDetails = [];
-            $refundAmount = 0;
+            $totalRefundAmount = 0;
 
             foreach ($request->variant_ids as $variantId) {
                 $inputQty = (int) ($request->quantities[$variantId] ?? 0);
                 if ($inputQty <= 0) continue;
 
-                $details = $order->details->where('product_variant_id', $variantId);
-                $firstDetail = $details->first();
+                $detail = $order->details->where('product_variant_id', $variantId)->first();
+                if (!$detail) continue;
 
-                if (!$firstDetail) continue;
-
-                $lineTotal = (int)($firstDetail->price * $inputQty);
+                $lineTotal = (int)($detail->price * $inputQty);
                 $productDetails[] = [
-                    'order_detail_id'    => $firstDetail->id,
                     'product_variant_id' => $variantId,
-                    'product_name'       => $firstDetail->productVariant->product->name ?? 'Sản phẩm',
+                    'product_name'       => $detail->productVariant->product->name ?? 'Sản phẩm',
                     'quantity'           => $inputQty,
-                    'price'              => (int)$firstDetail->price,
+                    'price'              => (int)$detail->price,
                     'total'              => $lineTotal
                 ];
                 
-                $refundAmount += $lineTotal;
+                $totalRefundAmount += $lineTotal;
             }
 
-            // 3. Lưu thông tin vào bảng order_returns
+            // 3. LƯU VÀO DB
             OrderReturn::create([
                 'order_id'          => $order->id,
                 'user_id'           => Auth::id(),
                 'refund_account_id' => $request->refund_account_id,
                 'reason'            => $request->reason,
                 'notes'             => $request->description,
-                'images'            => json_encode($imagePaths),
+                'images'            => json_encode($imagePaths), 
                 'product_details'   => json_encode($productDetails),
-                'status'            => 'pending',
-                'refund_amount'     => $refundAmount,
+                'status'            => OrderReturn::STATUS_PENDING,
+                'refund_amount'     => $totalRefundAmount,
                 'return_date'       => now()
             ]);
 
-            // 4. Cập nhật trạng thái đơn hàng sang Hoàn hàng (ID: 7)
+            // 4. Chuyển trạng thái Đơn hàng sang Hoàn hàng (ID: 7)
             $order->order_status_id = 7;
 
-            // 5. --- LOGIC THU HỒI ĐIỂM (Tỷ lệ 10.000đ = 1 điểm) ---
-           $points = (int) floor($order->subtotal / 100);
-
+            // 5. Thu hồi điểm tích lũy (Tỷ lệ 100đ = 1 điểm)
+            $pointsToDeduct = (int) floor($order->subtotal / 100);
             if ($pointsToDeduct > 0) {
-                $userId = Auth::id();
-                
-                // Sử dụng Query Builder trực tiếp để ghi đè mọi rào cản Eloquent
-                // GREATEST(0, CAST(points AS SIGNED) - X) đảm bảo không bị âm điểm
                 DB::table('users')
-                    ->where('id', $userId)
+                    ->where('id', Auth::id())
                     ->update([
                         'points' => DB::raw("GREATEST(0, CAST(points AS SIGNED) - $pointsToDeduct)")
                     ]);
                 
-                // Ghi chú vào Note để Admin và Khách tiện đối soát
-                $order->note = ($order->note ? $order->note . " | " : "") . "THU HOI: -$pointsToDeduct CP (Hoan hang)";
+                $order->note = ($order->note ? $order->note . " | " : "") . "THU HOI: -$pointsToDeduct CP (Tra hang)";
             }
 
-            // Lưu thay đổi trạng thái và note cho đơn hàng
             $order->save();
+
+            // 6. Ghi log lịch sử trạng thái
+            OrderStatusLog::create([
+                'order_id'        => $order->id,
+                'order_status_id' => 7,
+                'actor_type'      => 'user',
+                'note'            => 'Khách hàng gửi yêu cầu Trả hàng / Hoàn tiền. Lý do: ' . $request->reason
+            ]);
 
             DB::commit();
             return redirect()->route('orders.show', $order->id)->with('success', 'Gửi yêu cầu hoàn hàng thành công!');
@@ -157,9 +160,12 @@ class OrderReturnController extends Controller
     public function show(OrderReturn $return)
     {
         if ($return->user_id !== Auth::id()) abort(403);
-
+        
         $return->load(['order.details.productVariant', 'refundAccount']);
-        $productDetails = json_decode($return->product_details, true) ?? [];
+        
+        $productDetails = is_string($return->product_details) 
+            ? json_decode($return->product_details, true) 
+            : $return->product_details;
 
         return view('orders.return.show', compact('return', 'productDetails'));
     }
