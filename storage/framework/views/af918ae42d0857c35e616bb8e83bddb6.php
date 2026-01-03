@@ -60,6 +60,7 @@
 
                       /* Countdown Timer CSS */
                       .repay-timer { font-size: 11px; color: #ef4444; font-weight: 700; margin-top: 4px; display: flex; align-items: center; gap: 3px; }
+
                     </style>
 
                     <div class="woocommerce">
@@ -141,7 +142,6 @@
                                   <td>
                                     <span class="badge <?php echo e($payCls); ?>"><?php echo e($payLabel); ?></span>
                                     
-                                    
                                     <?php if($remainingSeconds > 0): ?>
                                       <a href="<?php echo e(route('orders.repay', $order->order_code)); ?>" class="btn-repay">
                                         <iconify-icon icon="solar:card-send-bold"></iconify-icon> Thanh toán ngay
@@ -150,6 +150,7 @@
                                         <iconify-icon icon="solar:history-linear"></iconify-icon>
                                         <span class="timer-text">--:--</span>
                                       </div>
+
                                     <?php elseif($order->order_status_id == 6 && $order->payment_method_id == 2 && $pStatusId != 2): ?>
                                       <span class="expired-label">Hết hạn thanh toán</span>
                                     <?php endif; ?>
