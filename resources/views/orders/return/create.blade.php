@@ -58,46 +58,51 @@
         </label>
         
         <div class="product-selection-container" style="background: #f9f9f9; padding: 15px; border-radius: 8px;">
-            @foreach($groupedDetails as $variantId => $item)
-    <div class="product-select-item" style="display: flex; align-items: center; background: #fff; margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+         @foreach($groupedDetails as $variantId => $item)
+    @php
+        // 1. Lấy product_id gốc từ variant để kiểm tra voucher
+        $orderDetail = $order->details->where('product_variant_id', $variantId)->first();
+        $productId = $orderDetail ? $orderDetail->productVariant->product_id : 0;
         
-        {{-- Checkbox chọn sản phẩm --}}
+        // 2. Kiểm tra sản phẩm có nằm trong danh sách được hưởng voucher không
+        $isEligible = isset($eligibleProductIds) && in_array($productId, $eligibleProductIds);
+    @endphp
+
+    <div class="product-select-item" style="display: flex; align-items: center; background: #fff; margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
         <div style="margin-right: 15px;">
             <input type="checkbox" 
                    name="variant_ids[]" 
                    value="{{ $variantId }}" 
-                   class="product-checkbox"
-                   id="variant_{{ $variantId }}">
+                   class="product-checkbox variant-checkbox" {{-- Thêm class variant-checkbox --}}
+                   id="variant_{{ $variantId }}"
+                   {{-- CÁC DÒNG QUAN TRỌNG DƯỚI ĐÂY --}}
+                   data-price="{{ $item->price }}"
+                   data-is-eligible="{{ $isEligible ? 'true' : 'false' }}"
+                   data-total-qty="{{ $item->max_quantity }}">
         </div>
 
-        {{-- Ảnh sản phẩm --}}
         <div style="margin-right: 15px;">
             <img src="{{ asset('storage/' . $item->image) }}" width="50" height="50" style="object-fit: cover; border-radius: 4px;">
         </div>
 
-        {{-- Thông tin tên & biến thể --}}
         <div style="flex: 1;">
             <label for="variant_{{ $variantId }}" style="margin: 0; cursor: pointer;">
-                <span style="font-weight: 600; display: block; line-height: 1.2;">{{ $item->product_name }}</span>
+                <span style="font-weight: 600; display: block;">{{ $item->product_name }}</span>
                 <small class="text-muted">{{ $item->variant_label }}</small>
             </label>
             <div style="color: #d63384; font-weight: bold;">{{ number_format($item->price) }}₫</div>
         </div>
 
-        {{-- Ô nhập số lượng --}}
         <div style="width: 130px; text-align: right;">
             <small style="display: block; color: #666; font-size: 11px;">Số lượng hoàn</small>
             <div style="display: flex; align-items: center; justify-content: flex-end; gap: 5px;">
                 <input type="number" 
                        name="quantities[{{ $variantId }}]" 
-                       value="1" 
-                       min="1" 
-                       max="{{ $item->max_quantity }}" 
+                       value="1" min="1" max="{{ $item->max_quantity }}" 
                        class="input-qty"
-                       id="qty_{{ $variantId }}" {{-- QUAN TRỌNG --}}
+                       id="qty_{{ $variantId }}"
                        data-variant-id="{{ $variantId }}"
-                       data-price="{{ $item->price }}" {{-- QUAN TRỌNG: Script dùng cái này để tính --}}
-                       style="width: 50px; padding: 2px 5px; text-align: center; border: 1px solid #ccc;">
+                       style="width: 50px; text-align: center; border: 1px solid #ccc;">
                 <span style="font-size: 12px; color: #999;">/ {{ $item->max_quantity }}</span>
             </div>
         </div>
@@ -173,15 +178,30 @@
                                                             </div>
 
                                                             {{-- Tổng số tiền hoàn --}}
-                                                            <div class="refund-amount-summary">
-                                                                <div class="refund-amount-container">
-                                                                    <span class="refund-amount-label">Tổng số tiền hoàn:</span>
-                                                                    <span class="refund-amount-value" id="refundAmountDisplay">
-                                                                        {{ number_format($order->total_amount) }}₫
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                        <div class="refund-amount-summary">
+    <div class="refund-amount-container" style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+        
+        <div style="font-size: 0.95rem; color: #666;">
+            <span>Tổng giá trị sản phẩm chọn: </span>
+            <span id="displaySubtotal">0₫</span>
+        </div>
 
+        <div style="font-size: 0.95rem; color: #dc3545;">
+            <span>Khấu trừ Voucher (phân bổ): </span>
+            <span id="displayVoucherDeduction">-0₫</span>
+        </div>
+
+        <hr style="width: 100%; margin: 5px 0; border-top: 1px dashed #ccc;">
+
+        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+            <span class="refund-amount-label" style="font-weight: bold; font-size: 1.1rem;">Thực nhận hoàn trả:</span>
+            <span class="refund-amount-value" id="refundAmountDisplay" style="background: #28a745; color: white; padding: 8px 20px; border-radius: 8px; font-size: 1.5rem;">
+                0₫
+            </span>
+        </div>
+        <small style="color: #888; font-style: italic;">* Số tiền được tính dựa trên giá trị thực trả sau khi phân bổ Voucher</small>
+    </div>
+</div>
                                                             <div class="woocommerce-order-details__actions">
                                                                 <button type="submit" class="woocommerce-button button">Gửi yê cầu hoàn hàng</button>
                                                                 <a href="{{ route('orders.show', $order->id) }}" class="woocommerce-button button">Quay lại</a>
@@ -262,24 +282,56 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // === PHẦN 2: TÍNH TIỀN & XỬ LÝ SỐ LƯỢNG (Cho phép nhập số 2) ===
-    function updateRefundTotal() {
-        let total = 0;
-        const checkedItems = document.querySelectorAll('.product-checkbox:checked');
-        
-        checkedItems.forEach(cb => {
-            const qtyInput = document.getElementById('qty_' + cb.value);
-            if (qtyInput) {
-                const price = parseFloat(qtyInput.dataset.price.replace(/[^0-9.-]+/g, "")) || 0;
-                const qty = parseInt(qtyInput.value) || 0;
-                total += (price * qty);
+   function updateRefundTotal() {
+    let subtotal = 0;
+    let totalVoucherDeduction = 0;
+    
+    // Lấy thông tin voucher từ Backend
+    const orderSubtotal = parseFloat("{{ $order->subtotal }}") || 0;
+    const orderDiscount = parseFloat("{{ $order->discount }}") || 0;
+    // Kiểm tra xem đây là voucher toàn sàn hay voucher cho SP cụ thể
+    const isVoucherGlobal = @json(empty($eligibleProductIds));
+
+    // Lặp qua các sản phẩm ĐƯỢC TÍCH CHỌN
+    document.querySelectorAll('.variant-checkbox:checked').forEach(cb => {
+        const vId = cb.value;
+        const qtyInput = document.getElementById('qty_' + vId);
+        if (!qtyInput) return;
+
+        const price = parseFloat(cb.dataset.price) || 0;
+        const qty = parseInt(qtyInput.value) || 0;
+        const isEligible = cb.dataset.isEligible === 'true';
+
+        const itemOriginalTotal = price * qty;
+        subtotal += itemOriginalTotal;
+
+        if (orderDiscount > 0) {
+            // TRƯỜNG HỢP 1: Voucher toàn sàn -> Chia đều tỷ lệ cho mọi món
+            if (isVoucherGlobal && orderSubtotal > 0) {
+                totalVoucherDeduction += (itemOriginalTotal / orderSubtotal) * orderDiscount;
+            } 
+            // TRƯỜNG HỢP 2: Voucher SP cụ thể -> CHỈ TRỪ NẾU SP ĐÓ ĐƯỢC HƯỞNG
+            else if (isEligible) {
+                const totalQtyInOrder = parseInt(cb.dataset.totalQty) || 1; 
+                // Khấu trừ = (Tổng tiền giảm / Tổng số lượng món đó trong đơn) * Số lượng trả lại
+                totalVoucherDeduction += (orderDiscount / totalQtyInOrder) * qty;
             }
-        });
-
-        if (refundDisplay) {
-            refundDisplay.innerText = new Intl.NumberFormat('vi-VN').format(total) + '₫';
+            // Nếu không thuộc 2 TH trên -> totalVoucherDeduction của món này = 0
         }
-    }
+    });
 
+    const roundedDeduction = Math.round(totalVoucherDeduction);
+    const finalRefund = Math.max(0, subtotal - roundedDeduction);
+    
+    const fmt = new Intl.NumberFormat('vi-VN');
+
+    // Hiển thị lên UI
+    document.getElementById('displaySubtotal').innerText = fmt.format(subtotal) + '₫';
+    document.getElementById('displayVoucherDeduction').innerText = '-' + fmt.format(roundedDeduction) + '₫';
+    if (refundDisplay) {
+        refundDisplay.innerText = fmt.format(finalRefund) + '₫';
+    }
+}
     // Lắng nghe sự kiện gõ số lượng (Sửa lỗi không gõ được số 2)
     document.addEventListener('input', function(e) {
         if (e.target.classList.contains('input-qty')) {
@@ -509,15 +561,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 text-shadow: none;
             }
 
-            .refund-amount-value {
-                font-size: 28px;
-                font-weight: 700;
-                color: #ffffff;
-                background: #6b6b6b;
-                padding: 8px 20px;
-                border-radius: 8px;
-                transition: all 0.3s ease;
-            }
+           .refund-amount-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    background: #28a745; /* Đổi sang màu xanh lá cho tích cực */
+    padding: 8px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
 
             /* Image Preview Styles */
             .button-select-images {

@@ -41,6 +41,13 @@
 @section('content')
 <main id="main" class="site-main">
     <div class="container pt-4">
+        {{-- Hiển thị thông báo lỗi từ hệ thống nếu có --}}
+        @if(session('error'))
+            <div class="alert alert-danger rounded-3 shadow-sm mb-4">
+                <i class="fa fa-exclamation-triangle me-2"></i>{{ session('error') }}
+            </div>
+        @endif
+
         <form action="{{ route('checkout.store') }}" method="post" id="checkoutForm">
             @csrf
             <input type="hidden" name="is_checkout_page" value="1" />
@@ -72,8 +79,8 @@
                             @foreach($cartItems as $item)
                                 <div class="product-item">
                                   <img src="{{ $item['image_url'] }}" 
-     alt="{{ $item['variant']->product->name }}" 
-     style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+                                       alt="{{ $item['variant']->product->name }}" 
+                                       style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
                                     <div class="product-info">
                                         <div class="product-name">{{ $item['variant']->product->name }}</div>
                                         <div class="product-meta">
@@ -149,6 +156,7 @@
     </div>
 </main>
 
+{{-- MODAL CHỌN ĐỊA CHỈ --}}
 <div class="modal fade" id="addressModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" style="border-radius: 20px;">
@@ -168,11 +176,12 @@
     </div>
 </div>
 
+{{-- MODAL THÊM ĐỊA CHỈ MỚI --}}
 <div class="modal fade" id="editAddressModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content" style="border-radius: 20px;">
             <div class="modal-header border-0 pb-0"> <h5 class="modal-title fw-bold">Thêm địa chỉ mới</h5> <button type="button" class="btn-close" data-bs-dismiss="modal"></button> </div>
-           <form id="formAddressAction" novalidate> {{-- Thêm novalidate để tắt validation mặc định --}}
+           <form id="formAddressAction" novalidate>
     <div class="modal-body">
         <div class="row">
             <div class="col-md-6 mb-3">
@@ -226,6 +235,7 @@
         </div>
     </div>
 </div>
+{{-- MODAL KHO VOUCHER --}}
 <div class="modal fade" id="myVoucherWallet" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: none; overflow: hidden;">
@@ -234,50 +244,104 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button> 
             </div>
             <div class="modal-body bg-light mt-3" style="max-height: 500px; overflow-y: auto; padding: 15px;">
-                @forelse($vouchers as $v)
+                @php
+                    // 1. Lấy danh sách Product ID đang có trong phiên thanh toán này
+                    $currentProductIds = [];
+                    if(session('buy_now')) {
+                        // Trường hợp Mua ngay
+                        $variant = \App\Models\ProductVariant::find(session('buy_now')['variant_id']);
+                        if($variant) $currentProductIds[] = $variant->product_id;
+                    } else {
+                        // Trường hợp từ Giỏ hàng (chỉ lấy các sản phẩm được chọn để thanh toán)
+                        $cart = session('cart', []);
+                        $selectedIds = session('selected_items_for_checkout', []);
+                        if(!empty($selectedIds)){
+                             $currentProductIds = \App\Models\ProductVariant::whereIn('id', $selectedIds)
+                                                ->pluck('product_id')->toArray();
+                        } else {
+                             // Nếu không có selected_items thì lấy toàn bộ giỏ hàng (tùy logic của bạn)
+                             $currentProductIds = \App\Models\ProductVariant::whereIn('id', array_keys($cart))
+                                                ->pluck('product_id')->toArray();
+                        }
+                    }
+
+                    $hasVisibleVoucher = false;
+                @endphp
+
+                @foreach($vouchers as $v)
+                    @php
+                        // 2. Logic kiểm tra hiển thị:
+                        // - Nếu voucher không giới hạn sản phẩm ($v->products()->exists() == false) -> HIỂN THỊ
+                        // - Nếu voucher có giới hạn sản phẩm -> Chỉ HIỂN THỊ nếu sản phẩm đó nằm trong đơn hàng
+                        $isSpecificVoucher = $v->products()->exists();
+                        $isProductMatch = false;
+                        
+                        if (!$isSpecificVoucher) {
+                            $isProductMatch = true;
+                        } else {
+                            $voucherProductIds = $v->products->pluck('id')->toArray();
+                            // Kiểm tra giao thoa giữa SP trong giỏ và SP được áp dụng mã
+                            if (!empty(array_intersect($currentProductIds, $voucherProductIds))) {
+                                $isProductMatch = true;
+                            }
+                        }
+
+                        // Nếu không khớp sản phẩm thì ẩn hoàn toàn (continue)
+                        if (!$isProductMatch) continue;
+
+                        // Đánh dấu là có ít nhất 1 voucher được hiện
+                        $hasVisibleVoucher = true;
+
+                        // Kiểm tra điều kiện số tiền tối thiểu để đổi màu nút
+                        $isMinOrderReached = isset($totalAmount) && $totalAmount >= ($v->min_order_value ?? 0);
+                    @endphp
+
                     <div class="voucher-item-modal mb-3 shadow-sm d-flex bg-white" style="border-radius: 12px; border: 1px solid #eee; min-height: 110px;">
                         <div class="voucher-left d-flex flex-column align-items-center justify-content-center text-white" 
-                             style="width: 100px; background: linear-gradient(135deg, #ff4747, #ff6b6b); border-right: 2px dashed #f8fafc;">
+                             style="background: {{ $isMinOrderReached ? 'linear-gradient(135deg, #ff4747, #ff6b6b)' : '#adb5bd' }}; width: 85px; flex-shrink: 0;">
                             <i class="fa fa-ticket-alt fa-2x mb-1"></i>
-                            <small class="fw-bold text-uppercase" style="font-size: 0.65rem;">{{ $v->discount_type == 'percent' ? 'Giảm %' : 'Giảm tiền' }}</small>
+                            <small class="fw-bold text-uppercase" style="font-size: 0.65rem;">
+                                {{ $v->discount_type == 'percent' ? 'Giảm %' : 'Giảm tiền' }}
+                            </small>
                         </div>
-
+                        
                         <div class="p-3 flex-grow-1 position-relative">
                             <h6 class="fw-bold mb-1 text-dark">{{ $v->voucher_code }}</h6>
-                            
                             <p class="text-danger small fw-bold mb-1">
                                 Giảm {{ $v->discount_type == 'percent' ? $v->discount_value.'%' : number_format($v->discount_value).'đ' }}
                             </p>
-
                             <div class="text-muted mb-1" style="font-size: 0.75rem;">
-                                <i class="fa fa-info-circle me-1"></i>Đơn tối thiểu: <b>{{ number_format($v->min_order_value ?? 0) }}đ</b>
+                                Đơn tối thiểu: <b>{{ number_format($v->min_order_value ?? 0) }}đ</b>
                             </div>
-
                             <div class="text-muted" style="font-size: 0.75rem;">
-                                <i class="fa fa-clock me-1"></i>HSD: {{ $v->end_date ? \Carbon\Carbon::parse($v->end_date)->format('d/m/Y') : 'Không giới hạn' }}
+                                HSD: {{ $v->end_date ? \Carbon\Carbon::parse($v->end_date)->format('d/m/Y') : 'Không giới hạn' }}
                             </div>
-                            
-                            @if($v->description)
-                            <div class="mt-2 pt-2 border-top text-secondary small" style="font-size: 0.7rem; font-style: italic;">
-                                {{ $v->description }}
-                            </div>
-                            @endif
                         </div>
 
-                        <div class="p-3 d-flex align-items-center bg-white" style="border-radius: 0 12px 12px 0;">
-                            @if(isset($totalAmount) && $totalAmount < ($v->min_order_value ?? 0))
-                                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3 fw-bold opacity-50" style="font-size: 0.75rem;" disabled>Chưa đủ ĐK</button>
+                        <div class="p-3 d-flex align-items-center bg-white">
+                            @if(!$isMinOrderReached)
+                                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3 fw-bold opacity-50" 
+                                        style="font-size: 0.75rem;" 
+                                        onclick="showToast('Đơn hàng chưa đủ {{ number_format($v->min_order_value) }}đ để dùng mã này', 'error')">
+                                    Thiếu tiền
+                                </button>
                             @else
-                                <button type="button" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm" style="font-size: 0.75rem;" onclick="pickVoucher('{{ $v->voucher_code }}')">Dùng ngay</button>
+                                <button type="button" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm" 
+                                        style="font-size: 0.75rem;" 
+                                        onclick="pickVoucher('{{ $v->voucher_code }}')">
+                                    Dùng ngay
+                                </button>
                             @endif
                         </div>
                     </div>
-                @empty
+                @endforeach
+
+                @if(!$hasVisibleVoucher)
                     <div class="text-center py-5">
                         <img src="https://cdn-icons-png.flaticon.com/512/4076/4076432.png" width="80" class="opacity-25 mb-3">
-                        <p class="text-muted">Bạn chưa có voucher nào trong kho</p>
+                        <p class="text-muted">Hiện tại không có voucher nào phù hợp với sản phẩm trong đơn hàng của bạn.</p>
                     </div>
-                @endforelse
+                @endif
             </div>
         </div>
     </div>
@@ -288,39 +352,63 @@
 
 @push('scripts')
 <script>
-    // --- KHỞI TẠO CÁC PHẦN TỬ ---
+    // --- KHỞI TẠO ---
     const provinceSelect = document.getElementById('addr_province');
     const districtSelect = document.getElementById('addr_district');
     const wardSelect = document.getElementById('addr_ward');
     const addressForm = document.getElementById('formAddressAction');
+    const checkoutForm = document.getElementById('checkoutForm');
 
-    // --- HÀM VALIDATION HELPER ---
-    function setFieldError(fieldId, message) {
-        const input = document.getElementById(fieldId);
-        const errorDiv = document.getElementById('error_' + fieldId);
-        if (input) input.classList.add('is-invalid-custom');
-        if (errorDiv) {
-            errorDiv.innerText = message;
-            errorDiv.style.display = 'block';
+    // --- LOGIC XỬ LÝ ĐỊA CHỈ TRONG MODAL CHỌN ---
+    document.getElementById('btn_confirm_addr').onclick = function() {
+        const selected = document.querySelector('input[name="modal_addr"]:checked');
+        if (selected) {
+            const btn = this;
+            const addressId = selected.value;
+            btn.disabled = true;
+            btn.innerText = 'Đang xử lý...';
+
+            fetch("{{ route('account.update') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ address_id: addressId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('selected_address_id').value = addressId;
+                    showToast("Đã thay đổi địa chỉ", "success");
+                    location.reload(); 
+                } else {
+                    btn.disabled = false;
+                    btn.innerText = 'GIAO ĐẾN ĐỊA CHỈ NÀY';
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                console.error(err);
+            });
         }
-    }
+    };
 
-    function clearErrors() {
-        document.querySelectorAll('.is-invalid-custom').forEach(el => el.classList.remove('is-invalid-custom'));
-        document.querySelectorAll('.invalid-feedback-custom').forEach(el => {
-            el.innerText = '';
-            el.style.display = 'none';
-        });
-    }
-
-    // Tự động xóa lỗi khi người dùng bắt đầu nhập lại
-    document.querySelectorAll('#formAddressAction .form-control, #formAddressAction .form-select').forEach(el => {
-        el.addEventListener('input', function() {
-            this.classList.remove('is-invalid-custom');
-            const errorDiv = document.getElementById('error_' + this.id);
-            if (errorDiv) errorDiv.style.display = 'none';
-        });
-    });
+    // --- KIỂM TRA TRƯỚC KHI SUBMIT FORM ĐẶT HÀNG ---
+    checkoutForm.onsubmit = function(e) {
+        const addressId = document.getElementById('selected_address_id').value;
+        if (!addressId) {
+            e.preventDefault();
+            showToast("Vui lòng thêm địa chỉ giao hàng trước khi đặt hàng!", "error");
+            new bootstrap.Modal(document.getElementById('addressModal')).show();
+            return false;
+        }
+        
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>ĐANG XỬ LÝ...';
+    };
 
     // --- TỈNH THÀNH API ---
     async function loadProvinces() {
@@ -357,7 +445,7 @@
         }
     };
 
-    // --- LƯU ĐỊA CHỈ VỚI VALIDATION CHI TIẾT ---
+    // --- THÊM ĐỊA CHỈ MỚI ---
     addressForm.onsubmit = function(e) {
         e.preventDefault();
         clearErrors();
@@ -370,14 +458,10 @@
         const detail = document.getElementById('addr_detail').value.trim();
         
         let isValid = true;
-
-        // Validation Logic
         if (!name) { setFieldError('addr_name', 'Vui lòng nhập họ tên'); isValid = false; }
-        
         const phoneRegex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
         if (!phone) { setFieldError('addr_phone', 'Vui lòng nhập số điện thoại'); isValid = false; }
         else if (!phoneRegex.test(phone)) { setFieldError('addr_phone', 'Số điện thoại không đúng định dạng'); isValid = false; }
-
         if (!province) { setFieldError('addr_province', 'Vui lòng chọn Tỉnh/Thành'); isValid = false; }
         if (!district) { setFieldError('addr_district', 'Vui lòng chọn Quận/Huyện'); isValid = false; }
         if (!ward) { setFieldError('addr_ward', 'Vui lòng chọn Phường/Xã'); isValid = false; }
@@ -390,12 +474,8 @@
         saveBtn.innerText = 'Đang xử lý...';
 
         const data = {
-            name: name,
-            phone: phone,
-            province: province,
-            district: district,
-            ward: ward,
-            address: detail,
+            name: name, phone: phone, province: province, district: district, 
+            ward: ward, address: detail,
             is_default: document.getElementById('addr_default').checked ? 1 : 0,
             _token: '{{ csrf_token() }}'
         };
@@ -414,46 +494,10 @@
                 saveBtn.disabled = false;
                 saveBtn.innerText = 'LƯU ĐỊA CHỈ';
                 if (res.errors) {
-                    // Hiển thị lỗi từ Laravel Backend nếu có
                     Object.keys(res.errors).forEach(key => setFieldError('addr_' + key, res.errors[key][0]));
-                } else {
-                    showToast(res.message || "Lỗi lưu địa chỉ", "error");
                 }
             }
-        }).catch(() => {
-            saveBtn.disabled = false;
-            showToast("Lỗi kết nối hệ thống", "error");
         });
-    };
-
-    // --- THAY ĐỔI ĐỊA CHỈ ---
-    document.getElementById('btn_confirm_addr').onclick = function() {
-        const selected = document.querySelector('input[name="modal_addr"]:checked');
-        if (selected) {
-            const btn = this;
-            btn.disabled = true;
-            btn.innerText = 'Đang xử lý...';
-
-            fetch("{{ route('account.update') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ address_id: selected.value })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showToast("Đã thay đổi địa chỉ", "success");
-                    location.reload();
-                } else {
-                    btn.disabled = false;
-                    btn.innerText = 'GIAO ĐẾN ĐỊA CHỈ NÀY';
-                }
-            });
-        }
     };
 
     // --- VOUCHER ---
@@ -476,9 +520,7 @@
             if(data.success) { 
                 showToast("Áp dụng thành công!", "success"); 
                 setTimeout(() => location.reload(), 800); 
-            } else { 
-                showToast(data.message, "error"); 
-            }
+            } else { showToast(data.message, "error"); }
         });
     }
 
@@ -506,16 +548,25 @@
         el.querySelector('input').checked = true;
     }
 
+    function setFieldError(fieldId, message) {
+        const input = document.getElementById(fieldId);
+        const errorDiv = document.getElementById('error_' + fieldId);
+        if (input) input.classList.add('is-invalid-custom');
+        if (errorDiv) { errorDiv.innerText = message; errorDiv.style.display = 'block'; }
+    }
+
+    function clearErrors() {
+        document.querySelectorAll('.is-invalid-custom').forEach(el => el.classList.remove('is-invalid-custom'));
+        document.querySelectorAll('.invalid-feedback-custom').forEach(el => { el.innerText = ''; el.style.display = 'none'; });
+    }
+
     function showToast(msg, type) {
         const box = document.getElementById('toast-container');
         const t = document.createElement('div');
         t.className = `custom-toast p-3 mb-2 rounded shadow-lg text-white ${type === 'success' ? 'bg-success' : 'bg-danger'}`;
         t.innerText = msg;
         box.appendChild(t);
-        setTimeout(() => {
-            t.style.opacity = '0';
-            setTimeout(() => t.remove(), 500);
-        }, 3000);
+        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 500); }, 3000);
     }
 </script>
 @endpush

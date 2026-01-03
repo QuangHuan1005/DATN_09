@@ -13,25 +13,26 @@ use Exception;
 
 class AdminOrderController extends Controller
 {
-    // Hằng số trạng thái đơn hàng
+    // ===========================================================
+    // HẰNG SỐ TRẠNG THÁI
+    // ===========================================================
     const STATUS_PENDING   = 1; // Chờ xác nhận
     const STATUS_CONFIRMED = 2; // Xác nhận
     const STATUS_SHIPPING  = 3; // Đang giao
-    const STATUS_DELIVERED = 4; // Đã giao
-    const STATUS_DONE      = 5; // Hoàn thành
+    const STATUS_DELIVERED = 4; // Đã giao (Khách chưa ấn nhận)
+    const STATUS_DONE      = 5; // Hoàn thành (Chỉ dành cho Client ấn)
     const STATUS_CANCEL    = 6; // Hủy
     const STATUS_RETURNED  = 7; // Hoàn hàng
 
-    // Hằng số trạng thái thanh toán
     const PAYMENT_STATUS_UNPAID   = 1;
     const PAYMENT_STATUS_PAID     = 2;
     const PAYMENT_STATUS_REFUNDED = 3;
 
-    // Hằng số phương thức thanh toán
     const PAYMENT_METHOD_COD = 1;
 
     /**
      * Lấy danh sách trạng thái để hiển thị (Màu sắc CSS)
+     * Đã loại bỏ 'Hoàn thành' để Admin không chọn được thủ công
      */
     private function getStatuses()
     {
@@ -42,7 +43,7 @@ class AdminOrderController extends Controller
             (object)['id' => self::STATUS_DELIVERED, 'name' => 'Đã giao hàng',  'color_class' => 'bg-success text-white'],
             (object)['id' => self::STATUS_DONE,      'name' => 'Hoàn thành',    'color_class' => 'bg-success text-white'],
             (object)['id' => self::STATUS_CANCEL,    'name' => 'Đã hủy',        'color_class' => 'bg-danger text-white'],
-            (object)['id' => self::STATUS_RETURNED,  'name' => 'Hoàn hàng',      'color_class' => 'bg-secondary text-white'],
+            (object)['id' => self::STATUS_RETURNED,  'name' => 'Hoàn hàng',     'color_class' => 'bg-secondary text-white'],
         ];
     }
 
@@ -59,8 +60,25 @@ class AdminOrderController extends Controller
             $query->whereDate('created_at', $request->date);
         }
 
+        if ($request->filled('month') && $request->filled('year')) {
+            $query->whereMonth('created_at', $request->month)
+                  ->whereYear('created_at', $request->year);
+        } elseif ($request->filled('year')) {
+            $query->whereYear('created_at', $request->year);
+        }
+
         if ($request->filled('status')) {
             $query->where('order_status_id', $request->status);
+        }
+
+        if ($request->filled('payment_status')) {
+            $query->where('payment_status_id', $request->payment_status);
+        }
+
+        if ($request->filled('product_id')) {
+            $query->whereHas('details.productVariant', function ($q) use ($request) {
+                $q->where('product_id', $request->product_id);
+            });
         }
 
         if ($request->filled('keyword')) {
@@ -122,7 +140,7 @@ class AdminOrderController extends Controller
     }
 
     /**
-     * Cập nhật trạng thái đơn hàng (Tích hợp Tặng & Thu hồi điểm)
+     * Cập nhật trạng thái đơn hàng
      */
     public function update(Request $request, $id, InventoryService $inv)
     {
@@ -131,7 +149,12 @@ class AdminOrderController extends Controller
         $newStatus = (int)$request->order_status_id;
 
         if ($oldStatus === $newStatus) {
-            return back()->with('info', 'Trạng thái đơn hàng không thay đổi.');
+            return $this->handleResponse($request, 'Trạng thái đơn hàng không thay đổi.', 'info');
+        }
+
+        // Kiểm tra quyền Admin: Không được phép chuyển sang trạng thái "Hoàn thành" thủ công
+        if ($newStatus === self::STATUS_DONE) {
+            return $this->handleResponse($request, 'Trạng thái "Hoàn thành" chỉ được kích hoạt khi khách hàng xác nhận đã nhận hàng.', 'error', 403);
         }
 
         if (in_array($oldStatus, [self::STATUS_DONE, self::STATUS_CANCEL, self::STATUS_RETURNED])) {
@@ -142,15 +165,16 @@ class AdminOrderController extends Controller
             return $this->handleResponse($request, 'Đơn hàng đang có yêu cầu hủy. Vui lòng xử lý yêu cầu hủy.', 'error', 422);
         }
 
+        // Quy trình chuyển đổi trạng thái của Admin (Đã loại bỏ đích đến là STATUS_DONE)
         $validNextSteps = [
             self::STATUS_PENDING   => [self::STATUS_CONFIRMED, self::STATUS_CANCEL],
             self::STATUS_CONFIRMED => [self::STATUS_SHIPPING, self::STATUS_CANCEL],
             self::STATUS_SHIPPING  => [self::STATUS_DELIVERED, self::STATUS_CANCEL],
-            self::STATUS_DELIVERED => [self::STATUS_DONE, self::STATUS_RETURNED],
+            self::STATUS_DELIVERED => [self::STATUS_RETURNED], // Admin chỉ có thể cho hoàn hàng nếu khách khiếu nại tại bước này
         ];
 
         if (!isset($validNextSteps[$oldStatus]) || !in_array($newStatus, $validNextSteps[$oldStatus])) {
-            return $this->handleResponse($request, 'Quy trình chuyển trạng thái không hợp lệ.', 'error', 422);
+            return $this->handleResponse($request, 'Quy trình chuyển trạng thái không hợp lệ hoặc bạn không có quyền thực hiện bước này.', 'error', 422);
         }
 
         if ($newStatus === self::STATUS_CANCEL) {
@@ -160,15 +184,12 @@ class AdminOrderController extends Controller
         try {
             DB::beginTransaction();
 
-            // 1. XỬ LÝ KHO
-            $statusDeductStock = [self::STATUS_CONFIRMED, self::STATUS_SHIPPING, self::STATUS_DELIVERED, self::STATUS_DONE];
-            if (!in_array($oldStatus, $statusDeductStock) && in_array($newStatus, $statusDeductStock)) {
-                $inv->deductForOrder($order);
-            } elseif (in_array($newStatus, [self::STATUS_CANCEL, self::STATUS_RETURNED])) {
+            // 1. XỬ LÝ KHO: Chỉ gọi RESTORE khi Hủy hoặc Hoàn hàng
+            if (in_array($newStatus, [self::STATUS_CANCEL, self::STATUS_RETURNED])) {
                 $inv->restoreForOrder($order);
             }
 
-            // 2. XỬ LÝ THANH TOÁN & ĐIỂM THƯỞNG (10.000đ = 1đ)
+            // 2. XỬ LÝ THANH TOÁN
             if ($newStatus === self::STATUS_CANCEL) {
                 $reason = $request->input('admin_reason');
                 $order->note = "Admin hủy: " . $reason;
@@ -189,42 +210,26 @@ class AdminOrderController extends Controller
                         'reason_admin' => "Duyệt trực tiếp từ đơn hàng: " . $reason
                     ]);
 
-            } elseif ($newStatus === self::STATUS_DONE) {
-                $order->payment_status_id = self::PAYMENT_STATUS_PAID;
-                
-                // --- TẶNG ĐIỂM KHI HOÀN THÀNH ---
-                $user = $order->user;
-                if ($user) {
-                    $pointsEarned = floor($order->total_amount / 10000);
-                    if ($pointsEarned > 0) {
-                        $user->increment('points', $pointsEarned);
-                        $order->note = ($order->note ? $order->note . " | " : "") . "Tặng +" . $pointsEarned . " điểm CP";
-                    }
-                }
-
             } elseif ($newStatus === self::STATUS_RETURNED) {
                 $order->payment_status_id = self::PAYMENT_STATUS_REFUNDED;
-
-                // --- THU HỒI ĐIỂM NẾU TRƯỚC ĐÓ ĐÃ HOÀN THÀNH ---
+                // Nếu đơn đã hoàn thành mà bị hoàn hàng sau đó, thu hồi điểm (Logic phòng hờ)
                 $user = $order->user;
                 if ($user && $oldStatus === self::STATUS_DONE) {
                     $pointsToDeduct = floor($order->total_amount / 10000);
                     if ($pointsToDeduct > 0) {
-                        // Tránh điểm bị âm dưới 0
                         $finalDeduct = ($user->points < $pointsToDeduct) ? $user->points : $pointsToDeduct;
                         $user->decrement('points', $finalDeduct);
                         $order->note = ($order->note ? $order->note . " | " : "") . "Thu hồi -" . $finalDeduct . " điểm CP (Hoàn hàng)";
                     }
                 }
             } elseif ($newStatus === self::STATUS_DELIVERED) {
+                // Khi admin báo đã giao (Shipper báo giao xong), thanh toán coi như đã thu (nếu COD)
                 $order->payment_status_id = self::PAYMENT_STATUS_PAID;
             }
 
-            // 3. Cập nhật trạng thái và lưu
             $order->order_status_id = $newStatus;
             $order->save();
 
-            // 4. Ghi log lịch sử
             OrderStatusLog::create([
                 'order_id' => $order->id,
                 'order_status_id' => $newStatus,
@@ -242,10 +247,16 @@ class AdminOrderController extends Controller
         }
     }
 
+    /**
+     * Hàm hỗ trợ trả về phản hồi cho cả Request thường và AJAX
+     */
     private function handleResponse(Request $request, $message, $type = 'success', $code = 200)
     {
         if ($request->ajax()) {
-            return response()->json(['message' => $message], $code);
+            return response()->json([
+                'status' => $type,
+                'message' => $message
+            ], $code);
         }
         return back()->with($type, $message);
     }

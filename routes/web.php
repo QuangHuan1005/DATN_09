@@ -140,6 +140,10 @@ Route::prefix('orders')->middleware('auth')->group(function () {
 Route::post('orders/{order_id}/cancel', [OrderCancelRequestController::class, 'store'])
     ->name('orders.cancel')
     ->middleware('auth'); // Đảm bảo người dùng đã đăng nhập
+
+// Route xử lý khách hàng xác nhận đã nhận tiền hoàn
+Route::post('/orders/cancel-request/{id}/confirm-received', [OrderCancelRequestController::class, 'confirmReceived'])
+    ->name('orders.cancel.confirm_received');
     // Route TẠO form đánh giá (GET)
     Route::get('/reviews/create', [ReviewController::class, 'create'])->name('review.create'); 
 
@@ -156,6 +160,9 @@ Route::post('orders/{order_id}/cancel', [OrderCancelRequestController::class, 's
     Route::get('/{order}/return', [OrderReturnController::class, 'create'])->name('orders.return.create');
     Route::post('/{order}/return', [OrderReturnController::class, 'store'])->name('orders.return.store');
     Route::get('/returns/{return}', [OrderReturnController::class, 'show'])->name('orders.return.show');
+
+    Route::post('/orders/returns/{id}/confirm-received', [OrderReturnController::class, 'confirmReceived'])
+    ->name('orders.return.confirm_received');
 });
 
 // 👤 Tài khoản cá nhân

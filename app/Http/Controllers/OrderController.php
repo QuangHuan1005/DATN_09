@@ -83,60 +83,68 @@ class OrderController extends Controller
     /**
      * Chi tiết đơn hàng
      */
-    public function show($id)
-    {
-        $this->autoCancelExpiredOrders();
+   public function show($id)
+{
+    $this->autoCancelExpiredOrders();
 
-        $order = Order::query()
-            ->with([
-                'status', 'paymentStatus', 'paymentMethod', 'invoice', 'voucher',
-                'user:id,name,email',
-                'details.productVariant.product:id,name',
-                'details.productVariant.color:id,name,color_code',
-                'details.productVariant.size:id,name,size_code',
-                'statusLogs',
-                'cancelRequest',
-            ])
-            ->where('id', $id)
-            ->where('user_id', Auth::id())
-            ->first();
+    $order = Order::query()
+        ->with([
+            'status', 'paymentStatus', 'paymentMethod', 'invoice', 'voucher',
+            'user:id,name,email',
+            'details.productVariant.product:id,name',
+            'details.productVariant.color:id,name,color_code',
+            'details.productVariant.size:id,name,size_code',
+            'statusLogs',
+            'cancelRequest',
+        ])
+        ->where('id', $id)
+        ->where('user_id', Auth::id())
+        ->first();
 
-        if (!$order) {
-            return redirect()->route('orders.index')->with('error', 'Không tìm thấy đơn hàng.');
-        }
-
-        $lines = $order->details->map(function ($d) {
-            $v = $d->productVariant;
-            $variantText = [];
-            if ($v?->size?->name)  $variantText[] = "Size: {$v->size->name}";
-            if ($v?->color?->name) $variantText[] = "Màu: {$v->color->name}";
-            return (object)[
-                'product_name' => $v?->product?->name ?? 'Sản phẩm',
-                'variant_text' => $variantText ? implode(' · ', $variantText) : null,
-                'image'        => $v?->image,
-                'unit_price'   => (int)$d->price,
-                'qty'          => (int)$d->quantity,
-                'line_total'   => (int)($d->price * $d->quantity),
-                // FIX LỖI: Thêm trường eta để tránh Undefined property
-                'eta'          => $d->estimated_delivery ?? null, 
-            ];
-        });
-
-        $calc_subtotal = $lines->sum('line_total');
-        $calc_discount = (int)$order->discount;
-        $calc_total    = (int)$order->total_amount;
-        $calc_shipping_fee = max(0, $calc_total - $calc_subtotal + $calc_discount);
-
-        return view('orders.show', [
-            'order'             => $order,
-            'lines'             => $lines,
-            'calc_subtotal'     => $calc_subtotal,
-            'calc_discount'     => $calc_discount,
-            'calc_shipping_fee' => $calc_shipping_fee,
-            'calc_total'        => $calc_total,
-        ]);
+    if (!$order) {
+        return redirect()->route('orders.index')->with('error', 'Không tìm thấy đơn hàng.');
     }
 
+    // --- BẮT ĐẦU LOGIC ĐẾM NGƯỢC ---
+    $remainingSeconds = 0;
+    // Kiểm tra: Thanh toán VNPay (id=2), Trạng thái đơn Chờ xác nhận (id=1), Trạng thái trả tiền Chưa thanh toán (id=1)
+    if ($order->payment_method_id == 2 && $order->order_status_id == 1 && $order->payment_status_id == 1) {
+        $expiryTime = $order->created_at->addMinutes(30);
+        $remainingSeconds = now()->diffInSeconds($expiryTime, false);
+    }
+    // --- KẾT THÚC LOGIC ĐẾM NGƯỢC ---
+
+    $lines = $order->details->map(function ($d) {
+        $v = $d->productVariant;
+        $variantText = [];
+        if ($v?->size?->name)  $variantText[] = "Size: {$v->size->name}";
+        if ($v?->color?->name) $variantText[] = "Màu: {$v->color->name}";
+        return (object)[
+            'product_name' => $v?->product?->name ?? 'Sản phẩm',
+            'variant_text' => $variantText ? implode(' · ', $variantText) : null,
+            'image'         => $v?->image,
+            'unit_price'   => (int)$d->price,
+            'qty'          => (int)$d->quantity,
+            'line_total'   => (int)($d->price * $d->quantity),
+            'eta'          => $d->estimated_delivery ?? null, 
+        ];
+    });
+
+    $calc_subtotal = $lines->sum('line_total');
+    $calc_discount = (int)$order->discount;
+    $calc_total    = (int)$order->total_amount;
+    $calc_shipping_fee = max(0, $calc_total - $calc_subtotal + $calc_discount);
+
+    return view('orders.show', [
+        'order'             => $order,
+        'lines'             => $lines,
+        'calc_subtotal'     => $calc_subtotal,
+        'calc_discount'     => $calc_discount,
+        'calc_shipping_fee' => $calc_shipping_fee,
+        'calc_total'        => $calc_total,
+        'remainingSeconds'  => $remainingSeconds, // Truyền biến mới này vào view
+    ]);
+}
     /**
      * Thanh toán lại VNPay
      */
@@ -166,102 +174,6 @@ class OrderController extends Controller
         }
 
         return redirect()->back()->with('error', 'Cổng thanh toán đang bảo trì, vui lòng thử lại sau.');
-    }
-
-    /**
-     * Hủy đơn hàng - Logic Double Check
-     */
-    public function cancel(Request $request, $id)
-    {
-        $order = Order::with('details.productVariant')
-            ->where('id', $id)
-            ->where('user_id', Auth::id())
-            ->first();
-
-        if (!$order) {
-            return back()->with('error', 'Không tìm thấy đơn hàng.');
-        }
-
-        // --- QUAN TRỌNG: LÀM MỚI DỮ LIỆU TỪ DB ---
-        $order->refresh();
-
-        // CHẶN HÀNH VI: Nếu không phải trạng thái 1, 2 thì KHÔNG ĐƯỢC HỦY
-        if (!$order->cancelable) {
-            return back()->with('error', 'Xin lỗi, trạng thái đơn hàng đã thay đổi (Đang vận chuyển hoặc đã giao), không thể hủy vào lúc này.');
-        }
-
-        // CHẶN HÀNH VI: Nếu đã gửi yêu cầu hủy rồi thì không cho gửi nữa
-        if ($order->is_cancel_requested == 1) {
-            return back()->with('error', 'Yêu cầu hủy đơn hàng của bạn đang được xử lý.');
-        }
-
-        DB::beginTransaction();
-
-        try {
-            $fileName = null;
-            if ($request->hasFile('refund_image')) {
-                $file = $request->file('refund_image');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('storage/refunds'), $fileName);
-            }
-
-            $paymentMethodId = (int) $order->payment_method_id;
-            $paymentStatusId = (int) $order->payment_status_id;
-
-            // Logic mặc định cho yêu cầu hủy
-            $cancelRequestStatusId = 1; // Chờ xử lý
-            $cancelRequestStatusStr = 'pending';
-
-            /**
-             * LƯU Ý: Không nên cập nhật order_status_id = 6 ngay lập tức ở đây 
-             * nếu bạn muốn Admin duyệt. Nếu bạn muốn hủy luôn thì giữ nguyên.
-             * Dưới đây giữ nguyên logic cập nhật ID 6 của bạn nhưng thêm bảo mật.
-             */
-            
-            OrderCancelRequest::create([
-                'order_id'      => $order->id,
-                'user_id'       => Auth::id(),
-                'canceled_by'   => 'customer',
-                'reason_user'   => trim($request->input('reason')),
-                'status'        => 'pending',
-                'status_id'     => 1, 
-                'refund_image'  => $fileName,
-            ]);
-
-            // Cập nhật trạng thái đơn hàng (Duyệt hủy ngay)
-            $order->order_status_id = 6; 
-            $order->is_cancel_requested = 1;
-            
-            if ($paymentMethodId !== 1 && $paymentStatusId === 2) {
-                $order->payment_status_id = 3; // Chờ hoàn tiền
-            }
-            
-            $order->note = $request->input('reason', 'Khách yêu cầu hủy');
-            $order->save();
-
-            // --- HOÀN KHO ---
-            foreach ($order->details as $item) {
-                $variant = $item->productVariant;
-                if ($variant) {
-                    $variant->increment('quantity', $item->quantity);
-                }
-            }
-
-            OrderStatusLog::create([
-                'order_id'        => $order->id,
-                'order_status_id' => 6,
-                'actor_type'      => 'user',
-                'note'            => 'Người dùng hủy đơn hàng: ' . trim($request->input('reason'))
-            ]);
-
-            DB::commit();
-            return redirect()->route('orders.show', $order->id)->with('success', 'Đơn hàng đã được hủy thành công.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error("Lỗi hủy đơn hàng của người dùng #{$id}: " . $e->getMessage());
-            return back()->with('error', 'Có lỗi xảy ra trong quá trình hủy đơn.');
-        }
     }
 
     /**

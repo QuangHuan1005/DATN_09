@@ -524,48 +524,40 @@
                                                     {{-- ======= FOOTER: THÔNG ĐIỆP + TỔNG TIỀN GÓc PHẢI ======= --}}
                                                     <div class="order-bottom">
                                                         <div class="order-bottom-left">
-                                                            <div class="woocommerce-message" style="margin-top:14px">
-                                                                Đơn hàng đã được hoàn tiền thành công.
-                                                                <strong>Số tiền hoàn: ₫{{ number_format($calc_total) }}</strong>
-                                                            </div>
-                                                        </div>
+                                                           <div class="woocommerce-message" style="margin-top:14px; background-color: #f0fdf4; border-color: #16a34a; color: #15803d;">
+    <i class="fa fa-check-circle"></i> 
+    Hệ thống đã hoàn tất quy trình hoàn tiền cho đơn hàng này. 
+    Số tiền <strong>₫{{ number_format($calc_total) }}</strong> đã được chuyển hoàn dựa trên giá trị hàng thực tế sau khi khấu trừ ưu đãi Voucher.
+</div>
+                                                <div class="order-total-card card">
+    <div class="card-hd">Chi tiết hoàn tiền</div>
+    <div class="card-bd">
+        <div class="sum-row">
+            <span>Tạm tính hàng trả</span>
+            <span>₫{{ number_format($calc_subtotal) }}</span>
+        </div>
+        
+        @if ($calc_shipping_fee > 0)
+            <div class="sum-row">
+                <span>Phí vận chuyển</span>
+                <span>₫{{ number_format($calc_shipping_fee) }}</span>
+            </div>
+        @endif
 
-                                                        <div class="order-total-card card">
-                                                            <div class="card-hd">Tổng hoàn tiền</div>
-                                                            <div class="card-bd">
-                                                                <div class="sum-row">
-                                                                    <span>Tạm tính</span>
-                                                                    <span>₫{{ number_format($calc_subtotal) }}</span>
-                                                                </div>
-                                                                @if ($calc_shipping_fee > 0)
-                                                                    <div class="sum-row">
-                                                                        <span>Phí vận chuyển</span>
-                                                                        <span>₫{{ number_format($calc_shipping_fee) }}</span>
-                                                                    </div>
-                                                                @endif
-                                                                @if ($calc_discount > 0)
-                                                                    <div class="sum-row">
-                                                                        <span>Giảm giá</span>
-                                                                        <span>-₫{{ number_format($calc_discount) }}</span>
-                                                                    </div>
-                                                                @endif
-                                                                @if ($order->voucher)
-                                                                    <div class="sum-row" style="color:#6b7280">
-                                                                        <span>Voucher</span>
-                                                                        <span>{{ $order->voucher->voucher_code }}</span>
-                                                                    </div>
-                                                                @endif
-                                                                <div class="sum-row">
-                                                                    <span>TT hoàn tiền</span>
-                                                                    <span>Đã hoàn tiền</span>
-                                                                </div>
-                                                                <div class="sum-row total">
-                                                                    <span>Tổng hoàn tiền</span>
-                                                                    <span>₫{{ number_format($calc_total) }}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+        {{-- Phần quan trọng nhất: Giải thích tại sao voucher mất đi --}}
+        @if ($calc_discount > 0)
+            <div class="sum-row" style="color: #dc2626;">
+                <span>Khấu trừ Voucher (tỷ lệ)</span>
+                <span>-₫{{ number_format($calc_discount) }}</span>
+            </div>
+        @endif
+
+        <div class="sum-row total" style="color: #047857; font-size: 1.1rem;">
+            <span>TỔNG THỰC HOÀN</span>
+            <span>₫{{ number_format($calc_total) }}</span>
+        </div>
+    </div>
+</div>
 
                                                 </div><!-- /.woocommerce-MyAccount-content -->
                                             </div><!-- /.woocommerce -->
