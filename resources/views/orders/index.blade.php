@@ -58,6 +58,9 @@
                       .btn-repay { background: #2563eb; color: #fff !important; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; transition: 0.3s; margin-top: 8px; text-decoration: none; }
                       .btn-repay:hover { background: #1d4ed8; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
                       .expired-label { font-size: 11px; color: #94a3b8; font-style: italic; margin-top: 5px; display: block; }
+
+                      /* Countdown Timer CSS */
+                      .repay-timer { font-size: 11px; color: #ef4444; font-weight: 700; margin-top: 4px; display: flex; align-items: center; gap: 3px; }
                     </style>
 
                     <div class="woocommerce">
@@ -119,6 +122,13 @@
                                   $pStatusId = (int)$order->payment_status_id;
                                   $payCls = ($pStatusId === 2) ? 'badge-completed' : (($pStatusId === 3) ? 'badge-refunded' : 'badge-on-hold');
                                   $payLabel = $order->paymentStatus->name ?? ($pStatusId === 2 ? 'Đã thanh toán' : 'Chưa thanh toán');
+
+                                  // Logic đếm ngược: 30 phút từ lúc tạo đơn
+                                  $remainingSeconds = 0;
+                                  if ($order->payment_method_id == 2 && $pStatusId != 2 && $order->order_status_id == 1) {
+                                      $expiryTime = $order->created_at->addMinutes(30);
+                                      $remainingSeconds = now()->diffInSeconds($expiryTime, false);
+                                  }
                                 @endphp
                                 <tr>
                                   <td class="fw-bold">
@@ -132,11 +142,15 @@
                                   <td>
                                     <span class="badge {{ $payCls }}">{{ $payLabel }}</span>
                                     
-                                    {{-- NÚT THANH TOÁN LẠI --}}
-                                    @if($order->payment_method_id == 2 && $pStatusId != 2 && $order->order_status_id == 1)
+                                    {{-- ĐỒNG HỒ ĐẾM NGƯỢC VÀ NÚT THANH TOÁN --}}
+                                    @if($remainingSeconds > 0)
                                       <a href="{{ route('orders.repay', $order->order_code) }}" class="btn-repay">
-                                        <iconify-icon icon="solar:card-send-bold"></iconify-icon> Thanh toán lại
+                                        <iconify-icon icon="solar:card-send-bold"></iconify-icon> Thanh toán ngay
                                       </a>
+                                      <div class="repay-timer" data-seconds="{{ $remainingSeconds }}">
+                                        <iconify-icon icon="solar:history-linear"></iconify-icon>
+                                        <span class="timer-text">--:--</span>
+                                      </div>
                                     @elseif($order->order_status_id == 6 && $order->payment_method_id == 2 && $pStatusId != 2)
                                       <span class="expired-label">Hết hạn thanh toán</span>
                                     @endif
@@ -157,6 +171,7 @@
                             {{ $orders->links() }}
                           </div>
                         @endif
+
                       </div>
                     </div>
                   </div>
@@ -170,5 +185,36 @@
     </div>
     @include('layouts.js')
   </div>
+
+  {{-- SCRIPT CHẠY ĐỒNG HỒ ĐẾM NGƯỢC --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const timers = document.querySelectorAll('.repay-timer');
+        
+        timers.forEach(timer => {
+            let secondsLeft = parseInt(timer.getAttribute('data-seconds'));
+            const display = timer.querySelector('.timer-text');
+
+            function updateDisplay() {
+                if (secondsLeft <= 0) {
+                    display.innerText = "Hết hạn";
+                    timer.style.color = "#94a3b8";
+                    // Tùy chọn: Tự động load lại trang khi hết hạn để cập nhật trạng thái "Hủy"
+                    // location.reload(); 
+                    return;
+                }
+
+                const minutes = Math.floor(secondsLeft / 60);
+                const seconds = secondsLeft % 60;
+                display.innerText = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                secondsLeft--;
+                setTimeout(updateDisplay, 1000);
+            }
+
+            updateDisplay();
+        });
+    });
+  </script>
 </body>
 @endsection

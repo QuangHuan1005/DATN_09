@@ -499,10 +499,10 @@ a.btn-checkout:hover{ opacity:.92; }
                 </div>
 
                 <a href="{{ route('checkout.index') }}"
-                class="btn-checkout mt-3 w-100"
-                onclick="return checkCartBeforeCheckout({{ $coSanPham ? 'true':'false' }})">
-                Tiến hành thanh toán
-                </a>
+   id="btn-proceed-checkout" 
+   class="btn-checkout mt-3 w-100">
+   Tiến hành thanh toán
+</a>
             </div>
             </div>
 
@@ -759,24 +759,34 @@ document.getElementById('check-all')?.addEventListener('change', function(){
 
 // Khởi tạo tổng lần đầu
 document.addEventListener('DOMContentLoaded', recomputeTotals);
-
-// Bảo vệ nút Thanh toán: phải có ít nhất 1 dòng được chọn
+// Bảo vệ nút Thanh toán và gửi dữ liệu sang Checkout
 document.querySelectorAll('a.btn-checkout').forEach(a => {
-  a.addEventListener('click', function(e){
-    const chosen = [...document.querySelectorAll('.js-check:checked')].map(x => x.dataset.variant);
-    if(chosen.length === 0){
-      Swal.fire({
-        icon: 'warning',
-        title: 'Chưa chọn sản phẩm',
-        text: 'Hãy tích chọn ít nhất 1 sản phẩm trước khi thanh toán.',
-        confirmButtonColor: '#000'
-      });
-      e.preventDefault();
-      return;
-    }
-    // (tuỳ chọn) đính kèm danh sách chọn lên URL để xử lý ở trang checkout
-    this.href = this.href.split('?')[0] + '?selected_items=' + encodeURIComponent(chosen.join(','));
-  });
+    a.addEventListener('click', function(e) {
+        // 1. Ngăn chặn trình duyệt chuyển hướng mặc định ngay lập tức
+        e.preventDefault();
+
+        // 2. Lấy danh sách các variant_id đã được tích chọn
+        const chosen = [...document.querySelectorAll('.js-check:checked')].map(x => x.dataset.variant);
+
+        // 3. Kiểm tra nếu chưa chọn sản phẩm
+        if (chosen.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chưa chọn sản phẩm',
+                text: 'Hãy tích chọn ít nhất 1 sản phẩm trước khi thanh toán.',
+                confirmButtonColor: '#000'
+            });
+            return;
+        }
+
+        // 4. Tạo URL mới với tham số selected_items
+        // Tách URL gốc để tránh bị lặp lại dấu chấm hỏi nếu click nhiều lần
+        const baseUrl = this.href.split('?')[0];
+        const finalUrl = baseUrl + '?selected_items=' + chosen.join(',');
+
+        // 5. Chủ động chuyển hướng bằng JavaScript
+        window.location.href = finalUrl;
+    });
 });
 
 // Lắng nghe thay đổi số lượng + chặn vượt tồn kho ngay khi gõ (dùng SweetAlert2)

@@ -23,32 +23,30 @@ class VNPayController extends Controller
      * 📌 1. RETURN URL (Xử lý khi khách được redirect về từ VNPay)
      */
     public function return(Request $request)
-    {
-        Log::info("VNPay RETURN Callback", [$request->all()]);
+{
+    Log::info("VNPay RETURN Callback", [$request->all()]);
 
-        // QUAN TRỌNG: Mở lại kiểm tra chữ ký để tránh bị fake URL
-        if (!$this->vnpayService->verifyCallback($request->all())) {
-             return redirect()->route('checkout.success')->with('error', 'Chữ ký không hợp lệ!');
-        }
-
-        $orderCode = $request->get('vnp_TxnRef');
-        $responseCode = trim($request->get('vnp_ResponseCode')); 
-
-        $order = Order::where('order_code', $orderCode)->first();
-
-        if (!$order) {
-            return redirect()->route('home')->with('error', 'Không tìm thấy đơn hàng!');
-        }
-
-        if ($responseCode === "00") {
-            // Lưu ý: Việc cập nhật DB chính nên để ở IPN. 
-            // Return URL chủ yếu để hiển thị thông báo cho khách.
-            return redirect()->route('checkout.success')->with('success', 'Thanh toán VNPay thành công!');
-        }
-
-        // Nếu thất bại hoặc hủy ngang
-        return redirect()->route('orders.index')->with('error', 'Thanh toán thất bại hoặc bạn đã hủy giao dịch.');
+    if (!$this->vnpayService->verifyCallback($request->all())) {
+         return redirect()->route('orders.index')->with('error', 'Chữ ký không hợp lệ!');
     }
+
+    $orderCode = $request->get('vnp_TxnRef');
+    $responseCode = trim($request->get('vnp_ResponseCode')); 
+    $order = Order::where('order_code', $orderCode)->first();
+
+    if ($order && $responseCode === "00") {
+        // CẬP NHẬT NGAY TẠI ĐÂY ĐỂ TRANG WEB THAY ĐỔI TRẠNG THÁI
+        if ($order->payment_status_id == 1) {
+            $order->update([
+                'payment_status_id' => 2, // Đã thanh toán
+                'order_status_id'   => 1  // Đã xác nhận
+            ]);
+        }
+        return redirect()->route('checkout.success')->with('success', 'Thanh toán thành công!');
+    }
+
+    return redirect()->route('orders.index')->with('error', 'Giao dịch không thành công.');
+}
 
 
     /**
@@ -92,7 +90,7 @@ class VNPayController extends Controller
                 // ✅ THANH TOÁN THÀNH CÔNG
                 $order->update([
                     'payment_status_id' => 2, // Đã thanh toán
-                    'order_status_id' => 2    // Đã xác nhận (Processing)
+                    'order_status_id' => 1
                 ]);
 
                 Payment::updateOrCreate(
@@ -107,7 +105,7 @@ class VNPayController extends Controller
 
                 OrderStatusLog::create([
                     'order_id' => $order->id,
-                    'order_status_id' => 2,
+                    'order_status_id' => 1,
                     'actor_type' => 'system',
                     'note' => 'VNPay xác nhận thanh toán thành công.'
                 ]);
