@@ -291,16 +291,17 @@ Route::prefix('admin')
         Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
 
         // Voucher
-        Route::resource('vouchers', AdminVoucherController::class);
-        // --- Quản lý Voucher & Lịch sử đổi thưởng ---
+      // --- Quản lý Voucher & Lịch sử đổi thưởng ---
 Route::prefix('vouchers')->name('vouchers.')->group(function () {
-    // Route Lịch sử đổi quà (Phải đặt TRÊN resource để tránh bị nhầm với id)
+    // 1. Phải đặt 'history' lên trên cùng
     Route::get('history', [AdminVoucherController::class, 'history'])->name('history');
     
-    // Các route CRUD mặc định
+    // 2. Các route CRUD thủ công (Thay thế cho resource)
     Route::get('/', [AdminVoucherController::class, 'index'])->name('index');
     Route::get('/create', [AdminVoucherController::class, 'create'])->name('create');
     Route::post('/', [AdminVoucherController::class, 'store'])->name('store');
+    
+    // Lưu ý: Các route có tham số {voucher} phải nằm DƯỚI các route từ khóa cố định như 'history'
     Route::get('/{voucher}/edit', [AdminVoucherController::class, 'edit'])->name('edit');
     Route::put('/{voucher}', [AdminVoucherController::class, 'update'])->name('update');
     Route::delete('/{voucher}', [AdminVoucherController::class, 'destroy'])->name('destroy');
@@ -327,11 +328,6 @@ Route::prefix('order-cancellations')->name('order-cancellations.')->group(functi
         Route::resource('users', AdminUserController::class);
         Route::post('users/{user}/toggle-lock', [AdminUserController::class, 'toggleLock'])->name('users.toggleLock');
         Route::post('users/{user}/restore', [AdminUserController::class, 'restore'])->name('users.restore');
-
-        // Quản lý kho hàng
-        Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
-        Route::patch('inventory/{variant}', [InventoryController::class, 'updateQuantity'])->name('inventory.update');
-        Route::patch('inventory/bulk', [InventoryController::class, 'bulkUpdate'])->name('inventory.bulk');
 
         // Quản lý thuộc tính - Màu sắc
         Route::prefix('attributes/colors')->name('attributes.colors.')->group(function () {

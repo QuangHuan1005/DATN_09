@@ -6,16 +6,39 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center gap-1">
-                        <h4 class="card-title flex-grow-1">Danh Sách Sản Phẩm</h4>
+                        <h4 class="card-title flex-grow-1">
+                            {{ request('trash') ? 'Thùng Rác Sản Phẩm' : 'Danh Sách Sản Phẩm' }}
+                        </h4>
+
+                        {{-- Form Tìm kiếm --}}
                         <form method="GET" action="{{ route('admin.products.index') }}" class="search-bar me-3">
-                            <span><i class="bx bx-search-alt"></i></span>
-                            <input type="search" name="keyword" id="search" class="form-control"
-                                placeholder="Tìm theo tên, mã sản phẩm..." value="{{ request('keyword') }}">
+                            {{-- Giữ trạng thái thùng rác khi tìm kiếm --}}
+                            @if(request('trash')) <input type="hidden" name="trash" value="1"> @endif
+                            
+                            <div class="position-relative">
+                                <input type="search" name="keyword" id="search" class="form-control"
+                                    placeholder="Tìm theo tên, mã sản phẩm..." value="{{ request('keyword') }}">
+                            </div>
                         </form>
-                        <a href="{{ route('admin.products.create') }}" class="btn btn-sm btn-primary">
-                            Thêm Sản Phẩm Mới
-                        </a>
+
+                        <div class="d-flex gap-2">
+                            @if(request('trash'))
+                                {{-- Nút quay lại danh sách chính --}}
+                                <a href="{{ route('admin.products.index') }}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bx bx-arrow-back"></i> Quay lại danh sách
+                                </a>
+                            @else
+                                {{-- Nút đi tới thùng rác --}}
+                                <a href="{{ route('admin.products.index', ['trash' => 1]) }}" class="btn btn-sm btn-outline-danger">
+                                    <i class="bx bx-trash"></i> Thùng rác
+                                </a>
+                                <a href="{{ route('admin.products.create') }}" class="btn btn-sm btn-primary">
+                                    Thêm Sản Phẩm Mới
+                                </a>
+                            @endif
+                        </div>
                     </div>
+
                     <div>
                         <div class="table-responsive">
                             <table class="table align-middle mb-0 table-hover table-centered">
@@ -23,8 +46,8 @@
                                     <tr>
                                         <th style="width: 20px;">
                                             <div class="form-check ms-1">
-                                                <input type="checkbox" class="form-check-input" id="customCheck1">
-                                                <label class="form-check-label" for="customCheck1"></label>
+                                                <input type="checkbox" class="form-check-input" id="checkAll">
+                                                <label class="form-check-label" for="checkAll"></label>
                                             </div>
                                         </th>
                                         <th>Sản Phẩm & Biến Thể</th>
@@ -36,11 +59,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($products as $product)
-                                        <tr @if ($product->trashed()) class="table-danger" @endif>
+                                    @forelse ($products as $product)
+                                        <tr @if ($product->trashed()) class="table-danger-subtle" @endif>
                                             <td>
                                                 <div class="form-check ms-1">
-                                                    <input type="checkbox" class="form-check-input"
+                                                    <input type="checkbox" class="form-check-input checkItem"
                                                         id="customCheck_{{ $product->id }}">
                                                     <label class="form-check-label"
                                                         for="customCheck_{{ $product->id }}">&nbsp;</label>
@@ -55,9 +78,9 @@
                                                         @endphp
 
                                                         @if ($productImage)
-                                                            <img src="{{ asset('storage/' . $productImage) }}" alt="Ảnh" class="avatar-md">
+                                                            <img src="{{ asset('storage/' . $productImage) }}" alt="Ảnh" class="avatar-md rounded">
                                                         @else
-                                                            <img src="{{ asset('images/no-image.png') }}" alt="No image" class="avatar-md">
+                                                            <img src="{{ asset('images/no-image.png') }}" alt="No image" class="avatar-md rounded">
                                                         @endif
                                                     </div>
                                                     <div>
@@ -75,10 +98,8 @@
                                             </td>
                                             <td>
                                                 @php
-                                                    // Lấy giá bán thấp nhất và cao nhất từ các biến thể
-                                                    // Ưu tiên lấy cột 'sale' nếu có, nếu không lấy 'price'
                                                     $prices = $product->variants->map(function($v) {
-                                                        return $v->sale > 0 ? $v->sale : $v->price;
+                                                        return ($v->sale > 0 && $v->sale < $v->price) ? $v->sale : $v->price;
                                                     });
                                                     $minPrice = $prices->min();
                                                     $maxPrice = $prices->max();
@@ -96,7 +117,6 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                {{-- Sử dụng dữ liệu từ withSum() trong Controller --}}
                                                 <p class="mb-1 text-muted">
                                                     <span class="text-dark fw-medium">
                                                         Tồn: {{ number_format($product->total_stock ?? 0, 0, ',', '.') }}
@@ -108,7 +128,6 @@
                                             </td>
                                             <td> {{ $product->category->name ?? 'Chưa phân loại' }}</td>
                                             <td>
-                                                {{-- Sử dụng dữ liệu từ withAvg() và withCount() trong Controller --}}
                                                 @php
                                                     $avgRating = number_format($product->avg_rating ?? 0, 1);
                                                     $totalReviews = $product->total_reviews ?? 0;
@@ -124,6 +143,7 @@
                                             <td>
                                                 <div class="d-flex gap-1">
                                                     @if (!$product->trashed())
+                                                        {{-- NHÓM NÚT KHI ĐANG BÁN --}}
                                                         <a href="{{ route('admin.products.variants.product', $product->id) }}"
                                                             class="btn btn-soft-success btn-sm" title="Quản lý biến thể">
                                                             <iconify-icon icon="solar:list-broken" class="align-middle fs-18"></iconify-icon>
@@ -137,26 +157,27 @@
                                                             <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                                                         </a>
                                                         <form action="{{ route('admin.products.destroy', $product->id) }}"
-                                                            method="POST" class="d-inline-block swal-confirm-form" data-text="Bạn muốn ẩn sản phẩm này?">
+                                                            method="POST" class="d-inline-block swal-confirm-form" data-text="Đưa sản phẩm vào thùng rác?">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-soft-danger btn-sm">
+                                                            <button type="submit" class="btn btn-soft-danger btn-sm" title="Xóa tạm thời">
                                                                 <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
                                                             </button>
                                                         </form>
                                                     @else
+                                                        {{-- NHÓM NÚT KHI TRONG THÙNG RÁC --}}
                                                         <form action="{{ route('admin.products.restore', $product->id) }}"
-                                                            method="POST" class="d-inline-block swal-confirm-form" data-text="Khôi phục sản phẩm này?">
+                                                            method="POST" class="d-inline-block swal-confirm-form" data-text="Khôi phục sản phẩm này về danh sách bán?">
                                                             @csrf
-                                                            <button type="submit" class="btn btn-soft-success btn-sm">
+                                                            <button type="submit" class="btn btn-soft-success btn-sm" title="Khôi phục">
                                                                 <iconify-icon icon="solar:restart-circle-broken" class="align-middle fs-18"></iconify-icon>
                                                             </button>
                                                         </form>
                                                         <form action="{{ route('admin.products.forceDelete', $product->id) }}"
-                                                            method="POST" class="d-inline-block swal-confirm-form" data-text="Xóa vĩnh viễn không thể hoàn tác!">
+                                                            method="POST" class="d-inline-block swal-confirm-form" data-text="XÓA VĨNH VIỄN: Dữ liệu và hình ảnh sẽ mất hoàn toàn!">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-soft-secondary btn-sm">
+                                                            <button type="submit" class="btn btn-soft-secondary btn-sm" title="Xóa cứng">
                                                                 <iconify-icon icon="solar:trash-bin-minimalistic-broken" class="align-middle fs-18"></iconify-icon>
                                                             </button>
                                                         </form>
@@ -164,7 +185,11 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="7" class="text-center py-4 text-muted">Không có dữ liệu nào để hiển thị.</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -187,7 +212,7 @@
 <script>
     (function($) {
         $(document).ready(function() {
-            // 1. Cấu hình Toast hiển thị thông báo
+            // Cấu hình Toast
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -203,14 +228,14 @@
                 Toast.fire({ icon: 'error', title: "{{ session('error') }}" });
             @endif
 
-            // 2. Xử lý hộp thoại xác nhận SweetAlert2 cho các Form
-            $('.swal-confirm-form').on('submit', function(e) {
+            // Xử lý xác nhận Form
+            $(document).on('submit', '.swal-confirm-form', function(e) {
                 e.preventDefault();
                 const form = this;
                 const text = $(form).data('text');
 
                 Swal.fire({
-                    title: 'Xác nhận hành động',
+                    title: 'Xác nhận?',
                     text: text,
                     icon: 'warning',
                     showCancelButton: true,
@@ -225,7 +250,22 @@
                     }
                 });
             });
+
+            // Chọn tất cả Checkbox
+            $('#checkAll').on('change', function() {
+                $('.checkItem').prop('checked', this.checked);
+            });
         });
     })(jQuery);
 </script>
+
+<style>
+    /* Làm mờ nhẹ hàng trong thùng rác */
+    .table-danger-subtle {
+        background-color: rgba(255, 0, 0, 0.03);
+    }
+    .avatar-md {
+        object-fit: cover;
+    }
+</style>
 @endsection

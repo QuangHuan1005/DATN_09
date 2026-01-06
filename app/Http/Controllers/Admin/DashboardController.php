@@ -12,14 +12,12 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         // ====== 1. Xử lý Năm lọc ======
-        // Ưu tiên năm từ request, nếu không có mặc định năm hiện tại
         $year = $request->input('year', date('Y'));
 
         // ====== 2. Bộ lọc thời gian (Cho biểu đồ Ngày và KPIs) ======
         $to   = $request->input('to') ? Carbon::parse($request->input('to'))->endOfDay() : now()->endOfDay();
         $from = $request->input('from') ? Carbon::parse($request->input('from'))->startOfDay() : now()->subDays(29)->startOfDay();
 
-        // CHẶN LỌC LÙI: Nếu ngày bắt đầu > ngày kết thúc, hoán đổi chúng để query không bị rỗng
         if ($from->gt($to)) {
             $temp = $from;
             $from = $to->copy()->startOfDay();
@@ -28,17 +26,24 @@ class DashboardController extends Controller
 
         $dateFormat = 'Y-m-d';
 
+        // Điều kiện lọc đơn hàng "Sạch" (Loại bỏ rác và chỉ tính đơn đã thanh toán)
+        // Dùng alias 'o' để tránh lỗi Ambiguous (xung đột tên cột name/created_at)
+        $validOrdersScope = function($query) {
+            $query->where('o.total_amount', '>', 0)
+                  ->whereNotNull('o.name')
+                  ->whereNotIn('o.name', ['N/A', 'aaaa', 'ghbhfdj', 'test', 'Admin'])
+                  ->where('o.payment_status_id', 2);
+        };
+
         // ====== 3. Doanh thu theo THÁNG (Khấu trừ hoàn hàng) ======
-        // Lấy doanh thu từ bảng orders
-        $monthlyOrders = DB::table('orders')
-            ->selectRaw('MONTH(created_at) as month, SUM(total_amount) as revenue')
-            ->whereYear('created_at', $year)
-            ->where('payment_status_id', 2) // Chỉ tính đơn đã thanh toán
+        $monthlyOrders = DB::table('orders as o')
+            ->selectRaw('MONTH(o.created_at) as month, SUM(o.total_amount) as revenue')
+            ->whereYear('o.created_at', $year)
+            ->where($validOrdersScope)
             ->groupBy('month')
             ->pluck('revenue', 'month')
             ->toArray();
 
-        // Lấy số tiền hoàn từ bảng order_returns (Chỉ tính trạng thái completed)
         $monthlyRefunds = DB::table('order_returns')
             ->selectRaw('MONTH(updated_at) as month, SUM(refund_amount) as refund')
             ->whereYear('updated_at', $year)
@@ -53,15 +58,14 @@ class DashboardController extends Controller
             $monthlyLabels[] = "Tháng $m";
             $rawRevenue = (float)($monthlyOrders[$m] ?? 0);
             $rawRefund = (float)($monthlyRefunds[$m] ?? 0);
-            // Doanh thu thuần = Doanh thu - Hoàn trả (Không nhỏ hơn 0)
             $monthlyRevenues[] = max(0, $rawRevenue - $rawRefund);
         }
 
         // ====== 4. Doanh thu theo NGÀY (Vẽ Line Chart - Khấu trừ hoàn hàng) ======
-        $revenueDaily = DB::table('orders')
-            ->selectRaw('DATE(created_at) as d, SUM(total_amount) as revenue')
-            ->whereBetween('created_at', [$from, $to])
-            ->where('payment_status_id', 2)
+        $revenueDaily = DB::table('orders as o')
+            ->selectRaw('DATE(o.created_at) as d, SUM(o.total_amount) as revenue')
+            ->whereBetween('o.created_at', [$from, $to])
+            ->where($validOrdersScope)
             ->groupBy('d')
             ->pluck('revenue', 'd')
             ->toArray();
@@ -80,11 +84,8 @@ class DashboardController extends Controller
         while ($cursor <= $to) {
             $key = $cursor->format($dateFormat);
             $labels[]   = $key;
-            
             $dayRevenue = (float)($revenueDaily[$key] ?? 0);
             $dayRefund  = (float)($refundDaily[$key] ?? 0);
-            
-            // Doanh thu thực nhận thực tế trong ngày sau khi trừ hoàn hàng
             $revenues[] = max(0, $dayRevenue - $dayRefund);
             $cursor->addDay();
         }
@@ -92,34 +93,28 @@ class DashboardController extends Controller
         // ====== 5. Tổng quan nhanh (KPIs) ======
         $totalRevenue = array_sum($revenues);
         
-        // Đếm đơn hàng đã thanh toán (payment_status_id = 2)
-        $totalPaidOrders = DB::table('orders')
-            ->whereBetween('created_at', [$from, $to])
-            ->where('payment_status_id', 2)
+        $totalPaidOrders = DB::table('orders as o')
+            ->whereBetween('o.created_at', [$from, $to])
+            ->where($validOrdersScope)
             ->count();
 
-        // Đếm tất cả đơn hàng phát sinh trong kỳ
-        $allOrders = DB::table('orders')
-            ->whereBetween('created_at', [$from, $to])
+        $allOrders = DB::table('orders as o')
+            ->whereBetween('o.created_at', [$from, $to])
+            ->whereNotNull('o.name')
+            ->whereNotIn('o.name', ['N/A', 'aaaa', 'ghbhfdj', 'test', 'Admin'])
             ->count();
 
         // ====== 6. Tỉ lệ đơn hàng theo trạng thái (Pie/Doughnut) ======
-        $statusCounts = DB::table('orders')
-            ->select('order_status_id', DB::raw('COUNT(*) as c'))
-            ->whereBetween('created_at', [$from, $to])
-            ->groupBy('order_status_id')
-            ->pluck('c', 'order_status_id')
+        $statusCounts = DB::table('orders as o')
+            ->select('o.order_status_id', DB::raw('COUNT(*) as c'))
+            ->whereBetween('o.created_at', [$from, $to])
+            ->whereNotNull('o.name')
+            ->whereNotIn('o.name', ['N/A', 'aaaa', 'ghbhfdj', 'test', 'Admin'])
+            ->groupBy('o.order_status_id')
+            ->pluck('c', 'o.order_status_id')
             ->toArray();
 
-        $statusMap = [
-            1 => 'Chờ xác nhận',
-            2 => 'Xác nhận',
-            3 => 'Đang giao hàng',
-            4 => 'Đã giao hàng',
-            5 => 'Hoàn thành',
-            6 => 'Hủy',
-            7 => 'Hoàn hàng',
-        ];
+        $statusMap = [1 => 'Chờ xác nhận', 2 => 'Xác nhận', 3 => 'Đang giao hàng', 4 => 'Đã giao hàng', 5 => 'Hoàn thành', 6 => 'Hủy', 7 => 'Hoàn hàng'];
         $statusLabels = [];
         $statusValues = [];
         foreach ($statusMap as $sid => $name) {
@@ -128,6 +123,7 @@ class DashboardController extends Controller
         }
 
         // ====== 7. Top sản phẩm bán chạy (Doanh thu & Số lượng) ======
+        // Giải pháp: Phân bổ Voucher chiết khấu để khớp tổng doanh thu
         $topProducts = DB::table('order_details as od')
             ->join('orders as o', 'o.id', '=', 'od.order_id')
             ->join('product_variants as pv', 'pv.id', '=', 'od.product_variant_id')
@@ -136,10 +132,11 @@ class DashboardController extends Controller
                 'p.id as product_id',
                 'p.name as product_name',
                 DB::raw('SUM(od.quantity) as qty_sold'),
-                DB::raw('SUM(od.price * od.quantity) as revenue')
+                DB::raw('SUM((od.price * od.quantity / o.subtotal) * o.total_amount) as revenue')
             )
             ->whereBetween('o.created_at', [$from, $to])
-            ->where('o.payment_status_id', 2)
+            ->where($validOrdersScope)
+            ->where('o.subtotal', '>', 0)
             ->groupBy('p.id', 'p.name')
             ->orderByDesc('revenue')
             ->limit(10)
@@ -149,7 +146,7 @@ class DashboardController extends Controller
         $tpRevenue = $topProducts->pluck('revenue')->map(fn($v) => (float)$v)->toArray();
         $tpQty = $topProducts->pluck('qty_sold')->map(fn($v) => (int)$v)->toArray();
 
-        // ====== 8. Top danh mục bán chạy ======
+        // ====== 8. Top danh mục bán chạy (Khấu trừ Voucher) ======
         $topCategories = DB::table('order_details as od')
             ->join('orders as o', 'o.id', '=', 'od.order_id')
             ->join('product_variants as pv', 'pv.id', '=', 'od.product_variant_id')
@@ -158,10 +155,12 @@ class DashboardController extends Controller
             ->select(
                 'c.name as category_name',
                 DB::raw('SUM(od.quantity) as qty_sold'),
-                DB::raw('SUM(od.price * od.quantity) as revenue')
+                // Phân bổ tỉ lệ giảm giá từ Voucher vào doanh thu danh mục
+                DB::raw('SUM((od.price * od.quantity / o.subtotal) * o.total_amount) as revenue')
             )
             ->whereBetween('o.created_at', [$from, $to])
-            ->where('o.payment_status_id', 2)
+            ->where($validOrdersScope)
+            ->where('o.subtotal', '>', 0)
             ->groupBy('c.name')
             ->orderByDesc('revenue')
             ->limit(10)
@@ -176,7 +175,7 @@ class DashboardController extends Controller
                 DB::raw('SUM(o.total_amount) as total_spent')
             )
             ->whereBetween('o.created_at', [$from, $to])
-            ->where('o.payment_status_id', 2)
+            ->where($validOrdersScope)
             ->groupBy('u.id', 'u.name')
             ->orderByDesc('total_spent')
             ->limit(10)
@@ -205,6 +204,8 @@ class DashboardController extends Controller
             ->join('users as u', 'u.id', '=', 'o.user_id')
             ->select('o.id', 'o.order_code', 'o.total_amount', 'o.created_at', 'u.name as customer')
             ->where('o.order_status_id', 1) 
+            ->whereNotNull('o.name')
+            ->whereNotIn('o.name', ['N/A', 'aaaa', 'ghbhfdj', 'test', 'Admin'])
             ->orderByDesc('o.created_at')
             ->limit(10)
             ->get();
@@ -216,7 +217,7 @@ class DashboardController extends Controller
             ->join('products as p', 'p.id', '=', 'pv.product_id')
             ->select('p.name as product_name', DB::raw('SUM(od.quantity) as qty_return'))
             ->whereBetween('o.created_at', [$from, $to])
-            ->where('o.order_status_id', 7) // Trạng thái hoàn hàng (Status ID: 7)
+            ->where('o.order_status_id', 7) 
             ->groupBy('p.name')
             ->orderByDesc('qty_return')
             ->limit(8)
