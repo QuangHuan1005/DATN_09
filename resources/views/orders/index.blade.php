@@ -216,5 +216,4 @@
         });
     });
   </script>
-</body>
 @endsection
