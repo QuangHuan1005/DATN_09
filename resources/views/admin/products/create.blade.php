@@ -62,7 +62,7 @@
 
                         <div class="mb-0">
                             <label class="form-label fw-bold">Album Ảnh Tổng Quát (Slider)</label>
-                            <input type="file" name="album_images[]" class="form-control" multiple accept="image/*">
+                            <input type="file" name="album_images[]" class="form-control shadow-none" multiple accept="image/*">
                             <small class="text-muted italic">Ảnh chung cho toàn bộ sản phẩm</small>
                         </div>
                     </div>
@@ -82,14 +82,14 @@
                             <div class="col-md-6 border-end">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <label class="form-label fw-bold text-primary mb-0">Size:</label>
-                                    <input type="text" class="form-control form-control-sm w-50" id="searchSize" placeholder="Tìm size...">
+                                    <input type="text" class="form-control form-control-sm w-50 shadow-none" id="searchSize" placeholder="Tìm size...">
                                 </div>
                                 <div class="p-3 border rounded bg-light" id="sizeContainer" style="max-height: 200px; overflow-y: auto;">
                                     <div class="d-flex flex-wrap gap-2">
                                         @foreach($sizes as $size)
                                             <div class="size-box">
                                                 <input type="checkbox" class="btn-check size-checkbox" id="size_{{ $size->id }}" value="{{ $size->id }}" data-code="{{ $size->size_code }}">
-                                                <label class="btn btn-outline-primary btn-sm px-3" for="size_{{ $size->id }}">{{ $size->size_code }}</label>
+                                                <label class="btn btn-outline-primary btn-sm px-3 shadow-none" for="size_{{ $size->id }}">{{ $size->size_code }}</label>
                                             </div>
                                         @endforeach
                                     </div>
@@ -99,14 +99,14 @@
                             <div class="col-md-6">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <label class="form-label fw-bold text-primary mb-0">Màu sắc:</label>
-                                    <input type="text" class="form-control form-control-sm w-50" id="searchColor" placeholder="Tìm màu...">
+                                    <input type="text" class="form-control form-control-sm w-50 shadow-none" id="searchColor" placeholder="Tìm màu...">
                                 </div>
                                 <div class="p-3 border rounded bg-light" id="colorContainer" style="max-height: 200px; overflow-y: auto;">
                                     <div class="d-flex flex-wrap gap-2">
                                         @foreach($colors as $color)
                                             <div class="color-box">
                                                 <input type="checkbox" class="btn-check color-checkbox" id="color_{{ $color->id }}" value="{{ $color->id }}" data-code="{{ $color->color_code }}" data-name="{{ $color->name }}">
-                                                <label class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1" for="color_{{ $color->id }}">
+                                                <label class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1 shadow-none" for="color_{{ $color->id }}">
                                                     <span style="width:12px; height:12px; background:{{ $color->color_code }}; border-radius:50%; border:1px solid #ddd; display:inline-block"></span>
                                                     {{ $color->name }}
                                                 </label>
@@ -123,19 +123,28 @@
                 {{-- BƯỚC 2: DANH SÁCH BIẾN THỂ --}}
                 <div class="card shadow-sm border-primary">
                     <div class="card-header bg-primary-subtle d-flex justify-content-between align-items-center">
-                        <h4 class="card-title mb-0 text-primary">Bước 2: Chi Tiết Biến Thể & Ảnh <span class="text-danger">*</span></h4>
+                        <h4 class="card-title mb-0 text-primary">Bước 2: Chi Tiết Biến Thể & Ảnh Theo Màu <span class="text-danger">*</span></h4>
                         <button type="button" class="btn btn-primary btn-sm shadow-sm" id="btnGenerateVariants">
                             <i class="bx bx-shuffle"></i> Tạo Biến Thể
                         </button>
                     </div>
-                    <div class="card-body p-0">
+                    <div class="card-body">
+                        {{-- Upload ảnh gom nhóm theo màu --}}
+                        <div id="colorImagesSection" class="mb-4" style="display: none;">
+                            <h6 class="fw-bold mb-3 text-dark"><i class="bx bx-images"></i> Upload ảnh đại diện theo màu:</h6>
+                            <div id="colorImagesContainer" class="d-flex flex-wrap gap-3 p-3 border rounded bg-white shadow-sm">
+                                {{-- JS render khung upload ở đây --}}
+                            </div>
+                            <hr>
+                        </div>
+
                         <div id="variantsTableContainer" style="display: none;">
                             <div class="table-responsive">
                                 <table class="table table-hover table-bordered align-middle mb-0 text-center">
                                     <thead class="bg-light">
                                         <tr>
-                                            <th width="10%">Ảnh</th>
-                                            <th>Phân Loại</th>
+                                            <th>Màu Sắc</th>
+                                            <th>Kích Thước</th>
                                             <th width="20%">Giá Gốc (₫) <span class="text-danger">*</span></th>
                                             <th width="20%">Giá Sale (₫)</th>
                                             <th width="15%">Số Lượng <span class="text-danger">*</span></th>
@@ -149,14 +158,14 @@
 
                         <div id="noVariantsMsg" class="text-center py-5">
                             <i class="bx bx-purchase-tag-alt fs-1 text-muted"></i>
-                            <p class="text-muted mt-2 mb-0" id="statusMessage">Chưa có biến thể nào. Chọn thuộc tính ở Bước 1 và nhấn Tạo.</p>
+                            <p class="text-muted mt-2 mb-0" id="statusMessage">Chưa có biến thể nào. Chọn thuộc tính ở Bước 1 và nhấn Tạo Biến Thể.</p>
                             <div class="text-danger fw-bold mt-2 error-msg" id="err_variants"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="p-4 bg-white mt-4 border rounded d-flex justify-content-end gap-2 shadow-sm">
-                    <a href="{{ route('admin.products.index') }}" class="btn btn-outline-secondary px-4">Hủy</a>
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-outline-secondary px-4 shadow-none">Hủy</a>
                     <button type="submit" class="btn btn-success px-5 fw-bold shadow-sm">
                         <i class="bx bx-save"></i> LƯU SẢN PHẨM
                     </button>
@@ -170,28 +179,33 @@
 document.addEventListener('DOMContentLoaded', function() {
     const btnGenerate = document.getElementById('btnGenerateVariants');
     const tableContainer = document.getElementById('variantsTableContainer');
+    const colorImagesSection = document.getElementById('colorImagesSection');
+    const colorImagesContainer = document.getElementById('colorImagesContainer');
     const noMsg = document.getElementById('noVariantsMsg');
     const tbody = document.getElementById('variantsTableBody');
 
-    // Hàm xóa lỗi khi nhập
     function clearError(errId, inputId = null) {
-        document.getElementById(errId).innerText = '';
+        const errEl = document.getElementById(errId);
+        if(errEl) errEl.innerText = '';
         if (inputId) document.getElementById(inputId).classList.remove('is-invalid');
     }
 
-    // 1 & 2. Tìm kiếm nhanh
+    // Tìm kiếm nhanh Size & Màu
     const setupSearch = (inputId, itemClass) => {
-        document.getElementById(inputId).addEventListener('input', function(e) {
-            let filter = e.target.value.toLowerCase();
-            document.querySelectorAll(itemClass).forEach(item => {
-                item.style.display = item.innerText.toLowerCase().includes(filter) ? "" : "none";
+        const searchInput = document.getElementById(inputId);
+        if(searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                let filter = e.target.value.toLowerCase();
+                document.querySelectorAll(itemClass).forEach(item => {
+                    item.style.display = item.innerText.toLowerCase().includes(filter) ? "" : "none";
+                });
             });
-        });
+        }
     };
     setupSearch('searchSize', '#sizeContainer .size-box');
     setupSearch('searchColor', '#colorContainer .color-box');
 
-    // 3. Chọn/Bỏ chọn tất cả
+    // Chọn/Bỏ chọn tất cả thuộc tính
     document.getElementById('selectAllAttributes').addEventListener('click', () => {
         document.querySelectorAll('.size-checkbox, .color-checkbox').forEach(cb => cb.checked = true);
         clearError('err_sizes'); clearError('err_colors');
@@ -200,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.size-checkbox, .color-checkbox').forEach(cb => cb.checked = false);
     });
 
-    // 4. Tạo biến thể
+    // logic tạo biến thể
     btnGenerate.addEventListener('click', function() {
         const selectedSizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(cb => ({
             id: cb.value, code: cb.dataset.code
@@ -216,31 +230,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         tbody.innerHTML = '';
+        colorImagesContainer.innerHTML = '';
         tableContainer.style.display = 'block';
+        colorImagesSection.style.display = 'block';
         noMsg.style.display = 'none';
         clearError('err_variants');
 
+        // 1. Render khung upload ảnh Gộp Theo Màu
+        selectedColors.forEach(color => {
+            const div = document.createElement('div');
+            div.className = "text-center border p-2 bg-white rounded shadow-sm";
+            div.style.width = "140px";
+            div.innerHTML = `
+                <div class="small fw-bold mb-2 text-primary text-truncate">${color.name}</div>
+                <div class="position-relative">
+                    <img src="https://via.placeholder.com/100" id="prev_color_${color.id}" 
+                         class="img-thumbnail mb-2" style="width: 100px; height: 100px; object-fit: cover; cursor: pointer" 
+                         onclick="document.getElementById('file_color_${color.id}').click()">
+                </div>
+                <input type="file" name="color_images[${color.id}]" id="file_color_${color.id}" 
+                       class="d-none" accept="image/*" onchange="previewVariantImg(this, 'prev_color_${color.id}')">
+                <div class="text-muted" style="font-size: 10px">Click vào ảnh để tải</div>
+            `;
+            colorImagesContainer.appendChild(div);
+        });
+
+        // 2. Render bảng danh sách các dòng biến thể
         let index = 0;
-        selectedSizes.forEach(size => {
-            selectedColors.forEach(color => {
+        selectedColors.forEach(color => {
+            selectedSizes.forEach(size => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>
-                        <div class="variant-img-upload">
-                            <img src="{{ asset('images/placeholder.png') }}" id="prev_${index}" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover; cursor: pointer" onclick="document.getElementById('file_${index}').click()">
-                            <input type="file" name="variants[${index}][image]" id="file_${index}" class="d-none" accept="image/*" onchange="previewVariantImg(this, 'prev_${index}')">
-                            <div class="small text-muted mt-1" style="font-size: 10px">Chọn ảnh</div>
+                    <td class="bg-light-subtle">
+                        <div class="d-flex align-items-center justify-content-center gap-1">
+                            <span style="width:10px; height:10px; background:${color.code}; border-radius:50%; display:inline-block; border:1px solid #ddd"></span>
+                            <span class="fw-bold">${color.name}</span>
                         </div>
-                    </td>
-                    <td>
-                        <div class="fw-bold text-dark">${size.code} - ${color.name}</div>
-                        <input type="hidden" name="variants[${index}][size_id]" value="${size.id}">
                         <input type="hidden" name="variants[${index}][color_id]" value="${color.id}">
                     </td>
-                    <td><input type="number" name="variants[${index}][price]" class="form-control form-control-sm" required min="0"></td>
-                    <td><input type="number" name="variants[${index}][sale]" class="form-control form-control-sm" min="0"></td>
-                    <td><input type="number" name="variants[${index}][quantity]" class="form-control form-control-sm" value="10" required min="0"></td>
-                    <td><button type="button" class="btn btn-sm btn-soft-danger" onclick="this.closest('tr').remove()"><i class="bx bx-trash"></i></button></td>
+                    <td>
+                        <span class="badge bg-info text-dark">${size.code}</span>
+                        <input type="hidden" name="variants[${index}][size_id]" value="${size.id}">
+                    </td>
+                    <td><input type="number" name="variants[${index}][price]" class="form-control form-control-sm shadow-none" required min="0" placeholder="Giá gốc"></td>
+                    <td><input type="number" name="variants[${index}][sale]" class="form-control form-control-sm shadow-none" min="0" placeholder="Giá sale"></td>
+                    <td><input type="number" name="variants[${index}][quantity]" class="form-control form-control-sm shadow-none" value="10" required min="0"></td>
+                    <td><button type="button" class="btn btn-sm btn-soft-danger shadow-none" onclick="this.closest('tr').remove()"><i class="bx bx-trash"></i></button></td>
                 `;
                 tbody.appendChild(row);
                 index++;
@@ -248,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 5. Validate trước khi lưu
+    // Validate trước khi submit form
     document.getElementById('productForm').addEventListener('submit', function(e) {
         let hasError = false;
         if (!document.getElementById('name').value.trim()) {
@@ -277,13 +312,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Reset lỗi khi nhập lại
+    // Reset trạng thái lỗi khi người dùng nhập lại
     ['name', 'category_id', 'product_code'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => clearError('err_' + id, id));
+        const el = document.getElementById(id);
+        if(el) {
+            el.addEventListener('input', () => {
+                clearError('err_' + id);
+                el.classList.remove('is-invalid');
+            });
+        }
     });
 });
 
-// Hàm preview ảnh biến thể
+// Hàm preview ảnh (Xử lý cho các input file được tạo động)
 function previewVariantImg(input, prevId) {
     if (input.files && input.files[0]) {
         let reader = new FileReader();
@@ -296,12 +337,21 @@ function previewVariantImg(input, prevId) {
 </script>
 
 <style>
+    /* Tùy chỉnh thanh cuộn cho Container Size/Màu */
     #sizeContainer::-webkit-scrollbar, #colorContainer::-webkit-scrollbar { width: 4px; }
     #sizeContainer::-webkit-scrollbar-thumb, #colorContainer::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
+    
     .bg-info-subtle { background-color: #e0f7fa !important; }
     .bg-primary-subtle { background-color: #e8f0fe !important; }
+    
+    /* Style cho nút xóa dòng */
     .btn-soft-danger { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; }
     .btn-soft-danger:hover { background-color: #ef4444; color: white; }
+    
     .error-msg:empty { display: none; }
+    
+    /* Hiệu ứng khi hover vào khung ảnh */
+    .img-thumbnail { border-radius: 8px; transition: border-color 0.2s; }
+    .img-thumbnail:hover { border-color: #3b82f6; }
 </style>
 @endsection

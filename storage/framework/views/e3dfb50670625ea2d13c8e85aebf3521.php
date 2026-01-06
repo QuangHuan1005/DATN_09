@@ -5,28 +5,46 @@
      */
     $currentStatusId = (int)$order->order_status_id;
     $cancelRequest = $order->cancelRequest;
+    $pStatusId = (int)$order->payment_status_id;
+    $pMethodId = (int)$order->payment_method_id; // Giả định 1 là COD
 
     /**
      * 2. Cấu hình mốc tiến trình (Progress Bar)
-     * LOGIC: Nếu đơn bị hủy (6), thay đổi toàn bộ các mốc hiển thị sang luồng Hoàn tiền.
+     * LOGIC: Nếu đơn bị hủy (6), kiểm tra phương thức thanh toán để hiện luồng phù hợp.
      */
     if ($currentStatusId === 6) {
-        $stepMeta = [
-            1 => ['label' => 'Đã đặt hàng', 'desc' => 'Chờ xử lý'],
-            2 => ['label' => 'Yêu cầu hủy', 'desc' => $cancelRequest ? 'Khách gửi yêu cầu' : 'Hệ thống hủy'],
-            3 => ['label' => 'Xác nhận hủy', 'desc' => 'Cửa hàng đồng ý'],
-            4 => ['label' => 'Hoàn tiền',    'desc' => 'Admin chuyển khoản'],
-            5 => ['label' => 'Kết thúc',    'desc' => 'Đã nhận lại tiền'],
-        ];
+        // Kiểm tra nếu là COD (Thanh toán khi nhận hàng)
+        if ($pMethodId === 1) {
+            $stepMeta = [
+                1 => ['label' => 'Đã đặt hàng', 'desc' => 'Chờ xử lý' ],
+                2 => ['label' => 'Yêu cầu hủy', 'desc' => $cancelRequest ? 'Khách gửi yêu cầu' : 'Hệ thống hủy'],
+                3 => ['label' => 'Xác nhận hủy', 'desc' => 'Cửa hàng đồng ý'],
+                4 => ['label' => 'Kết thúc',     'desc' => 'Giao dịch đã hủy'],
+            ];
 
-        // Xác định mốc active cho luồng Hủy
-        $rStatusId = $cancelRequest ? (int)$cancelRequest->status_id : 0;
-        $activeStep = match (true) {
-            ($cancelRequest && $cancelRequest->is_customer_confirmed) => 5, // Khách xác nhận đã nhận tiền
-            ($rStatusId === 4) => 4, // Đã hoàn tiền
-            ($rStatusId === 2) => 3, // Chấp nhận hủy
-            default => 2,            // Đang chờ xử lý hủy
-        };
+            $rStatusId = $cancelRequest ? (int)$cancelRequest->status_id : 0;
+            $activeStep = match (true) {
+                ($rStatusId === 2) => 4, // COD: Admin chấp nhận hủy là kết thúc luôn
+                default => 2,
+            };
+        } else {
+            // Luồng cho thanh toán ONLINE (Chuyển khoản, VNPAY, Momo...)
+            $stepMeta = [
+                1 => ['label' => 'Đã đặt hàng', 'desc' => 'Chờ xử lý'],
+                2 => ['label' => 'Yêu cầu hủy', 'desc' => $cancelRequest ? 'Khách gửi yêu cầu' : 'Hệ thống hủy'],
+                3 => ['label' => 'Xác nhận hủy', 'desc' => 'Cửa hàng đồng ý'],
+                4 => ['label' => 'Hoàn tiền',     'desc' => 'Admin chuyển khoản'],
+                5 => ['label' => 'Kết thúc',     'desc' => 'Đã nhận lại tiền'],
+            ];
+
+            $rStatusId = $cancelRequest ? (int)$cancelRequest->status_id : 0;
+            $activeStep = match (true) {
+                ($cancelRequest && $cancelRequest->is_customer_confirmed) => 5, // Khách xác nhận đã nhận tiền
+                ($rStatusId === 4) => 4, // Đã hoàn tiền
+                ($rStatusId === 2) => 3, // Chấp nhận hủy
+                default => 2,           // Đang chờ xử lý hủy
+            };
+        }
     } else {
         // Luồng hiển thị cho đơn hàng BÌNH THƯỜNG
         $stepMeta = [
@@ -44,39 +62,27 @@
     }
 
     /**
-     * 3. Xử lý Badge Trạng thái Đơn hàng (Hiển thị đầu trang/Card)
+     * 3. Xử lý Badge Trạng thái Đơn hàng
      */
     $statusName = $order->status?->name ?? '—';
     $tagClass = match($currentStatusId) {
-        1 => 'tag-amber',   // Chờ xác nhận
-        2 => 'tag-primary', // Đã xác nhận
-        3 => 'tag-amber',   // Đang giao
-        4 => 'tag-green',   // Đã giao
-        5 => 'tag-green',   // Hoàn thành
-        6 => 'tag-red',     // Hủy
-        7 => 'tag-gray',    // Hoàn hàng
-        default => 'tag-gray',
+        1 => 'tag-amber', 2 => 'tag-primary', 3 => 'tag-amber',
+        4 => 'tag-green', 5 => 'tag-green',   6 => 'tag-red',
+        7 => 'tag-gray',  default => 'tag-gray',
     };
 
     /**
-     * 4. Class màu sắc bao quanh Box chi tiết (Dùng cho CSS wrapper)
+     * 4. Class màu sắc bao quanh Box chi tiết
      */
     $statusClass = match($currentStatusId) {
-        1 => 'status-pending',
-        2 => 'status-confirmed',
-        3 => 'status-shipping',
-        4 => 'status-delivered',
-        5 => 'status-done',
-        6 => 'status-cancel',
+        1 => 'status-pending', 2 => 'status-confirmed', 3 => 'status-shipping',
+        4 => 'status-delivered', 5 => 'status-done',    6 => 'status-cancel',
         default => 'status-pending',
     };
 
     /**
-     * 5. LOGIC THANH TOÁN (Xác nhận dòng tiền khách đã trả thực tế)
+     * 5. LOGIC THANH TOÁN
      */
-    $pStatusId = (int)$order->payment_status_id;
-    $pMethodId = (int)$order->payment_method_id;
-
     if ($pMethodId !== 1 && in_array($pStatusId, [2, 3])) {
         $payLabel = "Đã thanh toán";
         $payClass = "pay-paid"; 
@@ -119,7 +125,7 @@
     }
 
     /**
-     * 7. Gom dữ liệu nhật ký (Logs) để hiển thị thời gian từng bước
+     * 7. Gom dữ liệu nhật ký (Logs)
      */
     $logsByStatus = $order->statusLogs->groupBy('order_status_id');
 
@@ -737,9 +743,72 @@ strong {
                            <div style="text-align:right">
                             <span class="tag <?php echo e($tagClass); ?>"><?php echo e($statusName); ?></span>
                             <div class="order-tools">
-                              <?php if($order->invoice): ?>
-                                <a href="#" class="btn-lite">In hoá đơn: <?php echo e($order->invoice->invoice_code); ?></a>
-                              <?php endif; ?>
+                              
+<?php if(in_array($order->order_status_id, [1, 2])): ?>
+    <form id="cancel-order-form" method="POST" action="<?php echo e(route('orders.cancel', $order->id)); ?>">
+        <?php echo csrf_field(); ?>
+        <button 
+            class="btn-danger-outline" 
+            type="button" 
+            id="btnOpenCancelModal"
+            style="cursor:pointer; border-radius: 999px; padding: 8px 16px; font-weight: 600;"
+        >
+            <i class="fa fa-times-circle"></i> Hủy đơn hàng
+        </button>
+        
+        
+        <div class="cancel-order-overlay" id="cancelOrderOverlay">
+            <div class="cancel-order-modal" style="text-align: left; max-width: 500px;">
+                <h3 style="text-align: center">Yêu cầu hủy đơn hàng</h3>
+                <p style="text-align: center">Vui lòng cho biết lý do bạn muốn hủy đơn này.</p>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px;">Lý do hủy <span class="text-danger">*</span></label>
+                    <textarea name="reason" class="form-control" rows="3" placeholder="Ví dụ: Tôi muốn đổi địa chỉ, đổi sản phẩm khác..." style="width: 100%; border-radius: 8px; border: 1px solid #ddd; padding: 10px;"></textarea>
+                    <div id="err_reason" class="error-msg text-danger" style="display:none; font-size: 12px; margin-top: 5px;"></div>
+                </div>
+
+                
+                <?php if($pMethodId !== 1 && in_array($pStatusId, [2, 3])): ?>
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: 600; display: block; margin-bottom: 5px;">Tài khoản nhận lại tiền <span class="text-danger">*</span></label>
+                        <select name="user_bank_account_id" id="selectBank" class="form-select" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd;">
+                            <option value="">-- Chọn tài khoản của bạn --</option>
+                            <?php $__currentLoopData = Auth::user()->bankAccounts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bank): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($bank->id); ?>" 
+                                    data-name="<?php echo e($bank->bank_name); ?>" 
+                                    data-number="<?php echo e($bank->account_number); ?>" 
+                                    data-holder="<?php echo e($bank->account_holder); ?>">
+                                    <?php echo e($bank->bank_name); ?> - <?php echo e($bank->account_number); ?>
+
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <option value="new">+ Thêm tài khoản mới</option>
+                        </select>
+                        <div id="err_user_bank_account_id" class="error-msg text-danger" style="display:none; font-size: 12px; margin-top: 5px;"></div>
+                    </div>
+
+                    <div id="newBankFields" style="display: none; background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
+                        <div style="margin-bottom: 10px;">
+                            <input type="text" name="bank_name" id="bank_name" class="form-control" placeholder="Tên ngân hàng (ví dụ: VCB, MB...)" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <input type="text" name="account_number" id="account_number" class="form-control" placeholder="Số tài khoản" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                        </div>
+                        <div>
+                            <input type="text" name="account_holder" id="account_holder" class="form-control" placeholder="Tên chủ tài khoản (viết hoa không dấu)" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <div class="cancel-order-actions" style="margin-top: 20px;">
+                    <button type="button" class="btn-cancel-close" id="btnCancelClose">Để tôi xem lại</button>
+                    <button type="button" class="btn-cancel-ok" id="btnCancelOk">Xác nhận hủy</button>
+                </div>
+            </div>
+        </div>
+    </form>
+<?php endif; ?>
 
                               
                               <?php if($order->order_status_id == 4): ?>
