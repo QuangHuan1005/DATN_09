@@ -52,7 +52,6 @@
 @yield('content')
 
 
-@include('components.chat-widget')
 <!-- .kitify-site-wrapper -->
 @include('layouts.js')
 
