@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Color;
@@ -17,14 +16,20 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::query()->with([
-            'category:id,name,slug',
-            'variants.color',
-            'variants.size',
-            'photoAlbums',
-            'variants',           // để lấy image, quantity
-        ]);
-
+        // Khởi tạo Query: CHỈ LẤY SẢN PHẨM CÒN HÀNG (có ít nhất 1 variant với quantity > 0)
+        $query = Product::query()
+            ->whereHas('variants', function($q) {
+                $q->where('quantity', '>', 0);
+            })
+            ->with([
+                'category:id,name,slug',
+                'variants.color',
+                'variants.size',
+                'photoAlbums',
+                'variants' => function($q) {
+                    $q->where('quantity', '>', 0); // Chỉ lấy các biến thể còn hàng để hiển thị
+                },
+            ]);
 
         // ----- TÌM KIẾM THEO TÊN / MÔ TẢ -----
         if ($request->filled('keyword')) {
@@ -36,44 +41,67 @@ class ProductController extends Controller
         }
 
         // ----- LỌC THEO DANH MỤC -----
+        $filterCategoryIds = [];
         if ($request->filled('category')) {
             $categoryId = (int) $request->category;
-
             // Lấy tất cả category con trực tiếp của category được chọn
             $childrenIds = Category::where('parent_id', $categoryId)->pluck('id')->toArray();
-
             // Gom lại: chính nó + các con
             $filterCategoryIds = array_merge([$categoryId], $childrenIds);
-
             $query->whereIn('category_id', $filterCategoryIds);
         }
 
-        // ----- LỌC THEO MÀU -----
-        if ($request->filled('color')) {
-            $query->whereHas('variants', fn($q) => $q->where('color_id', $request->color));
+        // ----- LỌC THEO MÀU (Chỉ lọc trên các biến thể CÒN HÀNG) -----
+        if ($request->filled('colors')) {
+            $colorIds = (array) $request->colors;
+            $query->whereHas('variants', function($q) use ($colorIds) {
+                $q->whereIn('color_id', $colorIds)->where('quantity', '>', 0);
+            });
         }
 
-        // ----- LỌC THEO SIZE -----
-        if ($request->filled('size')) {
-            $query->whereHas('variants', fn($q) => $q->where('size_id', $request->size));
+        // ----- LỌC THEO SIZE (Chỉ lọc trên các biến thể CÒN HÀNG) -----
+        if ($request->filled('sizes')) {
+            $sizeIds = (array) $request->sizes;
+            $query->whereHas('variants', function($q) use ($sizeIds) {
+                $q->whereIn('size_id', $sizeIds)->where('quantity', '>', 0);
+            });
         }
 
-        // ----- LỌC THEO GIÁ -----
+        // ----- LỌC THEO GIÁ (Dựa trên giá của biến thể CÒN HÀNG) -----
         if ($request->filled('min_price')) {
-            $query->whereHas('variants', fn($q) => $q->where('price', '>=', $request->min_price));
-        }
-        if ($request->filled('max_price')) {
-            $query->whereHas('variants', fn($q) => $q->where('price', '<=', $request->max_price));
+            $min = (int) $request->min_price;
+            $query->whereHas('variants', function($q) use ($min) {
+                $q->where('quantity', '>', 0)
+                  ->where(function($sub) use ($min) {
+                      $sub->where('price', '>=', $min)
+                          ->orWhere(function($s) use ($min) {
+                              $s->where('sale', '>', 0)->where('sale', '>=', $min);
+                          });
+                  });
+            });
         }
 
-        // ----- SẮP XẾP -----
+        if ($request->filled('max_price')) {
+            $max = (int) $request->max_price;
+            $query->whereHas('variants', function($q) use ($max) {
+                $q->where('quantity', '>', 0)
+                  ->where(function($sub) use ($max) {
+                      $sub->where('price', '<=', $max)
+                          ->orWhere(function($s) use ($max) {
+                              $s->where('sale', '>', 0)->where('sale', '<=', $max);
+                          });
+                  });
+            });
+        }
+
+        // ----- SẮP XẾP (Chỉ tính trên giá biến thể CÒN HÀNG) -----
         if ($request->filled('sort')) {
             switch ($request->sort) {
                 case 'price_asc':
-                    $query->orderBy(DB::raw('(SELECT MIN(price) FROM product_variants WHERE product_id = products.id)'), 'asc');
+                    $query->orderBy(DB::raw('(SELECT MIN(IF(sale > 0, sale, price)) FROM product_variants WHERE product_id = products.id AND quantity > 0)'), 'asc');
                     break;
                 case 'price_desc':
-                    $query->orderBy(DB::raw('(SELECT MAX(price) FROM product_variants WHERE product_id = products.id)'), 'desc');
+                    $query->orderBy(DB::raw('(SELECT MAX(IF(sale > 0, sale, price)) FROM product_variants WHERE product_id = products.id AND quantity > 0)'), 'desc');
                     break;
                 case 'bestseller':
                     $query->leftJoin('product_variants', 'products.id', '=', 'product_variants.product_id')
@@ -91,14 +119,32 @@ class ProductController extends Controller
 
         $products = $query->paginate(12)->appends($request->query());
 
-        // Dữ liệu cho filter
-        $categories = Category::withCount('products')->get();
+        // ----- DỮ LIỆU CHO FILTER SIDEBAR (CHỈ ĐẾM SẢN PHẨM CÒN HÀNG) -----
+        
+        // 1. Danh mục: Đếm SP còn hàng
+        $categories = Category::withCount(['products' => function($q) {
+            $q->whereHas('variants', fn($v) => $v->where('quantity', '>', 0));
+        }])->get();
+
+        // 2. Màu sắc: Đếm số SP còn hàng mang màu đó
         $colors = Color::select('colors.*', DB::raw('COUNT(DISTINCT product_variants.product_id) as products_count'))
-            ->leftJoin('product_variants', 'colors.id', '=', 'product_variants.color_id')
+            ->join('product_variants', 'colors.id', '=', 'product_variants.color_id')
+            ->join('products', 'products.id', '=', 'product_variants.product_id')
+            ->where('product_variants.quantity', '>', 0)
+            ->when(!empty($filterCategoryIds), function($q) use ($filterCategoryIds) {
+                return $q->whereIn('products.category_id', $filterCategoryIds);
+            })
             ->groupBy('colors.id')
             ->get();
+
+        // 3. Size: Đếm số SP còn hàng mang size đó
         $sizes = Size::select('sizes.*', DB::raw('COUNT(DISTINCT product_variants.product_id) as products_count'))
-            ->leftJoin('product_variants', 'sizes.id', '=', 'product_variants.size_id')
+            ->join('product_variants', 'sizes.id', '=', 'product_variants.size_id')
+            ->join('products', 'products.id', '=', 'product_variants.product_id')
+            ->where('product_variants.quantity', '>', 0)
+            ->when(!empty($filterCategoryIds), function($q) use ($filterCategoryIds) {
+                return $q->whereIn('products.category_id', $filterCategoryIds);
+            })
             ->groupBy('sizes.id')
             ->get();
 
@@ -114,12 +160,12 @@ class ProductController extends Controller
 
         $results = Product::select('id', 'name', 'image')
             ->where('name', 'LIKE', "%{$keyword}%")
+            ->whereHas('variants', fn($q) => $q->where('quantity', '>', 0)) // Chỉ gợi ý SP còn hàng
             ->limit(5)
             ->get();
 
         return response()->json($results);
     }
-
 
     public function show($id)
     {
@@ -133,15 +179,18 @@ class ProductController extends Controller
             ->withSum('variants as total_stock', 'quantity')
             ->withSum('orderDetails as total_sold', 'quantity')
             ->findOrFail($id);
-        $sessionKey = 'product_viewed_' . $id;
 
+        $sessionKey = 'product_viewed_' . $id;
         if (!session()->has($sessionKey)) {
             $product->increment('view');
             session()->put($sessionKey, true);
         }
-        // Tính giá min / sale hiện tại
-        $minPrice = $product->variants->min('price');
-        $minSale  = $product->variants
+
+        // Tính giá min / sale hiện tại của các variant còn hàng
+        $activeVariants = $product->variants->filter(fn($v) => $v->quantity > 0);
+        
+        $minPrice = $activeVariants->min('price');
+        $minSale  = $activeVariants
             ->filter(fn($v) => $v->sale && $v->sale > 0)
             ->min('sale');
 
@@ -158,105 +207,74 @@ class ProductController extends Controller
         $ratingCount  = $product->reviews->count();
 
         // Top reviews
-
         $reviews = $product->reviews()
             ->with('order.user')
             ->where('status', 1)
             ->latest('id')
-            ->take(8)
             ->paginate(4);
+
         $canReview   = false;
         $hasReviewed = false;
 
         if (Auth::check()) {
             $userId = Auth::id();
-
-            // 1) User này đã từng review sản phẩm này chưa? (qua order -> user)
             $hasReviewed = $product->reviews()
                 ->whereHas('order', function ($q) use ($userId) {
                     $q->where('user_id', $userId);
                 })
                 ->exists();
 
-            // 2) User này có ít nhất 1 đơn HỘI ĐỦ:
-            //    - thuộc user hiện tại
-            //    - trạng thái HOÀN THÀNH (ví dụ order_status_id = 5)
-            //    - có chứa sản phẩm này (thông qua orderDetails())
-            $completedOrderDetailsQuery = $product->orderDetails()
+            $hasCompletedOrder = $product->orderDetails()
                 ->whereHas('order', function ($q) use ($userId) {
                     $q->where('user_id', $userId)
-                        ->where('order_status_id', 5); // 5 = Hoàn thành (sửa lại nếu hệ thống bạn khác)
-                });
+                        ->where('order_status_id', 5); // 5 = Hoàn thành
+                })
+                ->exists();
 
-            $hasCompletedOrder = $completedOrderDetailsQuery->exists();
-
-            $canReview = $hasCompletedOrder && ! $hasReviewed;
+            $canReview = $hasCompletedOrder && !$hasReviewed;
         }
 
-        // Màu & size
-        $colors = $product->variants
-            ->pluck('color')
-            ->filter()
-            ->unique('id')
-            ->values();
+        // Màu & size biến thể của sản phẩm này (Chỉ lấy những cái còn hàng)
+        $colors = $activeVariants->pluck('color')->filter()->unique('id')->values();
+        $sizes  = $activeVariants->pluck('size')->filter()->unique('id')->values();
 
-        $sizes  = $product->variants
-            ->pluck('size')
-            ->filter()
-            ->unique('id')
-            ->values();
-
-        // ===== XỬ LÝ ẢNH HIỂN THỊ THEO THỨ TỰ: 
-        // photo đầu -> ảnh biến thể -> photo còn lại =====
-
+        // Xử lý ảnh Album
         $albumImages   = $product->photoAlbums->pluck('image')->filter()->values();
         $variantImages = $product->variants->pluck('image')->filter()->unique()->values();
 
         $images = [];
-
-        // 1️⃣ Ảnh photoAlbums đầu tiên
         if ($albumImages->isNotEmpty()) {
             $images[] = $albumImages->first();
         }
-
-        // 2️⃣ Toàn bộ ảnh biến thể (không trùng)
         foreach ($variantImages as $img) {
-            if (!in_array($img, $images)) {
-                $images[] = $img;
-            }
+            if (!in_array($img, $images)) { $images[] = $img; }
         }
-
-        // 3️⃣ Các ảnh photoAlbums còn lại
         foreach ($albumImages->slice(1) as $img) {
-            if (!in_array($img, $images)) {
-                $images[] = $img;
-            }
+            if (!in_array($img, $images)) { $images[] = $img; }
         }
+        $images = array_values($images);
 
-        $images = array_values($images); // reset index
+        // Map biến thể JS
+        $variantMap = $product->variants->mapWithKeys(function ($v) {
+            $key = $v->color_id . '_' . $v->size_id;
+            return [
+                $key => [
+                    'id'       => $v->id,
+                    'color_id' => $v->color_id,
+                    'size_id'  => $v->size_id,
+                    'price'    => $v->price,
+                    'sale'     => $v->sale,
+                    'stock'    => $v->quantity,
+                    'image'    => $v->image,
+                ],
+            ];
+        });
 
-        // dd($albumImages);
-        // dd($images);
-        // Map biến thể: key = color_id_size_id
-        $variantMap = $product->variants
-            ->mapWithKeys(function ($v) {
-                $key = $v->color_id . '_' . $v->size_id;
-                return [
-                    $key => [
-                        'id'       => $v->id,
-                        'color_id' => $v->color_id,
-                        'size_id'  => $v->size_id,
-                        'price'    => $v->price,
-                        'sale'     => $v->sale,
-                        'stock'    => $v->quantity,
-                        'image'    => $v->image,
-                    ],
-                ];
-            });
         $relatedProducts = Product::with(['photoAlbums', 'variants'])
-            ->where('category_id', $product->category_id) // cùng danh mục
-            ->where('id', '!=', $product->id)             // loại trừ sản phẩm hiện tại
-            ->take(8)                                     // giới hạn số lượng (tùy bạn chỉnh)
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->whereHas('variants', fn($q) => $q->where('quantity', '>', 0)) // Liên quan cũng phải còn hàng
+            ->take(8)
             ->get();
 
         $cart = Session::get('cart', []);
@@ -267,33 +285,17 @@ class ProductController extends Controller
                 $variantCartQtyMap[$vid] = (int) ($row['quantity'] ?? 0);
             }
         }
-        return view('products.show', compact(
-            'product',
-            'displayPrice',
-            'originalPrice',
-            'discountPercent',
-            'avgRating',
-            'ratingCount',
-            'reviews',
-            'canReview',
-            'hasReviewed',
-            'colors',
-            'sizes',
-            'images',
-            'variantMap',
-            'relatedProducts',
-            'variantCartQtyMap'
 
+        return view('products.show', compact(
+            'product', 'displayPrice', 'originalPrice', 'discountPercent',
+            'avgRating', 'ratingCount', 'reviews', 'canReview', 'hasReviewed',
+            'colors', 'sizes', 'images', 'variantMap', 'relatedProducts', 'variantCartQtyMap'
         ));
     }
 
-
-
     public function showByCategory($slug)
     {
-        $categories = Category::all();
         $category = Category::where('slug', $slug)->firstOrFail();
-        $products = Product::where('category_id', $category->id)->paginate(12);
-        return view('products.index', compact('category', 'products', 'categories', 'colors'));
+        return redirect()->route('products.index', ['category' => $category->id]);
     }
 }
