@@ -182,33 +182,33 @@
                                                 <th>Thành Tiền</th>
                                             </tr>
                                         </thead>
-                                      <tbody>
-                                                @foreach ($lines as $line)
-<tr>
-    <td>
-        <div class="d-flex align-items-center gap-2">
-            <div class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                <!-- ĐÃ SỬA DỨT ĐIỂM: Sử dụng đường dẫn chính xác bạn đã xác nhận là 'storage/product_images/' -->
-                <img src="{{ $line->image ? asset('storage/product_images/' . $line->image) : asset('images/no-image.png') }}"
-                     alt="{{ $line->product_name }}"
-                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"
-                >
-            </div>
-        </div>
-    </td>
-    <td>
-        {{ $line->product_name }}
-        
-        <!-- ĐÃ GỠ BỎ TOÀN BỘ DÒNG DEBUG -->
-        
-    </td>
-    <td>{{ $line->variant_text }}</td>
-    <td>{{ number_format($line->unit_price) }}₫</td>
-    <td>{{ $line->qty }}</td>
-    <td>{{ number_format($line->line_total) }}₫</td>
-</tr>
-                                                @endforeach
-                                            </tbody>
+                                        <tbody>
+                                            @foreach ($lines as $line)
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <div
+                                                                class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
+                                                                <!-- ĐÃ SỬA DỨT ĐIỂM: Sử dụng đường dẫn chính xác bạn đã xác nhận là 'storage/product_images/' -->
+                                                                <img src="{{ $line->image ? asset('storage/product_images/' . $line->image) : asset('images/no-image.png') }}"
+                                                                    alt="{{ $line->product_name }}"
+                                                                    style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{ $line->product_name }}
+
+                                                        <!-- ĐÃ GỠ BỎ TOÀN BỘ DÒNG DEBUG -->
+
+                                                    </td>
+                                                    <td>{{ $line->variant_text }}</td>
+                                                    <td>{{ number_format($line->unit_price) }}₫</td>
+                                                    <td>{{ $line->qty }}</td>
+                                                    <td>{{ number_format($line->line_total) }}₫</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
