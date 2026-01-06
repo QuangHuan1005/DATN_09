@@ -14,6 +14,9 @@ use App\Services\VNPayService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Facades\Mail; // Nhớ import
+use App\Mail\OrderConfirmationMail;  // Nhớ import
+
 class CheckoutController extends Controller
 {
     /**
@@ -193,6 +196,7 @@ class CheckoutController extends Controller
                 $voucherData = session('applied_voucher');
                 $appliedVoucher = $voucherData ? Voucher::find($voucherData['id']) : null;
 
+                
                 foreach ($sourceItems as $variantId => $item) {
                     $variant = ProductVariant::lockForUpdate()->find($variantId);
                     if (!$variant || $variant->quantity < $item['quantity']) {
@@ -253,6 +257,12 @@ class CheckoutController extends Controller
                         'quantity'           => $item['quantity'],
                         'price'              => $item['price'],
                     ]);
+                }
+                $userEmail = Auth::user()->email;
+                if ($userEmail) {
+                    // Nên dùng Queue để không làm chậm trải nghiệm người dùng
+                    Mail::to($userEmail)->send(new OrderConfirmationMail($order));
+                    // Hoặc dùng: Mail::to($userEmail)->queue(new OrderConfirmationMail($order));
                 }
 
                 if ($appliedVoucher) $appliedVoucher->increment('total_used');

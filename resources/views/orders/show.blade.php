@@ -116,12 +116,17 @@
             default => 'Đang xử lý'
         };
 
-        $refundStyle = match($rStatusId) {
-            1 => 'background: #fff3cd; color: #856404; border: 1px solid #ffeeba;', 
-            2 => 'background: #cce5ff; color: #004085; border: 1px solid #b8daff;', 
-            3 => 'background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;', 
-            4 => 'background: #d4edda; color: #155724; border: 1px solid #c3e6cb;', 
-            default => 'background: #e2e3e5; color: #383d41;'
+        /**
+         * 4. Class màu sắc bao quanh Box chi tiết (Dùng cho CSS wrapper)
+         */
+        $statusClass = match ($currentStatusId) {
+            1 => 'status-pending',
+            2 => 'status-confirmed',
+            3 => 'status-shipping',
+            4 => 'status-delivered',
+            5 => 'status-done',
+            6 => 'status-cancel',
+            default => 'status-pending',
         };
     }
 
@@ -435,7 +440,8 @@
                 justify-content: center;
                 gap: 6px;
                 padding: 8px 14px;
-                min-width: 120px;0px;
+                min-width: 120px;
+                0px;
                 border-radius: 999px;
                 border: 1px solid #f59e0b;
                 background: #f59e0b;
@@ -463,7 +469,8 @@
                 color: #6b7280 !important;
                 cursor: not-allowed;
                 opacity: 0.6;
-                transform: none; /* Không có active effect cho disabled */
+                transform: none;
+                /* Không có active effect cho disabled */
             }
 
             /* Nút "CHI TIẾT HOÀN HÀNG" - Màu vàng */
@@ -512,229 +519,92 @@
                 border-color: #ef4444 !important;
             }
 
-    /* ==== Giảm khoảng trắng phần My account & đơn hàng ==== */
+            /* ==== Giảm khoảng trắng phần My account & đơn hàng ==== */
 
-    /* Thu bớt padding trên container của trang xem đơn */
-    body.woocommerce-view-order .site-content-wrapper .container {
-      padding-top: 18px;
-    }
+            /* Thu bớt padding trên container của trang xem đơn */
+            body.woocommerce-view-order .site-content-wrapper .container {
+                padding-top: 18px;
+            }
 
-    /* Thu khoảng trắng giữa breadcrumb / title và nội dung */
-    body.woocommerce-view-order .page-header-content {
-      margin-bottom: 0px !important;
-      padding-bottom: 0 !important;
-    }
+            /* Thu khoảng trắng giữa breadcrumb / title và nội dung */
+            body.woocommerce-view-order .page-header-content {
+                margin-bottom: 0px !important;
+                padding-bottom: 0 !important;
+            }
 
-    /* Tiêu đề "My account" không cách quá xa breadcrumb */
-    body.woocommerce-view-order .page-header-content .page-title {
-      margin-top: 6px !important;
-      margin-bottom: 0 !important;
-    }
+            /* Tiêu đề "My account" không cách quá xa breadcrumb */
+            body.woocommerce-view-order .page-header-content .page-title {
+                margin-top: 6px !important;
+                margin-bottom: 0 !important;
+            }
 
-    /* Nội dung tài khoản sát lên một chút */
-    body.woocommerce-view-order .woocommerce-MyAccount-content {
-      margin-top: 0px !important;
-    }
+            /* Nội dung tài khoản sát lên một chút */
+            body.woocommerce-view-order .woocommerce-MyAccount-content {
+                margin-top: 0px !important;
+            }
 
-    /* Header đơn hàng dính nhẹ lên trên cho gọn hơn */
-    body.woocommerce-view-order .order-header {
-      margin-top: 0px;
-    }
+            /* Header đơn hàng dính nhẹ lên trên cho gọn hơn */
+            body.woocommerce-view-order .order-header {
+                margin-top: 0px;
+            }
 
-    /* ===== Modal hủy đơn (thay cho alert/confirm) ===== */
-    .cancel-order-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, .45);
-      z-index: 9999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
+            /* ===== Modal hủy đơn (thay cho alert/confirm) ===== */
+            .cancel-order-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(15, 23, 42, .45);
+                z-index: 9999;
+                display: none;
+                align-items: center;
+                justify-content: center;
+            }
 
-    .cancel-order-overlay.is-open {
-      display: flex;
-    }
+            .cancel-order-overlay.is-open {
+                display: flex;
+            }
 
-    .cancel-order-modal {
-      background: #fff;
-      border-radius: 16px;
-      padding: 20px 24px;
-      max-width: 360px;
-      width: 100%;
-      box-shadow: 0 18px 45px rgba(15, 23, 42, .25);
-      text-align: center;
-    }
+            .cancel-order-modal {
+                background: #fff;
+                border-radius: 16px;
+                padding: 20px 24px;
+                max-width: 360px;
+                width: 100%;
+                box-shadow: 0 18px 45px rgba(15, 23, 42, .25);
+                text-align: center;
+            }
 
-    .cancel-order-modal h3 {
-      margin: 0 0 6px;
-      font-size: 18px;
-      font-weight: 700;
-    }
+            .cancel-order-modal h3 {
+                margin: 0 0 6px;
+                font-size: 18px;
+                font-weight: 700;
+            }
 
-    .cancel-order-modal p {
-      margin: 0 0 18px;
-      font-size: 14px;
-      color: #4b5563;
-    }
+            .cancel-order-modal p {
+                margin: 0 0 18px;
+                font-size: 14px;
+                color: #4b5563;
+            }
 
-    .cancel-order-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
+            .cancel-order-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+            }
 
-    .btn-cancel-close,
-    .btn-cancel-ok {
-      border-radius: 999px;
-      padding: 8px 18px;
-      font-size: 14px;
-      cursor: pointer;
-      border: 1px solid transparent;
-    }
+            .btn-cancel-close,
+            .btn-cancel-ok {
+                border-radius: 999px;
+                padding: 8px 18px;
+                font-size: 14px;
+                cursor: pointer;
+                border: 1px solid transparent;
+            }
 
-    .btn-cancel-close {
-      background: #fff;
-      border-color: #e5e7eb;
-      color: #111827;
-    }
-
-    .btn-cancel-ok {
-      background: #b04b64;
-      color: #fff;
-      border-color: #b04b64;
-    }
-
-    .btn-cancel-ok:hover {
-      opacity: .9;
-    }
-
-    /* ===== Modal xác nhận ĐÃ NHẬN HÀNG ===== */
-    .complete-order-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, .45);
-      z-index: 9999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .complete-order-overlay.is-open {
-      display: flex;
-    }
-    .status-badge {
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-strong {
-    font-weight: 700 !important;
-}
-/* Trạng thái đơn hàng */
-.status-pending   { background:#fff3cd; color:#856404; }   /* Chờ xác nhận */
-.status-confirmed { background:#cce5ff; color:#004085; }   /* Đã xác nhận */
-.status-shipping  { background:#ffeeba; color:#856404; }   /* Đang giao */
-.status-delivered { background:#d4edda; color:#155724; }   /* Đã giao */
-.status-done      { background:#d4edda; color:#155724; }   /* Hoàn thành */
-.status-cancel    { background:#f8d7da; color:#721c24; }   /* Hủy */
-
-/* Trạng thái thanh toán */
-.pay-unpaid { background:#f8d7da; color:#721c24; }   /* Chưa thanh toán */
-.pay-paid   { background:#d4edda; color:#155724; }   /* Đã thanh toán */
-.pay-refund { background:#fff3cd; color:#856404; }   /* Hoàn tiền */
-
-
-/* Đảm bảo modal bên trong luôn nổi lên trên cùng */
-.cancel-order-modal {
-    position: relative;
-    z-index: 100000000 !important;
-    background: #fff;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 450px;
-    overflow: hidden;
-}
-</style>
-
-  <div class="site-wrapper">
-    <div class="kitify-site-wrapper elementor-459kitify">
-      @include('layouts.header')
-
-      <div id="site-content" class="site-content-wrapper">
-        <div class="container">
-          <div class="grid-x">
-            <div class="cell small-12">
-              <div class="site-content">
-                <div class="page-header-content">
-                  <nav class="woocommerce-breadcrumb">
-                    <a href="{{ url('/') }}">Home</a><span class="delimiter">/</span>
-                    <a href="{{ route('orders.index') }}">My account</a><span class="delimiter">/</span>
-                    Order #{{ $order->order_code }}
-                  </nav>
-                  <h1 class="page-title">My account</h1>
-                </div>
-
-                <article class="hentry">
-                  <div class="entry-content">
-                    <div class="woocommerce">
-                      @include('account.partials.navigation')
-
-                      <div class="woocommerce-MyAccount-content">
-                        <div class="woocommerce-notices-wrapper">
-                          @if(session('error')) <div class="woocommerce-error">{{ session('error') }}</div> @endif
-                          @if(session('success')) <div class="woocommerce-message">{{ session('success') }}</div> @endif
-                        </div>
-
-                        {{-- ======= HEADER TÓM TẮT ======= --}}           
-
-                        <div class="order-header">
-                          <div>
-                            <div style="font-weight:700;font-size:1.05rem">Đơn hàng #{{ $order->order_code }}</div>
-                            <div class="meta">
-                              <span>Đặt lúc {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i') }}</span>
-                              <span>•</span>
-                              <span>Tổng: <strong>₫{{ number_format($calc_total) }}</strong></span>
-                            </div>
-
-                            {{-- progress dùng log: hiển thị Người dùng / Hệ thống + thời gian --}}
-                            <div class="order-progress" aria-label="Tiến trình đơn hàng">
-                              @foreach($stepMeta as $sid => $meta)
-                                @php
-                                    // Bước này đã được đi qua chưa?
-                                    $isReached   = $activeStep >= $sid;
-
-                                    // Lấy log đầu tiên của trạng thái này (thời điểm chuyển sang trạng thái)
-                                    $logsForStep = $logsByStatus->get($sid);
-                                    $firstLog    = $logsForStep ? $logsForStep->first() : null;
-                                @endphp
-
-                                <div class="step">
-                                  <span class="dot {{ $isReached ? 'active' : '' }}"></span>
-
-                                  <div style="display:flex;flex-direction:column;align-items:flex-start">
-                                    {{-- Tiêu đề + mô tả --}}
-                                    <span style="font-size:.83rem;color:#374151">{{ $meta['label'] }}</span>
-                                    <span style="font-size:.78rem;color:#6b7280">{{ $meta['desc'] }}</span>
-
-                                    {{-- Người dùng / Hệ thống + thời gian --}}
-                                    @if($firstLog)
-                                      <span style="font-size:.75rem;color:#9ca3af">
-                                        {{ $firstLog->actor_label }}
-                                        • {{ $firstLog->created_at->format('H:i d/m/Y') }}
-                                      </span>
-                                    @endif
-                                  </div>
-                                </div>
-
-                                @if($sid < count($stepMeta))
-                                  <span class="bar {{ $sid < $activeStep ? 'active' : '' }}"></span>
-                                @endif
-                              @endforeach
-                            </div>
+            .btn-cancel-close {
+                background: #fff;
+                border-color: #e5e7eb;
+                color: #111827;
+            }
 
                           </div>
 
@@ -826,17 +696,20 @@ strong {
                                 {{-- Nút YÊU CẦU HOÀN HÀNG: hiển thị khi đơn đã giao hoặc hoàn thành --}}
                                                                 @if (in_array($order->order_status_id, [4, 5]))
                                                                     @php
-                                                                        $hasReturnRequest = \App\Models\OrderReturn::where('order_id', $order->id)->exists();
+                                                                        $hasReturnRequest = \App\Models\OrderReturn::where(
+                                                                            'order_id',
+                                                                            $order->id,
+                                                                        )->exists();
                                                                     @endphp
                                                                     @if (!$hasReturnRequest)
                                                                         <button type="button"
-                                                                                onclick="window.location.href='{{ route('orders.return.create', $order->id) }}'"
-                                                                                class="btn-return"
-                                                                                title="Yêu cầu hoàn hàng">
+                                                                            onclick="window.location.href='{{ route('orders.return.create', $order->id) }}'"
+                                                                            class="btn-return" title="Yêu cầu hoàn hàng">
                                                                             Yêu cầu hoàn hàng
                                                                         </button>
                                                                     @else
-                                                                        <span class="btn-return disabled" title="Đã gửi yêu cầu hoàn hàng">
+                                                                        <span class="btn-return disabled"
+                                                                            title="Đã gửi yêu cầu hoàn hàng">
                                                                             Đã gửi yêu cầu hoàn hàng
                                                                         </span>
                                                                     @endif
@@ -844,193 +717,266 @@ strong {
 
                                                                 @if ($order->order_status_id == 7 || \App\Models\OrderReturn::where('order_id', $order->id)->exists())
                                                                     @php
-                                                                        $returnRequest = \App\Models\OrderReturn::where('order_id', $order->id)->first();
+                                                                        $returnRequest = \App\Models\OrderReturn::where(
+                                                                            'order_id',
+                                                                            $order->id,
+                                                                        )->first();
                                                                     @endphp
                                                                     @if ($returnRequest)
                                                                         <button type="button"
-                                                                                onclick="window.location.href='{{ route('orders.return.show', $returnRequest->id) }}'"
-                                                                                class="btn-return-detail"
-                                                                                title="Xem chi tiết hoàn hàng">
+                                                                            onclick="window.location.href='{{ route('orders.return.show', $returnRequest->id) }}'"
+                                                                            class="btn-return-detail"
+                                                                            title="Xem chi tiết hoàn hàng">
                                                                             Chi tiết hoàn hàng
                                                                         </button>
                                                                     @endif
                                                                 @endif
 
-                                                        {{-- ======= BOX: ĐƠN HÀNG & THÔNG TIN NGƯỜI NHẬN ======= --}}
-<div class="order-info-grid">
-    <div class="order-info-flex">
-        {{-- Box Đơn hàng --}}
-        <div class="card">
-            <div class="card-hd">Đơn hàng</div>
-            <div class="card-bd">
+                                                                {{-- ======= BOX: ĐƠN HÀNG & THÔNG TIN NGƯỜI NHẬN ======= --}}
+                                                                <div class="order-info-grid">
+                                                                    <div class="order-info-flex">
+                                                                        {{-- Box Đơn hàng --}}
+                                                                        <div class="card">
+                                                                            <div class="card-hd">Đơn hàng</div>
+                                                                            <div class="card-bd">
 
-                <div class="sum-row">
-                    <span>Mã đơn</span>
-                    <span>#{{ $order->order_code }}</span>
-                </div>
+                                                                                <div class="sum-row">
+                                                                                    <span>Mã đơn</span>
+                                                                                    <span>#{{ $order->order_code }}</span>
+                                                                                </div>
 
-                <div class="sum-row">
-                    <span>Trạng thái đơn</span>
-                    <span>
-                        <span class="status-badge {{ $statusClass }}">
-                            {{ $order->status?->name ?? '—' }}
-                        </span>
-                    </span>
-                </div>
+                                                                                <div class="sum-row">
+                                                                                    <span>Trạng thái đơn</span>
+                                                                                    <span>
+                                                                                        <span
+                                                                                            class="status-badge {{ $statusClass }}">
+                                                                                            {{ $order->status?->name ?? '—' }}
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </div>
 
-                {{-- TRẠNG THÁI HỦY/HOÀN TIỀN --}}
-                @if($order->cancelRequest)
-                    <div class="sum-row">
-                        <span>Trạng thái hủy hàng</span>
-                        <span>
-                            @php
-                                $rStatusId = (int) $order->cancelRequest->status_id; 
-                                $refundClass = match($rStatusId) {
-                                    1 => 'badge-warning text-dark',
-                                    2 => 'badge-primary',
-                                    3 => 'badge-danger',
-                                    4 => 'badge-success',
-                                    default => 'badge-secondary'
-                                };
-                                $refundName = match($rStatusId) {
-                                    1 => 'Chờ xử lý',
-                                    2 => 'Đã chấp nhận',
-                                    3 => 'Đã từ chối',
-                                    4 => 'Đã hoàn tiền',
-                                    default => 'Đang xử lý'
-                                };
-                            @endphp
-                            <span class="status-badge {{ $refundClass }}">
-                                {{ $refundName }}
-                            </span>
-                        </span>
-                    </div>
+                                                                                {{-- TRẠNG THÁI HỦY/HOÀN TIỀN --}}
+                                                                                @if ($order->cancelRequest)
+                                                                                    <div class="sum-row">
+                                                                                        <span>Trạng thái hủy hàng</span>
+                                                                                        <span>
+                                                                                            @php
+                                                                                                $rStatusId =
+                                                                                                    (int) $order
+                                                                                                        ->cancelRequest
+                                                                                                        ->status_id;
+                                                                                                $refundClass = match (
+                                                                                                    $rStatusId
+                                                                                                ) {
+                                                                                                    1
+                                                                                                        => 'badge-warning text-dark',
+                                                                                                    2
+                                                                                                        => 'badge-primary',
+                                                                                                    3 => 'badge-danger',
+                                                                                                    4
+                                                                                                        => 'badge-success',
+                                                                                                    default
+                                                                                                        => 'badge-secondary',
+                                                                                                };
+                                                                                                $refundName = match (
+                                                                                                    $rStatusId
+                                                                                                ) {
+                                                                                                    1 => 'Chờ xử lý',
+                                                                                                    2 => 'Đã chấp nhận',
+                                                                                                    3 => 'Đã từ chối',
+                                                                                                    4 => 'Đã hoàn tiền',
+                                                                                                    default
+                                                                                                        => 'Đang xử lý',
+                                                                                                };
+                                                                                            @endphp
+                                                                                            <span
+                                                                                                class="status-badge {{ $refundClass }}">
+                                                                                                {{ $refundName }}
+                                                                                            </span>
+                                                                                        </span>
+                                                                                    </div>
 
-                    {{-- Khu vực minh chứng hoàn tiền và nút xác nhận --}}
-                    @if($order->cancelRequest->refund_image)
-                        <div class="sum-row" style="flex-direction: column; align-items: stretch; gap: 10px; background: #f0fdf4; border: 1px solid #bcf0da; padding: 12px; border-radius: 8px; margin-top: 10px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                <span style="font-weight: 600; color: #065f46; font-size: 0.9rem;">
-                                    <i class="fas fa-file-invoice-dollar me-1"></i> Minh chứng hoàn tiền
-                                </span>
-                                <a href="{{ asset('storage/refunds/' . $order->cancelRequest->refund_image) }}" target="_blank" class="text-success" style="text-decoration: underline; font-size: 0.85rem; font-weight: 600;">
-                                    <i class="fas fa-external-link-alt me-1"></i> Xem ảnh
-                                </a>
-                            </div>
+                                                                                    {{-- Khu vực minh chứng hoàn tiền và nút xác nhận --}}
+                                                                                    @if ($order->cancelRequest->refund_image)
+                                                                                        <div class="sum-row"
+                                                                                            style="flex-direction: column; align-items: stretch; gap: 10px; background: #f0fdf4; border: 1px solid #bcf0da; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                                                                                            <div
+                                                                                                style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                                                                                <span
+                                                                                                    style="font-weight: 600; color: #065f46; font-size: 0.9rem;">
+                                                                                                    <i
+                                                                                                        class="fas fa-file-invoice-dollar me-1"></i>
+                                                                                                    Minh chứng hoàn tiền
+                                                                                                </span>
+                                                                                                <a href="{{ asset('storage/refunds/' . $order->cancelRequest->refund_image) }}"
+                                                                                                    target="_blank"
+                                                                                                    class="text-success"
+                                                                                                    style="text-decoration: underline; font-size: 0.85rem; font-weight: 600;">
+                                                                                                    <i
+                                                                                                        class="fas fa-external-link-alt me-1"></i>
+                                                                                                    Xem ảnh
+                                                                                                </a>
+                                                                                            </div>
 
-                            <div id="refund-action-area" style="text-align: right;">
-                                @php
-                                    $isConfirmed = (bool)$order->cancelRequest->is_customer_confirmed;
-                                @endphp
+                                                                                            <div id="refund-action-area"
+                                                                                                style="text-align: right;">
+                                                                                                @php
+                                                                                                    $isConfirmed =
+                                                                                                        (bool) $order
+                                                                                                            ->cancelRequest
+                                                                                                            ->is_customer_confirmed;
+                                                                                                @endphp
 
-                                @if($rStatusId === 4 && !$isConfirmed)
-                                    <button type="button" id="btnOpenConfirmMoney" class="btn-complete" style="padding: 6px 12px; font-size: 12px; background: #059669; color: white; border: none; border-radius: 4px;">
-                                        Xác nhận nhận tiền
-                                    </button>
-                                @elseif($isConfirmed)
-                                    <span class="badge bg-success" style="padding: 6px 12px; border-radius: 999px; font-size: 11px;">
-                                        <i class="fas fa-check-circle"></i> Bạn đã xác nhận
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                    @endif
-                @endif
+                                                                                                @if ($rStatusId === 4 && !$isConfirmed)
+                                                                                                    <button type="button"
+                                                                                                        id="btnOpenConfirmMoney"
+                                                                                                        class="btn-complete"
+                                                                                                        style="padding: 6px 12px; font-size: 12px; background: #059669; color: white; border: none; border-radius: 4px;">
+                                                                                                        Xác nhận nhận tiền
+                                                                                                    </button>
+                                                                                                @elseif($isConfirmed)
+                                                                                                    <span
+                                                                                                        class="badge bg-success"
+                                                                                                        style="padding: 6px 12px; border-radius: 999px; font-size: 11px;">
+                                                                                                        <i
+                                                                                                            class="fas fa-check-circle"></i>
+                                                                                                        Bạn đã xác nhận
+                                                                                                    </span>
+                                                                                                @endif
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                @endif
 
-                <hr class="my-3">
+                                                                                <hr class="my-3">
 
-                {{-- Thông tin thanh toán chung --}}
-                <div class="sum-row">
-                    <span>Trạng thái thanh toán</span>
-                    <span>
-                        <span class="status-badge {{ $payClass }}">
-                            {{ $payLabel }}
-                        </span>
-                    </span>
-                </div>
+                                                                                {{-- Thông tin thanh toán chung --}}
+                                                                                <div class="sum-row">
+                                                                                    <span>Trạng thái thanh toán</span>
+                                                                                    <span>
+                                                                                        <span
+                                                                                            class="status-badge {{ $payClass }}">
+                                                                                            {{ $payLabel }}
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </div>
 
-                <div class="sum-row">
-                    <span>Phương thức thanh toán</span>
-                    <span>{{ $order->paymentMethod?->name ?? '—' }}</span>
-                </div>
+                                                                                <div class="sum-row">
+                                                                                    <span>Phương thức thanh toán</span>
+                                                                                    <span>{{ $order->paymentMethod?->name ?? '—' }}</span>
+                                                                                </div>
 
-                <div class="sum-row">
-                    <span>Thời gian đặt</span>
-                    <span>{{ \Carbon\Carbon::parse($order->created_at)->format('H:i, d/m/Y') }}</span>
-                </div>
+                                                                                <div class="sum-row">
+                                                                                    <span>Thời gian đặt</span>
+                                                                                    <span>{{ \Carbon\Carbon::parse($order->created_at)->format('H:i, d/m/Y') }}</span>
+                                                                                </div>
 
-                <div class="sum-row">
-                    <span>Thời gian hủy</span>
-                    <span style="text-align: right;">
-                        @if($order->cancelRequest && $order->cancelRequest->status_id != 3)
-                            <div style="font-size: 0.85em; color: #7f8c8d; font-style: italic;">
-                                {{ \Carbon\Carbon::parse($order->cancelRequest->created_at)->format('H:i - d/m/Y') }}
-                            </div>
-                        @else
-                            <span class="text-muted">—</span>
-                        @endif
-                    </span>
-                </div>
-            </div>
-        </div>
+                                                                                <div class="sum-row">
+                                                                                    <span>Thời gian hủy</span>
+                                                                                    <span style="text-align: right;">
+                                                                                        @if ($order->cancelRequest && $order->cancelRequest->status_id != 3)
+                                                                                            <div
+                                                                                                style="font-size: 0.85em; color: #7f8c8d; font-style: italic;">
+                                                                                                {{ \Carbon\Carbon::parse($order->cancelRequest->created_at)->format('H:i - d/m/Y') }}
+                                                                                            </div>
+                                                                                        @else
+                                                                                            <span
+                                                                                                class="text-muted">—</span>
+                                                                                        @endif
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
 
-        {{-- Box Thông tin người nhận --}}
-        <div class="card">
-            <div class="card-hd">Thông tin người nhận</div>
-            <div class="card-bd pt-2">
-                <p class="mb-1"><strong>Họ tên:</strong> {{ $order->name }}</p>
-                <p class="mb-1"><strong>Điện thoại:</strong> {{ $order->phone }}</p>
-                <p class="mb-1"><strong>Địa chỉ:</strong> {{ $order->address }}</p>
+                                                                        {{-- Box Thông tin người nhận --}}
+                                                                        <div class="card">
+                                                                            <div class="card-hd">Thông tin người nhận</div>
+                                                                            <div class="card-bd pt-2">
+                                                                                <p class="mb-1"><strong>Họ tên:</strong>
+                                                                                    {{ $order->name }}</p>
+                                                                                <p class="mb-1"><strong>Điện
+                                                                                        thoại:</strong> {{ $order->phone }}
+                                                                                </p>
+                                                                                <p class="mb-1"><strong>Địa chỉ:</strong>
+                                                                                    {{ $order->address }}</p>
 
-                @if($order->user?->email)
-                    <p class="mb-1"><strong>Email:</strong> <a href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a></p>
-                @endif
+                                                                                @if ($order->user?->email)
+                                                                                    <p class="mb-1">
+                                                                                        <strong>Email:</strong> <a
+                                                                                            href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a>
+                                                                                    </p>
+                                                                                @endif
 
-                @if($order->note)
-                    <p class="mt-2 text-muted"><strong>Ghi chú:</strong> {{ $order->note }}</p>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
+                                                                                @if ($order->note)
+                                                                                    <p class="mt-2 text-muted"><strong>Ghi
+                                                                                            chú:</strong>
+                                                                                        {{ $order->note }}</p>
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
 
-{{-- MODAL XÁC NHẬN NHẬN TIỀN (Đặt ngoài cùng) --}}
-<div class="complete-order-overlay" id="confirmMoneyOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
-    <div class="cancel-order-modal" style="background: white; padding: 24px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center;">
-        <div style="color: #059669; font-size: 2.5rem; margin-bottom: 15px;">
-            <i class="fas fa-hand-holding-usd"></i>
-        </div>
-        <h3 style="color: #059669; font-size: 1.2rem; font-weight: 700;">Xác nhận nhận tiền</h3>
-        <p style="font-size: 14px; color: #4b5563; margin-bottom: 20px;">
-            Bạn xác nhận đã nhận đủ số tiền hoàn lại thông qua tài khoản ngân hàng?
-        </p>
-        <div class="cancel-order-actions" style="display: flex; gap: 10px; justify-content: center;">
-            <button type="button" class="btn-cancel-close" id="btnConfirmMoneyClose" style="padding: 8px 16px; border: 1px solid #ddd; border-radius: 6px;">Kiểm tra lại</button>
-            <button type="button" class="btn-cancel-ok" id="btnConfirmMoneyOk" style="padding: 8px 16px; background: #059669; color: white; border: none; border-radius: 6px; font-weight: 600;">Đã nhận được</button>
-        </div>
-    </div>
-</div>
+                                                                {{-- MODAL XÁC NHẬN NHẬN TIỀN (Đặt ngoài cùng) --}}
+                                                                <div class="complete-order-overlay"
+                                                                    id="confirmMoneyOverlay"
+                                                                    style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+                                                                    <div class="cancel-order-modal"
+                                                                        style="background: white; padding: 24px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center;">
+                                                                        <div
+                                                                            style="color: #059669; font-size: 2.5rem; margin-bottom: 15px;">
+                                                                            <i class="fas fa-hand-holding-usd"></i>
+                                                                        </div>
+                                                                        <h3
+                                                                            style="color: #059669; font-size: 1.2rem; font-weight: 700;">
+                                                                            Xác nhận nhận tiền</h3>
+                                                                        <p
+                                                                            style="font-size: 14px; color: #4b5563; margin-bottom: 20px;">
+                                                                            Bạn xác nhận đã nhận đủ số tiền hoàn lại thông
+                                                                            qua tài khoản ngân hàng?
+                                                                        </p>
+                                                                        <div class="cancel-order-actions"
+                                                                            style="display: flex; gap: 10px; justify-content: center;">
+                                                                            <button type="button"
+                                                                                class="btn-cancel-close"
+                                                                                id="btnConfirmMoneyClose"
+                                                                                style="padding: 8px 16px; border: 1px solid #ddd; border-radius: 6px;">Kiểm
+                                                                                tra lại</button>
+                                                                            <button type="button" class="btn-cancel-ok"
+                                                                                id="btnConfirmMoneyOk"
+                                                                                style="padding: 8px 16px; background: #059669; color: white; border: none; border-radius: 6px; font-weight: 600;">Đã
+                                                                                nhận được</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
 
-                        {{-- ======= CHI TIẾT ĐƠN HÀNG (BẢNG SẢN PHẨM) ======= --}}
-                        <section class="woocommerce-order-details card" style="margin-top:18px">
-                          <div class="card-hd">Chi tiết đơn hàng</div>
-                          <div class="card-bd" style="padding:0">
-                            <table class="woocommerce-table woocommerce-table--order-details shop_table order_details" style="margin:0">
-                              <thead>
-                                <tr>
-                                  <th style="width:60px">STT</th>
-                                  <th class="product-name">Sản phẩm</th>
-                                  <th class="product-quantity" style="width:90px">SL</th>
-                                  <th class="product-total" style="width:150px">Thành tiền</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                @foreach($lines as $it)
-                                  <tr class="order_item">
-                                    <td style="text-align:center">{{ $loop->iteration }}</td>
-                                    <td class="product-name">
-                                      <div style="display:flex; gap:12px; align-items:center">
-{{-- @php
+                                                                {{-- ======= CHI TIẾT ĐƠN HÀNG (BẢNG SẢN PHẨM) ======= --}}
+                                                                <section class="woocommerce-order-details card"
+                                                                    style="margin-top:18px">
+                                                                    <div class="card-hd">Chi tiết đơn hàng</div>
+                                                                    <div class="card-bd" style="padding:0">
+                                                                        <table
+                                                                            class="woocommerce-table woocommerce-table--order-details shop_table order_details"
+                                                                            style="margin:0">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th style="width:60px">STT</th>
+                                                                                    <th class="product-name">Sản phẩm</th>
+                                                                                    <th class="product-quantity"
+                                                                                        style="width:90px">SL</th>
+                                                                                    <th class="product-total"
+                                                                                        style="width:150px">Thành tiền</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach ($lines as $it)
+                                                                                    <tr class="order_item">
+                                                                                        <td style="text-align:center">
+                                                                                            {{ $loop->iteration }}</td>
+                                                                                        <td class="product-name">
+                                                                                            <div
+                                                                                                style="display:flex; gap:12px; align-items:center">
+                                                                                                {{-- @php
 $firstImage = $it->photoAlbums->first()?->image;
 @endphp
 
@@ -1039,370 +985,400 @@ $firstImage = $it->photoAlbums->first()?->image;
      class="avatar-md"> --}}
 
 
-                                          <strong>{{ $it->product_name }}</strong>
-                                          <div class="meta">
-                                            @if($it->variant_text) {{ $it->variant_text }} · @endif
-                                            Đơn giá: ₫{{ number_format($it->unit_price) }}
-                                            @if($it->eta)
-                                              · Dự kiến: {{ \Carbon\Carbon::parse($it->eta)->format('d/m') }}
-                                            @endif
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td class="product-quantity" style="text-align:center">{{ $it->qty }}</td>
-                                    <td class="product-total" style="text-align:right">
-                                      <span class="woocommerce-Price-amount amount">
-                                        <span class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($it->line_total) }}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                @endforeach
-                              </tbody>
-                            </table>
-                          </div>
-                        </section>
+                                                                                                <strong>{{ $it->product_name }}</strong>
+                                                                                                <div class="meta">
+                                                                                                    @if ($it->variant_text)
+                                                                                                        {{ $it->variant_text }}
+                                                                                                        ·
+                                                                                                    @endif
+                                                                                                    Đơn giá:
+                                                                                                    ₫{{ number_format($it->unit_price) }}
+                                                                                                    @if ($it->eta)
+                                                                                                        · Dự kiến:
+                                                                                                        {{ \Carbon\Carbon::parse($it->eta)->format('d/m') }}
+                                                                                                    @endif
+                                                                                                </div>
+                                                                                            </div>
+                                                                    </div>
+                                                                    </td>
+                                                                    <td class="product-quantity"
+                                                                        style="text-align:center">{{ $it->qty }}</td>
+                                                                    <td class="product-total" style="text-align:right">
+                                                                        <span class="woocommerce-Price-amount amount">
+                                                                            <span
+                                                                                class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($it->line_total) }}
+                                                                        </span>
+                                                                    </td>
+                                                                    </tr>
+                                                                    @endforeach
+                                                                    </tbody>
+                                                                    </table>
+                                                            </div>
+                                                            </section>
 
-                    {{-- ======= FOOTER: THÔNG ĐIỆP + TỔNG TIỀN GÓC PHẢI ======= --}}
-<div class="order-bottom">
+                                                            {{-- ======= FOOTER: THÔNG ĐIỆP + TỔNG TIỀN GÓC PHẢI ======= --}}
+                                                            <div class="order-bottom">
 
-    {{-- phần bên trái (bạn giữ nguyên nếu có) --}}
-    <div class="order-bottom-left">
-        @if($order->order_status_id == 5)
-            <h2>Sản phẩm cần đánh giá</h2>
-    <div class="review-list">
+                                                                {{-- phần bên trái (bạn giữ nguyên nếu có) --}}
+                                                                <div class="order-bottom-left">
+                                                                    @if ($order->order_status_id == 5)
+                                                                        <h2>Sản phẩm cần đánh giá</h2>
+                                                                        <div class="review-list">
 
-        {{-- Lặp qua từng chi tiết sản phẩm trong đơn hàng --}}
-        @foreach ($order->details as $detail)
-            <div class="product-review-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded">
+                                                                            {{-- Lặp qua từng chi tiết sản phẩm trong đơn hàng --}}
+                                                                            @foreach ($order->details as $detail)
+                                                                                <div
+                                                                                    class="product-review-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded">
 
-                {{-- Hiển thị tên sản phẩm --}}
-                <div>
-                    <strong>{{ $detail->product->name ?? 'Sản phẩm không rõ' }}</strong>
-                    <p class="text-muted mb-0">SKU: {{ $detail->variant_sku }}</p>
-                </div>
+                                                                                    {{-- Hiển thị tên sản phẩm --}}
+                                                                                    <div>
+                                                                                        <strong>{{ $detail->product->name ?? 'Sản phẩm không rõ' }}</strong>
+                                                                                        <p class="text-muted mb-0">SKU:
+                                                                                            {{ $detail->variant_sku }}</p>
+                                                                                    </div>
 
-                {{-- Kiểm tra xem sản phẩm này đã được đánh giá chưa --}}
-                @php
-                    // Lấy đánh giá cho sản phẩm/đơn hàng cụ thể
-                    $existingReview = $detail->product->reviews()->where('order_id', $order->id)->first();
-                @endphp
+                                                                                    {{-- Kiểm tra xem sản phẩm này đã được đánh giá chưa --}}
+                                                                                    @php
+                                                                                        // Lấy đánh giá cho sản phẩm/đơn hàng cụ thể
+                                                                                        $existingReview = $detail->product
+                                                                                            ->reviews()
+                                                                                            ->where(
+                                                                                                'order_id',
+                                                                                                $order->id,
+                                                                                            )
+                                                                                            ->first();
+                                                                                    @endphp
 
-                <div class="review-action">
-                    @if ($existingReview)
-                        {{-- Nếu đã có đánh giá --}}
-                        <span class="text-success me-3">
-                            <i class="fa fa-check-circle"></i> Đã đánh giá ({{ $existingReview->rating }} sao)
-                        </span>
-                    @else
-                        {{-- Nếu chưa có đánh giá --}}
-                       <a href="{{ route('review.create', ['order_id' => $order->id, 'product_id' => $detail->product->id]) }}"
-                           class="btn btn-sm btn-primary">
-                           <i class="fa fa-star"></i> Viết đánh giá
-                        </a>
-                    @endif
-                </div>
-            </div>
-        @endforeach
+                                                                                    <div class="review-action">
+                                                                                        @if ($existingReview)
+                                                                                            {{-- Nếu đã có đánh giá --}}
+                                                                                            <span
+                                                                                                class="text-success me-3">
+                                                                                                <i
+                                                                                                    class="fa fa-check-circle"></i>
+                                                                                                Đã đánh giá
+                                                                                                ({{ $existingReview->rating }}
+                                                                                                sao)
+                                                                                            </span>
+                                                                                        @else
+                                                                                            {{-- Nếu chưa có đánh giá --}}
+                                                                                            <a href="{{ route('review.create', ['order_id' => $order->id, 'product_id' => $detail->product->id]) }}"
+                                                                                                class="btn btn-sm btn-primary">
+                                                                                                <i class="fa fa-star"></i>
+                                                                                                Viết đánh giá
+                                                                                            </a>
+                                                                                        @endif
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endforeach
 
-    </div>
-@endif
-    </div>
-     </div>
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
 
-    {{-- BOX TỔNG THANH TOÁN BÊN PHẢI --}}
-    <div class="order-total-card card">
+                                                            {{-- BOX TỔNG THANH TOÁN BÊN PHẢI --}}
+                                                            <div class="order-total-card card">
 
-        <div class="card-hd">Tổng thanh toán</div>
+                                                                <div class="card-hd">Tổng thanh toán</div>
 
-        <div class="card-bd">
+                                                                <div class="card-bd">
 
-            <div class="sum-row">
-                <span>Tạm tính</span>
-                <span>₫{{ number_format($calc_subtotal) }}</span>
-            </div>
+                                                                    <div class="sum-row">
+                                                                        <span>Tạm tính</span>
+                                                                        <span>₫{{ number_format($calc_subtotal) }}</span>
+                                                                    </div>
 
-            <div class="sum-row">
-                <span>Phí vận chuyển</span>
-                <span>₫{{ number_format($calc_shipping_fee ?? 0) }}</span>
-            </div>
+                                                                    <div class="sum-row">
+                                                                        <span>Phí vận chuyển</span>
+                                                                        <span>₫{{ number_format($calc_shipping_fee ?? 0) }}</span>
+                                                                    </div>
 
-            <div class="sum-row">
-                <span>Giảm giá</span>
-                <span>-₫{{ number_format($calc_discount ?? 0) }}</span>
-            </div>
+                                                                    <div class="sum-row">
+                                                                        <span>Giảm giá</span>
+                                                                        <span>-₫{{ number_format($calc_discount ?? 0) }}</span>
+                                                                    </div>
 
-            <div class="sum-row">
-                <span>Voucher</span>
-                <span>{{ $order->voucher->voucher_code ?? 'Không có' }}</span>
-            </div>
+                                                                    <div class="sum-row">
+                                                                        <span>Voucher</span>
+                                                                        <span>{{ $order->voucher->voucher_code ?? 'Không có' }}</span>
+                                                                    </div>
 
-            <div class="sum-row">
-                <span>Trạng thái thanh toán</span>
-                <span>{{ $order->paymentStatus?->name ?? 'Chưa xác định' }}</span>
-            </div>
+                                                                    <div class="sum-row">
+                                                                        <span>Trạng thái thanh toán</span>
+                                                                        <span>{{ $order->paymentStatus?->name ?? 'Chưa xác định' }}</span>
+                                                                    </div>
 
-            <div class="sum-row total">
-                <span>Tổng thanh toán</span>
-                <span>₫{{ number_format($calc_total) }}</span>
-            </div>
+                                                                    <div class="sum-row total">
+                                                                        <span>Tổng thanh toán</span>
+                                                                        <span>₫{{ number_format($calc_total) }}</span>
+                                                                    </div>
 
-        </div>
-    </div>
+                                                                </div>
+                                                            </div>
 
-</div>
+                                                        </div>
 
-                        {{-- ===== Modal xác nhận ĐÃ NHẬN HÀNG ===== --}}
-                        <div class="complete-order-overlay" id="completeOrderOverlay">
-                          <div class="cancel-order-modal">
-                            <h3>Đã nhận hàng</h3>
-                            <p>Bạn đã nhận đầy đủ hàng và muốn hoàn thành đơn này?</p>
-                            <div class="cancel-order-actions">
-                              <button type="button" class="btn-cancel-close" id="btnCompleteClose">Không</button>
-                              <button type="button" class="btn-cancel-ok" id="btnCompleteOk">Đồng ý</button>
+                                                        {{-- ===== Modal xác nhận ĐÃ NHẬN HÀNG ===== --}}
+                                                        <div class="complete-order-overlay" id="completeOrderOverlay">
+                                                            <div class="cancel-order-modal">
+                                                                <h3>Đã nhận hàng</h3>
+                                                                <p>Bạn đã nhận đầy đủ hàng và muốn hoàn thành đơn này?</p>
+                                                                <div class="cancel-order-actions">
+                                                                    <button type="button" class="btn-cancel-close"
+                                                                        id="btnCompleteClose">Không</button>
+                                                                    <button type="button" class="btn-cancel-ok"
+                                                                        id="btnCompleteOk">Đồng ý</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div><!-- /.woocommerce-MyAccount-content -->
+                                                </div><!-- /.woocommerce -->
+                                            </div><!-- .entry-content -->
+                                    </article>
+                                </div>
                             </div>
-                          </div>
                         </div>
+                    </div>
+                </div><!-- .site-content-wrapper -->
 
-                      </div><!-- /.woocommerce-MyAccount-content -->
-                    </div><!-- /.woocommerce -->
-                  </div><!-- .entry-content -->
-                </article>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div><!-- .site-content-wrapper -->
+                @include('layouts.footer')
+                <div class="nova-overlay-global"></div>
+            </div><!-- .kitify-site-wrapper -->
 
-      @include('layouts.footer')
-      <div class="nova-overlay-global"></div>
-    </div><!-- .kitify-site-wrapper -->
+            {{-- JS điều khiển modal hủy đơn & đã nhận hàng --}}
+            {{-- JS điều khiển modal hủy đơn & đã nhận hàng --}}
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // ==========================================
+                    // 1. XỬ LÝ MODAL HỦY ĐƠN HÀNG (GIỮ NGUYÊN)
+                    // ==========================================
+                    const cancelOverlay = document.getElementById('cancelOrderOverlay');
+                    const btnOpenCancel = document.getElementById('btnOpenCancelModal');
+                    const btnCloseCancel = document.getElementById('btnCancelClose');
+                    const btnOkCancel = document.getElementById('btnCancelOk');
+                    const cancelForm = document.getElementById('cancel-order-form');
 
-    {{-- JS điều khiển modal hủy đơn & đã nhận hàng --}}
-   {{-- JS điều khiển modal hủy đơn & đã nhận hàng --}}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // ==========================================
-    // 1. XỬ LÝ MODAL HỦY ĐƠN HÀNG (GIỮ NGUYÊN)
-    // ==========================================
-    const cancelOverlay = document.getElementById('cancelOrderOverlay');
-    const btnOpenCancel = document.getElementById('btnOpenCancelModal');
-    const btnCloseCancel = document.getElementById('btnCancelClose');
-    const btnOkCancel = document.getElementById('btnCancelOk');
-    const cancelForm = document.getElementById('cancel-order-form');
-    
-    const selectBank = document.getElementById('selectBank');
-    const newBankFields = document.getElementById('newBankFields');
-    const inputBankName = document.getElementById('bank_name');
-    const inputAccNumber = document.getElementById('account_number');
-    const inputAccHolder = document.getElementById('account_holder');
+                    const selectBank = document.getElementById('selectBank');
+                    const newBankFields = document.getElementById('newBankFields');
+                    const inputBankName = document.getElementById('bank_name');
+                    const inputAccNumber = document.getElementById('account_number');
+                    const inputAccHolder = document.getElementById('account_holder');
 
-    function showError(input, errorId, message) {
-        if (!input) return;
-        input.classList.add('is-invalid');
-        const errorDiv = document.getElementById(errorId);
-        if (errorDiv) {
-            errorDiv.innerText = message;
-            errorDiv.style.display = 'block';
-        }
-    }
+                    function showError(input, errorId, message) {
+                        if (!input) return;
+                        input.classList.add('is-invalid');
+                        const errorDiv = document.getElementById(errorId);
+                        if (errorDiv) {
+                            errorDiv.innerText = message;
+                            errorDiv.style.display = 'block';
+                        }
+                    }
 
-    function clearErrors() {
-        document.querySelectorAll('.error-msg').forEach(el => {
-            el.innerText = '';
-            el.style.display = 'none';
-        });
-        document.querySelectorAll('.form-control, .form-select, .is-invalid').forEach(el => {
-            el.classList.remove('is-invalid');
-        });
-    }
+                    function clearErrors() {
+                        document.querySelectorAll('.error-msg').forEach(el => {
+                            el.innerText = '';
+                            el.style.display = 'none';
+                        });
+                        document.querySelectorAll('.form-control, .form-select, .is-invalid').forEach(el => {
+                            el.classList.remove('is-invalid');
+                        });
+                    }
 
-    function updateBankInputs() {
-        if (!selectBank || !newBankFields) return;
-        const selectedOption = selectBank.options[selectBank.selectedIndex];
-        
-        if (selectBank.value === 'new') {
-            newBankFields.style.display = 'block';
-            if(inputBankName) {
-                inputBankName.value = ''; inputAccNumber.value = ''; inputAccHolder.value = '';
-                inputBankName.readOnly = false; inputAccNumber.readOnly = false; inputAccHolder.readOnly = false;
-            }
-        } else if (selectBank.value !== "") {
-            newBankFields.style.display = 'none';
-            if(inputBankName) {
-                inputBankName.value = selectedOption.dataset.name || '';
-                inputAccNumber.value = selectedOption.dataset.number || '';
-                inputAccHolder.value = selectedOption.dataset.holder || '';
-                inputBankName.readOnly = true; inputAccNumber.readOnly = true; inputAccHolder.readOnly = true;
-            }
-        } else {
-            newBankFields.style.display = 'none';
-        }
-    }
+                    function updateBankInputs() {
+                        if (!selectBank || !newBankFields) return;
+                        const selectedOption = selectBank.options[selectBank.selectedIndex];
 
-    if (btnOpenCancel) {
-        btnOpenCancel.addEventListener('click', () => {
-            cancelOverlay.style.display = 'flex';
-            clearErrors();
-            updateBankInputs();
-        });
-    }
-    if (btnCloseCancel) {
-        btnCloseCancel.addEventListener('click', () => cancelOverlay.style.display = 'none');
-    }
+                        if (selectBank.value === 'new') {
+                            newBankFields.style.display = 'block';
+                            if (inputBankName) {
+                                inputBankName.value = '';
+                                inputAccNumber.value = '';
+                                inputAccHolder.value = '';
+                                inputBankName.readOnly = false;
+                                inputAccNumber.readOnly = false;
+                                inputAccHolder.readOnly = false;
+                            }
+                        } else if (selectBank.value !== "") {
+                            newBankFields.style.display = 'none';
+                            if (inputBankName) {
+                                inputBankName.value = selectedOption.dataset.name || '';
+                                inputAccNumber.value = selectedOption.dataset.number || '';
+                                inputAccHolder.value = selectedOption.dataset.holder || '';
+                                inputBankName.readOnly = true;
+                                inputAccNumber.readOnly = true;
+                                inputAccHolder.readOnly = true;
+                            }
+                        } else {
+                            newBankFields.style.display = 'none';
+                        }
+                    }
 
-    if (selectBank) {
-        selectBank.addEventListener('change', () => {
-            clearErrors();
-            updateBankInputs();
-        });
-    }
+                    if (btnOpenCancel) {
+                        btnOpenCancel.addEventListener('click', () => {
+                            cancelOverlay.style.display = 'flex';
+                            clearErrors();
+                            updateBankInputs();
+                        });
+                    }
+                    if (btnCloseCancel) {
+                        btnCloseCancel.addEventListener('click', () => cancelOverlay.style.display = 'none');
+                    }
 
-    if (btnOkCancel && cancelForm) {
-        btnOkCancel.addEventListener('click', function(e) {
-            e.preventDefault();
-            let isValid = true;
-            clearErrors();
+                    if (selectBank) {
+                        selectBank.addEventListener('change', () => {
+                            clearErrors();
+                            updateBankInputs();
+                        });
+                    }
 
-            const reason = cancelForm.querySelector('textarea[name="reason"]');
-            if (reason && !reason.value.trim()) {
-                showError(reason, 'err_reason', 'Vui lòng nhập lý do hủy đơn.');
-                isValid = false;
-            } else if (reason && reason.value.trim().length < 10) {
-                showError(reason, 'err_reason', 'Lý do quá ngắn (tối thiểu 10 ký tự).');
-                isValid = false;
-            }
+                    if (btnOkCancel && cancelForm) {
+                        btnOkCancel.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            let isValid = true;
+                            clearErrors();
 
-            if (selectBank && selectBank.value === "") {
-                showError(selectBank, 'err_user_bank_account_id', 'Vui lòng chọn tài khoản nhận tiền hoàn.');
-                isValid = false;
-            }
+                            const reason = cancelForm.querySelector('textarea[name="reason"]');
+                            if (reason && !reason.value.trim()) {
+                                showError(reason, 'err_reason', 'Vui lòng nhập lý do hủy đơn.');
+                                isValid = false;
+                            } else if (reason && reason.value.trim().length < 10) {
+                                showError(reason, 'err_reason', 'Lý do quá ngắn (tối thiểu 10 ký tự).');
+                                isValid = false;
+                            }
 
-            if (isValid) cancelForm.submit();
-        });
-    }
+                            if (selectBank && selectBank.value === "") {
+                                showError(selectBank, 'err_user_bank_account_id',
+                                    'Vui lòng chọn tài khoản nhận tiền hoàn.');
+                                isValid = false;
+                            }
 
-    // ==========================================
-    // 2. XỬ LÝ MODAL ĐÃ NHẬN HÀNG (GIỮ NGUYÊN)
-    // ==========================================
-    const completeOverlay = document.getElementById('completeOrderOverlay');
-    const btnOpenComplete = document.getElementById('btnOpenCompleteModal');
-    const btnCloseComplete = document.getElementById('btnCompleteClose');
-    const btnOkComplete = document.getElementById('btnCompleteOk');
-    const completeForm = document.getElementById('complete-order-form');
+                            if (isValid) cancelForm.submit();
+                        });
+                    }
 
-    if (btnOpenComplete) {
-        btnOpenComplete.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (completeOverlay) completeOverlay.style.display = 'flex';
-        });
-    }
+                    // ==========================================
+                    // 2. XỬ LÝ MODAL ĐÃ NHẬN HÀNG (GIỮ NGUYÊN)
+                    // ==========================================
+                    const completeOverlay = document.getElementById('completeOrderOverlay');
+                    const btnOpenComplete = document.getElementById('btnOpenCompleteModal');
+                    const btnCloseComplete = document.getElementById('btnCompleteClose');
+                    const btnOkComplete = document.getElementById('btnCompleteOk');
+                    const completeForm = document.getElementById('complete-order-form');
 
-    if (btnCloseComplete) {
-        btnCloseComplete.addEventListener('click', function() {
-            completeOverlay.style.display = 'none';
-        });
-    }
+                    if (btnOpenComplete) {
+                        btnOpenComplete.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            if (completeOverlay) completeOverlay.style.display = 'flex';
+                        });
+                    }
 
-    if (btnOkComplete && completeForm) {
-        btnOkComplete.addEventListener('click', function() {
-            btnOkComplete.disabled = true;
-            btnOkComplete.innerText = 'Đang xử lý...';
-            completeForm.submit();
-        });
-    }
+                    if (btnCloseComplete) {
+                        btnCloseComplete.addEventListener('click', function() {
+                            completeOverlay.style.display = 'none';
+                        });
+                    }
 
-    // ==========================================
-    // 3. XỬ LÝ MODAL XÁC NHẬN NHẬN TIỀN (AJAX LOGIC)
-    // ==========================================
-    const moneyOverlay = document.getElementById('confirmMoneyOverlay');
-    const btnOpenMoney = document.getElementById('btnOpenConfirmMoney');
-    const btnCloseMoney = document.getElementById('btnConfirmMoneyClose');
-    const btnOkMoney = document.getElementById('btnConfirmMoneyOk');
+                    if (btnOkComplete && completeForm) {
+                        btnOkComplete.addEventListener('click', function() {
+                            btnOkComplete.disabled = true;
+                            btnOkComplete.innerText = 'Đang xử lý...';
+                            completeForm.submit();
+                        });
+                    }
 
-    // Mở modal xác nhận nhận tiền hoàn
-    if (btnOpenMoney) {
-        btnOpenMoney.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (moneyOverlay) moneyOverlay.style.display = 'flex';
-        });
-    }
+                    // ==========================================
+                    // 3. XỬ LÝ MODAL XÁC NHẬN NHẬN TIỀN (AJAX LOGIC)
+                    // ==========================================
+                    const moneyOverlay = document.getElementById('confirmMoneyOverlay');
+                    const btnOpenMoney = document.getElementById('btnOpenConfirmMoney');
+                    const btnCloseMoney = document.getElementById('btnConfirmMoneyClose');
+                    const btnOkMoney = document.getElementById('btnConfirmMoneyOk');
 
-    // Đóng modal
-    if (btnCloseMoney) {
-        btnCloseMoney.addEventListener('click', function() {
-            moneyOverlay.style.display = 'none';
-        });
-    }
+                    // Mở modal xác nhận nhận tiền hoàn
+                    if (btnOpenMoney) {
+                        btnOpenMoney.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            if (moneyOverlay) moneyOverlay.style.display = 'flex';
+                        });
+                    }
 
-    // Gửi yêu cầu AJAX khi bấm Xác nhận đã nhận tiền
-  // Gửi yêu cầu AJAX khi bấm Xác nhận đã nhận tiền
-    if (btnOkMoney) {
-        btnOkMoney.addEventListener('click', function() {
-            const btn = this;
-            btn.disabled = true;
-            btn.innerText = 'Đang xử lý...';
+                    // Đóng modal
+                    if (btnCloseMoney) {
+                        btnCloseMoney.addEventListener('click', function() {
+                            moneyOverlay.style.display = 'none';
+                        });
+                    }
 
-            fetch("{{ route('orders.cancel.confirm_received', $order->id) }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    moneyOverlay.style.display = 'none';
-                    
-                    // 1. Cập nhật Badge xác nhận dưới ảnh minh chứng
-                    const actionArea = document.getElementById('refund-action-area');
-                    if (actionArea) {
-                        actionArea.innerHTML = `
+                    // Gửi yêu cầu AJAX khi bấm Xác nhận đã nhận tiền
+                    // Gửi yêu cầu AJAX khi bấm Xác nhận đã nhận tiền
+                    if (btnOkMoney) {
+                        btnOkMoney.addEventListener('click', function() {
+                            const btn = this;
+                            btn.disabled = true;
+                            btn.innerText = 'Đang xử lý...';
+
+                            fetch("{{ route('orders.cancel.confirm_received', $order->id) }}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        moneyOverlay.style.display = 'none';
+
+                                        // 1. Cập nhật Badge xác nhận dưới ảnh minh chứng
+                                        const actionArea = document.getElementById('refund-action-area');
+                                        if (actionArea) {
+                                            actionArea.innerHTML = `
                             <span class="badge" style="background: #d1fae5; color: #065f46; padding: 6px 12px; border-radius: 999px; font-size: 12px; border: 1px solid #059669;">
                                 <i class="fas fa-check-circle me-1"></i> Bạn đã xác nhận nhận tiền
                             </span>
                         `;
+                                        }
+
+                                        // 2. LOGIC QUAN TRỌNG: Cập nhật Thanh tiến trình sang bước 5 (Kết thúc)
+                                        const dots = document.querySelectorAll('.order-progress .dot');
+                                        const bars = document.querySelectorAll('.order-progress .bar');
+
+                                        // Thắp sáng tất cả các chấm (dots) cho đến bước 5
+                                        dots.forEach((dot, index) => {
+                                            if (index < 5) dot.classList.add('active');
+                                        });
+
+                                        // Thắp sáng tất cả các thanh nối (bars)
+                                        bars.forEach((bar, index) => {
+                                            if (index < 4) bar.classList.add('active');
+                                        });
+
+                                    } else {
+                                        alert(data.message || 'Có lỗi xảy ra!');
+                                        btn.disabled = false;
+                                        btn.innerText = 'Đã nhận được';
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('Lỗi kết nối hệ thống!');
+                                    btn.disabled = false;
+                                });
+                        });
                     }
 
-                    // 2. LOGIC QUAN TRỌNG: Cập nhật Thanh tiến trình sang bước 5 (Kết thúc)
-                    const dots = document.querySelectorAll('.order-progress .dot');
-                    const bars = document.querySelectorAll('.order-progress .bar');
-
-                    // Thắp sáng tất cả các chấm (dots) cho đến bước 5
-                    dots.forEach((dot, index) => {
-                        if (index < 5) dot.classList.add('active');
+                    // ==========================================
+                    // ĐÓNG MODAL KHI CLICK RA NGOÀI VÙNG XÁM
+                    // ==========================================
+                    window.addEventListener('click', (e) => {
+                        if (e.target === cancelOverlay) cancelOverlay.style.display = 'none';
+                        if (e.target === completeOverlay) completeOverlay.style.display = 'none';
+                        if (e.target === moneyOverlay) moneyOverlay.style.display = 'none';
                     });
-
-                    // Thắp sáng tất cả các thanh nối (bars)
-                    bars.forEach((bar, index) => {
-                        if (index < 4) bar.classList.add('active');
-                    });
-
-                } else {
-                    alert(data.message || 'Có lỗi xảy ra!');
-                    btn.disabled = false;
-                    btn.innerText = 'Đã nhận được';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Lỗi kết nối hệ thống!');
-                btn.disabled = false;
-            });
-        });
-    }
-
-    // ==========================================
-    // ĐÓNG MODAL KHI CLICK RA NGOÀI VÙNG XÁM
-    // ==========================================
-    window.addEventListener('click', (e) => {
-        if (e.target === cancelOverlay) cancelOverlay.style.display = 'none';
-        if (e.target === completeOverlay) completeOverlay.style.display = 'none';
-        if (e.target === moneyOverlay) moneyOverlay.style.display = 'none';
-    });
-});
-</script>
-  </div>
-@endsection
+                });
+            </script>
+        </div>
+    @endsection
