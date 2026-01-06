@@ -135,6 +135,7 @@ Route::prefix('orders')->middleware('auth')->group(function () {
     Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/repay/{orderCode}', [OrderController::class, 'repay'])->name('orders.repay');
     Route::post('/{id}/complete', [OrderController::class, 'complete'])->name('orders.complete');
+    
 
 // Route cho OrderCancelRequestController (Xử lý việc gửi yêu cầu hủy)
 Route::post('orders/{order_id}/cancel', [OrderCancelRequestController::class, 'store'])
