@@ -52,8 +52,39 @@
                       .orders-search-box { position: relative; flex: 1; max-width: 400px; }
                       .orders-search-box input { width: 100%; padding: 10px 15px 10px 40px !important; border-radius: 10px !important; border: 1px solid #e2e8f0 !important; font-size: 14px; }
                       .orders-search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
-                      .orders-select { padding: 10px 35px 10px 15px !important; border-radius: 10px !important; border: 1px solid #e2e8f0 !important; background-color: #fff !important; font-size: 14px; min-width: 200px; }
+                    .orders-select {
+    /* 1. Xóa bỏ hoàn toàn giao diện mặc định của trình duyệt (Quan trọng nhất) */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 
+    /* 2. Căn giữa chữ tuyệt đối */
+    text-align: center;
+    text-align-last: center; /* Hỗ trợ Chrome/Safari */
+    
+    /* 3. Đặt padding cân bằng hai bên để không bị đẩy lệch */
+    padding: 10px 15px !important; 
+    
+    /* 4. Thêm mũi tên mới bằng background-image (Không chiếm chỗ của chữ) */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center; /* Mũi tên nằm bên phải */
+    background-size: 12px;
+
+    /* 5. Giữ các thuộc tính thiết kế của bạn */
+    border-radius: 10px !important;
+    border: 1px solid #e2e8f0 !important;
+    background-color: #fff !important;
+    font-size: 14px;
+    min-width: 220px; /* Tăng nhẹ min-width để chữ có không gian */
+    cursor: pointer;
+    line-height: normal;
+}
+
+/* Căn giữa các lựa chọn trong danh sách thả xuống */
+.orders-select option {
+    text-align: center;
+}
                       /* Button Repay */
                       .btn-repay { background: #2563eb; color: #fff !important; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; transition: 0.3s; margin-top: 8px; text-decoration: none; }
                       .btn-repay:hover { background: #1d4ed8; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }

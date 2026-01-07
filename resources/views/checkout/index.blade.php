@@ -35,6 +35,85 @@
     /* Toast Notification */
     .custom-toast { position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; animation: slideIn 0.3s ease; }
     @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    /* Container bao quanh mã giảm giá */
+.voucher-card-wrapper {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px dashed #ced4da; /* Tạo hiệu ứng thẻ voucher */
+}
+
+/* Sửa lỗi lệch hàng trong input-group */
+.voucher-card-wrapper .input-group {
+    display: flex !important;
+    align-items: stretch !important; /* Buộc input và button phải cao bằng nhau */
+    height: 42px; /* Đặt chiều cao cố định để dễ kiểm soát chữ bên trong */
+}
+
+.voucher-card-wrapper .form-control {
+    flex: 1;
+    height: 100% !important;
+    border: 1px solid #ced4da !important;
+    border-right: none !important; /* Bỏ viền phải để nối liền với nút */
+    border-radius: 8px 0 0 8px !important; /* Bo góc trái */
+    padding: 0 15px !important;
+    font-size: 14px;
+    line-height: 42px !important; /* Giúp chữ "Nhập mã..." nằm giữa dọc */
+    box-shadow: none !important;
+}
+
+.voucher-card-wrapper .form-control:focus {
+    border-color: #212529 !important;
+}
+
+/* Sửa nút "Áp dụng" */
+.voucher-card-wrapper .btn-dark {
+    height: 100% !important;
+    border-radius: 0 8px 8px 0 !important; /* Bo góc phải */
+    padding: 0 20px !important;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center; /* Căn chữ "Áp dụng" vào chính giữa nút */
+    justify-content: center;
+    white-space: nowrap;
+    border: 1px solid #212529 !important;
+    transition: all 0.2s;
+}
+
+.voucher-card-wrapper .btn-dark:hover {
+    background-color: #000 !important;
+}
+.btn-danger.rounded-pill.shadow {
+    /* Căn giữa chữ tuyệt đối */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    /* Thiết lập kích thước và khoảng cách */
+    height: 60px; /* Đặt chiều cao cố định để không bị lệch dọc */
+    padding: 0 !important; /* Bỏ padding vì đã dùng height và flex center */
+    
+    /* Hiệu ứng thẩm mỹ */
+    border: none !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Hiệu ứng khi di chuột vào */
+.btn-danger.rounded-pill.shadow:hover {
+    transform: translateY(-3px); /* Nhấc nút lên nhẹ */
+    box-shadow: 0 8px 15px rgba(220, 53, 69, 0.4) !important;
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%) !important;
+}
+
+/* Hiệu ứng khi bấm nút */
+.btn-danger.rounded-pill.shadow:active {
+    transform: translateY(1px); /* Nút lún xuống khi bấm */
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3) !important;
+}
 </style>
 @endpush
 
@@ -444,61 +523,134 @@
             wardSelect.disabled = false;
         }
     };
+// --- THÊM ĐỊA CHỈ MỚI ---
+addressForm.onsubmit = function(e) {
+    e.preventDefault();
+    clearErrors();
 
-    // --- THÊM ĐỊA CHỈ MỚI ---
-    addressForm.onsubmit = function(e) {
-        e.preventDefault();
-        clearErrors();
+    const name = document.getElementById('addr_name').value.trim();
+    const phone = document.getElementById('addr_phone').value.trim();
+    const province = provinceSelect.value;
+    const district = districtSelect.value;
+    const ward = wardSelect.value;
+    const detail = document.getElementById('addr_detail').value.trim();
+    const isDefault = document.getElementById('addr_default').checked;
+    
+    let isValid = true;
+    if (!name) { setFieldError('addr_name', 'Vui lòng nhập họ tên'); isValid = false; }
+    
+    const phoneRegex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    if (!phone) { 
+        setFieldError('addr_phone', 'Vui lòng nhập số điện thoại'); 
+        isValid = false; 
+    } else if (!phoneRegex.test(phone)) { 
+        setFieldError('addr_phone', 'Số điện thoại không đúng định dạng'); 
+        isValid = false; 
+    }
 
-        const name = document.getElementById('addr_name').value.trim();
-        const phone = document.getElementById('addr_phone').value.trim();
-        const province = provinceSelect.value;
-        const district = districtSelect.value;
-        const ward = wardSelect.value;
-        const detail = document.getElementById('addr_detail').value.trim();
-        
-        let isValid = true;
-        if (!name) { setFieldError('addr_name', 'Vui lòng nhập họ tên'); isValid = false; }
-        const phoneRegex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
-        if (!phone) { setFieldError('addr_phone', 'Vui lòng nhập số điện thoại'); isValid = false; }
-        else if (!phoneRegex.test(phone)) { setFieldError('addr_phone', 'Số điện thoại không đúng định dạng'); isValid = false; }
-        if (!province) { setFieldError('addr_province', 'Vui lòng chọn Tỉnh/Thành'); isValid = false; }
-        if (!district) { setFieldError('addr_district', 'Vui lòng chọn Quận/Huyện'); isValid = false; }
-        if (!ward) { setFieldError('addr_ward', 'Vui lòng chọn Phường/Xã'); isValid = false; }
-        if (!detail) { setFieldError('addr_detail', 'Vui lòng nhập địa chỉ cụ thể'); isValid = false; }
+    if (!province) { setFieldError('addr_province', 'Vui lòng chọn Tỉnh/Thành'); isValid = false; }
+    if (!district) { setFieldError('addr_district', 'Vui lòng chọn Quận/Huyện'); isValid = false; }
+    if (!ward) { setFieldError('addr_ward', 'Vui lòng chọn Phường/Xã'); isValid = false; }
+    if (!detail) { setFieldError('addr_detail', 'Vui lòng nhập địa chỉ cụ thể'); isValid = false; }
 
-        if (!isValid) return;
+    if (!isValid) return;
 
-        const saveBtn = document.getElementById('btnSaveAddress');
-        saveBtn.disabled = true;
-        saveBtn.innerText = 'Đang xử lý...';
+    const saveBtn = document.getElementById('btnSaveAddress');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Đang xử lý...';
 
-        const data = {
-            name: name, phone: phone, province: province, district: district, 
-            ward: ward, address: detail,
-            is_default: document.getElementById('addr_default').checked ? 1 : 0,
-            _token: '{{ csrf_token() }}'
-        };
-
-        fetch('/checkout/address/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if(res.success || res.id) {
-                showToast("Lưu địa chỉ thành công!", "success");
-                location.reload();
-            } else {
-                saveBtn.disabled = false;
-                saveBtn.innerText = 'LƯU ĐỊA CHỈ';
-                if (res.errors) {
-                    Object.keys(res.errors).forEach(key => setFieldError('addr_' + key, res.errors[key][0]));
-                }
-            }
-        });
+    const data = {
+        name: name, 
+        phone: phone, 
+        province: province, 
+        district: district, 
+        ward: ward, 
+        address: detail,
+        is_default: isDefault ? 1 : 0,
+        _token: '{{ csrf_token() }}'
     };
+
+    // Bước 1: Lưu địa chỉ vào Database
+    fetch('/checkout/address/add', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json' 
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(async res => {
+        if(res.success || res.id) {
+            
+            // Bước 2: NẾU TÍCH CHỌN MẶC ĐỊNH -> Cập nhật Session ngay lập tức
+            if (isDefault) {
+                try {
+                    await fetch("{{ route('account.update') }}", {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+                        },
+                        body: JSON.stringify({ address_id: res.id })
+                    });
+                    // Lưu trạng thái để hiển thị thông báo sau khi reload
+                    sessionStorage.setItem('checkout_address_success', 'true');
+                    sessionStorage.setItem('selected_address_id', res.id);
+                } catch (err) {
+                    console.error("Lỗi cập nhật session:", err);
+                }
+            } else {
+                // Nếu không tích mặc định, chỉ lưu thông báo thành công bình thường
+                sessionStorage.setItem('checkout_address_success', 'true');
+            }
+
+            // Đóng modal
+            const editModalEl = document.getElementById('editAddressModal');
+            const editModal = bootstrap.Modal.getInstance(editModalEl);
+            if(editModal) editModal.hide();
+
+            showToast("Đang đồng bộ dữ liệu...", "success");
+
+            // Bước 3: Reload để Server hiển thị địa chỉ mới (vì đã cập nhật session/db mặc định)
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+
+        } else {
+            saveBtn.disabled = false;
+            saveBtn.innerText = 'LƯU ĐỊA CHỈ';
+            if (res.errors) {
+                Object.keys(res.errors).forEach(key => {
+                    setFieldError('addr_' + key, res.errors[key][0]);
+                });
+            } else if (res.message) {
+                showToast(res.message, "error");
+            }
+        }
+    })
+    .catch(err => {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'LƯU ĐỊA CHỈ';
+        console.error("Lỗi:", err);
+        showToast("Có lỗi xảy ra", "error");
+    });
+};
+
+// CHẠY SAU KHI RELOAD TRANG
+window.addEventListener('load', function() {
+    if (sessionStorage.getItem('checkout_address_success')) {
+        showToast("Cập nhật địa chỉ thành công!", "success");
+        sessionStorage.removeItem('checkout_address_success');
+        
+        const savedId = sessionStorage.getItem('selected_address_id');
+        if (savedId) {
+            const inputId = document.getElementById('selected_address_id');
+            if (inputId) inputId.value = savedId;
+            sessionStorage.removeItem('selected_address_id');
+        }
+    }
+});
 
     // --- VOUCHER ---
     function pickVoucher(code) {
