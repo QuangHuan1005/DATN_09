@@ -36,16 +36,16 @@ class CheckoutController extends Controller
 
             if ($selectedIds) {
                 $idArray = array_map('strval', explode(',', $selectedIds));
-                $sourceItems = array_filter($cart, function($key) use ($idArray) {
+                $sourceItems = array_filter($cart, function ($key) use ($idArray) {
                     return in_array((string)$key, $idArray);
                 }, ARRAY_FILTER_USE_KEY);
-                
+
                 Session::put('selected_items_for_checkout', $idArray);
             } else {
                 $idArray = Session::get('selected_items_for_checkout');
                 if ($idArray) {
                     $idArray = array_map('strval', $idArray);
-                    $sourceItems = array_filter($cart, function($key) use ($idArray) {
+                    $sourceItems = array_filter($cart, function ($key) use ($idArray) {
                         return in_array((string)$key, $idArray);
                     }, ARRAY_FILTER_USE_KEY);
                 } else {
@@ -64,7 +64,7 @@ class CheckoutController extends Controller
 
         foreach ($sourceItems as $variantId => $item) {
             $variant = ProductVariant::with(['product', 'color', 'size'])->find($variantId);
-            
+
             if ($variant) {
                 if ($variant->quantity < $item['quantity']) {
                     return redirect()->route('cart.index')->with('error', "Sản phẩm {$variant->product->name} không đủ số lượng.");
@@ -74,7 +74,7 @@ class CheckoutController extends Controller
                 $qty = (int)$item['quantity'];
                 $itemTotal = $price * $qty;
                 $totalAmount += $itemTotal;
-                
+
                 $cartItems[] = [
                     'variant' => $variant,
                     'quantity' => $qty,
@@ -86,9 +86,9 @@ class CheckoutController extends Controller
 
         /** ================= 3. XỬ LÝ ĐỊA CHỈ ================= */
         $addresses = $user->addresses()->orderBy('is_default', 'desc')->get();
-        $selectedAddressId = session('checkout_address_id'); 
+        $selectedAddressId = session('checkout_address_id');
         $defaultAddress = $selectedAddressId ? $addresses->where('id', $selectedAddressId)->first() : null;
-        
+
         if (!$defaultAddress) {
             $defaultAddress = $addresses->where('is_default', true)->first() ?: $addresses->first();
         }
@@ -136,9 +136,17 @@ class CheckoutController extends Controller
             ->get();
 
         return view('checkout.index', compact(
-            'cartItems', 'totalAmount', 'discountAmount', 'shippingFee', 
-            'grandTotal', 'appliedVoucher', 'user', 'addresses', 
-            'defaultAddress', 'vouchers', 'addressCount'
+            'cartItems',
+            'totalAmount',
+            'discountAmount',
+            'shippingFee',
+            'grandTotal',
+            'appliedVoucher',
+            'user',
+            'addresses',
+            'defaultAddress',
+            'vouchers',
+            'addressCount'
         ));
     }
 
@@ -148,8 +156,8 @@ class CheckoutController extends Controller
     public function buyNow(Request $request)
     {
         $data = $request->validate([
-            'product_variant_id' => ['required','integer','exists:product_variants,id'],
-            'quantity'           => ['required','integer','min:1'],
+            'product_variant_id' => ['required', 'integer', 'exists:product_variants,id'],
+            'quantity'           => ['required', 'integer', 'min:1'],
         ]);
 
         $variant = ProductVariant::findOrFail($data['product_variant_id']);
@@ -176,7 +184,7 @@ class CheckoutController extends Controller
 
         $buyNow = Session::get('buy_now');
         $cart = Session::get('cart', []);
-        
+
         if ($buyNow) {
             $sourceItems = [$buyNow['variant_id'] => ['quantity' => $buyNow['quantity']]];
         } else {
@@ -196,7 +204,7 @@ class CheckoutController extends Controller
                 $voucherData = session('applied_voucher');
                 $appliedVoucher = $voucherData ? Voucher::find($voucherData['id']) : null;
 
-                
+
                 foreach ($sourceItems as $variantId => $item) {
                     $variant = ProductVariant::lockForUpdate()->find($variantId);
                     if (!$variant || $variant->quantity < $item['quantity']) {
@@ -247,7 +255,7 @@ class CheckoutController extends Controller
                     'payment_status_id' => 1,
                 ]);
 
-               $orderCode = 'ORD' . $order->id;
+                $orderCode = 'ORD' . $order->id;
                 $order->update(['order_code' => $orderCode]);
 
                 foreach ($variantsToOrder as $item) {
@@ -258,11 +266,11 @@ class CheckoutController extends Controller
                         'price'              => $item['price'],
                     ]);
                 }
-                $userEmail = Auth::user()->email;
-                if ($userEmail) {
-                    // Nên dùng Queue để không làm chậm trải nghiệm người dùng
-                    Mail::to($userEmail)->send(new OrderConfirmationMail($order));
-                    // Hoặc dùng: Mail::to($userEmail)->queue(new OrderConfirmationMail($order));
+                if ($validated['payment_method'] != 2) {
+                    $userEmail = Auth::user()->email;
+                    if ($userEmail) {
+                        Mail::to($userEmail)->send(new OrderConfirmationMail($order));
+                    }
                 }
 
                 if ($appliedVoucher) $appliedVoucher->increment('total_used');
@@ -272,7 +280,9 @@ class CheckoutController extends Controller
                 } else {
                     $selectedIds = Session::get('selected_items_for_checkout');
                     if ($selectedIds) {
-                        foreach ($selectedIds as $id) { unset($cart[$id]); }
+                        foreach ($selectedIds as $id) {
+                            unset($cart[$id]);
+                        }
                         Session::put('cart', $cart);
                     } else {
                         Session::forget('cart');
@@ -290,8 +300,8 @@ class CheckoutController extends Controller
             if ($orderResult['payment_method'] == '2') {
                 $vnpayService = new VNPayService();
                 $result = $vnpayService->createPayment(
-                    $orderResult['order_code'], 
-                    $orderResult['grand_total'], 
+                    $orderResult['order_code'],
+                    $orderResult['grand_total'],
                     "Thanh toan don hang " . $orderResult['order_code']
                 );
                 if ($result['success']) return redirect()->away($result['payment_url']);
@@ -302,95 +312,130 @@ class CheckoutController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+    public function vnpayReturn(Request $request)
+    {
+        // 1. Kiểm tra dữ liệu trả về từ VNPay
+        if ($request->vnp_ResponseCode == "00") {
+            // --- THANH TOÁN THÀNH CÔNG ---
+
+            // Tìm đơn hàng theo mã (vnp_TxnRef thường là order_code)
+            $orderCode = $request->vnp_TxnRef;
+            $order = Order::where('order_code', $orderCode)->first();
+
+            if ($order) {
+                // Cập nhật trạng thái đơn hàng -> Đã thanh toán
+                // Giả sử payment_status_id = 2 là "Đã thanh toán"
+                $order->update(['payment_status_id' => 2]);
+
+                // === GỬI MAIL XÁC NHẬN TẠI ĐÂY ===
+                $user = $order->user; // Hoặc lấy email từ Auth::user() nếu user đang login
+                $emailToSend = $user ? $user->email : null; // Cần xử lý trường hợp khách vãng lai nếu có
+
+                if ($emailToSend) {
+                    Mail::to($emailToSend)->send(new OrderConfirmationMail($order));
+                }
+            }
+
+            return redirect()->route('checkout.success')->with('success', 'Thanh toán VNPay thành công! Đã gửi email xác nhận.');
+        } else {
+            // --- THANH TOÁN THẤT BẠI ---
+
+            // Có thể bạn muốn xóa đơn hàng tạm hoặc cập nhật trạng thái "Hủy/Thất bại"
+            $orderCode = $request->vnp_TxnRef;
+            Order::where('order_code', $orderCode)->update(['payment_status_id' => 3]); // Ví dụ 3 là thất bại
+
+            return redirect()->route('checkout.index')->with('error', 'Thanh toán VNPay thất bại hoặc bị hủy.');
+        }
+    }
 
     /**
      * Áp dụng Voucher
      */
-   public function applyVoucher(Request $request)
-{
-    $request->validate(['voucher_code' => 'required|string']);
+    public function applyVoucher(Request $request)
+    {
+        $request->validate(['voucher_code' => 'required|string']);
 
-    $voucher = Voucher::with('products')
-        ->where('voucher_code', $request->voucher_code)
-        ->where('status', 1)
-        ->where('start_date', '<=', now())
-        ->where('end_date', '>=', now())
-        ->whereColumn('total_used', '<', 'quantity')
-        ->first();
+        $voucher = Voucher::with('products')
+            ->where('voucher_code', $request->voucher_code)
+            ->where('status', 1)
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->whereColumn('total_used', '<', 'quantity')
+            ->first();
 
-    if (!$voucher) {
-        return response()->json(['success' => false, 'message' => 'Voucher không hợp lệ hoặc hết lượt']);
-    }
-
-    $buyNow = session('buy_now');
-    $cart = session('cart', []);
-    
-    if ($buyNow) {
-        $sourceItems = [$buyNow['variant_id'] => ['quantity' => $buyNow['quantity']]];
-    } else {
-        $selectedIds = session('selected_items_for_checkout');
-        $sourceItems = $selectedIds ? array_filter($cart, fn($k) => in_array((string)$k, $selectedIds), ARRAY_FILTER_USE_KEY) : $cart;
-    }
-
-    if (empty($sourceItems)) {
-        return response()->json(['success' => false, 'message' => 'Không có sản phẩm để áp dụng']);
-    }
-
-    $totalAmount = 0; 
-    $eligibleAmount = 0;
-    $hasEligibleProduct = false; // Biến kiểm tra có SP hợp lệ không
-    $isSpecificVoucher = $voucher->products()->exists(); // Kiểm tra voucher có giới hạn SP không
-
-    foreach ($sourceItems as $variantId => $item) {
-        $variant = ProductVariant::with('product')->find($variantId);
-        if (!$variant) continue;
-        
-        $price = $variant->sale > 0 ? $variant->sale : $variant->price;
-        $itemTotal = $price * (int)$item['quantity'];
-        $totalAmount += $itemTotal;
-
-        // Kiểm tra nếu voucher áp dụng cho toàn sàn (không có SP giới hạn)
-        // hoặc SP này nằm trong danh sách được áp dụng của voucher
-        if (!$isSpecificVoucher || $voucher->products->pluck('id')->contains($variant->product_id)) {
-            $eligibleAmount += $itemTotal;
-            $hasEligibleProduct = true;
+        if (!$voucher) {
+            return response()->json(['success' => false, 'message' => 'Voucher không hợp lệ hoặc hết lượt']);
         }
-    }
 
-    // --- BƯỚC FIX LỖI: Chặn nếu không có sản phẩm nào hợp lệ ---
-    if ($isSpecificVoucher && !$hasEligibleProduct) {
+        $buyNow = session('buy_now');
+        $cart = session('cart', []);
+
+        if ($buyNow) {
+            $sourceItems = [$buyNow['variant_id'] => ['quantity' => $buyNow['quantity']]];
+        } else {
+            $selectedIds = session('selected_items_for_checkout');
+            $sourceItems = $selectedIds ? array_filter($cart, fn($k) => in_array((string)$k, $selectedIds), ARRAY_FILTER_USE_KEY) : $cart;
+        }
+
+        if (empty($sourceItems)) {
+            return response()->json(['success' => false, 'message' => 'Không có sản phẩm để áp dụng']);
+        }
+
+        $totalAmount = 0;
+        $eligibleAmount = 0;
+        $hasEligibleProduct = false; // Biến kiểm tra có SP hợp lệ không
+        $isSpecificVoucher = $voucher->products()->exists(); // Kiểm tra voucher có giới hạn SP không
+
+        foreach ($sourceItems as $variantId => $item) {
+            $variant = ProductVariant::with('product')->find($variantId);
+            if (!$variant) continue;
+
+            $price = $variant->sale > 0 ? $variant->sale : $variant->price;
+            $itemTotal = $price * (int)$item['quantity'];
+            $totalAmount += $itemTotal;
+
+            // Kiểm tra nếu voucher áp dụng cho toàn sàn (không có SP giới hạn)
+            // hoặc SP này nằm trong danh sách được áp dụng của voucher
+            if (!$isSpecificVoucher || $voucher->products->pluck('id')->contains($variant->product_id)) {
+                $eligibleAmount += $itemTotal;
+                $hasEligibleProduct = true;
+            }
+        }
+
+        // --- BƯỚC FIX LỖI: Chặn nếu không có sản phẩm nào hợp lệ ---
+        if ($isSpecificVoucher && !$hasEligibleProduct) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mã này không áp dụng cho các sản phẩm hiện có trong đơn hàng của bạn'
+            ]);
+        }
+
+        if ($voucher->min_order_value > 0 && $totalAmount < $voucher->min_order_value) {
+            return response()->json(['success' => false, 'message' => 'Đơn hàng tối thiểu ' . number_format($voucher->min_order_value) . ' đ']);
+        }
+
+        // Tính toán số tiền giảm
+        $discountAmount = ($voucher->discount_type === 'percent')
+            ? min($eligibleAmount * $voucher->discount_value / 100, $voucher->sale_price > 0 ? $voucher->sale_price : 999999999)
+            : min($voucher->discount_value, $eligibleAmount);
+
+        // Chốt chặn cuối cùng: Nếu số tiền giảm vẫn bằng 0 thì không cho áp dụng
+        if ($discountAmount <= 0) {
+            return response()->json(['success' => false, 'message' => 'Đơn hàng không đủ điều kiện để giảm giá']);
+        }
+
+        session(['applied_voucher' => [
+            'id' => $voucher->id,
+            'voucher_code' => $voucher->voucher_code,
+            'discount_amount' => round($discountAmount)
+        ]]);
+
         return response()->json([
-            'success' => false, 
-            'message' => 'Mã này không áp dụng cho các sản phẩm hiện có trong đơn hàng của bạn'
+            'success' => true,
+            'message' => 'Giảm ' . number_format(round($discountAmount)) . ' đ',
+            'discount_amount' => round($discountAmount)
         ]);
     }
-
-    if ($voucher->min_order_value > 0 && $totalAmount < $voucher->min_order_value) {
-        return response()->json(['success' => false, 'message' => 'Đơn hàng tối thiểu ' . number_format($voucher->min_order_value) . ' đ']);
-    }
-
-    // Tính toán số tiền giảm
-    $discountAmount = ($voucher->discount_type === 'percent') 
-        ? min($eligibleAmount * $voucher->discount_value / 100, $voucher->sale_price > 0 ? $voucher->sale_price : 999999999)
-        : min($voucher->discount_value, $eligibleAmount);
-
-    // Chốt chặn cuối cùng: Nếu số tiền giảm vẫn bằng 0 thì không cho áp dụng
-    if ($discountAmount <= 0) {
-        return response()->json(['success' => false, 'message' => 'Đơn hàng không đủ điều kiện để giảm giá']);
-    }
-
-    session(['applied_voucher' => [
-        'id' => $voucher->id, 
-        'voucher_code' => $voucher->voucher_code,
-        'discount_amount' => round($discountAmount)
-    ]]);
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Giảm ' . number_format(round($discountAmount)) . ' đ',
-        'discount_amount' => round($discountAmount)
-    ]);
-}
 
     /**
      * Chuẩn hóa URL ảnh
@@ -398,9 +443,11 @@ class CheckoutController extends Controller
     private function normalizeImageUrl($product, $variant = null): string
     {
         $raw = null;
-        if ($variant && !empty($variant->image)) { $raw = $variant->image; } 
-        elseif (!empty($product->image)) { $raw = $product->image; } 
-        elseif (!empty($product->images)) {
+        if ($variant && !empty($variant->image)) {
+            $raw = $variant->image;
+        } elseif (!empty($product->image)) {
+            $raw = $product->image;
+        } elseif (!empty($product->images)) {
             $images = is_string($product->images) ? json_decode($product->images, true) : $product->images;
             if (is_array($images)) {
                 $first = $images[0] ?? null;
@@ -409,15 +456,17 @@ class CheckoutController extends Controller
         }
 
         $raw = $raw ? ltrim($raw, '/') : '';
-        if ($raw && preg_match('#^https?://#i', $raw)) { return $raw; }
+        if ($raw && preg_match('#^https?://#i', $raw)) {
+            return $raw;
+        }
 
         $rel = Str::startsWith($raw, 'storage/') ? Str::after($raw, 'storage/') : $raw;
         $file = basename($rel);
-        $candidates = ['products/'.$file, ltrim($rel, '/'), 'product_images/'.$file];
+        $candidates = ['products/' . $file, ltrim($rel, '/'), 'product_images/' . $file];
 
         foreach ($candidates as $relPath) {
             if (Storage::disk('public')->exists($relPath)) {
-                return asset('storage/'.$relPath);
+                return asset('storage/' . $relPath);
             }
         }
         return asset('images/placeholder.png');
