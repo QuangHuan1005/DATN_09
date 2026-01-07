@@ -39,42 +39,71 @@
         </div>
     </div>
 
-    {{-- KPI Cards --}}
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 border-start border-4 border-success h-100">
+   {{-- KPI Cards - DOANH THU --}}
+<div class="row g-3 mb-3">
+    {{-- Click xem Đơn hoàn thành --}}
+    <div class="col-md-4">
+        <a href="{{ route('admin.orders.index', ['order_status_id' => 5]) }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 border-start border-4 border-primary h-100 btn-reveal">
                 <div class="card-body">
-                    <div class="text-uppercase small fw-bold text-muted mb-1">Tổng doanh thu (Thực nhận)</div>
-                    <div class="h3 mb-0 fw-bold text-success">{{ number_format($totalRevenue, 0, ',', '.') }} ₫</div>
-                    <div class="progress mt-2" style="height: 4px;">
-                        <div class="progress-bar bg-success" style="width: 100%"></div>
-                    </div>
+                    <div class="text-uppercase small fw-bold text-muted mb-1">Doanh thu gộp (Hóa đơn)</div>
+                    <div class="h3 mb-0 fw-bold text-primary">{{ number_format($totalRevenue, 0, ',', '.') }} ₫</div>
+                    <small class="text-muted">Tổng đơn Hoàn thành <i class="bi bi-arrow-right-short"></i></small>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <a href="{{ route('admin.orders.index', ['payment_status' => 2]) }}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 border-start border-4 border-primary h-100">
-                    <div class="card-body">
-                        <div class="text-uppercase small fw-bold text-muted mb-1">Đơn hàng đã thanh toán</div>
-                        <div class="h3 mb-0 fw-bold text-primary">{{ $totalPaidOrders }}</div>
-                        <small class="text-muted">Click để xem danh sách</small>
-                    </div>
+        </a>
+    </div>
+
+    {{-- Click xem Đơn đã hoàn tiền --}}
+    <div class="col-md-4">
+        <a href="{{ route('admin.orders.index', ['order_status_id' => 7]) }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 border-start border-4 border-danger h-100 btn-reveal">
+                <div class="card-body">
+                    <div class="text-uppercase small fw-bold text-muted mb-1">Tổng tiền hoàn trả</div>
+                    <div class="h3 mb-0 fw-bold text-danger">{{ number_format($totalRefund ?? 0, 0, ',', '.') }} ₫</div>
+                    <small class="text-muted">Khấu trừ đơn Hoàn hàng <i class="bi bi-arrow-right-short"></i></small>
                 </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-            <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 border-start border-4 border-info h-100">
-                    <div class="card-body">
-                        <div class="text-uppercase small fw-bold text-muted mb-1">Tổng lượng giao dịch</div>
-                        <div class="h3 mb-0 fw-bold text-info">{{ $allOrders }}</div>
-                        <small class="text-muted">Bao gồm cả đơn đang xử lý</small>
-                    </div>
-                </div>
-            </a>
+            </div>
+        </a>
+    </div>
+
+    {{-- Thẻ này thường xem tổng thể nên để link về trang index không lọc hoặc lọc đơn "Thực thu" --}}
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 border-start border-4 border-success h-100">
+            <div class="card-body">
+                <div class="text-uppercase small fw-bold text-muted mb-1">Doanh thu thực nhận</div>
+                <div class="h3 mb-0 fw-bold text-success">{{ number_format($netRevenue ?? $totalRevenue, 0, ',', '.') }} ₫</div>
+                <small class="text-muted">Thực thu sau khi trừ hoàn</small>
+            </div>
         </div>
     </div>
+</div>
+
+{{-- KPI Cards - SỐ LƯỢNG ĐƠN HÀNG --}}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <a href="{{ route('admin.orders.index', ['order_status_id' => 5]) }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 border-start border-4 h-100" style="border-left-color: #ff6b00 !important;">
+                <div class="card-body">
+                    <div class="text-uppercase small fw-bold text-muted mb-1">Đơn hàng hoàn thành</div>
+                    <div class="h3 mb-0 fw-bold" style="color: #ff6b00;">{{ $totalPaidOrders }}</div>
+                    <small class="text-muted">Đơn đã nhận hàng & thanh toán</small>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 border-start border-4 border-info h-100">
+                <div class="card-body">
+                    <div class="text-uppercase small fw-bold text-muted mb-1">Tổng lượng giao dịch</div>
+                    <div class="h3 mb-0 fw-bold text-info">{{ $allOrders }}</div>
+                    <small class="text-muted">Tất cả trạng thái đơn hàng</small>
+                </div>
+            </div>
+        </a>
+    </div> 
+</div>
 
     {{-- BIỂU ĐỒ DOANH THU THÁNG --}}
     <div class="row mb-4">
@@ -252,7 +281,9 @@
 const money = v => new Intl.NumberFormat('vi-VN').format(v) + ' ₫';
 
 document.addEventListener('DOMContentLoaded', function() {
-    // --- 0. XỬ LÝ AJAX NOTIFICATION CHO BỘ LỌC NGÀY ---
+    const COMPLETED_STATUS_ID = 5;
+
+    // --- 0. BỘ LỌC NGÀY ---
     const fromInput = document.getElementById('fromDate');
     const toInput = document.getElementById('toDate');
     const filterForm = document.getElementById('filterForm');
@@ -261,24 +292,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (fromInput.value && toInput.value) {
             const date1 = new Date(fromInput.value);
             const date2 = new Date(toInput.value);
-
             if (date1 > date2) {
-                // Đảo giá trị ngay lập tức
                 const temp = fromInput.value;
                 fromInput.value = toInput.value;
                 toInput.value = temp;
-
-                // Thông báo Toast (Ajax Style)
                 Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                    timerProgressBar: true,
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 4000, timerProgressBar: true,
                 }).fire({
-                    icon: 'warning',
-                    title: 'Ngày bắt đầu > Ngày kết thúc',
-                    text: 'Hệ thống đã tự động đảo lại ngày cho hợp lệ.'
+                    icon: 'warning', title: 'Ngày bắt đầu > Ngày kết thúc', text: 'Hệ thống đã tự động đảo lại ngày cho hợp lệ.'
                 });
             }
         }
@@ -287,16 +308,13 @@ document.addEventListener('DOMContentLoaded', function() {
     fromInput.addEventListener('change', validateDates);
     toInput.addEventListener('change', validateDates);
 
-    // Hiệu ứng loading khi submit
     filterForm.addEventListener('submit', function() {
         Swal.fire({
-            title: 'Đang xử lý dữ liệu...',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
+            title: 'Đang xử lý dữ liệu...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }
         });
     });
 
-    // --- 1. BIỂU ĐỒ DOANH THU THÁNG ---
+    // --- 1. BIỂU ĐỒ THÁNG ---
     new Chart(document.getElementById('revenueMonthly'), {
         type: 'bar',
         data: {
@@ -306,30 +324,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 data: {!! json_encode($monthlyRevenues ?? []) !!},
                 backgroundColor: 'rgba(54, 162, 235, 0.7)',
                 borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-                borderRadius: 4
+                borderWidth: 1, borderRadius: 4
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: true, maintainAspectRatio: false,
             onClick: (e, els) => {
                 if (els.length > 0) {
                     const month = els[0].index + 1;
                     const year = {{ request('year', $year ?? date('Y')) }};
-                    window.location.href = `{{ route('admin.orders.index') }}?month=${month}&year=${year}`;
+                    window.location.href = `{{ route('admin.orders.index') }}?month=${month}&year=${year}&order_status_id=${COMPLETED_STATUS_ID}`;
                 }
             },
-            plugins: {
-                tooltip: { callbacks: { label: ctx => ' ' + money(ctx.parsed.y) } }
-            },
-            scales: {
-                y: { ticks: { callback: v => money(v) } }
-            }
+            plugins: { tooltip: { callbacks: { label: ctx => ' ' + money(ctx.parsed.y) } } },
+            scales: { y: { ticks: { callback: v => money(v) } } }
         }
     });
 
-    // --- 2. BIỂU ĐỒ DOANH THU NGÀY ---
+    // --- 2. BIỂU ĐỒ NGÀY ---
     new Chart(document.getElementById('revenueLine'), {
         type: 'line',
         data: {
@@ -337,30 +349,21 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Doanh thu',
                 data: {!! json_encode($revenues ?? []) !!},
-                borderColor: '#0dcaf0',
-                backgroundColor: 'rgba(13, 202, 240, 0.1)',
-                fill: true,
-                tension: 0.4,
-                pointRadius: 4,
-                pointHoverRadius: 7
+                borderColor: '#0dcaf0', backgroundColor: 'rgba(13, 202, 240, 0.1)',
+                fill: true, tension: 0.4, pointRadius: 4, pointHoverRadius: 7
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: true, maintainAspectRatio: false,
             onClick: (e, els) => {
                 if (els.length > 0) {
                     const idx = els[0].index;
                     const date = {!! json_encode($labels ?? []) !!}[idx];
-                    window.location.href = `{{ route('admin.orders.index') }}?date=${date}`;
+                    window.location.href = `{{ route('admin.orders.index') }}?date=${date}&order_status_id=${COMPLETED_STATUS_ID}`;
                 }
             },
-            plugins: {
-                tooltip: { callbacks: { label: ctx => ' ' + money(ctx.parsed.y) } }
-            },
-            scales: {
-                y: { ticks: { callback: v => money(v) } }
-            }
+            plugins: { tooltip: { callbacks: { label: ctx => ' ' + money(ctx.parsed.y) } } },
+            scales: { y: { ticks: { callback: v => money(v) } } }
         }
     });
 
@@ -380,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (els.length > 0) {
                     const idx = els[0].index;
                     const sid = statusMapIds[idx];
-                    window.location.href = `{{ route('admin.orders.index') }}?status=${sid}`;
+                    window.location.href = `{{ route('admin.orders.index') }}?order_status_id=${sid}`;
                 }
             },
             plugins: {
@@ -408,15 +411,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 {
                     label: 'Doanh thu',
                     data: {!! json_encode($tpRevenue ?? []) !!},
-                    backgroundColor: 'rgba(13, 110, 253, 0.7)',
-                    yAxisID: 'y'
+                    backgroundColor: 'rgba(13, 110, 253, 0.7)', yAxisID: 'y'
                 },
                 {
                     label: 'Số lượng',
                     data: {!! json_encode($tpQty ?? []) !!},
-                    borderColor: '#dc3545',
-                    type: 'line',
-                    yAxisID: 'y1'
+                    borderColor: '#dc3545', type: 'line', yAxisID: 'y1'
                 }
             ]
         },
@@ -425,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (els.length > 0) {
                     const idx = els[0].index;
                     const pid = topProductIds[idx];
-                    window.location.href = `{{ route('admin.orders.index') }}?product_id=${pid}`;
+                    window.location.href = `{{ route('admin.orders.index') }}?product_id=${pid}&order_status_id=${COMPLETED_STATUS_ID}`;
                 }
             },
             scales: {
@@ -447,13 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }]
         },
         options: {
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: ctx => ` ${ctx.label}: hoàn ${ctx.raw} món`
-                    }
-                }
-            }
+            plugins: { tooltip: { callbacks: { label: ctx => ` ${ctx.label}: hoàn ${ctx.raw} món` } } }
         }
     });
     @endif

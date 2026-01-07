@@ -14,6 +14,9 @@ use App\Services\VNPayService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Facades\Mail; // Nhớ import
+use App\Mail\OrderConfirmationMail;  // Nhớ import
+
 class CheckoutController extends Controller
 {
     /**
@@ -81,15 +84,34 @@ class CheckoutController extends Controller
             }
         }
 
-        /** ================= 3. XỬ LÝ ĐỊA CHỈ ================= */
-        $addresses = $user->addresses()->orderBy('is_default', 'desc')->get();
-        $selectedAddressId = session('checkout_address_id'); 
-        $defaultAddress = $selectedAddressId ? $addresses->where('id', $selectedAddressId)->first() : null;
-        
-        if (!$defaultAddress) {
-            $defaultAddress = $addresses->where('is_default', true)->first() ?: $addresses->first();
-        }
-        $addressCount = $addresses->count();
+       /** ================= 3. XỬ LÝ ĐỊA CHỈ ================= */
+// 1. Lấy tất cả địa chỉ chưa xóa của user
+$addresses = $user->addresses()->whereNull('deleted_at')->latest()->get();
+
+// 2. TÌM ĐỊA CHỈ MẶC ĐỊNH TRONG DATABASE (Ưu tiên số 1)
+// Theo dữ liệu của bạn, bản ghi ID 22 sẽ được tìm thấy ở đây
+$defaultAddress = $addresses->where('is_default', 1)->first();
+
+// 3. Nếu không có mặc định trong DB, mới kiểm tra Session cũ
+if (!$defaultAddress) {
+    $selectedAddressId = session('checkout_address_id');
+    if ($selectedAddressId) {
+        $defaultAddress = $addresses->where('id', $selectedAddressId)->first();
+    }
+}
+
+// 4. Cuối cùng nếu vẫn không có, lấy địa chỉ mới nhất
+if (!$defaultAddress) {
+    $defaultAddress = $addresses->first();
+}
+
+// 5. ĐỒNG BỘ LẠI SESSION
+// Sau khi tìm thấy ID 22 là mặc định, ta ghi đè vào session để các hàm Store() dùng đúng
+if ($defaultAddress) {
+    session(['checkout_address_id' => $defaultAddress->id]);
+}
+
+$addressCount = $addresses->count();
 
         /** ================= 4. XỬ LÝ VOUCHER ĐÃ ÁP DỤNG ================= */
         $voucherData = session('applied_voucher');
@@ -193,6 +215,7 @@ class CheckoutController extends Controller
                 $voucherData = session('applied_voucher');
                 $appliedVoucher = $voucherData ? Voucher::find($voucherData['id']) : null;
 
+                
                 foreach ($sourceItems as $variantId => $item) {
                     $variant = ProductVariant::lockForUpdate()->find($variantId);
                     if (!$variant || $variant->quantity < $item['quantity']) {
@@ -253,6 +276,12 @@ class CheckoutController extends Controller
                         'quantity'           => $item['quantity'],
                         'price'              => $item['price'],
                     ]);
+                }
+                $userEmail = Auth::user()->email;
+                if ($userEmail) {
+                    // Nên dùng Queue để không làm chậm trải nghiệm người dùng
+                    Mail::to($userEmail)->send(new OrderConfirmationMail($order));
+                    // Hoặc dùng: Mail::to($userEmail)->queue(new OrderConfirmationMail($order));
                 }
 
                 if ($appliedVoucher) $appliedVoucher->increment('total_used');

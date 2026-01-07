@@ -7,11 +7,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0">Danh Sách Đơn Hàng</h3>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-primary d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false border-0 shadow-sm">
+            <button class="btn btn-outline-primary d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" style="border: none; box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;">
                 <iconify-icon icon="solar:filter-bold-duotone" class="fs-20"></iconify-icon>
                 <span class="fw-bold">Bộ lọc</span>
             </button>
-            @if(request()->anyFilled(['payment_status', 'product_id', 'month', 'date', 'status', 'keyword']))
+            @if(request()->anyFilled(['payment_status', 'product_id', 'month', 'date', 'status', 'order_status_id', 'keyword']))
                 <a href="{{ route('admin.orders.index') }}" class="btn btn-soft-danger d-flex align-items-center shadow-sm">
                     <iconify-icon icon="solar:refresh-broken" class="fs-20"></iconify-icon>
                 </a>
@@ -30,16 +30,21 @@
     @endforeach
 
     {{-- Dashboard Filter Badges --}}
-    @if(request('payment_status') || request('product_id') || request('month') || request('date'))
+    @if(request('payment_status') || request('product_id') || request('month') || request('date') || request('order_status_id'))
         <div class="mb-3 d-flex flex-wrap gap-2">
+            @if(request('order_status_id'))
+                <span class="badge bg-soft-primary text-primary border border-primary px-3 py-2">
+                    Trạng thái: {{ collect($statuses)->firstWhere('id', request('order_status_id'))->name ?? 'N/A' }}
+                </span>
+            @endif
             @if(request('payment_status'))
                 <span class="badge bg-soft-info text-info border border-info px-3 py-2">
-                    Trạng thái thanh toán: {{ request('payment_status') == 2 ? 'Đã thanh toán' : 'Chưa thanh toán' }}
+                    Thanh toán: {{ request('payment_status') == 2 ? 'Đã thanh toán' : (request('payment_status') == 3 ? 'Đã hoàn tiền' : 'Chưa thanh toán') }}
                 </span>
             @endif
             @if(request('product_id'))
                 <span class="badge bg-soft-primary text-primary border border-primary px-3 py-2">
-                    Đang lọc theo sản phẩm ID: #{{ request('product_id') }}
+                    Sản phẩm ID: #{{ request('product_id') }}
                 </span>
             @endif
             @if(request('month'))
@@ -59,7 +64,7 @@
     @endif
 
     {{-- Bộ lọc trượt --}}
-    <div class="collapse {{ request()->anyFilled(['payment_status', 'date', 'status', 'keyword']) ? 'show' : '' }}" id="collapseFilter">
+    <div class="collapse {{ request()->anyFilled(['payment_status', 'date', 'status', 'order_status_id', 'keyword']) ? 'show' : '' }}" id="collapseFilter">
         <div class="card mb-4 border-0 shadow-sm">
             <div class="card-body">
                 <form method="GET" action="{{ route('admin.orders.index') }}" class="row g-3">
@@ -73,10 +78,10 @@
                     </div>
                     <div class="col-md-2">
                         <label class="form-label small fw-bold">Trạng thái đơn</label>
-                        <select name="status" class="form-select">
+                        <select name="order_status_id" class="form-select">
                             <option value="">Tất cả</option>
                             @foreach($statuses as $status)
-                                <option value="{{ $status->id }}" {{ request('status') == $status->id ? 'selected' : '' }}>
+                                <option value="{{ $status->id }}" {{ (request('order_status_id') == $status->id || request('status') == $status->id) ? 'selected' : '' }}>
                                     {{ $status->name }}
                                 </option>
                             @endforeach
@@ -111,6 +116,7 @@
                             <th>Ngày Tạo</th>
                             <th>Khách Hàng</th>
                             <th>Tổng Tiền</th>
+                            <th>Tiền Hoàn</th>
                             <th>Phương Thức</th>
                             <th>Thanh Toán</th>
                             <th>Sản Phẩm</th>
@@ -153,6 +159,13 @@
                                     </a>
                                 </td>
                                 <td class="fw-bold">{{ number_format($order->total_amount, 0, ',', '.') }}₫</td>
+                                <td class="fw-bold">
+                                    @if($order->order_status_id == 7)
+                                        <span class="text-danger">-{{ number_format($order->total_amount, 0, ',', '.') }}₫</span>
+                                    @else
+                                        <span class="text-muted">0₫</span>
+                                    @endif
+                                </td>
                                 <td><span class="small fw-medium {{ $methodColor }}">{{ $methodName }}</span></td>
                                 <td><span class="{{ $paymentColor }} px-2 py-1 fs-12 fw-bold text-uppercase">{{ $paymentName }}</span></td>
                                 <td>
@@ -186,13 +199,9 @@
                                             @foreach($statuses as $status)
                                                 @php
                                                     $disabled = false;
-                                                    
-                                                    // Ẩn trạng thái Hoàn thành (5) và Hoàn hàng (7) khỏi danh sách lựa chọn
-                                                    // Nhưng nếu đơn hàng đang ở trạng thái đó thì vẫn giữ lại để hiển thị Label
                                                     if (in_array($status->id, [5, 7]) && $order->order_status_id != $status->id) {
                                                         continue;
                                                     }
-
                                                     if ($status->id < $order->order_status_id && $status->id != 6) $disabled = true;
                                                     if ($isShippingOrBeyond && $status->id == 6) $disabled = true;
                                                 @endphp
@@ -215,7 +224,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="10" class="text-center py-5 text-muted">
+                                <td colspan="11" class="text-center py-5 text-muted">
                                     <iconify-icon icon="solar:document-text-broken" class="fs-48 mb-2 d-block mx-auto opacity-25"></iconify-icon>
                                     Không có đơn hàng nào khớp với bộ lọc.
                                 </td>
@@ -316,7 +325,7 @@ function resetSelect(select) {
                 <textarea id="admin_reason_input" class="form-control" rows="3" placeholder="Ví dụ: Sản phẩm hết hàng, Khách không nghe máy..."></textarea>
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-light px-4" id="btnCancelModal">Đóng</button>
+                <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Đóng</button>
                 <button type="button" class="btn btn-danger px-4" id="btnConfirmCancel">Xác nhận hủy</button>
             </div>
         </div>
@@ -324,10 +333,13 @@ function resetSelect(select) {
 </div>
 
 <style>
-    .bg-soft-primary { background-color: #e0ebff; }
-    .bg-soft-info { background-color: #e0f7ff; }
-    .bg-soft-success { background-color: #e6fffa; }
+    .bg-soft-primary { background-color: #e0ebff; color: #0d6efd; }
+    .bg-soft-info { background-color: #e0f7ff; color: #0dcaf0; }
+    .bg-soft-success { background-color: #e6fffa; color: #198754; }
     .bg-soft-danger { background-color: #fee2e2; color: #ef4444; }
+    .bg-soft-dark { background-color: #f1f1f1; color: #333; }
     .fs-20 { font-size: 20px; }
+    .fs-12 { font-size: 12px; }
+    .badge { font-weight: 600; }
 </style>
 @endsection

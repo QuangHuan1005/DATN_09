@@ -227,6 +227,7 @@ class OrderController extends Controller
             return back()->with('error', 'Có lỗi xảy ra khi cập nhật đơn hàng.');
         }
     }
+    
 
     /**
      * Đánh giá đơn hàng
