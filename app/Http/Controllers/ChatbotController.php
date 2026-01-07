@@ -16,7 +16,7 @@ class ChatbotController extends Controller
         // 1. Phân tích và lấy dữ liệu đa chiều
         $contextData = $this->getAdvancedDatabaseContext($userMessage);
 
-        // 2. Prompt được tinh chỉnh để xử lý dữ liệu chi tiết
+        // 2. Prompt (Không thay đổi nhiều, chỉ cập nhật hướng dẫn về giá)
         $systemPrompt = "Bạn là trợ lý ảo AI của shop thời trang 'Friday'.
         
         NHIỆM VỤ:
@@ -25,8 +25,8 @@ class ChatbotController extends Controller
         
         QUY TẮC ĐỊNH DẠNG:
         - Luôn dùng định dạng Markdown cho link: [Tên Sản Phẩm](Đường_dẫn)
-        - Ví dụ: [Áo Thun Teelab](http://localhost:8000/products/42) - Giá: 200k
-        - Nếu có thông tin về màu sắc hoặc chất liệu trong dữ liệu, hãy nhắc đến để khách rõ.
+        - Ưu tiên nhắc đến giá Sale nếu có.
+        - Ví dụ: [Áo Thun Teelab](http://localhost:8000/products/42) - Đang giảm còn 150k (Gốc 200k)
         
         [KẾT QUẢ TÌM KIẾM TỪ KHO DỮ LIỆU]:
         {$contextData}";
@@ -36,7 +36,7 @@ class ChatbotController extends Controller
                 'Authorization' => 'Bearer ' . env('GROQ_API_KEY'),
                 'Content-Type'  => 'application/json',
             ])->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model' => 'llama-3.3-70b-versatile', 
+                'model' => 'llama-3.3-70b-versatile',
                 'messages' => [
                     ['role' => 'system', 'content' => $systemPrompt],
                     ['role' => 'user', 'content' => $userMessage],
@@ -50,99 +50,114 @@ class ChatbotController extends Controller
             } else {
                 return response()->json(['reply' => 'Hệ thống đang bận, vui lòng thử lại sau.']);
             }
-
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['reply' => 'Lỗi kết nối.'], 500);
         }
     }
 
-    // --- HÀM XỬ LÝ LOGIC TÌM KIẾM NÂNG CAO ---
+    // --- HÀM XỬ LÝ LOGIC TÌM KIẾM NÂNG CAO (ĐÃ NÂNG CẤP) ---
     private function getAdvancedDatabaseContext($message)
     {
         // 1. XỬ LÝ GIÁ (Price Parser)
-        // Tìm các con số đi kèm chữ 'k' hoặc 'trăm', 'triệu' (ví dụ: 200k, 500000)
         $priceFilter = null;
         if (preg_match('/(\d+)[.,]?(\d+)?\s*(k|nghìn|vnd|đ|trăm|triệu)?/i', $message, $matches)) {
-            // Logic đơn giản hóa: Lấy số đầu tiên tìm thấy làm mốc giá
             $number = intval(preg_replace('/[^0-9]/', '', $matches[0]));
-            if ($number < 1000) $number *= 1000; // Hiểu 200 là 200.000
-            
-            // Nếu câu hỏi có từ "dưới", "nhỏ hơn"
-            if (preg_match('/(dưới|nhỏ hơn|tầm|khoảng)/i', $message)) {
+            if ($number < 1000) $number *= 1000;
+
+            if (preg_match('/(dưới|nhỏ hơn|tầm|khoảng|rẻ hơn)/i', $message)) {
                 $priceFilter = ['operator' => '<=', 'value' => $number];
-            } 
-            // Nếu câu hỏi có từ "trên", "hơn"
-            elseif (preg_match('/(trên|hơn|lớn hơn)/i', $message)) {
+            } elseif (preg_match('/(trên|hơn|lớn hơn|đắt hơn)/i', $message)) {
                 $priceFilter = ['operator' => '>=', 'value' => $number];
             }
         }
 
-        // 2. TÁCH TỪ KHÓA (Keyword Extraction)
-        // Loại bỏ các từ nối vô nghĩa để tìm kiếm chính xác hơn
-        $stopWords = ['là', 'của', 'những', 'cái', 'chiếc', 'shop', 'có', 'không', 'với', 'tìm', 'cho', 'tôi', 'mình', 'em', 'anh', 'chị', 'xem'];
+        // 2. TÁCH TỪ KHÓA
+        $stopWords = ['là', 'của', 'những', 'cái', 'chiếc', 'shop', 'có', 'không', 'với', 'tìm', 'cho', 'tôi', 'mình', 'em', 'anh', 'chị', 'xem', 'giá', 'bao', 'nhiêu'];
         $cleanMessage = str_replace($stopWords, '', mb_strtolower($message));
-        $keywords = array_filter(explode(' ', $cleanMessage), function($w) {
-            return mb_strlen($w) > 1; 
+        $keywords = array_filter(explode(' ', $cleanMessage), function ($w) {
+            return mb_strlen($w) > 1;
         });
 
         // 3. XÂY DỰNG QUERY
         $query = DB::table('products')
             ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-            ->leftJoin('categories', 'products.category_id', '=', 'categories.id') // Join danh mục
-            ->leftJoin('colors', 'product_variants.color_id', '=', 'colors.id')     // Join màu sắc
+            ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+            ->leftJoin('colors', 'product_variants.color_id', '=', 'colors.id')
+            // [NÂNG CẤP 1] Chỉ lấy sản phẩm chưa bị xóa (Soft Delete)
+            ->whereNull('products.deleted_at')
             ->select(
                 'products.id',
                 'products.name',
                 'categories.name as category_name',
                 'products.material',
+                // [NÂNG CẤP 2] Lấy cả giá gốc và giá Sale (chỉ lấy giá sale > 0)
                 DB::raw('MIN(product_variants.price) as min_price'),
-                DB::raw('GROUP_CONCAT(DISTINCT colors.name SEPARATOR ", ") as colors_list') // Gộp danh sách màu
+                DB::raw('MIN(NULLIF(product_variants.sale, 0)) as min_sale'),
+                DB::raw('GROUP_CONCAT(DISTINCT colors.name SEPARATOR ", ") as colors_list')
             )
             ->groupBy('products.id', 'products.name', 'categories.name', 'products.material');
 
-        // Áp dụng bộ lọc Giá (nếu có)
-        if ($priceFilter) {
-            $query->having('min_price', $priceFilter['operator'], $priceFilter['value']);
-        }
-
-        // Áp dụng bộ lọc Từ khóa đa năng (Tìm trong Tên, Danh mục, Màu, Mô tả)
+        // [NÂNG CẤP 3] Logic tìm kiếm chặt chẽ hơn (AND Logic)
+        // Ví dụ: "Áo đỏ" -> Sản phẩm phải thỏa mãn (có chữ "Áo") VÀ (có chữ "đỏ")
+        // Logic cũ là HOẶC (có "Áo" là lấy, hoặc có "đỏ" là lấy -> dẫn đến kết quả rác)
         if (!empty($keywords)) {
-            $query->where(function($q) use ($keywords) {
-                foreach ($keywords as $word) {
-                    $q->orWhere('products.name', 'LIKE', "%{$word}%");
-                    $q->orWhere('products.description', 'LIKE', "%{$word}%"); // Tìm trong mô tả
-                    $q->orWhere('categories.name', 'LIKE', "%{$word}%");      // Tìm trong danh mục (ví dụ: quần, áo)
-                    $q->orWhere('colors.name', 'LIKE', "%{$word}%");          // Tìm trong màu (ví dụ: đỏ, xanh)
-                    $q->orWhere('products.material', 'LIKE', "%{$word}%");    // Tìm trong chất liệu
-                }
-            });
+            foreach ($keywords as $word) {
+                $query->where(function ($subQuery) use ($word) {
+                    $subQuery->orWhere('products.name', 'LIKE', "%{$word}%")
+                        ->orWhere('products.description', 'LIKE', "%{$word}%")
+                        ->orWhere('categories.name', 'LIKE', "%{$word}%")
+                        ->orWhere('colors.name', 'LIKE', "%{$word}%")
+                        ->orWhere('products.material', 'LIKE', "%{$word}%");
+                });
+            }
         }
 
-        // Lấy kết quả (Tăng giới hạn lên 15)
+        // [NÂNG CẤP 4] Lọc giá thông minh (Dựa trên giá thực tế khách phải trả)
+        // Nếu có giá sale thì so sánh giá sale, không thì so sánh giá gốc
+        if ($priceFilter) {
+            // Logic SQL: COALESCE(min_sale, min_price) nghĩa là ưu tiên lấy min_sale, nếu null thì lấy min_price
+            $query->havingRaw('COALESCE(MIN(NULLIF(product_variants.sale, 0)), MIN(product_variants.price)) ' . $priceFilter['operator'] . ' ?', [$priceFilter['value']]);
+        }
+
         $products = $query->limit(15)->get();
 
-        // 4. FORMAT DỮ LIỆU TRẢ VỀ CHO AI
-        $resultString = $products->map(function($p) {
-            $url = url("/products/{$p->id}"); // Link sản phẩm
-            $price = number_format($p->min_price);
+        // 4. FORMAT DỮ LIỆU
+        $resultString = $products->map(function ($p) {
+            $url = url("/products/{$p->id}");
+
+            // Xử lý hiển thị Giá Sale
+            $priceInfo = "";
+            $originalPrice = $p->min_price;
+            $salePrice = $p->min_sale;
+
+            // Nếu có giá sale và giá sale nhỏ hơn giá gốc
+            if ($salePrice > 0 && $salePrice < $originalPrice) {
+                $discountAmount = $originalPrice - $salePrice;
+                // Format: Giảm 50k - Còn 150,000đ (Gốc: 200,000đ)
+                $priceInfo = "Đang giảm " . number_format($discountAmount / 1000) . "k | Giá chỉ: " . number_format($salePrice) . "đ (Gốc: " . number_format($originalPrice) . "đ)";
+            } else {
+                $priceInfo = "Giá: " . number_format($originalPrice) . "đ";
+            }
+
             $colors = $p->colors_list ? "Màu: {$p->colors_list}" : "Nhiều màu";
             $cat = $p->category_name ?? 'Khác';
             $mat = $p->material ? "| Chất: {$p->material}" : "";
 
-            return "- [{$cat}] {$p->name} | Giá: {$price} đ | {$colors} {$mat} | Link: {$url}";
+            return "- [{$cat}] {$p->name} | {$priceInfo} | {$colors} {$mat} | Link: {$url}";
         })->implode("\n");
 
-        // Fallback: Nếu không tìm thấy gì (và không lọc giá), trả về hàng mới nhất
+        // Fallback
         if (empty($resultString) && !$priceFilter) {
             $newArrivals = DB::table('products')
                 ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+                ->whereNull('products.deleted_at') // Nhớ thêm check deleted_at ở fallback
                 ->select('products.id', 'products.name', DB::raw('MIN(product_variants.price) as price'))
                 ->groupBy('products.id', 'products.name')
                 ->orderBy('products.created_at', 'desc')
                 ->limit(5)->get();
-            
-            $resultString = "Không tìm thấy sản phẩm chính xác theo yêu cầu. Gợi ý hàng mới về:\n" . 
+
+            $resultString = "Không tìm thấy sản phẩm chính xác. Gợi ý hàng mới về:\n" .
                 $newArrivals->map(fn($p) => "- {$p->name} (" . number_format($p->price) . "đ): " . url("/products/{$p->id}"))->implode("\n");
         } elseif (empty($resultString) && $priceFilter) {
             $resultString = "Không tìm thấy sản phẩm nào trong khoảng giá này.";
