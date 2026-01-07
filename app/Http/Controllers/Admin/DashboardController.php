@@ -26,16 +26,18 @@ class DashboardController extends Controller
 
         $dateFormat = 'Y-m-d';
 
-        // Điều kiện lọc đơn hàng "Sạch" (Loại bỏ rác và chỉ tính đơn đã thanh toán)
-        // Dùng alias 'o' để tránh lỗi Ambiguous (xung đột tên cột name/created_at)
+        /**
+         * Điều kiện lọc đơn hàng "Sạch" và ĐÃ HOÀN THÀNH
+         * Mục tiêu: Khớp 100% với trang danh sách đơn hàng khi Admin lọc trạng thái "Hoàn thành"
+         */
         $validOrdersScope = function($query) {
             $query->where('o.total_amount', '>', 0)
                   ->whereNotNull('o.name')
                   ->whereNotIn('o.name', ['N/A', 'aaaa', 'ghbhfdj', 'test', 'Admin'])
-                  ->where('o.payment_status_id', 2);
+                  ->where('o.order_status_id', 5); // Chỉ tính đơn đã Hoàn thành
         };
 
-        // ====== 3. Doanh thu theo THÁNG (Khấu trừ hoàn hàng) ======
+        // ====== 3. Doanh thu theo THÁNG (Cho Bar Chart - Dùng doanh thu Gộp) ======
         $monthlyOrders = DB::table('orders as o')
             ->selectRaw('MONTH(o.created_at) as month, SUM(o.total_amount) as revenue')
             ->whereYear('o.created_at', $year)
@@ -44,24 +46,15 @@ class DashboardController extends Controller
             ->pluck('revenue', 'month')
             ->toArray();
 
-        $monthlyRefunds = DB::table('order_returns')
-            ->selectRaw('MONTH(updated_at) as month, SUM(refund_amount) as refund')
-            ->whereYear('updated_at', $year)
-            ->where('status', 'completed')
-            ->groupBy('month')
-            ->pluck('refund', 'month')
-            ->toArray();
-
         $monthlyLabels = [];
         $monthlyRevenues = [];
         for ($m = 1; $m <= 12; $m++) {
             $monthlyLabels[] = "Tháng $m";
-            $rawRevenue = (float)($monthlyOrders[$m] ?? 0);
-            $rawRefund = (float)($monthlyRefunds[$m] ?? 0);
-            $monthlyRevenues[] = max(0, $rawRevenue - $rawRefund);
+            // Dùng doanh thu gộp để khi click vào cột biểu đồ sẽ khớp với danh sách đơn hàng
+            $monthlyRevenues[] = (float)($monthlyOrders[$m] ?? 0);
         }
 
-        // ====== 4. Doanh thu theo NGÀY (Vẽ Line Chart - Khấu trừ hoàn hàng) ======
+        // ====== 4. Doanh thu theo NGÀY (Cho Line Chart - Dùng doanh thu Gộp) ======
         $revenueDaily = DB::table('orders as o')
             ->selectRaw('DATE(o.created_at) as d, SUM(o.total_amount) as revenue')
             ->whereBetween('o.created_at', [$from, $to])
@@ -70,41 +63,44 @@ class DashboardController extends Controller
             ->pluck('revenue', 'd')
             ->toArray();
 
-        $refundDaily = DB::table('order_returns')
-            ->selectRaw('DATE(updated_at) as d, SUM(refund_amount) as refund')
-            ->whereBetween('updated_at', [$from, $to])
-            ->where('status', 'completed')
-            ->groupBy('d')
-            ->pluck('refund', 'd')
-            ->toArray();
-
         $labels = [];
         $revenues = [];
         $cursor = (clone $from)->startOfDay();
         while ($cursor <= $to) {
             $key = $cursor->format($dateFormat);
             $labels[]   = $key;
-            $dayRevenue = (float)($revenueDaily[$key] ?? 0);
-            $dayRefund  = (float)($refundDaily[$key] ?? 0);
-            $revenues[] = max(0, $dayRevenue - $dayRefund);
+            $revenues[] = (float)($revenueDaily[$key] ?? 0);
             $cursor->addDay();
         }
 
-        // ====== 5. Tổng quan nhanh (KPIs) ======
-        $totalRevenue = array_sum($revenues);
+        // ====== 5. KPIs Tổng quan & Xử lý phần TRỪ (Refund) ======
         
+        // 5.1 Doanh thu gộp (Gross Revenue) - Tổng tiền các hóa đơn Hoàn thành
+        $totalGrossRevenue = array_sum($revenues);
+        
+        // 5.2 Tổng tiền hoàn trả (Refunds) - Tiền trừ
+        $totalRefundAmount = DB::table('order_returns')
+            ->whereBetween('updated_at', [$from, $to])
+            ->where('status', 'completed')
+            ->sum('refund_amount');
+
+        // 5.3 Doanh thu thực nhận (Net Revenue)
+        $netRevenue = max(0, $totalGrossRevenue - $totalRefundAmount);
+
+        // Đơn hàng đã hoàn thành
         $totalPaidOrders = DB::table('orders as o')
             ->whereBetween('o.created_at', [$from, $to])
             ->where($validOrdersScope)
             ->count();
 
+        // Tổng lượng giao dịch (bao gồm cả đơn Hủy/Chờ/Hoàn...)
         $allOrders = DB::table('orders as o')
             ->whereBetween('o.created_at', [$from, $to])
             ->whereNotNull('o.name')
             ->whereNotIn('o.name', ['N/A', 'aaaa', 'ghbhfdj', 'test', 'Admin'])
             ->count();
 
-        // ====== 6. Tỉ lệ đơn hàng theo trạng thái (Pie/Doughnut) ======
+        // ====== 6. Tỉ lệ đơn hàng theo trạng thái ======
         $statusCounts = DB::table('orders as o')
             ->select('o.order_status_id', DB::raw('COUNT(*) as c'))
             ->whereBetween('o.created_at', [$from, $to])
@@ -122,8 +118,7 @@ class DashboardController extends Controller
             $statusValues[] = (int)($statusCounts[$sid] ?? 0);
         }
 
-        // ====== 7. Top sản phẩm bán chạy (Doanh thu & Số lượng) ======
-        // Giải pháp: Phân bổ Voucher chiết khấu để khớp tổng doanh thu
+        // ====== 7. Top 10 sản phẩm bán chạy (Dựa trên hóa đơn thành công) ======
         $topProducts = DB::table('order_details as od')
             ->join('orders as o', 'o.id', '=', 'od.order_id')
             ->join('product_variants as pv', 'pv.id', '=', 'od.product_variant_id')
@@ -132,7 +127,7 @@ class DashboardController extends Controller
                 'p.id as product_id',
                 'p.name as product_name',
                 DB::raw('SUM(od.quantity) as qty_sold'),
-                DB::raw('SUM((od.price * od.quantity / o.subtotal) * o.total_amount) as revenue')
+                DB::raw('SUM((od.price * od.quantity / NULLIF(o.subtotal, 0)) * o.total_amount) as revenue')
             )
             ->whereBetween('o.created_at', [$from, $to])
             ->where($validOrdersScope)
@@ -146,7 +141,7 @@ class DashboardController extends Controller
         $tpRevenue = $topProducts->pluck('revenue')->map(fn($v) => (float)$v)->toArray();
         $tpQty = $topProducts->pluck('qty_sold')->map(fn($v) => (int)$v)->toArray();
 
-        // ====== 8. Top danh mục bán chạy (Khấu trừ Voucher) ======
+        // ====== 8. Top danh mục bán chạy ======
         $topCategories = DB::table('order_details as od')
             ->join('orders as o', 'o.id', '=', 'od.order_id')
             ->join('product_variants as pv', 'pv.id', '=', 'od.product_variant_id')
@@ -155,8 +150,7 @@ class DashboardController extends Controller
             ->select(
                 'c.name as category_name',
                 DB::raw('SUM(od.quantity) as qty_sold'),
-                // Phân bổ tỉ lệ giảm giá từ Voucher vào doanh thu danh mục
-                DB::raw('SUM((od.price * od.quantity / o.subtotal) * o.total_amount) as revenue')
+                DB::raw('SUM((od.price * od.quantity / NULLIF(o.subtotal, 0)) * o.total_amount) as revenue')
             )
             ->whereBetween('o.created_at', [$from, $to])
             ->where($validOrdersScope)
@@ -166,7 +160,7 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        // ====== 9. Top khách hàng ======
+        // ====== 9. Top khách hàng VIP ======
         $topCustomers = DB::table('orders as o')
             ->join('users as u', 'u.id', '=', 'o.user_id')
             ->select(
@@ -210,7 +204,7 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        // ====== 12. Tỉ lệ hoàn hàng (Theo sản phẩm) ======
+        // ====== 12. Tỉ lệ hoàn hàng theo sản phẩm ======
         $returnByProduct = DB::table('orders as o')
             ->join('order_details as od', 'od.order_id', '=', 'o.id')
             ->join('product_variants as pv', 'pv.id', '=', 'od.product_variant_id')
@@ -223,7 +217,7 @@ class DashboardController extends Controller
             ->limit(8)
             ->get();
 
-        // Trả về View với đầy đủ dữ liệu
+        // Trả về View
         return view('admin.dashboard', [
             'year' => $year,
             'from' => $from,
@@ -232,7 +226,9 @@ class DashboardController extends Controller
             'revenues' => $revenues,
             'monthlyLabels' => $monthlyLabels,
             'monthlyRevenues' => $monthlyRevenues,
-            'totalRevenue' => $totalRevenue,
+            'totalRevenue' => $totalGrossRevenue, // Doanh thu gộp
+            'totalRefund' => $totalRefundAmount,   // Tiền bị trừ
+            'netRevenue' => $netRevenue,           // Doanh thu thực tế
             'totalPaidOrders' => $totalPaidOrders,
             'allOrders' => $allOrders,
             'statusLabels' => $statusLabels,

@@ -1077,6 +1077,22 @@
                         const quantityInput = document.getElementById('quantity_input_{{ $product->id }}');
                         const qtyErrorEl = document.getElementById('js-qty-error');
 
+                        // Thêm hàm này vào script
+function updateMainImage(imageUrl) {
+    const mainImageEl = document.getElementById('js-main-image');
+    if (!mainImageEl || !imageUrl) return;
+
+    // Thay đổi ảnh (hỗ trợ cả lazy load nếu có dùng data-src)
+    mainImageEl.src = imageUrl;
+    if(mainImageEl.dataset.src) mainImageEl.dataset.src = imageUrl;
+    if(mainImageEl.dataset.large_image) mainImageEl.dataset.large_image = imageUrl;
+    
+    // Nếu bạn có dùng thư viện zoom ảnh, cần re-init ở đây (tùy giao diện)
+}
+
+// Lưu lại ảnh gốc lúc mới tải trang để khi "Clear" thì quay về ảnh cũ
+const initialProductImage = document.getElementById('js-main-image')?.src;
+
                         function formatCurrency(value) {
                             if (!value) return '0₫';
                             return new Intl.NumberFormat('vi-VN', {
@@ -1277,47 +1293,84 @@
                             resetPriceAndStock();
                         }
 
-                        // ===== EVENT: CHỌN / BỎ CHỌN MÀU =====
-                        colorItems.forEach(item => {
-                            item.addEventListener('click', function() {
-                                if (this.classList.contains('is-disabled')) return;
+                      // --- 1. ĐẶT ĐOẠN KHAI BÁO NÀY Ở ĐẦU SCRIPT (Sau variantMap) ---
+const mainImageEl = document.getElementById('js-main-image');
+const defaultProductImage = mainImageEl ? mainImageEl.src : '';
 
-                                const colorId = this.dataset.colorId;
+/**
+ * Hàm cập nhật ảnh sản phẩm
+ * @param {string} imagePath - Tên file hoặc đường dẫn ảnh
+ */
+function changeProductImage(imagePath) {
+    if (!mainImageEl || !imagePath) return;
 
-                                // Nếu đang được chọn -> click lần 2 để HUỶ CHỌN màu
-                                if (this.classList.contains('selected')) {
-                                    this.classList.remove('selected');
-                                    this.setAttribute('aria-checked', 'false');
-                                    selectedColorId = null;
-                                    if (colorSelect) colorSelect.value = '';
+    // KIỂM TRA ĐƯỜNG DẪN: 
+    // Nếu imagePath chưa có "http", ta nối thêm tiền tố folder (ví dụ /storage/)
+    // Nếu imagePath đã là link full từ database thì dùng luôn.
+    let finalUrl = imagePath.includes('http') ? imagePath : `/storage/${imagePath}`;
 
-                                    // Khi không còn màu được chọn, enable lại size theo logic hiện tại
-                                    updateAvailableSizes();
+    mainImageEl.src = finalUrl;
+    
+    // Cập nhật cho các thư viện Zoom/Lightbox nếu có
+    if (mainImageEl.dataset.src) mainImageEl.dataset.src = finalUrl;
+    if (mainImageEl.srcset) mainImageEl.srcset = finalUrl;
+    if (mainImageEl.dataset.large_image) mainImageEl.dataset.large_image = finalUrl;
+}
 
-                                    // Không đủ cặp color+size -> reset giá/stock
-                                    updatePriceByVariant();
-                                    return;
-                                }
+// --- 2. ĐOẠN EVENT CHỌN MÀU HOÀN CHỈNH ---
+colorItems.forEach(item => {
+    item.addEventListener('click', function() {
+        if (this.classList.contains('is-disabled')) return;
 
-                                // Chọn màu mới
-                                selectedColorId = colorId;
+        const colorId = this.dataset.colorId;
 
-                                if (colorSelect) {
-                                    colorSelect.value = colorId;
-                                }
+        // TRƯỜNG HỢP 1: HUỶ CHỌN MÀU (Click lại vào màu đang active)
+        if (this.classList.contains('selected')) {
+            this.classList.remove('selected');
+            this.setAttribute('aria-checked', 'false');
+            selectedColorId = null;
+            if (colorSelect) colorSelect.value = '';
 
-                                colorItems.forEach(i => {
-                                    i.classList.remove('selected');
-                                    i.setAttribute('aria-checked', 'false');
-                                });
-                                this.classList.add('selected');
-                                this.setAttribute('aria-checked', 'true');
+            // Reset về ảnh mặc định ban đầu của sản phẩm
+            changeProductImage(defaultProductImage);
 
-                                updateAvailableSizes();
-                                updatePriceByVariant();
-                            });
-                        });
+            updateAvailableSizes();
+            updatePriceByVariant();
+            return;
+        }
 
+        // TRƯỜNG HỢP 2: CHỌN MÀU MỚI
+        selectedColorId = colorId;
+
+        if (colorSelect) {
+            colorSelect.value = colorId;
+        }
+
+        // Cập nhật UI: Xóa class selected cũ, thêm vào cái mới
+        colorItems.forEach(i => {
+            i.classList.remove('selected');
+            i.setAttribute('aria-checked', 'false');
+        });
+        this.classList.add('selected');
+        this.setAttribute('aria-checked', 'true');
+
+        // --- LOGIC XỬ LÝ ĐỔI ẢNH ---
+        // Tìm trong variantMap biến thể đầu tiên có màu này và có chứa ảnh
+        const variantWithImage = Object.values(variantMap).find(v => 
+            String(v.color_id) === String(colorId) && v.image && v.image !== ""
+        );
+
+        if (variantWithImage) {
+            changeProductImage(variantWithImage.image);
+        } else {
+            // Nếu màu này không có ảnh riêng, có thể quay về ảnh mặc định
+            changeProductImage(defaultProductImage);
+        }
+
+        updateAvailableSizes();
+        updatePriceByVariant();
+    });
+});
                         // ===== EVENT: CHỌN / BỎ CHỌN SIZE =====
                         sizeItems.forEach(item => {
                             item.addEventListener('click', function() {

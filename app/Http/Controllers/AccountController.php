@@ -51,6 +51,10 @@ class AccountController extends Controller
 
     // Cập nhật thông tin hồ sơ
    // Cập nhật thông tin hồ sơ & Địa chỉ Checkout
+   /**
+     * Cập nhật thông tin hồ sơ & Địa chỉ Checkout
+     * Giữ nguyên 100% logic cũ và bổ sung xử lý Session + Database khi đặt địa chỉ mặc định.
+     */
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -58,40 +62,51 @@ class AccountController extends Controller
         // TRƯỜNG HỢP 1: Cập nhật nhanh address_id từ trang Checkout
         if ($request->has('address_id')) {
             try {
+                $addressId = $request->address_id;
+
                 // Kiểm tra xem địa chỉ có thuộc về user này không để bảo mật
-                $exists = $user->addresses()->where('id', $request->address_id)->exists();
+                $exists = $user->addresses()->where('id', $addressId)->exists();
                 
-                if (!$exists && $request->address_id != 0) {
+                if (!$exists && $addressId != 0) {
                     return response()->json(['success' => false, 'message' => 'Địa chỉ không hợp lệ.'], 403);
                 }
 
-                // Lưu ID địa chỉ vào session để CheckoutController nhận diện
-                session(['checkout_address_id' => $request->address_id]);
+                // --- LOGIC: CHỈ CẬP NHẬT KHI LÀ ĐỊA CHỈ MẶC ĐỊNH ---
+                // Lưu ID địa chỉ vào session để CheckoutController nhận diện ngay sau khi reload
+                session(['checkout_address_id' => $addressId]);
                 
-                // (Tùy chọn) Lưu vào database nếu bạn có cột address_id trong bảng users
-                // $user->update(['address_id' => $request->address_id]);
+                // Cập nhật trạng thái mặc định trong Database để đảm bảo tính nhất quán
+                if ($addressId != 0) {
+                    // Bỏ mặc định tất cả các địa chỉ cũ của User này
+                    $user->addresses()->update(['is_default' => 0]); 
+                    
+                    // Thiết lập địa chỉ được chọn thành mặc định
+                    $user->addresses()->where('id', $addressId)->update(['is_default' => 1]);
+                }
+                // ------------------------------------------------
 
                 return response()->json([
                     'success' => true, 
-                    'message' => 'Đã thay đổi địa chỉ giao hàng.'
+                    'message' => 'Đã thay đổi địa chỉ giao hàng mặc định.',
+                    'address_id' => $addressId
                 ]);
             } catch (\Exception $e) {
                 return response()->json(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()], 500);
             }
         }
 
-        // TRƯỜNG HỢP 2: Cập nhật hồ sơ bình thường (Code cũ của bạn)
+        // TRƯỜNG HỢP 2: Cập nhật hồ sơ bình thường (Giữ nguyên toàn bộ code cũ)
         $request->validate([
             'username' => [
                 'required', 'string', 'max:50',
-                Rule::unique('users', 'username')->ignore($user->id)->whereNull('deleted_at'),
+                \Illuminate\Validation\Rule::unique('users', 'username')->ignore($user->id)->whereNull('deleted_at'),
                 'regex:/^[a-zA-Z0-9_.-]+$/',
             ],
             'name'  => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\-\s()]*$/'],
             'email' => [
                 'required', 'email', 'max:255',
-                Rule::unique('users', 'email')->ignore($user->id),
+                \Illuminate\Validation\Rule::unique('users', 'email')->ignore($user->id),
             ],
         ], [
             'username.regex' => 'Username chỉ gồm chữ, số, dấu chấm, gạch dưới hoặc gạch nối.',
@@ -102,7 +117,7 @@ class AccountController extends Controller
         
         if ($request->hasFile('image')) {
             if ($user->image) {
-                Storage::delete('public/' . $user->image);
+                \Illuminate\Support\Facades\Storage::delete('public/' . $user->image);
             }
             $data['image'] = $request->file('image')->store('avatars', 'public');
         }

@@ -167,7 +167,7 @@ class ProductController extends Controller
         return response()->json($results);
     }
 
-    public function show($id)
+   public function show($id)
     {
         $product = Product::with([
             'category:id,name',
@@ -238,21 +238,39 @@ class ProductController extends Controller
         $colors = $activeVariants->pluck('color')->filter()->unique('id')->values();
         $sizes  = $activeVariants->pluck('size')->filter()->unique('id')->values();
 
-        // Xử lý ảnh Album
-        $albumImages   = $product->photoAlbums->pluck('image')->filter()->values();
-        $variantImages = $product->variants->pluck('image')->filter()->unique()->values();
+        // --- BẮT ĐẦU PHẦN CẬP NHẬT: Xử lý ảnh Album theo màu ---
+        // 1. Lấy ảnh từ Album (ảnh chung)
+        $albumImages = $product->photoAlbums->pluck('image')->filter()->values();
+
+        // 2. Lấy ảnh từ biến thể: QUAN TRỌNG - unique theo color_id để mỗi màu chỉ xuất hiện 1 ảnh đại diện
+        $variantImages = $product->variants
+            ->filter(fn($v) => !empty($v->image)) // Chỉ lấy variant có ảnh
+            ->unique('color_id')                  // Loại bỏ các variant trùng màu (size khác nhau)
+            ->pluck('image')
+            ->filter()
+            ->values();
 
         $images = [];
+        // Ảnh đầu tiên của album làm ảnh đại diện chính (nếu có)
         if ($albumImages->isNotEmpty()) {
             $images[] = $albumImages->first();
         }
+
+        // Thêm các ảnh đại diện của từng màu vào danh sách
         foreach ($variantImages as $img) {
-            if (!in_array($img, $images)) { $images[] = $img; }
+            if (!in_array($img, $images)) { 
+                $images[] = $img; 
+            }
         }
+
+        // Thêm các ảnh còn lại trong Album (trừ ảnh đầu đã lấy)
         foreach ($albumImages->slice(1) as $img) {
-            if (!in_array($img, $images)) { $images[] = $img; }
+            if (!in_array($img, $images)) { 
+                $images[] = $img; 
+            }
         }
         $images = array_values($images);
+        // --- KẾT THÚC PHẦN CẬP NHẬT ---
 
         // Map biến thể JS
         $variantMap = $product->variants->mapWithKeys(function ($v) {
