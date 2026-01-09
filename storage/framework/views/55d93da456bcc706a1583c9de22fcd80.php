@@ -48,7 +48,6 @@
 <?php echo $__env->yieldContent('content'); ?>
 
 
-<?php echo $__env->make('components.chat-widget', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <!-- .kitify-site-wrapper -->
 <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 

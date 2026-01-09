@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Role;
-use App\Models\Ranking;
 use App\Models\UserAddress;
 use App\Models\UserBankAccount;
 use App\Models\Product;
@@ -23,12 +22,12 @@ class User extends Authenticatable
 
     /**
      * Các cột cho phép gán hàng loạt (Mass Assignment)
+     * Đã bỏ 'username' vì dùng Email làm định danh duy nhất.
      */
     protected $fillable = [
         'role_id',
         'ranking_id',
         'image',
-        'username',
         'name',
         'email',
         'phone',
@@ -38,7 +37,7 @@ class User extends Authenticatable
         'verification_token',
         'remember_token',
         'is_locked',
-        'points', // Cột tích điểm bạn vừa thêm trong Database
+        'points', 
     ];
 
     /**
@@ -74,8 +73,6 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
-
-
     /**
      * Quan hệ với UserAddress (Một user có nhiều địa chỉ)
      */
@@ -93,7 +90,15 @@ class User extends Authenticatable
     }
 
     /**
-     * Quan hệ với UserBankAccount (Nhiều tài khoản ngân hàng)
+     * Quan hệ với UserBankAccount (Lấy 1 tài khoản duy nhất để hiển thị và sửa)
+     */
+    public function bankAccount()
+    {
+        return $this->hasOne(UserBankAccount::class, 'user_id');
+    }
+
+    /**
+     * Quan hệ với UserBankAccount (Nhiều tài khoản)
      */
     public function bankAccounts()
     {
@@ -117,7 +122,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Gán đơn hàng cho staff (Nếu user là nhân viên)
+     * Gán đơn hàng cho nhân viên (Staff)
      */
     public function assignedOrders()
     {
@@ -133,8 +138,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Quan hệ Nhiều - Nhiều với bảng Vouchers thông qua bảng trung gian UserVoucher
-     * Giúp quản lý các voucher mà user này ĐÃ ĐỔI
+     * Voucher mà user đang sở hữu thông qua bảng trung gian
      */
     public function ownedVouchers()
     {
@@ -144,7 +148,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Lấy trực tiếp các bản ghi trong bảng trung gian (Dành cho RewardController)
+     * Truy cập trực tiếp bản ghi trong bảng trung gian vouchers
      */
     public function userVouchers()
     {
@@ -162,7 +166,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->role_id === 1;
+        return (int)$this->role_id === 1;
     }
 
     /**
