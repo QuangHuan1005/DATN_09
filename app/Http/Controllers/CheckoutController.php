@@ -84,7 +84,6 @@ class CheckoutController extends Controller
             }
         }
 
-<<<<<<< HEAD
         /** ================= 3. XỬ LÝ ĐỊA CHỈ ================= */
         $addresses = $user->addresses()->orderBy('is_default', 'desc')->get();
         $selectedAddressId = session('checkout_address_id');
@@ -94,36 +93,6 @@ class CheckoutController extends Controller
             $defaultAddress = $addresses->where('is_default', true)->first() ?: $addresses->first();
         }
         $addressCount = $addresses->count();
-=======
-       /** ================= 3. XỬ LÝ ĐỊA CHỈ ================= */
-// 1. Lấy tất cả địa chỉ chưa xóa của user
-$addresses = $user->addresses()->whereNull('deleted_at')->latest()->get();
-
-// 2. TÌM ĐỊA CHỈ MẶC ĐỊNH TRONG DATABASE (Ưu tiên số 1)
-// Theo dữ liệu của bạn, bản ghi ID 22 sẽ được tìm thấy ở đây
-$defaultAddress = $addresses->where('is_default', 1)->first();
-
-// 3. Nếu không có mặc định trong DB, mới kiểm tra Session cũ
-if (!$defaultAddress) {
-    $selectedAddressId = session('checkout_address_id');
-    if ($selectedAddressId) {
-        $defaultAddress = $addresses->where('id', $selectedAddressId)->first();
-    }
-}
-
-// 4. Cuối cùng nếu vẫn không có, lấy địa chỉ mới nhất
-if (!$defaultAddress) {
-    $defaultAddress = $addresses->first();
-}
-
-// 5. ĐỒNG BỘ LẠI SESSION
-// Sau khi tìm thấy ID 22 là mặc định, ta ghi đè vào session để các hàm Store() dùng đúng
-if ($defaultAddress) {
-    session(['checkout_address_id' => $defaultAddress->id]);
-}
-
-$addressCount = $addresses->count();
->>>>>>> 73c582316a2341232573258bc1eab745686c4db9
 
         /** ================= 4. XỬ LÝ VOUCHER ĐÃ ÁP DỤNG ================= */
         $voucherData = session('applied_voucher');
@@ -335,7 +304,6 @@ $addressCount = $addresses->count();
                     $orderResult['grand_total'],
                     "Thanh toan don hang " . $orderResult['order_code']
                 );
-                
                 if ($result['success']) return redirect()->away($result['payment_url']);
             }
 
@@ -344,41 +312,7 @@ $addressCount = $addresses->count();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-    public function vnpayReturn(Request $request)
-    {
-        // 1. Kiểm tra dữ liệu trả về từ VNPay
-        if ($request->vnp_ResponseCode == "00") {
-            // --- THANH TOÁN THÀNH CÔNG ---
 
-            // Tìm đơn hàng theo mã (vnp_TxnRef thường là order_code)
-            $orderCode = $request->vnp_TxnRef;
-            $order = Order::where('order_code', $orderCode)->first();
-
-            if ($order) {
-                // Cập nhật trạng thái đơn hàng -> Đã thanh toán
-                // Giả sử payment_status_id = 2 là "Đã thanh toán"
-                $order->update(['payment_status_id' => 2]);
-
-                // === GỬI MAIL XÁC NHẬN TẠI ĐÂY ===
-                $user = $order->user; // Hoặc lấy email từ Auth::user() nếu user đang login
-                $emailToSend = $user ? $user->email : null; // Cần xử lý trường hợp khách vãng lai nếu có
-
-                if ($emailToSend) {
-                    Mail::to($emailToSend)->send(new OrderConfirmationMail($order));
-                }
-            }
-
-            return redirect()->route('checkout.success')->with('success', 'Thanh toán VNPay thành công! Đã gửi email xác nhận.');
-        } else {
-            // --- THANH TOÁN THẤT BẠI ---
-
-            // Có thể bạn muốn xóa đơn hàng tạm hoặc cập nhật trạng thái "Hủy/Thất bại"
-            $orderCode = $request->vnp_TxnRef;
-            Order::where('order_code', $orderCode)->update(['payment_status_id' => 3]); // Ví dụ 3 là thất bại
-
-            return redirect()->route('checkout.index')->with('error', 'Thanh toán VNPay thất bại hoặc bị hủy.');
-        }
-    }
 
     /**
      * Áp dụng Voucher
