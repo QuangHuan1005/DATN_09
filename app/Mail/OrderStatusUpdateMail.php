@@ -26,10 +26,10 @@ class OrderStatusUpdateMail extends Mailable
     {
         $subject = '';
         switch ($this->messageType) {
-            case 'cancel':
+            case '6':
                 $subject = 'Thông báo hủy đơn hàng #' . $this->order->order_code;
                 break;
-            case 'return':
+            case '7':
                 $subject = 'Thông báo hoàn trả đơn hàng #' . $this->order->order_code;
                 break;
             default:

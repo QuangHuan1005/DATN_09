@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -9,6 +10,7 @@ use App\Services\VNPayService;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\OrderStatusLog;
+use Illuminate\Support\Facades\Mail;
 
 class VNPayController extends Controller
 {
@@ -23,30 +25,39 @@ class VNPayController extends Controller
      * 📌 1. RETURN URL (Xử lý khi khách được redirect về từ VNPay)
      */
     public function return(Request $request)
-{
-    Log::info("VNPay RETURN Callback", [$request->all()]);
+    {
+        Log::info("VNPay RETURN Callback", [$request->all()]);
 
-    if (!$this->vnpayService->verifyCallback($request->all())) {
-         return redirect()->route('orders.index')->with('error', 'Chữ ký không hợp lệ!');
-    }
-
-    $orderCode = $request->get('vnp_TxnRef');
-    $responseCode = trim($request->get('vnp_ResponseCode')); 
-    $order = Order::where('order_code', $orderCode)->first();
-
-    if ($order && $responseCode === "00") {
-        // CẬP NHẬT NGAY TẠI ĐÂY ĐỂ TRANG WEB THAY ĐỔI TRẠNG THÁI
-        if ($order->payment_status_id == 1) {
-            $order->update([
-                'payment_status_id' => 2, // Đã thanh toán
-                'order_status_id'   => 1  // Đã xác nhận
-            ]);
+        if (!$this->vnpayService->verifyCallback($request->all())) {
+            return redirect()->route('orders.index')->with('error', 'Chữ ký không hợp lệ!');
         }
-        return redirect()->route('checkout.success')->with('success', 'Thanh toán thành công!');
-    }
 
-    return redirect()->route('orders.index')->with('error', 'Giao dịch không thành công.');
-}
+        $orderCode = $request->get('vnp_TxnRef');
+        $responseCode = trim($request->get('vnp_ResponseCode'));
+        $order = Order::where('order_code', $orderCode)->first();
+
+        if ($order && $responseCode === "00") {
+            // CẬP NHẬT NGAY TẠI ĐÂY ĐỂ TRANG WEB THAY ĐỔI TRẠNG THÁI
+            if ($order->payment_status_id == 1) {
+
+                DB::transaction(function () use ($order) {
+                    // 1. Cập nhật trạng thái
+                    $order->update([
+                        'payment_status_id' => 2, // Đã thanh toán
+                        'order_status_id'   => 1  // Đã xác nhận
+                    ]);
+
+                    // 2. GỬI EMAIL XÁC NHẬN (BỔ SUNG PHẦN NÀY)
+                    if ($order->user && $order->user->email) {
+                        Mail::to($order->user->email)->send(new OrderConfirmationMail($order));
+                    }
+                });
+            }
+            return redirect()->route('checkout.success')->with('success', 'Thanh toán thành công!');
+        }
+
+        return redirect()->route('orders.index')->with('error', 'Giao dịch không thành công.');
+    }
 
 
     /**
@@ -112,12 +123,11 @@ class VNPayController extends Controller
 
                 DB::commit();
                 return response()->json(['RspCode' => '00', 'Message' => 'Confirm Success']);
-
             } else {
                 // ❌ THANH TOÁN THẤT BẠI
                 // Lưu ý: Không nên hủy đơn ngay tại đây nếu khách vẫn còn thời gian 30p để "Thanh toán lại"
                 // Chỉ ghi log hoặc cập nhật trạng thái lỗi thanh toán.
-                
+
                 Payment::updateOrCreate(
                     ['order_id' => $order->id],
                     [
@@ -131,7 +141,6 @@ class VNPayController extends Controller
                 DB::commit();
                 return response()->json(['RspCode' => '00', 'Message' => 'Payment Failed Recorded']);
             }
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("VNPay IPN Exception: " . $e->getMessage());
