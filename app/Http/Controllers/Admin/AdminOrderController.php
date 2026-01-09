@@ -51,15 +51,25 @@ class AdminOrderController extends Controller
      * Trang danh sách đơn hàng
      * CẬP NHẬT: Thêm logic lọc order_status_id để khớp với Dashboard
      */
-    public function index(Request $request)
+ public function index(Request $request)
     {
-        $query = Order::with(['status', 'user', 'paymentStatus', 'staff'])
+        // Khởi tạo query với đầy đủ các quan hệ cần thiết
+        // Thêm 'orderReturn' để fix lỗi tính tiền hoàn và hiển thị tooltip sản phẩm hoàn
+        $query = Order::with(['status', 'user', 'paymentStatus', 'staff', 'paymentMethod', 'orderReturn'])
             ->withSum('details', 'quantity')
             ->orderByDesc('id');
 
         // 1. Lọc theo ngày cụ thể (Click từ biểu đồ Line Chart)
         if ($request->filled('date')) {
             $query->whereDate('created_at', $request->date);
+        }
+
+        // 1b. MỚI: Lọc theo khoảng ngày (Từ ngày... Đến ngày...)
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
         }
 
         // 2. Lọc theo tháng và năm (Click từ biểu đồ Bar Chart)
@@ -98,7 +108,10 @@ class AdminOrderController extends Controller
             });
         }
 
+        // Phân trang 15 đơn hàng trên 1 trang
         $orders = $query->paginate(15); 
+        
+        // Lấy danh sách trạng thái để hiển thị trong select bộ lọc và bảng
         $statuses = $this->getStatuses();
 
         return view('admin.orders.index', compact('orders', 'statuses'), [

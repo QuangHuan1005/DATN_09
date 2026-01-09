@@ -50,6 +50,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
     Route::get('/search/suggestions', [ProductController::class, 'suggest'])->name('products.suggest');
+    // Chú ý: Đưa ID xuống dưới để không chặn các route tĩnh
     Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
     Route::get('/category/{slug}', [ProductController::class, 'showByCategory'])->name('products.category');
     Route::get('/color/{slug}', [ProductController::class, 'showByColor'])->name('products.color');
@@ -58,6 +59,7 @@ Route::prefix('products')->group(function () {
 
 // Đánh giá sản phẩm (yêu cầu đăng nhập)
 Route::middleware(['auth'])->group(function () {
+    // Route này đã có tên reviews.store, nên bên dưới group orders mình sẽ comment lại hoặc đổi tên
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 });
 
@@ -137,18 +139,19 @@ Route::prefix('orders')->middleware('auth')->group(function () {
     Route::post('/{id}/complete', [OrderController::class, 'complete'])->name('orders.complete');
     
 
-// Route cho OrderCancelRequestController (Xử lý việc gửi yêu cầu hủy)
-Route::post('orders/{order_id}/cancel', [OrderCancelRequestController::class, 'store'])
-    ->name('orders.cancel')
-    ->middleware('auth'); // Đảm bảo người dùng đã đăng nhập
+    // Route cho OrderCancelRequestController (Xử lý việc gửi yêu cầu hủy)
+    Route::post('/{order_id}/cancel', [OrderCancelRequestController::class, 'store'])
+        ->name('orders.cancel');
 
-// Route xử lý khách hàng xác nhận đã nhận tiền hoàn
-Route::post('/orders/cancel-request/{id}/confirm-received', [OrderCancelRequestController::class, 'confirmReceived'])
-    ->name('orders.cancel.confirm_received');
+    // Route xử lý khách hàng xác nhận đã nhận tiền hoàn
+    Route::post('/cancel-request/{id}/confirm-received', [OrderCancelRequestController::class, 'confirmReceived'])
+        ->name('orders.cancel.confirm_received');
+        
     // Route TẠO form đánh giá (GET)
     Route::get('/reviews/create', [ReviewController::class, 'create'])->name('review.create'); 
 
-    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    // CHỖ NÀY BỊ TRÙNG: Mình đổi tên thành orders.reviews.store để tránh lỗi serialize
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('orders.reviews.store');
 
     // Route SỬA đánh giá (GET) và CẬP NHẬT (PUT)
     Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])->name('review.edit'); 
@@ -162,7 +165,7 @@ Route::post('/orders/cancel-request/{id}/confirm-received', [OrderCancelRequestC
     Route::post('/{order}/return', [OrderReturnController::class, 'store'])->name('orders.return.store');
     Route::get('/returns/{return}', [OrderReturnController::class, 'show'])->name('orders.return.show');
 
-    Route::post('/orders/returns/{id}/confirm-received', [OrderReturnController::class, 'confirmReceived'])
+    Route::post('/returns/{id}/confirm-received', [OrderReturnController::class, 'confirmReceived'])
     ->name('orders.return.confirm_received');
 });
 
@@ -200,7 +203,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Địa chỉ
-    Route::prefix('addresses')->group(function () {
+    Route::prefix('addresses')->middleware('auth')->group(function () {
         Route::get('/', [AddressController::class, 'index'])->name('addresses.index');
         Route::post('/', [AddressController::class, 'store'])->name('addresses.store');
         Route::put('/{address}', [AddressController::class, 'update'])->name('addresses.update');
@@ -209,7 +212,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Wishlist
-    Route::prefix('wishlist')->group(function () {
+    Route::prefix('wishlist')->middleware('auth')->group(function () {
         Route::get('/', [WishlistController::class, 'index'])->name('wishlist.index');
         Route::post('/add', [WishlistController::class, 'add'])->name('wishlist.add');
         Route::post('/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
@@ -225,6 +228,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    // Route đăng ký gốc bị thiếu đóng ngoặc hoặc sai logic trong file cũ, mình đã giữ nguyên theo file bạn gửi
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 
@@ -232,6 +236,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
     Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+    // Route xử lý reset pass
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.store');
 });
 
@@ -292,38 +297,28 @@ Route::prefix('admin')
         Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
 
         // Voucher
-      // --- Quản lý Voucher & Lịch sử đổi thưởng ---
-Route::prefix('vouchers')->name('vouchers.')->group(function () {
-    // 1. Phải đặt 'history' lên trên cùng
-    Route::get('history', [AdminVoucherController::class, 'history'])->name('history');
-    
-    // 2. Các route CRUD thủ công (Thay thế cho resource)
-    Route::get('/', [AdminVoucherController::class, 'index'])->name('index');
-    Route::get('/create', [AdminVoucherController::class, 'create'])->name('create');
-    Route::post('/', [AdminVoucherController::class, 'store'])->name('store');
-    
-    // Lưu ý: Các route có tham số {voucher} phải nằm DƯỚI các route từ khóa cố định như 'history'
-    Route::get('/{voucher}/edit', [AdminVoucherController::class, 'edit'])->name('edit');
-    Route::put('/{voucher}', [AdminVoucherController::class, 'update'])->name('update');
-    Route::delete('/{voucher}', [AdminVoucherController::class, 'destroy'])->name('destroy');
-});
+        Route::prefix('vouchers')->name('vouchers.')->group(function () {
+            Route::get('history', [AdminVoucherController::class, 'history'])->name('history');
+            Route::get('/', [AdminVoucherController::class, 'index'])->name('index');
+            Route::get('/create', [AdminVoucherController::class, 'create'])->name('create');
+            Route::post('/', [AdminVoucherController::class, 'store'])->name('store');
+            Route::get('/{voucher}/edit', [AdminVoucherController::class, 'edit'])->name('edit');
+            Route::put('/{voucher}', [AdminVoucherController::class, 'update'])->name('update');
+            Route::delete('/{voucher}', [AdminVoucherController::class, 'destroy'])->name('destroy');
+        });
 
         // Đơn hàng
         Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
         Route::delete('orders/{id}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
         Route::post('orders/{id}/status', [AdminOrderController::class, 'update'])->name('orders.status');
 
-        // 🗃️ Quản lý Yêu cầu Hủy Đơn hàng (ĐÃ ĐƯỢC DI CHUYỂN VÀO ĐÂY)
-        // 🗃️ Quản lý Yêu cầu Hủy Đơn hàng (ĐÃ CẬP NHẬT)
-Route::prefix('order-cancellations')->name('order-cancellations.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'index'])->name('index');
-    Route::get('/{request}', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'show'])->name('show');
-    Route::post('/{request}/process', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'process'])->name('process'); 
-    
-    // Thêm Route mới này để xác nhận đã chuyển khoản xong
-    Route::post('/{request}/confirm-refund', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'confirmRefund'])->name('confirm-refund');
-});
-
+        // 🗃️ Quản lý Yêu cầu Hủy Đơn hàng
+        Route::prefix('order-cancellations')->name('order-cancellations.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'index'])->name('index');
+            Route::get('/{request}', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'show'])->name('show');
+            Route::post('/{request}/process', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'process'])->name('process'); 
+            Route::post('/{request}/confirm-refund', [\App\Http\Controllers\Admin\AdminOrderCancelController::class, 'confirmRefund'])->name('confirm-refund');
+        });
 
         // Người dùng
         Route::resource('users', AdminUserController::class);
@@ -350,19 +345,15 @@ Route::prefix('order-cancellations')->name('order-cancellations.')->group(functi
             Route::delete('/{size}', [AdminAttributeController::class, 'sizesDestroy'])->name('destroy');
         });
 
-           // 🔄 Quản lý yêu cầu hoàn hàng
+        // 🔄 Quản lý yêu cầu hoàn hàng
         Route::get('/returns', [\App\Http\Controllers\Admin\AdminReturnController::class, 'index'])->name('returns.index');
         Route::get('/returns/{return}', [\App\Http\Controllers\Admin\AdminReturnController::class, 'show'])->name('returns.show');
         Route::post('/returns/{return}/status', [\App\Http\Controllers\Admin\AdminReturnController::class, 'updateStatus'])->name('returns.updateStatus');
     });
 
-    
-
-    
-
 /*
 |--------------------------------------------------------------------------
-| CHAT REALTIME ROUTES (Typing, Mark as read, Unread count)
+| CHAT REALTIME ROUTES
 |--------------------------------------------------------------------------
 */
 

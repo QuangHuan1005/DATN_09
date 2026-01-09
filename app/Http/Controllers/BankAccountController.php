@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserBankAccount;
+use Illuminate\Support\Facades\Storage;
 
 class BankAccountController extends Controller
 {
@@ -67,9 +68,6 @@ class BankAccountController extends Controller
                     ->withInput()
                     ->withErrors(['account_holder' => 'Tên chủ tài khoản phải giống với tài khoản ngân hàng đầu tiên của bạn.']);
             }
-        } else {
-            // Tài khoản đầu tiên - tên chủ do user nhập (sẽ được sử dụng cho các tài khoản sau)
-            // Validation đảm bảo có tên chủ tài khoản
         }
 
         // Kiểm tra tài khoản trùng lặp (cùng tên ngân hàng + số tài khoản)
@@ -125,7 +123,6 @@ class BankAccountController extends Controller
             ->with('success', 'Thêm tài khoản ngân hàng thành công!');
     }
 
-
     /**
      * Xóa tài khoản ngân hàng
      */
@@ -170,5 +167,58 @@ class BankAccountController extends Controller
 
         return redirect()->back()
             ->with('success', 'Đã đặt tài khoản mặc định thành công!');
+    }
+
+    /**
+     * Cập nhật thông tin cá nhân và tài khoản ngân hàng duy nhất (Tích hợp trong trang Account Details)
+     */
+    public function updateAccountDetails(Request $request)
+    {
+        $user = Auth::user();
+
+        // 1. Validate toàn bộ thông tin (Cá nhân + Ngân hàng)
+        $request->validate([
+            'name'           => 'required|string|max:255',
+            'email'          => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone'          => 'nullable|string|max:20',
+            'bank_name'      => 'required|string|max:100',
+            'account_number' => 'required|string|max:50',
+            'account_holder' => 'required|string|max:100',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'bank_name.required'      => 'Vui lòng nhập tên ngân hàng nhận hoàn tiền.',
+            'account_number.required' => 'Số tài khoản không được để trống.',
+            'account_holder.required' => 'Tên chủ tài khoản là bắt buộc.',
+        ]);
+
+        // 2. Xử lý ảnh đại diện (nếu có)
+        if ($request->hasFile('image')) {
+            // Xóa ảnh cũ nếu có
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+            $imagePath = $request->file('image')->store('avatars', 'public');
+            $user->image = $imagePath;
+        }
+
+        // 3. Cập nhật thông tin User (Lưu ý: Bạn đã xác nhận bỏ trường username trong database)
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->save();
+
+        // 4. Xử lý logic 1 tài khoản duy nhất cho UserBankAccount
+        // updateOrCreate sẽ tìm theo user_id, nếu thấy thì CẬP NHẬT, không thấy thì TẠO MỚI
+        $user->bankAccount()->updateOrCreate(
+            ['user_id' => $user->id], // Điều kiện tìm kiếm
+            [
+                'bank_name'      => $request->bank_name,
+                'account_number' => $request->account_number,
+                'account_holder' => $request->account_holder,
+                'is_default'     => true, // Luôn là mặc định vì đây là tài khoản hoàn tiền chính
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Thông tin tài khoản và ngân hàng đã được cập nhật thành công.');
     }
 }

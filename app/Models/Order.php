@@ -204,4 +204,9 @@ class Order extends Model
     {
         return $query->where('order_status_id', 7);
     }
+
+public function orderReturn()
+{
+    return $this->hasOne(\App\Models\OrderReturn::class, 'order_id');
+}
 }
