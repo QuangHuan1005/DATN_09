@@ -26,12 +26,12 @@
         $headerColor = 'bg-primary';
         $statusIcon = '📦'; // Icon mặc định
         
-        if($messageType == 'cancel') {
+        if($messageType == '6') {
             $headerColor = 'bg-danger';
             $statusIcon = '🚫';
-        } elseif($messageType == 'return') {
+        } elseif($messageType == '7') {
             $headerColor = 'bg-warning';
-            $statusIcon = 'k';
+            $statusIcon = '';
         } elseif(str_contains(strtolower($statusName), 'thành công') || str_contains(strtolower($statusName), 'hoàn thành')) {
             $headerColor = 'bg-success';
             $statusIcon = '✅';
@@ -50,9 +50,9 @@
             
             <h2 style="text-transform: uppercase; color: #333;">{{ $statusName }}</h2>
 
-            @if($messageType == 'cancel')
+            @if($messageType == '6')
                 <p style="color: #dc3545;">Chúng tôi rất tiếc vì đơn hàng đã bị hủy. Nếu có nhầm lẫn, vui lòng liên hệ ngay với chúng tôi.</p>
-            @elseif($messageType == 'return')
+            @elseif($messageType == '7')
                 <p>Yêu cầu hoàn trả của bạn đang được xử lý.</p>
             @else
                 <p>Vui lòng chú ý điện thoại để nhận hàng nhé!</p>

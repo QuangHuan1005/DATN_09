@@ -54,8 +54,6 @@ src="../../mixtas.b-cdn.net/wp-content/uploads/2023/12/m5_banner_01.jpg"
                             </div>
                         </div>
 
-                        @include('components.chat-widget')
-
                         <div class="elementor-element elementor-element-0515f8d e-flex e-con-boxed kitify-col-width-auto-no ignore-docs-style-no kitify-disable-relative-no e-root-container elementor-top-section e-con e-parent"
                             data-id="0515f8d" data-element_type="container">
                             <div class="e-con-inner">

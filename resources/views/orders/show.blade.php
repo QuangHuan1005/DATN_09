@@ -58,7 +58,7 @@
             3 => ['label' => 'Đang giao hàng', 'desc' => $getStatusTime(3) ?? 'Đang vận chuyển'],
             4 => ['label' => 'Đã giao hàng',   'desc' => $getStatusTime(4) ?? 'Giao thành công'],
             5 => ['label' => 'Hoàn thành',    'desc' => $getStatusTime(5) ?? 'Khách đã nhận'],
-        ];
+];
 
         $activeStep = match (true) {
             $currentStatusId >= 5 => 5,
@@ -153,7 +153,7 @@
 
     .tag-amber {
       background: #fff7ed;
-      color: #9a3412
+color: #9a3412
     }
 
     .tag-red {
@@ -318,7 +318,7 @@
     }
 
     /* Gom badge + các nút trên 1 hàng, căn phải gọn gàng */
-    .order-header>div:last-child {
+.order-header>div:last-child {
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -434,7 +434,7 @@
                 cursor: not-allowed;
                 opacity: 0.6;
                 transform: none;
-                /* Không có active effect cho disabled */
+/* Không có active effect cho disabled */
             }
 
             /* Nút "CHI TIẾT HOÀN HÀNG" - Màu vàng */
@@ -519,7 +519,7 @@
                 background: rgba(15, 23, 42, .45);
                 z-index: 9999;
                 display: none;
-                align-items: center;
+align-items: center;
                 justify-content: center;
             }
 
@@ -598,7 +598,7 @@
 
                                                 <div class="woocommerce-MyAccount-content">
                                                     <div class="woocommerce-notices-wrapper">
-                                                        @if (session('error'))
+@if (session('error'))
                                                             <div class="woocommerce-error">{{ session('error') }}</div>
                                                         @endif
                                                         @if (session('success'))
@@ -633,8 +633,7 @@
                                                                             ? $logsForStep->first()
                                                                             : null;
                                                                     @endphp
-
-                                                                    <div class="step">
+<div class="step">
                                                                         <span
                                                                             class="dot {{ $isReached ? 'active' : '' }}"></span>
 
@@ -671,7 +670,7 @@
                            <div style="text-align:right">
                             <span class="tag {{ $tagClass }}">{{ $statusName }}</span>
                             <div class="order-tools">
-                              {{-- Nút HỦY ĐƠN HÀNG: Chỉ hiện khi đơn ở trạng thái Chờ xác nhận (1) hoặc Đã xác nhận (2) --}}
+{{-- Nút HỦY ĐƠN HÀNG: Chỉ hiện khi đơn ở trạng thái Chờ xác nhận (1) hoặc Đã xác nhận (2) --}}
 @if(in_array($order->order_status_id, [1, 2]))
     <form id="cancel-order-form" method="POST" action="{{ route('orders.cancel', $order->id) }}">
         @csrf
@@ -712,7 +711,7 @@
                             @endforeach
                             <option value="new">+ Thêm tài khoản mới</option>
                         </select>
-                        <div id="err_user_bank_account_id" class="error-msg text-danger" style="display:none; font-size: 12px; margin-top: 5px;"></div>
+<div id="err_user_bank_account_id" class="error-msg text-danger" style="display:none; font-size: 12px; margin-top: 5px;"></div>
                     </div>
 
                     <div id="newBankFields" style="display: none; background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
@@ -757,7 +756,7 @@
                                                                 @if (in_array($order->order_status_id, [4, 5]))
                                                                     @php
                                                                         $hasReturnRequest = \App\Models\OrderReturn::where(
-                                                                            'order_id',
+'order_id',
                                                                             $order->id,
                                                                         )->exists();
                                                                     @endphp
@@ -789,7 +788,7 @@
                                                                             title="Xem chi tiết hoàn hàng">
                                                                             Chi tiết hoàn hàng
                                                                         </button>
-                                                                    @endif
+@endif
                                                                 @endif
 
                                                                 {{-- ======= BOX: ĐƠN HÀNG & THÔNG TIN NGƯỜI NHẬN ======= --}}
@@ -822,7 +821,7 @@
                                                                                         <span>
                                                                                             @php
                                                                                                 $rStatusId =
-                                                                                                    (int) $order
+(int) $order
                                                                                                         ->cancelRequest
                                                                                                         ->status_id;
                                                                                                 $refundClass = match (
@@ -848,7 +847,7 @@
                                                                                                     default
                                                                                                         => 'Đang xử lý',
                                                                                                 };
-                                                                                            @endphp
+@endphp
                                                                                             <span
                                                                                                 class="status-badge {{ $refundClass }}">
                                                                                                 {{ $refundName }}
@@ -872,7 +871,7 @@
                                                                                                     target="_blank"
                                                                                                     class="text-success"
                                                                                                     style="text-decoration: underline; font-size: 0.85rem; font-weight: 600;">
-                                                                                                    <i
+<i
                                                                                                         class="fas fa-external-link-alt me-1"></i>
                                                                                                     Xem ảnh
                                                                                                 </a>
@@ -898,7 +897,7 @@
                                                                                                     <span
                                                                                                         class="badge bg-success"
                                                                                                         style="padding: 6px 12px; border-radius: 999px; font-size: 11px;">
-                                                                                                        <i
+<i
                                                                                                             class="fas fa-check-circle"></i>
                                                                                                         Bạn đã xác nhận
                                                                                                     </span>
@@ -930,8 +929,7 @@
                                                                                     <span>Thời gian đặt</span>
                                                                                     <span>{{ \Carbon\Carbon::parse($order->created_at)->format('H:i, d/m/Y') }}</span>
                                                                                 </div>
-
-                                                                                <div class="sum-row">
+<div class="sum-row">
                                                                                     <span>Thời gian hủy</span>
                                                                                     <span style="text-align: right;">
                                                                                         @if ($order->cancelRequest && $order->cancelRequest->status_id != 3)
@@ -971,7 +969,7 @@
         @if ($order->user?->email)
             <p class="mb-1" style="text-align: left; margin-left: 0; color: #000;">
                 <strong style="font-weight: 700;">Email:</strong>
-                <a href="mailto:{{ $order->user->email }}" style="color: inherit; text-decoration: underline;">
+<a href="mailto:{{ $order->user->email }}" style="color: inherit; text-decoration: underline;">
                     {{ $order->user->email }}
                 </a>
             </p>
@@ -1008,7 +1006,7 @@
                                                                         </p>
                                                                         <div class="cancel-order-actions"
                                                                             style="display: flex; gap: 10px; justify-content: center;">
-                                                                            <button type="button"
+<button type="button"
                                                                                 class="btn-cancel-close"
                                                                                 id="btnConfirmMoneyClose"
                                                                                 style="padding: 8px 16px; border: 1px solid #ddd; border-radius: 6px;">Kiểm
@@ -1036,7 +1034,7 @@
                                                                                     <th class="product-quantity"
                                                                                         style="width:90px">SL</th>
                                                                                     <th class="product-total"
-                                                                                        style="width:150px">Thành tiền</th>
+style="width:150px">Thành tiền</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
@@ -1068,7 +1066,7 @@ $firstImage = $it->photoAlbums->first()?->image;
                                                                                                         · Dự kiến:
                                                                                                         {{ \Carbon\Carbon::parse($it->eta)->format('d/m') }}
                                                                                                     @endif
-                                                                                                </div>
+</div>
                                                                                             </div>
                                                                     </div>
                                                                     </td>
@@ -1109,7 +1107,7 @@ $firstImage = $it->photoAlbums->first()?->image;
                             <div class="product-info">
                                 <strong class="d-block text-dark">{{ $detail->product->name ?? 'Sản phẩm không rõ' }}</strong>
                                 <small class="text-muted">Đơn hàng #{{ $order->order_code }}</small>
-                            </div>
+</div>
 
                             @php
                                 /** * 2. Kiểm tra tồn tại đánh giá: 
@@ -1161,7 +1159,7 @@ $firstImage = $it->photoAlbums->first()?->image;
                     <div class="d-flex justify-content-between mb-2 text-danger">
                         <span>Giảm giá</span>
                         <span>-{{ number_format($calc_discount ?? 0) }} ₫</span>
-                    </div>
+</div>
 
                     <div class="d-flex justify-content-between mb-3">
                         <span>Voucher</span>
@@ -1220,7 +1218,7 @@ $firstImage = $it->photoAlbums->first()?->image;
         const btnOpenCancel = document.getElementById('btnOpenCancelModal');
         const btnCloseCancel = document.getElementById('btnCancelClose');
         const btnOkCancel = document.getElementById('btnCancelOk');
-        const cancelForm = document.getElementById('cancel-order-form');
+const cancelForm = document.getElementById('cancel-order-form');
 
         const selectBank = document.getElementById('selectBank');
         const newBankFields = document.getElementById('newBankFields');
@@ -1293,7 +1291,7 @@ $firstImage = $it->photoAlbums->first()?->image;
                 clearErrors();
                 updateBankInputs();
             });
-        }
+}
 
         if (btnOkCancel && cancelForm) {
             btnOkCancel.addEventListener('click', function(e) {
@@ -1366,7 +1364,7 @@ window.addEventListener('click', function(e) {
 
         if (btnOpenMoney) {
             btnOpenMoney.addEventListener('click', function(e) {
-                e.preventDefault();
+e.preventDefault();
                 if (moneyOverlay) moneyOverlay.style.display = 'flex';
             });
         }
@@ -1430,7 +1428,7 @@ window.addEventListener('click', function(e) {
         // ĐÓNG MODAL KHI CLICK RA NGOÀI VÙNG XÁM (GIỮ NGUYÊN)
         // ==========================================
         window.addEventListener('click', (e) => {
-            if (e.target === cancelOverlay) cancelOverlay.style.display = 'none';
+if (e.target === cancelOverlay) cancelOverlay.style.display = 'none';
             if (e.target === moneyOverlay) moneyOverlay.style.display = 'none';
         });
     });

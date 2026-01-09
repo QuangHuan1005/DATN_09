@@ -44,14 +44,15 @@
             pointer-events: none;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @include('layouts.css')
 
 </head>
 
 @yield('content')
+{{-- @include('components.chat-widget') --}}
 
-
+@include('components.chat-widget')
 <!-- .kitify-site-wrapper -->
 @include('layouts.js')
 
