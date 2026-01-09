@@ -49,6 +49,7 @@ class AdminOrderController extends Controller
 
     /**
      * Trang danh sách đơn hàng
+     * CẬP NHẬT: Thêm logic lọc order_status_id để khớp với Dashboard
      */
     public function index(Request $request)
     {
@@ -56,10 +57,12 @@ class AdminOrderController extends Controller
             ->withSum('details', 'quantity')
             ->orderByDesc('id');
 
+        // 1. Lọc theo ngày cụ thể (Click từ biểu đồ Line Chart)
         if ($request->filled('date')) {
             $query->whereDate('created_at', $request->date);
         }
 
+        // 2. Lọc theo tháng và năm (Click từ biểu đồ Bar Chart)
         if ($request->filled('month') && $request->filled('year')) {
             $query->whereMonth('created_at', $request->month)
                   ->whereYear('created_at', $request->year);
@@ -67,20 +70,26 @@ class AdminOrderController extends Controller
             $query->whereYear('created_at', $request->year);
         }
 
-        if ($request->filled('status')) {
+        // 3. Lọc theo trạng thái (Ưu tiên order_status_id từ Dashboard truyền sang)
+        if ($request->filled('order_status_id')) {
+            $query->where('order_status_id', $request->order_status_id);
+        } elseif ($request->filled('status')) {
             $query->where('order_status_id', $request->status);
         }
 
+        // 4. Lọc theo trạng thái thanh toán
         if ($request->filled('payment_status')) {
             $query->where('payment_status_id', $request->payment_status);
         }
 
+        // 5. Lọc theo sản phẩm (Click từ biểu đồ Top sản phẩm)
         if ($request->filled('product_id')) {
             $query->whereHas('details.productVariant', function ($q) use ($request) {
                 $q->where('product_id', $request->product_id);
             });
         }
 
+        // 6. Tìm kiếm theo từ khóa (Mã đơn hoặc tên khách)
         if ($request->filled('keyword')) {
             $kw = $request->keyword;
             $query->where(function ($q) use ($kw) {
@@ -165,16 +174,16 @@ class AdminOrderController extends Controller
             return $this->handleResponse($request, 'Đơn hàng đang có yêu cầu hủy. Vui lòng xử lý yêu cầu hủy.', 'error', 422);
         }
 
-        // Quy trình chuyển đổi trạng thái của Admin (Đã loại bỏ đích đến là STATUS_DONE)
+        // Quy trình chuyển đổi trạng thái của Admin
         $validNextSteps = [
             self::STATUS_PENDING   => [self::STATUS_CONFIRMED, self::STATUS_CANCEL],
             self::STATUS_CONFIRMED => [self::STATUS_SHIPPING, self::STATUS_CANCEL],
             self::STATUS_SHIPPING  => [self::STATUS_DELIVERED, self::STATUS_CANCEL],
-            self::STATUS_DELIVERED => [self::STATUS_RETURNED], // Admin chỉ có thể cho hoàn hàng nếu khách khiếu nại tại bước này
+            self::STATUS_DELIVERED => [self::STATUS_RETURNED],
         ];
 
         if (!isset($validNextSteps[$oldStatus]) || !in_array($newStatus, $validNextSteps[$oldStatus])) {
-            return $this->handleResponse($request, 'Quy trình chuyển trạng thái không hợp lệ hoặc bạn không có quyền thực hiện bước này.', 'error', 422);
+            return $this->handleResponse($request, 'Quy trình chuyển trạng thái không hợp lệ.', 'error', 422);
         }
 
         if ($newStatus === self::STATUS_CANCEL) {
@@ -184,7 +193,7 @@ class AdminOrderController extends Controller
         try {
             DB::beginTransaction();
 
-            // 1. XỬ LÝ KHO: Chỉ gọi RESTORE khi Hủy hoặc Hoàn hàng
+            // 1. XỬ LÝ KHO
             if (in_array($newStatus, [self::STATUS_CANCEL, self::STATUS_RETURNED])) {
                 $inv->restoreForOrder($order);
             }
@@ -212,7 +221,6 @@ class AdminOrderController extends Controller
 
             } elseif ($newStatus === self::STATUS_RETURNED) {
                 $order->payment_status_id = self::PAYMENT_STATUS_REFUNDED;
-                // Nếu đơn đã hoàn thành mà bị hoàn hàng sau đó, thu hồi điểm (Logic phòng hờ)
                 $user = $order->user;
                 if ($user && $oldStatus === self::STATUS_DONE) {
                     $pointsToDeduct = floor($order->total_amount / 10000);
@@ -223,7 +231,6 @@ class AdminOrderController extends Controller
                     }
                 }
             } elseif ($newStatus === self::STATUS_DELIVERED) {
-                // Khi admin báo đã giao (Shipper báo giao xong), thanh toán coi như đã thu (nếu COD)
                 $order->payment_status_id = self::PAYMENT_STATUS_PAID;
             }
 

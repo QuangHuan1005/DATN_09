@@ -129,12 +129,9 @@
                         </button>
                     </div>
                     <div class="card-body">
-                        {{-- Upload ảnh gom nhóm theo màu --}}
                         <div id="colorImagesSection" class="mb-4" style="display: none;">
                             <h6 class="fw-bold mb-3 text-dark"><i class="bx bx-images"></i> Upload ảnh đại diện theo màu:</h6>
-                            <div id="colorImagesContainer" class="d-flex flex-wrap gap-3 p-3 border rounded bg-white shadow-sm">
-                                {{-- JS render khung upload ở đây --}}
-                            </div>
+                            <div id="colorImagesContainer" class="d-flex flex-wrap gap-3 p-3 border rounded bg-white shadow-sm"></div>
                             <hr>
                         </div>
 
@@ -145,8 +142,8 @@
                                         <tr>
                                             <th>Màu Sắc</th>
                                             <th>Kích Thước</th>
-                                            <th width="20%">Giá Gốc (₫) <span class="text-danger">*</span></th>
-                                            <th width="20%">Giá Sale (₫)</th>
+                                            <th width="22%">Giá Gốc (₫) <span class="text-danger">*</span></th>
+                                            <th width="22%">Giá Sale (₫)</th>
                                             <th width="15%">Số Lượng <span class="text-danger">*</span></th>
                                             <th width="5%">Xóa</th>
                                         </tr>
@@ -187,7 +184,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function clearError(errId, inputId = null) {
         const errEl = document.getElementById(errId);
         if(errEl) errEl.innerText = '';
-        if (inputId) document.getElementById(inputId).classList.remove('is-invalid');
+        if (inputId) {
+            const el = document.getElementById(inputId);
+            if(el) el.classList.remove('is-invalid');
+        }
     }
 
     // Tìm kiếm nhanh Size & Màu
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupSearch('searchSize', '#sizeContainer .size-box');
     setupSearch('searchColor', '#colorContainer .color-box');
 
-    // Chọn/Bỏ chọn tất cả thuộc tính
+    // Chọn/Bỏ chọn tất cả
     document.getElementById('selectAllAttributes').addEventListener('click', () => {
         document.querySelectorAll('.size-checkbox, .color-checkbox').forEach(cb => cb.checked = true);
         clearError('err_sizes'); clearError('err_colors');
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.size-checkbox, .color-checkbox').forEach(cb => cb.checked = false);
     });
 
-    // logic tạo biến thể
+    // Logic tạo biến thể
     btnGenerate.addEventListener('click', function() {
         const selectedSizes = Array.from(document.querySelectorAll('.size-checkbox:checked')).map(cb => ({
             id: cb.value, code: cb.dataset.code
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
         noMsg.style.display = 'none';
         clearError('err_variants');
 
-        // 1. Render khung upload ảnh Gộp Theo Màu
+        // 1. Render khung upload ảnh theo màu
         selectedColors.forEach(color => {
             const div = document.createElement('div');
             div.className = "text-center border p-2 bg-white rounded shadow-sm";
@@ -250,16 +250,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <input type="file" name="color_images[${color.id}]" id="file_color_${color.id}" 
                        class="d-none" accept="image/*" onchange="previewVariantImg(this, 'prev_color_${color.id}')">
-                <div class="text-muted" style="font-size: 10px">Click vào ảnh để tải</div>
             `;
             colorImagesContainer.appendChild(div);
         });
 
-        // 2. Render bảng danh sách các dòng biến thể
+        // 2. Render bảng biến thể kèm validate
         let index = 0;
         selectedColors.forEach(color => {
             selectedSizes.forEach(size => {
                 const row = document.createElement('tr');
+                row.className = "variant-row";
                 row.innerHTML = `
                     <td class="bg-light-subtle">
                         <div class="d-flex align-items-center justify-content-center gap-1">
@@ -272,9 +272,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="badge bg-info text-dark">${size.code}</span>
                         <input type="hidden" name="variants[${index}][size_id]" value="${size.id}">
                     </td>
-                    <td><input type="number" name="variants[${index}][price]" class="form-control form-control-sm shadow-none" required min="0" placeholder="Giá gốc"></td>
-                    <td><input type="number" name="variants[${index}][sale]" class="form-control form-control-sm shadow-none" min="0" placeholder="Giá sale"></td>
-                    <td><input type="number" name="variants[${index}][quantity]" class="form-control form-control-sm shadow-none" value="10" required min="0"></td>
+                    <td>
+                        <input type="number" name="variants[${index}][price]" class="form-control form-control-sm v-price" placeholder="Nhập giá">
+                        <div class="text-danger small v-err-price" style="font-size: 11px;"></div>
+                    </td>
+                    <td>
+                        <input type="number" name="variants[${index}][sale]" class="form-control form-control-sm v-sale" placeholder="Giá giảm">
+                        <div class="text-danger small v-err-sale" style="font-size: 11px;"></div>
+                    </td>
+                    <td>
+                        <input type="number" name="variants[${index}][quantity]" class="form-control form-control-sm v-qty" value="10">
+                        <div class="text-danger small v-err-qty" style="font-size: 11px;"></div>
+                    </td>
                     <td><button type="button" class="btn btn-sm btn-soft-danger shadow-none" onclick="this.closest('tr').remove()"><i class="bx bx-trash"></i></button></td>
                 `;
                 tbody.appendChild(row);
@@ -283,9 +292,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Validate trước khi submit form
+    // Validate FORM khi SUBMIT
     document.getElementById('productForm').addEventListener('submit', function(e) {
         let hasError = false;
+
+        // Validate cơ bản
         if (!document.getElementById('name').value.trim()) {
             document.getElementById('err_name').innerText = 'Tên không được để trống.';
             document.getElementById('name').classList.add('is-invalid');
@@ -301,57 +312,84 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('product_code').classList.add('is-invalid');
             hasError = true;
         }
-        if (tbody.children.length === 0) {
+
+        // Validate Biến thể
+        const rows = document.querySelectorAll('.variant-row');
+        if (rows.length === 0) {
             document.getElementById('err_variants').innerText = 'Phải tạo ít nhất 1 biến thể.';
             hasError = true;
+        } else {
+            document.getElementById('err_variants').innerText = '';
+            rows.forEach(row => {
+                const pInput = row.querySelector('.v-price');
+                const sInput = row.querySelector('.v-sale');
+                const qInput = row.querySelector('.v-qty');
+
+                const pErr = row.querySelector('.v-err-price');
+                const sErr = row.querySelector('.v-err-sale');
+                const qErr = row.querySelector('.v-err-qty');
+
+                // Reset
+                pErr.innerText = ''; sErr.innerText = ''; qErr.innerText = '';
+                pInput.classList.remove('is-invalid');
+                sInput.classList.remove('is-invalid');
+                qInput.classList.remove('is-invalid');
+
+                // Check Giá gốc
+                if (!pInput.value || pInput.value <= 0) {
+                    pErr.innerText = 'Nhập giá > 0';
+                    pInput.classList.add('is-invalid');
+                    hasError = true;
+                }
+
+                // Check Giá sale
+                if (sInput.value && parseFloat(sInput.value) >= parseFloat(pInput.value)) {
+                    sErr.innerText = 'Sale < Gốc';
+                    sInput.classList.add('is-invalid');
+                    hasError = true;
+                }
+
+                // Check Số lượng
+                if (qInput.value === "" || qInput.value < 0) {
+                    qErr.innerText = 'Nhập số lượng';
+                    qInput.classList.add('is-invalid');
+                    hasError = true;
+                }
+            });
         }
 
         if (hasError) {
             e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const firstErr = document.querySelector('.is-invalid');
+            if(firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     });
 
-    // Reset trạng thái lỗi khi người dùng nhập lại
     ['name', 'category_id', 'product_code'].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) {
-            el.addEventListener('input', () => {
-                clearError('err_' + id);
-                el.classList.remove('is-invalid');
-            });
-        }
+        document.getElementById(id).addEventListener('input', () => {
+            clearError('err_' + id, id);
+        });
     });
 });
 
-// Hàm preview ảnh (Xử lý cho các input file được tạo động)
 function previewVariantImg(input, prevId) {
     if (input.files && input.files[0]) {
         let reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById(prevId).src = e.target.result;
-        }
+        reader.onload = e => document.getElementById(prevId).src = e.target.result;
         reader.readAsDataURL(input.files[0]);
     }
 }
 </script>
 
 <style>
-    /* Tùy chỉnh thanh cuộn cho Container Size/Màu */
     #sizeContainer::-webkit-scrollbar, #colorContainer::-webkit-scrollbar { width: 4px; }
     #sizeContainer::-webkit-scrollbar-thumb, #colorContainer::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
-    
     .bg-info-subtle { background-color: #e0f7fa !important; }
     .bg-primary-subtle { background-color: #e8f0fe !important; }
-    
-    /* Style cho nút xóa dòng */
     .btn-soft-danger { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; }
     .btn-soft-danger:hover { background-color: #ef4444; color: white; }
-    
     .error-msg:empty { display: none; }
-    
-    /* Hiệu ứng khi hover vào khung ảnh */
-    .img-thumbnail { border-radius: 8px; transition: border-color 0.2s; }
     .img-thumbnail:hover { border-color: #3b82f6; }
+    .is-invalid { border-color: #dc3545 !important; }
 </style>
 @endsection
