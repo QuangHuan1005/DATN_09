@@ -30,15 +30,21 @@
         }
 
         .chat-list-header {
-            padding: 20px;
+            height: 72px;
+            /* QUAN TRỌNG */
+            padding: 0 24px;
             background: var(--primary);
             color: white;
             font-size: 1.3rem;
             font-weight: 600;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
         }
 
         .chat-list {
-            max-height: calc(78vh - 80px);
+            max-height: calc(78vh - 72px);
             overflow-y: auto;
         }
 
@@ -80,23 +86,31 @@
         }
 
         .chat-header {
-            padding: 18px 25px;
+            height: 72px;
+            /* QUAN TRỌNG */
+            padding: 0 24px;
             background: var(--primary);
             color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
         }
 
         .chat-header img {
-            width: 45px;
-            height: 45px;
-            border: 3px solid white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: 44px;
+            height: 44px;
+            border: 2px solid white;
+            flex-shrink: 0;
         }
 
         .chat-header h4 {
-            margin: 0;
-            font-size: 1.2rem;
-            margin-left: 12px;
+            margin: 0 0 0 12px;
+            font-size: 1.1rem;
+            line-height: 1.2;
+
         }
 
         .chat-window {
@@ -345,6 +359,16 @@
             opacity: 0.9;
         }
 
+        #chat_name {
+            padding-left: 1ch;
+        }
+
+        .fa-comments {
+            margin-right: 0.5rem;
+        }
+
+
+
         .unread-badge {
             position: absolute;
             top: 10px;
@@ -423,7 +447,7 @@
 
                                 <div class="chat-list-panel">
                                     <div class="chat-list-header">
-                                        <h4><i class="fas fa-comments"></i> Tin nhắn với Admin</h4>
+                                        <i class="fas fa-comments"></i> Tin nhắn với Admin
                                     </div>
                                     <div class="chat-list">
                                         @foreach ($admins as $admin)
@@ -448,14 +472,14 @@
                                             <img id="chat_img"
                                                 src="https://img.freepik.com/vector-cao-cap/vector-khuon-mat-nguoi-dan-ong_1072857-7641.jpg?semt=ais_hybrid&w=740&q=80"
                                                 alt="Admin">
-                                            <h4 id="chat_name">Chọn một admin để chat</h4>
+                                            <i id="chat_name"> Chọn một admin để chat</i>
                                         </div>
                                     </div>
 
                                     <div class="chat-window" id="chatMessageContainer">
                                         <div class="text-center text-muted mt-5">
                                             <i class="fas fa-comment-dots fa-3x mb-3"></i>
-                                            <p>Chọn một admin để bắt đầu trò chuyện</p>
+                                            <p> Chọn một admin để bắt đầu trò chuyện</p>
                                         </div>
                                     </div>
 
@@ -546,59 +570,59 @@
                 markConversationAsRead(id);
             });
 
-         $('#messageForm').on('submit', function(e) {
-    e.preventDefault();
+            $('#messageForm').on('submit', function(e) {
+                e.preventDefault();
 
-    const message = emojioneArea[0].emojioneArea.getText().trim();
-    const receiverId = $('#receiver_id').val();
-    const file = imageInput.files[0];
+                const message = emojioneArea[0].emojioneArea.getText().trim();
+                const receiverId = $('#receiver_id').val();
+                const file = imageInput.files[0];
 
-    if (!message && !file) {
-        toastr.warning('Vui lòng nhập tin nhắn hoặc chọn ảnh');
-        return;
-    }
+                if (!message && !file) {
+                    toastr.warning('Vui lòng nhập tin nhắn hoặc chọn ảnh');
+                    return;
+                }
 
-    pendingMessageId++;
-    const currentPendingId = 'pending-' + pendingMessageId;
+                pendingMessageId++;
+                const currentPendingId = 'pending-' + pendingMessageId;
 
-    appendPendingMessage(message, file ? URL.createObjectURL(file) : null, currentPendingId);
+                appendPendingMessage(message, file ? URL.createObjectURL(file) : null, currentPendingId);
 
-    emojioneArea[0].emojioneArea.setText('');
-    imageInput.value = "";
-    previewBox.style.display = "none";
+                emojioneArea[0].emojioneArea.setText('');
+                imageInput.value = "";
+                previewBox.style.display = "none";
 
-    const formData = new FormData();
-    formData.append('_token', '{{ csrf_token() }}');
-    formData.append('receiver_id', receiverId);
-    if (message) formData.append('message', message);
-    if (file) formData.append('image', file);
+                const formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('receiver_id', receiverId);
+                if (message) formData.append('message', message);
+                if (file) formData.append('image', file);
 
-    $.ajax({
-        url: '{{ route('send.Messageofsellertoadmin') }}',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(res) {
-            if (res.success) {
-                replacePendingMessage(
-                    currentPendingId,
-                    message || '',
-                    res.data?.image || null,
-                    res.data?.created_at || new Date()
-                );
-                scrollToBottom();
-            } else {
-                removePendingMessage(currentPendingId);
-                toastr.error(res.message || 'Gửi thất bại');
-            }
-        },
-        error: function() {
-            removePendingMessage(currentPendingId);
-            toastr.error('Lỗi kết nối, tin nhắn không gửi được');
-        }
-    });
-});
+                $.ajax({
+                    url: '{{ route('send.Messageofsellertoadmin') }}',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        if (res.success) {
+                            replacePendingMessage(
+                                currentPendingId,
+                                message || '',
+                                res.data?.image || null,
+                                res.data?.created_at || new Date()
+                            );
+                            scrollToBottom();
+                        } else {
+                            removePendingMessage(currentPendingId);
+                            toastr.error(res.message || 'Gửi thất bại');
+                        }
+                    },
+                    error: function() {
+                        removePendingMessage(currentPendingId);
+                        toastr.error('Lỗi kết nối, tin nhắn không gửi được');
+                    }
+                });
+            });
 
             function appendMessageWithImage(text, imageUrl, isSender, displayName, avatar, time = null) {
                 const timestamp = time ? new Date(time).toLocaleTimeString('vi-VN', {
@@ -803,56 +827,58 @@
                 updateUnreadBadge(data.senderId, 0);
             });
 
-function appendPendingMessage(text, previewImageUrl, pendingId) {
-    let content = '';
-    if (text) content += `<p>${text.replace(/\n/g, '<br>')}</p>`;
-    if (previewImageUrl) {
-        content += `<img src="${previewImageUrl}" class="chat-image" onclick="window.open(this.src, '_blank')">`;
-    }
-    content += `<div class="timestamp" style="font-style:italic; opacity:0.7;">Đang gửi...</div>`;
+            function appendPendingMessage(text, previewImageUrl, pendingId) {
+                let content = '';
+                if (text) content += `<p>${text.replace(/\n/g, '<br>')}</p>`;
+                if (previewImageUrl) {
+                    content +=
+                        `<img src="${previewImageUrl}" class="chat-image" onclick="window.open(this.src, '_blank')">`;
+                }
+                content += `<div class="timestamp" style="font-style:italic; opacity:0.7;">Đang gửi...</div>`;
 
-    const html = `
+                const html = `
         <div class="chat-message sender" data-pending-id="${pendingId}">
             <div class="message-content" style="opacity:0.8;">
                 ${content}
             </div>
         </div>`;
 
-    $('#chatMessageContainer').append(html);
-    scrollToBottom();
-}
+                $('#chatMessageContainer').append(html);
+                scrollToBottom();
+            }
 
-function replacePendingMessage(pendingId, text, realImageUrl, createdAt) {
-    const $pendingMsg = $(`[data-pending-id="${pendingId}"]`);
-    if ($pendingMsg.length === 0) return;
+            function replacePendingMessage(pendingId, text, realImageUrl, createdAt) {
+                const $pendingMsg = $(`[data-pending-id="${pendingId}"]`);
+                if ($pendingMsg.length === 0) return;
 
-    const timestamp = createdAt ? new Date(createdAt).toLocaleTimeString('vi-VN', {
-        hour: '2-digit',
-        minute: '2-digit'
-    }) : new Date().toLocaleTimeString('vi-VN', {
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+                const timestamp = createdAt ? new Date(createdAt).toLocaleTimeString('vi-VN', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : new Date().toLocaleTimeString('vi-VN', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
 
-    let content = '';
-    if (text) content += `<p>${text.replace(/\n/g, '<br>')}</p>`;
-    if (realImageUrl) {
-        content += `<img src="${realImageUrl}" class="chat-image" onclick="window.open(this.src, '_blank')">`;
-    }
-    content += `<div class="timestamp">${timestamp}</div>`;
+                let content = '';
+                if (text) content += `<p>${text.replace(/\n/g, '<br>')}</p>`;
+                if (realImageUrl) {
+                    content +=
+                        `<img src="${realImageUrl}" class="chat-image" onclick="window.open(this.src, '_blank')">`;
+                }
+                content += `<div class="timestamp">${timestamp}</div>`;
 
-    $pendingMsg.find('.message-content')
-        .html(content)
-        .css('opacity', '1');
+                $pendingMsg.find('.message-content')
+                    .html(content)
+                    .css('opacity', '1');
 
-    $pendingMsg.removeAttr('data-pending-id');
-}
+                $pendingMsg.removeAttr('data-pending-id');
+            }
 
-function removePendingMessage(pendingId) {
-    $(`[data-pending-id="${pendingId}"]`).fadeOut(300, function() {
-        $(this).remove();
-    });
-}
+            function removePendingMessage(pendingId) {
+                $(`[data-pending-id="${pendingId}"]`).fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }
         });
     </script>
 @endsection
