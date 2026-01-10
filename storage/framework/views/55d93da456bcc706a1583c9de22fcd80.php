@@ -40,7 +40,7 @@
             pointer-events: none;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php echo $__env->make('layouts.css', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 </head>
@@ -48,6 +48,7 @@
 <?php echo $__env->yieldContent('content'); ?>
 
 
+<?php echo $__env->make('components.chat-widget', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <!-- .kitify-site-wrapper -->
 <?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
@@ -58,4 +59,5 @@
 
 </body>
 
-</html><?php /**PATH C:\laragon\www\DATN09\resources\views/master.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\laragon\www\DATN09\resources\views/master.blade.php ENDPATH**/ ?>

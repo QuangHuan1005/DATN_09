@@ -27,14 +27,6 @@ class DashboardController extends Controller
 
         $dbDateFormat = 'Y-m-d';
 
-        // Lấy các trạng thái lọc từ request (nếu có), mặc định lọc nhóm thành công (5, 7)
-        $selectedStatuses = $request->input('order_status_id');
-        if (empty($selectedStatuses)) {
-            $selectedStatuses = [5, 7]; 
-        } else {
-            $selectedStatuses = (array) $selectedStatuses;
-        }
-
         // Danh sách tên rác cần loại bỏ
         $excludedNames = ['N/A', 'aaaa', 'ghbhfdj', 'test', 'Admin'];
 
@@ -47,23 +39,21 @@ class DashboardController extends Controller
                   ->whereNotIn('o.name', $excludedNames);
         };
 
-        // ====== 2. Doanh thu theo THÁNG (Cho Bar Chart) ======
-        // Tách 2 query để tránh lỗi nhân đôi dữ liệu khi Join SUM
+        // ====== 2. Doanh thu theo THÁNG (Cho Bar Chart - Dòng tiền thực tế) ======
+        // Doanh thu phát sinh từ đơn mới
         $monthlyGross = DB::table('orders as o')
             ->selectRaw('MONTH(o.created_at) as month, SUM(o.total_amount) as total')
             ->whereYear('o.created_at', $year)
-            ->whereIn('o.order_status_id', [5, 7])
+            ->whereIn('o.order_status_id', [5, 7]) // Hoàn thành hoặc Hoàn trả
             ->where($cleanOrdersOnly)
             ->groupBy('month')
             ->pluck('total', 'month');
 
+        // Tiền hoàn trả tính theo thời điểm hoàn tiền thành công (updated_at của phiếu hoàn)
         $monthlyRefunds = DB::table('order_returns as re')
-            ->join('orders as o', 'o.id', '=', 're.order_id')
-            ->selectRaw('MONTH(o.created_at) as month, SUM(re.refund_amount) as total')
-            ->whereYear('o.created_at', $year)
-            ->whereIn('o.order_status_id', [5, 7])
+            ->selectRaw('MONTH(re.updated_at) as month, SUM(re.refund_amount) as total')
+            ->whereYear('re.updated_at', $year)
             ->where('re.status', 'completed')
-            ->where($cleanOrdersOnly)
             ->groupBy('month')
             ->pluck('total', 'month');
 
@@ -72,42 +62,48 @@ class DashboardController extends Controller
         for ($m = 1; $m <= 12; $m++) {
             $monthlyLabels[] = "Tháng $m";
             $netMonth = ($monthlyGross[$m] ?? 0) - ($monthlyRefunds[$m] ?? 0);
-            $monthlyRevenues[] = max(0, (float)$netMonth);
+            $monthlyRevenues[] = (float)$netMonth; // Cho phép số âm nếu hoàn tiền > bán được
         }
 
         // ====== 3. Doanh thu theo NGÀY (Line Chart) ======
-        $dailyGross = DB::table('orders as o')
-            ->selectRaw('DATE(o.created_at) as d, SUM(o.total_amount) as total')
-            ->whereBetween('o.created_at', [$from, $to])
-            ->whereIn('o.order_status_id', [5, 7])
-            ->where($cleanOrdersOnly)
-            ->groupBy('d')
-            ->pluck('total', 'd');
 
-        $dailyRefunds = DB::table('order_returns as re')
-            ->join('orders as o', 'o.id', '=', 're.order_id')
-            ->selectRaw('DATE(o.created_at) as d, SUM(re.refund_amount) as total')
-            ->whereBetween('o.created_at', [$from, $to])
-            ->whereIn('o.order_status_id', [5, 7])
-            ->where('re.status', 'completed')
-            ->where($cleanOrdersOnly)
-            ->groupBy('d')
-            ->pluck('total', 'd');
+// Lấy TIỀN THU VÀO (Tính theo ngày đơn hàng phát sinh)
+$dailyGross = DB::table('orders as o')
+    ->selectRaw('DATE(o.created_at) as d, SUM(o.total_amount) as total')
+    ->whereBetween('o.created_at', [$from, $to])
+    ->whereIn('o.order_status_id', [5, 7]) // Hoàn thành & Hoàn trả
+    ->where($cleanOrdersOnly)
+    ->groupBy('d')
+    ->pluck('total', 'd');
 
-        $labels = [];
-        $revenues = [];
-        $cursor = (clone $from)->startOfDay();
-        while ($cursor <= $to) {
-            $dateKey = $cursor->format($dbDateFormat);
-            $labels[] = $dateKey; 
+// Lấy TIỀN CHI RA (Dựa vào cột refund_amount riêng của bạn)
+// Tính theo ngày bạn thực hiện bấm "Hoàn tiền thành công"
+$dailyRefunds = DB::table('order_returns as re')
+    ->selectRaw('DATE(re.updated_at) as d, SUM(re.refund_amount) as total')
+    ->whereBetween('re.updated_at', [$from, $to])
+    ->where('re.status', 'completed')
+    ->groupBy('d')
+    ->pluck('total', 'd');
 
-            $netDay = ($dailyGross[$dateKey] ?? 0) - ($dailyRefunds[$dateKey] ?? 0);
-            $revenues[] = max(0, (float)$netDay);
-            
-            $cursor->addDay();
-        }
+$labels = [];
+$revenues = [];
+$cursor = (clone $from)->startOfDay();
 
-        // ====== 4. KPIs Tổng quan (Thực nhận) ======
+while ($cursor <= $to) {
+    $dateKey = $cursor->format($dbDateFormat);
+    $labels[] = $dateKey; 
+
+    // DOANH THU THỰC TẾ = (Tổng thu từ đơn hàng) - (Số tiền thực trả khách)
+    // Nếu đơn 1 triệu hoàn 200k, Gross là 1tr, Refund là 200k => Bạn vẫn còn 800k. 
+    // Không cần quan tâm đơn đó có mấy sản phẩm.
+    $netDay = ($dailyGross[$dateKey] ?? 0) - ($dailyRefunds[$dateKey] ?? 0);
+    $revenues[] = (float)$netDay;
+    
+    $cursor->addDay();
+}
+
+        // ====== 4. KPIs Tổng quan (Thực nhận trong kỳ) ======
+        // Tổng tiền đơn hàng phát sinh trong kỳ
         $grossData = DB::table('orders as o')
             ->selectRaw('SUM(o.total_amount) as gross_revenue, COUNT(o.id) as total_paid_orders')
             ->whereBetween('o.created_at', [$from, $to])
@@ -115,25 +111,22 @@ class DashboardController extends Controller
             ->where($cleanOrdersOnly)
             ->first();
 
-        $totalGrossRevenue = (float)($grossData->gross_revenue ?? 0);
-        $totalPaidOrders   = (int)($grossData->total_paid_orders ?? 0);
+        $totalGrossRevenueInPeriod = (float)($grossData->gross_revenue ?? 0);
+        $totalPaidOrders           = (int)($grossData->total_paid_orders ?? 0);
 
-        $refundOfOrdersInPeriod = DB::table('order_returns as re')
-            ->join('orders as o', 'o.id', '=', 're.order_id')
-            ->whereBetween('o.created_at', [$from, $to])
-            ->whereIn('o.order_status_id', [5, 7])
+        // Tổng tiền hoàn trả thực hiện trong kỳ (re.updated_at)
+        $totalRefundAmountInPeriod = DB::table('order_returns as re')
+            ->whereBetween('re.updated_at', [$from, $to])
             ->where('re.status', 'completed')
-            ->where($cleanOrdersOnly)
             ->sum('re.refund_amount');
 
-        $netRevenue = $totalGrossRevenue - $refundOfOrdersInPeriod;
+        // Doanh thu thực nhận cuối cùng trong kỳ
+        $netRevenue = $totalGrossRevenueInPeriod - $totalRefundAmountInPeriod;
 
-        $totalRefundAmount = DB::table('order_returns')
-            ->whereBetween('created_at', [$from, $to])
-            ->where('status', 'completed')
-            ->sum('refund_amount');
-
-        $allOrders = DB::table('orders as o')->whereBetween('o.created_at', [$from, $to])->where($cleanOrdersOnly)->count();
+        $allOrders = DB::table('orders as o')
+            ->whereBetween('o.created_at', [$from, $to])
+            ->where($cleanOrdersOnly)
+            ->count();
 
         $totalQtySold = DB::table('order_details as od')
             ->join('orders as o', 'o.id', '=', 'od.order_id')
@@ -161,7 +154,7 @@ class DashboardController extends Controller
             $statusValues[] = (int)($statusCounts[$sid] ?? 0);
         }
 
-        // ====== 6. Top 10 sản phẩm (Doanh thu thực nhận tỉ lệ) ======
+        // ====== 6. Top 10 sản phẩm (Trừ đi tỉ lệ hoàn trả) ======
         $topProducts = DB::table('order_details as od')
             ->join('orders as o', 'o.id', '=', 'od.order_id')
             ->join('product_variants as pv', 'pv.id', '=', 'od.product_variant_id')
@@ -253,8 +246,8 @@ class DashboardController extends Controller
             'revenues'        => $revenues, 
             'monthlyLabels'   => $monthlyLabels,
             'monthlyRevenues' => $monthlyRevenues,
-            'totalRevenue'    => $totalGrossRevenue,
-            'totalRefund'     => $totalRefundAmount,
+            'totalRevenue'    => $totalGrossRevenueInPeriod,
+            'totalRefund'     => $totalRefundAmountInPeriod,
             'netRevenue'      => $netRevenue,
             'totalPaidOrders' => $totalPaidOrders,
             'allOrders'       => $allOrders,

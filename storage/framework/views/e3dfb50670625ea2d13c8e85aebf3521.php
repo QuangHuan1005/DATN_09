@@ -57,7 +57,7 @@
             3 => ['label' => 'Đang giao hàng', 'desc' => $getStatusTime(3) ?? 'Đang vận chuyển'],
             4 => ['label' => 'Đã giao hàng',   'desc' => $getStatusTime(4) ?? 'Giao thành công'],
             5 => ['label' => 'Hoàn thành',    'desc' => $getStatusTime(5) ?? 'Khách đã nhận'],
-        ];
+];
 
         $activeStep = match (true) {
             $currentStatusId >= 5 => 5,
@@ -152,7 +152,7 @@
 
     .tag-amber {
       background: #fff7ed;
-      color: #9a3412
+color: #9a3412
     }
 
     .tag-red {
@@ -317,7 +317,7 @@
     }
 
     /* Gom badge + các nút trên 1 hàng, căn phải gọn gàng */
-    .order-header>div:last-child {
+.order-header>div:last-child {
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -433,7 +433,7 @@
                 cursor: not-allowed;
                 opacity: 0.6;
                 transform: none;
-                /* Không có active effect cho disabled */
+/* Không có active effect cho disabled */
             }
 
             /* Nút "CHI TIẾT HOÀN HÀNG" - Màu vàng */
@@ -518,7 +518,7 @@
                 background: rgba(15, 23, 42, .45);
                 z-index: 9999;
                 display: none;
-                align-items: center;
+align-items: center;
                 justify-content: center;
             }
 
@@ -598,7 +598,7 @@
 
                                                 <div class="woocommerce-MyAccount-content">
                                                     <div class="woocommerce-notices-wrapper">
-                                                        <?php if(session('error')): ?>
+<?php if(session('error')): ?>
                                                             <div class="woocommerce-error"><?php echo e(session('error')); ?></div>
                                                         <?php endif; ?>
                                                         <?php if(session('success')): ?>
@@ -633,8 +633,7 @@
                                                                             ? $logsForStep->first()
                                                                             : null;
                                                                     ?>
-
-                                                                    <div class="step">
+<div class="step">
                                                                         <span
                                                                             class="dot <?php echo e($isReached ? 'active' : ''); ?>"></span>
 
@@ -673,7 +672,7 @@
                            <div style="text-align:right">
                             <span class="tag <?php echo e($tagClass); ?>"><?php echo e($statusName); ?></span>
                             <div class="order-tools">
-                              
+
 <?php if(in_array($order->order_status_id, [1, 2])): ?>
     <form id="cancel-order-form" method="POST" action="<?php echo e(route('orders.cancel', $order->id)); ?>">
         <?php echo csrf_field(); ?>
@@ -715,7 +714,7 @@
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             <option value="new">+ Thêm tài khoản mới</option>
                         </select>
-                        <div id="err_user_bank_account_id" class="error-msg text-danger" style="display:none; font-size: 12px; margin-top: 5px;"></div>
+<div id="err_user_bank_account_id" class="error-msg text-danger" style="display:none; font-size: 12px; margin-top: 5px;"></div>
                     </div>
 
                     <div id="newBankFields" style="display: none; background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
@@ -760,7 +759,7 @@
                                                                 <?php if(in_array($order->order_status_id, [4, 5])): ?>
                                                                     <?php
                                                                         $hasReturnRequest = \App\Models\OrderReturn::where(
-                                                                            'order_id',
+'order_id',
                                                                             $order->id,
                                                                         )->exists();
                                                                     ?>
@@ -792,7 +791,7 @@
                                                                             title="Xem chi tiết hoàn hàng">
                                                                             Chi tiết hoàn hàng
                                                                         </button>
-                                                                    <?php endif; ?>
+<?php endif; ?>
                                                                 <?php endif; ?>
 
                                                                 
@@ -826,7 +825,7 @@
                                                                                         <span>
                                                                                             <?php
                                                                                                 $rStatusId =
-                                                                                                    (int) $order
+(int) $order
                                                                                                         ->cancelRequest
                                                                                                         ->status_id;
                                                                                                 $refundClass = match (
@@ -852,7 +851,7 @@
                                                                                                     default
                                                                                                         => 'Đang xử lý',
                                                                                                 };
-                                                                                            ?>
+?>
                                                                                             <span
                                                                                                 class="status-badge <?php echo e($refundClass); ?>">
                                                                                                 <?php echo e($refundName); ?>
@@ -877,7 +876,7 @@
                                                                                                     target="_blank"
                                                                                                     class="text-success"
                                                                                                     style="text-decoration: underline; font-size: 0.85rem; font-weight: 600;">
-                                                                                                    <i
+<i
                                                                                                         class="fas fa-external-link-alt me-1"></i>
                                                                                                     Xem ảnh
                                                                                                 </a>
@@ -903,7 +902,7 @@
                                                                                                     <span
                                                                                                         class="badge bg-success"
                                                                                                         style="padding: 6px 12px; border-radius: 999px; font-size: 11px;">
-                                                                                                        <i
+<i
                                                                                                             class="fas fa-check-circle"></i>
                                                                                                         Bạn đã xác nhận
                                                                                                     </span>
@@ -936,8 +935,7 @@
                                                                                     <span>Thời gian đặt</span>
                                                                                     <span><?php echo e(\Carbon\Carbon::parse($order->created_at)->format('H:i, d/m/Y')); ?></span>
                                                                                 </div>
-
-                                                                                <div class="sum-row">
+<div class="sum-row">
                                                                                     <span>Thời gian hủy</span>
                                                                                     <span style="text-align: right;">
                                                                                         <?php if($order->cancelRequest && $order->cancelRequest->status_id != 3): ?>
@@ -978,7 +976,7 @@
         <?php if($order->user?->email): ?>
             <p class="mb-1" style="text-align: left; margin-left: 0; color: #000;">
                 <strong style="font-weight: 700;">Email:</strong>
-                <a href="mailto:<?php echo e($order->user->email); ?>" style="color: inherit; text-decoration: underline;">
+<a href="mailto:<?php echo e($order->user->email); ?>" style="color: inherit; text-decoration: underline;">
                     <?php echo e($order->user->email); ?>
 
                 </a>
@@ -1016,7 +1014,7 @@
                                                                         </p>
                                                                         <div class="cancel-order-actions"
                                                                             style="display: flex; gap: 10px; justify-content: center;">
-                                                                            <button type="button"
+<button type="button"
                                                                                 class="btn-cancel-close"
                                                                                 id="btnConfirmMoneyClose"
                                                                                 style="padding: 8px 16px; border: 1px solid #ddd; border-radius: 6px;">Kiểm
@@ -1030,114 +1028,175 @@
                                                                 </div>
 
                                                                 
-                                                                <section class="woocommerce-order-details card"
-                                                                    style="margin-top:18px">
-                                                                    <div class="card-hd">Chi tiết đơn hàng</div>
-                                                                    <div class="card-bd" style="padding:0">
-                                                                        <table
-                                                                            class="woocommerce-table woocommerce-table--order-details shop_table order_details"
-                                                                            style="margin:0">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th style="width:60px">STT</th>
-                                                                                    <th class="product-name">Sản phẩm</th>
-                                                                                    <th class="product-quantity"
-                                                                                        style="width:90px">SL</th>
-                                                                                    <th class="product-total"
-                                                                                        style="width:150px">Thành tiền</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <?php $__currentLoopData = $lines; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $it): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                                    <tr class="order_item">
-                                                                                        <td style="text-align:center">
-                                                                                            <?php echo e($loop->iteration); ?></td>
-                                                                                        <td class="product-name">
-                                                                                            <div
-                                                                                                style="display:flex; gap:12px; align-items:center">
-                                                                                                
+                                                               <section class="woocommerce-order-details card shadow-sm" style="margin-top:25px; border:none; border-radius: 12px; overflow: hidden; background: #fff;">
+    
+    <div class="card-hd" style="background: #f8f9fa; padding: 18px 25px; font-weight: bold; border-bottom: 2px solid #eee; text-transform: uppercase; font-size: 0.85rem; color: #004d40; letter-spacing: 0.5px;">
+        <i class="fa fa-shopping-cart me-2"></i> Danh sách sản phẩm
+    </div>
+    
+    <div class="card-bd" style="padding:0">
+        <table class="table" style="margin:0; width:100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #ffffff; border-bottom: 2px solid #f1f1f1;">
+                    <th style="width:70px; text-align:center; padding: 15px; vertical-align: middle; color: #888; font-weight: 600;">STT</th>
+                    <th class="product-name" style="text-align:left; padding: 15px; vertical-align: middle; color: #888; font-weight: 600;">Sản phẩm</th>
+                    <th class="product-quantity" style="width:100px; text-align:center; padding: 15px; vertical-align: middle; color: #888; font-weight: 600;">Số lượng</th>
+                    <th class="product-total" style="width:160px; text-align:right; padding: 15px; vertical-align: middle; color: #888; font-weight: 600;">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $__currentLoopData = $lines; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $it): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <tr class="order_item" style="border-bottom: 1px solid #f2f2f2; transition: background 0.2s ease;">
+                    
+                    <td style="text-align:center; vertical-align: middle; padding: 15px; color: #999; font-weight: 500;">
+                        <?php echo e($loop->iteration); ?>
 
+                    </td>
 
-                                                                                                <strong><?php echo e($it->product_name); ?></strong>
-                                                                                                <div class="meta">
-                                                                                                    <?php if($it->variant_text): ?>
-                                                                                                        <?php echo e($it->variant_text); ?>
-
-                                                                                                        ·
-                                                                                                    <?php endif; ?>
-                                                                                                    Đơn giá:
-                                                                                                    ₫<?php echo e(number_format($it->unit_price)); ?>
-
-                                                                                                    <?php if($it->eta): ?>
-                                                                                                        · Dự kiến:
-                                                                                                        <?php echo e(\Carbon\Carbon::parse($it->eta)->format('d/m')); ?>
-
-                                                                                                    <?php endif; ?>
-                                                                                                </div>
-                                                                                            </div>
-                                                                    </div>
-                                                                    </td>
-                                                                    <td class="product-quantity"
-                                                                        style="text-align:center"><?php echo e($it->qty); ?></td>
-                                                                    <td class="product-total" style="text-align:right">
-                                                                        <span class="woocommerce-Price-amount amount">
-                                                                            <span
-                                                                                class="woocommerce-Price-currencySymbol">₫</span><?php echo e(number_format($it->line_total)); ?>
-
-                                                                        </span>
-                                                                    </td>
-                                                                    </tr>
-                                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                                    </tbody>
-                                                                    </table>
-                                                            </div>
-                                                            </section>
-
-<div class="order-bottom container-fluid mt-4">
-    <div class="row">
-        
-        
-        <div class="col-md-7 col-12 order-bottom-left">
-            <?php if($order->order_status_id == 5): ?>
-                <h2 class="h5 mb-4 font-weight-bold">Sản phẩm cần đánh giá</h2>
-                <div class="review-list">
-                    <?php
-                        /** * 1. Lọc sản phẩm duy nhất dựa trên ID sản phẩm gốc (product->id)
-                         * Vì bảng của bạn dùng product_variant_id, ta phải trỏ qua quan hệ product
-                         */
-                        $uniqueDetails = $order->details->unique(function($item) {
-                            return $item->product->id;
-                        });
-                    ?>
-
-                    <?php $__currentLoopData = $uniqueDetails; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="product-review-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded bg-white shadow-sm">
-                            <div class="product-info">
-                                <strong class="d-block text-dark"><?php echo e($detail->product->name ?? 'Sản phẩm không rõ'); ?></strong>
-                                <small class="text-muted">Đơn hàng #<?php echo e($order->order_code); ?></small>
+                    
+                    <td class="product-name" style="padding: 15px; vertical-align: middle;">
+                        <div style="display:flex; gap:15px; align-items:center">
+                            
+                            <?php
+                                $displayImage = $it->variant_image ?? ($it->image ?? null);
+                            ?>
+                            
+                            <div class="product-img-box" style="flex-shrink: 0;">
+                                <?php if($displayImage): ?>
+                                    <img src="<?php echo e(asset(Str::startsWith($displayImage, 'http') ? $displayImage : 'storage/' . $displayImage)); ?>" 
+                                         style="width: 65px; height: 65px; object-fit: cover; border-radius: 10px; border: 1px solid #f0f0f0;" 
+                                         alt="<?php echo e($it->product_name); ?>"
+                                         onerror="this.src='https://placehold.co/65x65?text=No+Image'">
+                                <?php else: ?>
+                                    <div style="width: 65px; height: 65px; background: #f5f5f5; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #ccc; border: 1px dashed #ddd;">
+                                        <i class="fa fa-cube fa-lg"></i>
+                                    </div>
+                                <?php endif; ?>
                             </div>
 
-                            <?php
-                                /** * 2. Kiểm tra tồn tại đánh giá: 
-                                 * Phải tìm theo product_id (ID sản phẩm gốc) thay vì biến thể
-                                 */
-                                $existingReview = \App\Models\Review::where('order_id', $order->id)
-                                    ->where('product_id', $detail->product->id)
-                                    ->first();
-                            ?>
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <strong style="color: #333; font-size: 1rem; line-height: 1.3; display: block;">
+                                    <?php echo e($it->product_name); ?>
 
-                            <div class="review-action">
-                                <?php if($existingReview): ?>
+                                </strong>
+                                
+                                <div class="meta" style="font-size: 0.85rem; color: #666; display: flex; align-items: center; flex-wrap: wrap; gap: 5px;">
+                                    <?php if($it->variant_text): ?>
+                                        <span class="badge" style="background: #e0f2f1; color: #00695c; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; border: 1px solid #b2dfdb;">
+                                            <?php echo e($it->variant_text); ?>
+
+                                        </span>
+                                        <span style="color: #ddd;">|</span>
+                                    <?php endif; ?>
                                     
-                                    <span class="badge badge-success p-2" style="border-radius: 20px; background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;">
-                                        <i class="fa fa-check-circle"></i> Đã hoàn thành đánh giá
+                                    <span style="font-weight: 500;">₫<?php echo e(number_format($it->unit_price)); ?></span>
+                                    
+                                    <?php if($it->eta): ?>
+                                        <span style="color: #ddd;">|</span>
+                                        <span style="color: #f57c00; font-weight: 500;">
+                                            <i class="fa fa-clock-o me-1"></i>Dự kiến: <?php echo e(\Carbon\Carbon::parse($it->eta)->format('d/m')); ?>
+
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    
+                    <td class="product-quantity" style="text-align:center; vertical-align: middle; padding: 15px;">
+                        <span style="background: #f1f3f5; color: #495057; padding: 5px 15px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; border: 1px solid #dee2e6;">
+                            x<?php echo e($it->qty); ?>
+
+                        </span>
+                    </td>
+
+                    
+                    <td class="product-total" style="text-align:right; vertical-align: middle; padding: 15px;">
+                        <span style="font-weight: 800; color: #d32f2f; font-size: 1.1rem; letter-spacing: -0.5px;">
+                            ₫<?php echo e(number_format($it->line_total)); ?>
+
+                        </span>
+                    </td>
+                </tr>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<div class="order-bottom container mt-4 pb-5">
+    <div class="row g-4 align-items-start">
+        
+        
+        <div class="col-lg-7 col-md-7 col-12">
+            <?php if($order->order_status_id == 5): ?>
+                <div class="d-flex align-items-center mb-4">
+                    <div style="width: 5px; height: 25px; background-color: #004d40; border-radius: 10px; margin-right: 12px;"></div>
+                    <h2 class="h5 mb-0 font-weight-bold text-dark">Sản phẩm cần đánh giá</h2>
+                </div>
+
+                <div class="review-list">
+                    <?php $__currentLoopData = $order->details; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php
+                            $pId = $detail->product_id ?? ($detail->product->id ?? null);
+                            // Lấy ảnh biến thể nếu có, không thì lấy ảnh sản phẩm gốc
+                            $variantImage = $detail->productVariant->image ?? ($detail->product->image_url ?? null);
+                        ?>
+
+                        <div class="product-review-item d-flex align-items-center mb-3 p-3 border rounded-3 bg-white shadow-sm">
+                            
+                            
+                            <div class="product-img-wrapper me-3">
+                                <img src="<?php echo e($variantImage ? asset('storage/' . $variantImage) : asset('images/no-image.png')); ?>" 
+                                     alt="product" 
+                                     class="rounded border" 
+                                     style="width: 80px; height: 80px; object-fit: cover;"
+                                     onerror="this.src='https://placehold.co/80x80?text=No+Image'">
+                            </div>
+
+                            
+                            <div class="product-info flex-grow-1">
+                                <?php if($pId): ?>
+                                    <a href="<?php echo e(route('products.show', ['id' => $pId])); ?>" class="text-decoration-none">
+                                        <strong class="d-block text-dark mb-1" style="font-size: 1.05rem; line-height: 1.2;">
+                                            <?php echo e($detail->product->name ?? 'Sản phẩm không rõ'); ?>
+
+                                        </strong>
+                                    </a>
+                                <?php else: ?>
+                                    <strong class="d-block text-dark mb-1" style="font-size: 1.05rem;">
+                                        <?php echo e($detail->product->name ?? 'Sản phẩm không rõ'); ?>
+
+                                    </strong>
+                                <?php endif; ?>
+
+                                <div class="mb-0">
+                                    <span class="badge bg-light text-primary border" style="font-weight: 500;">
+                                        Phân loại: <?php echo e($detail->productVariant->color->name ?? 'N/A'); ?> - <?php echo e($detail->productVariant->size->name ?? 'N/A'); ?>
+
+                                    </span>
+                                </div>
+                            </div>
+
+                            
+                            <div class="review-action ms-3">
+                                <?php
+                                    $existingReview = \App\Models\Review::where('order_id', $order->id)
+                                        ->where('product_variant_id', $detail->product_variant_id)
+                                        ->first();
+                                ?>
+
+                                <?php if($existingReview): ?>
+                                    <span class="badge p-2 px-3 shadow-sm" style="border-radius: 20px; background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; white-space: nowrap;">
+                                        <i class="fa fa-check-circle me-1"></i> Đã đánh giá
                                     </span>
                                 <?php else: ?>
-                                    
-                                    <a href="<?php echo e(route('review.create', ['order_id' => $order->id, 'product_id' => $detail->product->id])); ?>"
-                                       class="btn btn-sm btn-primary px-4" 
-                                       style="border-radius: 999px; font-weight: 600; background-color: #3b82f6; border: none; color: white !important;">
-                                       <i class="fa fa-star me-1" style="color: #fbbf24;"></i> Viết đánh giá
+                                    <a href="<?php echo e(route('review.create', ['order_id' => $order->id, 'product_id' => $pId, 'product_variant_id' => $detail->product_variant_id])); ?>"
+                                       class="btn btn-primary px-3 shadow-sm py-2" 
+                                       style="border-radius: 999px; font-weight: 600; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border: none; white-space: nowrap; color: white !important; font-size: 0.85rem;">
+                                       Viết đánh giá
                                     </a>
                                 <?php endif; ?>
                             </div>
@@ -1145,9 +1204,15 @@
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             <?php endif; ?>
+
+            
+            <div class="mt-4 d-flex gap-2">
+                <a href="<?php echo e(route('home')); ?>" class="btn btn-outline-secondary px-4 shadow-sm" style="border-radius: 8px; font-weight: 500;">
+                    <i class="fa fa-shopping-cart me-2"></i>Tiếp tục mua sắm
+                </a>
+            </div>
         </div>
 
-        
         <div class="col-md-5 col-12">
             <div class="order-total-card card shadow-sm border-0">
                 <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3">
@@ -1167,7 +1232,7 @@
                     <div class="d-flex justify-content-between mb-2 text-danger">
                         <span>Giảm giá</span>
                         <span>-<?php echo e(number_format($calc_discount ?? 0)); ?> ₫</span>
-                    </div>
+</div>
 
                     <div class="d-flex justify-content-between mb-3">
                         <span>Voucher</span>
@@ -1184,6 +1249,7 @@
 
     </div>
 </div>
+
                                                         
                                                         
 <?php if($currentStatusId === 4): ?>
@@ -1226,7 +1292,7 @@
         const btnOpenCancel = document.getElementById('btnOpenCancelModal');
         const btnCloseCancel = document.getElementById('btnCancelClose');
         const btnOkCancel = document.getElementById('btnCancelOk');
-        const cancelForm = document.getElementById('cancel-order-form');
+const cancelForm = document.getElementById('cancel-order-form');
 
         const selectBank = document.getElementById('selectBank');
         const newBankFields = document.getElementById('newBankFields');
@@ -1299,7 +1365,7 @@
                 clearErrors();
                 updateBankInputs();
             });
-        }
+}
 
         if (btnOkCancel && cancelForm) {
             btnOkCancel.addEventListener('click', function(e) {
@@ -1372,7 +1438,7 @@ window.addEventListener('click', function(e) {
 
         if (btnOpenMoney) {
             btnOpenMoney.addEventListener('click', function(e) {
-                e.preventDefault();
+e.preventDefault();
                 if (moneyOverlay) moneyOverlay.style.display = 'flex';
             });
         }
@@ -1436,7 +1502,7 @@ window.addEventListener('click', function(e) {
         // ĐÓNG MODAL KHI CLICK RA NGOÀI VÙNG XÁM (GIỮ NGUYÊN)
         // ==========================================
         window.addEventListener('click', (e) => {
-            if (e.target === cancelOverlay) cancelOverlay.style.display = 'none';
+if (e.target === cancelOverlay) cancelOverlay.style.display = 'none';
             if (e.target === moneyOverlay) moneyOverlay.style.display = 'none';
         });
     });

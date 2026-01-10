@@ -84,17 +84,6 @@ class CheckoutController extends Controller
             }
         }
 
-<<<<<<< HEAD
-        /** ================= 3. XỬ LÝ ĐỊA CHỈ ================= */
-        $addresses = $user->addresses()->orderBy('is_default', 'desc')->get();
-        $selectedAddressId = session('checkout_address_id');
-        $defaultAddress = $selectedAddressId ? $addresses->where('id', $selectedAddressId)->first() : null;
-
-        if (!$defaultAddress) {
-            $defaultAddress = $addresses->where('is_default', true)->first() ?: $addresses->first();
-        }
-        $addressCount = $addresses->count();
-=======
        /** ================= 3. XỬ LÝ ĐỊA CHỈ ================= */
 // 1. Lấy tất cả địa chỉ chưa xóa của user
 $addresses = $user->addresses()->whereNull('deleted_at')->latest()->get();
@@ -123,7 +112,6 @@ if ($defaultAddress) {
 }
 
 $addressCount = $addresses->count();
->>>>>>> cec2afc14d474666ec7b9d82df0e9433d39f0d30
 
         /** ================= 4. XỬ LÝ VOUCHER ĐÃ ÁP DỤNG ================= */
         $voucherData = session('applied_voucher');

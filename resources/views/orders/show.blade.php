@@ -1020,116 +1020,166 @@ align-items: center;
                                                                 </div>
 
                                                                 {{-- ======= CHI TIẾT ĐƠN HÀNG (BẢNG SẢN PHẨM) ======= --}}
-                                                                <section class="woocommerce-order-details card"
-                                                                    style="margin-top:18px">
-                                                                    <div class="card-hd">Chi tiết đơn hàng</div>
-                                                                    <div class="card-bd" style="padding:0">
-                                                                        <table
-                                                                            class="woocommerce-table woocommerce-table--order-details shop_table order_details"
-                                                                            style="margin:0">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th style="width:60px">STT</th>
-                                                                                    <th class="product-name">Sản phẩm</th>
-                                                                                    <th class="product-quantity"
-                                                                                        style="width:90px">SL</th>
-                                                                                    <th class="product-total"
-style="width:150px">Thành tiền</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                @foreach ($lines as $it)
-                                                                                    <tr class="order_item">
-                                                                                        <td style="text-align:center">
-                                                                                            {{ $loop->iteration }}</td>
-                                                                                        <td class="product-name">
-                                                                                            <div
-                                                                                                style="display:flex; gap:12px; align-items:center">
-                                                                                                {{-- @php
-$firstImage = $it->photoAlbums->first()?->image;
-@endphp
+                                                               <section class="woocommerce-order-details card shadow-sm" style="margin-top:25px; border:none; border-radius: 12px; overflow: hidden; background: #fff;">
+    {{-- Header của bảng --}}
+    <div class="card-hd" style="background: #f8f9fa; padding: 18px 25px; font-weight: bold; border-bottom: 2px solid #eee; text-transform: uppercase; font-size: 0.85rem; color: #004d40; letter-spacing: 0.5px;">
+        <i class="fa fa-shopping-cart me-2"></i> Danh sách sản phẩm
+    </div>
+    
+    <div class="card-bd" style="padding:0">
+        <table class="table" style="margin:0; width:100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #ffffff; border-bottom: 2px solid #f1f1f1;">
+                    <th style="width:70px; text-align:center; padding: 15px; vertical-align: middle; color: #888; font-weight: 600;">STT</th>
+                    <th class="product-name" style="text-align:left; padding: 15px; vertical-align: middle; color: #888; font-weight: 600;">Sản phẩm</th>
+                    <th class="product-quantity" style="width:100px; text-align:center; padding: 15px; vertical-align: middle; color: #888; font-weight: 600;">Số lượng</th>
+                    <th class="product-total" style="width:160px; text-align:right; padding: 15px; vertical-align: middle; color: #888; font-weight: 600;">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($lines as $it)
+                <tr class="order_item" style="border-bottom: 1px solid #f2f2f2; transition: background 0.2s ease;">
+                    {{-- Cột STT --}}
+                    <td style="text-align:center; vertical-align: middle; padding: 15px; color: #999; font-weight: 500;">
+                        {{ $loop->iteration }}
+                    </td>
 
-<img src="{{ $firstImage ? asset('storage/products/' . $firstImage) : asset('images/no-image.png') }}"
-     alt="{{ $it->product_name ?? 'Sản phẩm' }}"
-     class="avatar-md"> --}}
-
-
-                                                                                                <strong>{{ $it->product_name }}</strong>
-                                                                                                <div class="meta">
-                                                                                                    @if ($it->variant_text)
-                                                                                                        {{ $it->variant_text }}
-                                                                                                        ·
-                                                                                                    @endif
-                                                                                                    Đơn giá:
-                                                                                                    ₫{{ number_format($it->unit_price) }}
-                                                                                                    @if ($it->eta)
-                                                                                                        · Dự kiến:
-                                                                                                        {{ \Carbon\Carbon::parse($it->eta)->format('d/m') }}
-                                                                                                    @endif
-</div>
-                                                                                            </div>
-                                                                    </div>
-                                                                    </td>
-                                                                    <td class="product-quantity"
-                                                                        style="text-align:center">{{ $it->qty }}</td>
-                                                                    <td class="product-total" style="text-align:right">
-                                                                        <span class="woocommerce-Price-amount amount">
-                                                                            <span
-                                                                                class="woocommerce-Price-currencySymbol">₫</span>{{ number_format($it->line_total) }}
-                                                                        </span>
-                                                                    </td>
-                                                                    </tr>
-                                                                    @endforeach
-                                                                    </tbody>
-                                                                    </table>
-                                                            </div>
-                                                            </section>
-{{-- ======= FOOTER: THÔNG ĐIỆP + TỔNG TIỀN ======= --}}
-<div class="order-bottom container-fluid mt-4">
-    <div class="row">
-        
-        {{-- PHẦN BÊN TRÁI: CHIẾM 7/12 CỘT (Đánh giá sản phẩm) --}}
-        <div class="col-md-7 col-12 order-bottom-left">
-            @if ($order->order_status_id == 5)
-                <h2 class="h5 mb-4 font-weight-bold">Sản phẩm cần đánh giá</h2>
-                <div class="review-list">
-                    @php
-                        /** * 1. Lọc sản phẩm duy nhất dựa trên ID sản phẩm gốc (product->id)
-                         * Vì bảng của bạn dùng product_variant_id, ta phải trỏ qua quan hệ product
-                         */
-                        $uniqueDetails = $order->details->unique(function($item) {
-                            return $item->product->id;
-                        });
-                    @endphp
-
-                    @foreach ($uniqueDetails as $detail)
-                        <div class="product-review-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded bg-white shadow-sm">
-                            <div class="product-info">
-                                <strong class="d-block text-dark">{{ $detail->product->name ?? 'Sản phẩm không rõ' }}</strong>
-                                <small class="text-muted">Đơn hàng #{{ $order->order_code }}</small>
-</div>
-
+                    {{-- Cột Sản phẩm: Ảnh trái - Chữ phải --}}
+                    <td class="product-name" style="padding: 15px; vertical-align: middle;">
+                        <div style="display:flex; gap:15px; align-items:center">
+                            {{-- Logic hiển thị ảnh: Ưu tiên ảnh biến thể --}}
                             @php
-                                /** * 2. Kiểm tra tồn tại đánh giá: 
-                                 * Phải tìm theo product_id (ID sản phẩm gốc) thay vì biến thể
-                                 */
-                                $existingReview = \App\Models\Review::where('order_id', $order->id)
-                                    ->where('product_id', $detail->product->id)
-                                    ->first();
+                                $displayImage = $it->variant_image ?? ($it->image ?? null);
                             @endphp
+                            
+                            <div class="product-img-box" style="flex-shrink: 0;">
+                                @if ($displayImage)
+                                    <img src="{{ asset(Str::startsWith($displayImage, 'http') ? $displayImage : 'storage/' . $displayImage) }}" 
+                                         style="width: 65px; height: 65px; object-fit: cover; border-radius: 10px; border: 1px solid #f0f0f0;" 
+                                         alt="{{ $it->product_name }}"
+                                         onerror="this.src='https://placehold.co/65x65?text=No+Image'">
+                                @else
+                                    <div style="width: 65px; height: 65px; background: #f5f5f5; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #ccc; border: 1px dashed #ddd;">
+                                        <i class="fa fa-cube fa-lg"></i>
+                                    </div>
+                                @endif
+                            </div>
 
-                            <div class="review-action">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <strong style="color: #333; font-size: 1rem; line-height: 1.3; display: block;">
+                                    {{ $it->product_name }}
+                                </strong>
+                                
+                                <div class="meta" style="font-size: 0.85rem; color: #666; display: flex; align-items: center; flex-wrap: wrap; gap: 5px;">
+                                    @if ($it->variant_text)
+                                        <span class="badge" style="background: #e0f2f1; color: #00695c; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; border: 1px solid #b2dfdb;">
+                                            {{ $it->variant_text }}
+                                        </span>
+                                        <span style="color: #ddd;">|</span>
+                                    @endif
+                                    
+                                    <span style="font-weight: 500;">₫{{ number_format($it->unit_price) }}</span>
+                                    
+                                    @if ($it->eta)
+                                        <span style="color: #ddd;">|</span>
+                                        <span style="color: #f57c00; font-weight: 500;">
+                                            <i class="fa fa-clock-o me-1"></i>Dự kiến: {{ \Carbon\Carbon::parse($it->eta)->format('d/m') }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    {{-- Cột Số lượng: Căn giữa tuyệt đối --}}
+                    <td class="product-quantity" style="text-align:center; vertical-align: middle; padding: 15px;">
+                        <span style="background: #f1f3f5; color: #495057; padding: 5px 15px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; border: 1px solid #dee2e6;">
+                            x{{ $it->qty }}
+                        </span>
+                    </td>
+
+                    {{-- Cột Thành tiền: Căn phải, màu đỏ nổi bật --}}
+                    <td class="product-total" style="text-align:right; vertical-align: middle; padding: 15px;">
+                        <span style="font-weight: 800; color: #d32f2f; font-size: 1.1rem; letter-spacing: -0.5px;">
+                            ₫{{ number_format($it->line_total) }}
+                        </span>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{{-- ======= FOOTER: THÔNG ĐIỆP + TỔNG TIỀN ======= --}}
+<div class="order-bottom container mt-4 pb-5">
+    <div class="row g-4 align-items-start">
+        
+        {{-- PHẦN BÊN TRÁI: DANH SÁCH SẢN PHẨM (7/12 cột - Nới rộng để cân bằng) --}}
+        <div class="col-lg-7 col-md-7 col-12">
+            @if ($order->order_status_id == 5)
+                <div class="d-flex align-items-center mb-4">
+                    <div style="width: 5px; height: 25px; background-color: #004d40; border-radius: 10px; margin-right: 12px;"></div>
+                    <h2 class="h5 mb-0 font-weight-bold text-dark">Sản phẩm cần đánh giá</h2>
+                </div>
+
+                <div class="review-list">
+                    @foreach ($order->details as $detail)
+                        @php
+                            $pId = $detail->product_id ?? ($detail->product->id ?? null);
+                            // Lấy ảnh biến thể nếu có, không thì lấy ảnh sản phẩm gốc
+                            $variantImage = $detail->productVariant->image ?? ($detail->product->image_url ?? null);
+                        @endphp
+
+                        <div class="product-review-item d-flex align-items-center mb-3 p-3 border rounded-3 bg-white shadow-sm">
+                            
+                            {{-- Ảnh sản phẩm/biến thể --}}
+                            <div class="product-img-wrapper me-3">
+                                <img src="{{ $variantImage ? asset('storage/' . $variantImage) : asset('images/no-image.png') }}" 
+                                     alt="product" 
+                                     class="rounded border" 
+                                     style="width: 80px; height: 80px; object-fit: cover;"
+                                     onerror="this.src='https://placehold.co/80x80?text=No+Image'">
+                            </div>
+
+                            {{-- Thông tin sản phẩm --}}
+                            <div class="product-info flex-grow-1">
+                                @if($pId)
+                                    <a href="{{ route('products.show', ['id' => $pId]) }}" class="text-decoration-none">
+                                        <strong class="d-block text-dark mb-1" style="font-size: 1.05rem; line-height: 1.2;">
+                                            {{ $detail->product->name ?? 'Sản phẩm không rõ' }}
+                                        </strong>
+                                    </a>
+                                @else
+                                    <strong class="d-block text-dark mb-1" style="font-size: 1.05rem;">
+                                        {{ $detail->product->name ?? 'Sản phẩm không rõ' }}
+                                    </strong>
+                                @endif
+
+                                <div class="mb-0">
+                                    <span class="badge bg-light text-primary border" style="font-weight: 500;">
+                                        Phân loại: {{ $detail->productVariant->color->name ?? 'N/A' }} - {{ $detail->productVariant->size->name ?? 'N/A' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {{-- Nút hành động --}}
+                            <div class="review-action ms-3">
+                                @php
+                                    $existingReview = \App\Models\Review::where('order_id', $order->id)
+                                        ->where('product_variant_id', $detail->product_variant_id)
+                                        ->first();
+                                @endphp
+
                                 @if ($existingReview)
-                                    {{-- Nếu đã có đánh giá: Hiển thị trạng thái, không hiện link nữa --}}
-                                    <span class="badge badge-success p-2" style="border-radius: 20px; background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;">
-                                        <i class="fa fa-check-circle"></i> Đã hoàn thành đánh giá
+                                    <span class="badge p-2 px-3 shadow-sm" style="border-radius: 20px; background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; white-space: nowrap;">
+                                        <i class="fa fa-check-circle me-1"></i> Đã đánh giá
                                     </span>
                                 @else
-                                    {{-- Nếu chưa có: Cho phép nhấn nút đánh giá --}}
-                                    <a href="{{ route('review.create', ['order_id' => $order->id, 'product_id' => $detail->product->id]) }}"
-                                       class="btn btn-sm btn-primary px-4" 
-                                       style="border-radius: 999px; font-weight: 600; background-color: #3b82f6; border: none; color: white !important;">
-                                       <i class="fa fa-star me-1" style="color: #fbbf24;"></i> Viết đánh giá
+                                    <a href="{{ route('review.create', ['order_id' => $order->id, 'product_id' => $pId, 'product_variant_id' => $detail->product_variant_id]) }}"
+                                       class="btn btn-primary px-3 shadow-sm py-2" 
+                                       style="border-radius: 999px; font-weight: 600; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border: none; white-space: nowrap; color: white !important; font-size: 0.85rem;">
+                                       Viết đánh giá
                                     </a>
                                 @endif
                             </div>
@@ -1137,9 +1187,15 @@ $firstImage = $it->photoAlbums->first()?->image;
                     @endforeach
                 </div>
             @endif
+
+            {{-- Nút điều hướng bổ sung --}}
+            <div class="mt-4 d-flex gap-2">
+                <a href="{{ route('home') }}" class="btn btn-outline-secondary px-4 shadow-sm" style="border-radius: 8px; font-weight: 500;">
+                    <i class="fa fa-shopping-cart me-2"></i>Tiếp tục mua sắm
+                </a>
+            </div>
         </div>
 
-        {{-- PHẦN BÊN PHẢI: CHIẾM 5/12 CỘT (Tổng thanh toán) --}}
         <div class="col-md-5 col-12">
             <div class="order-total-card card shadow-sm border-0">
                 <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3">
@@ -1176,6 +1232,7 @@ $firstImage = $it->photoAlbums->first()?->image;
 
     </div>
 </div>
+
                                                         {{-- ===== Modal xác nhận ĐÃ NHẬN HÀNG ===== --}}
                                                         {{-- CHỈ render modal này khi đơn hàng ở trạng thái Đã giao hàng (ID = 4) --}}
 @if($currentStatusId === 4)
