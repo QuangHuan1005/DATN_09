@@ -2,7 +2,6 @@
 
 @section('content')
 <style>
-    /* Tinh chỉnh để chữ to và rõ nét hơn */
     .container-xxl { font-size: 15px !important; }
     .table thead th { 
         font-size: 14px !important; 
@@ -18,8 +17,8 @@
     }
     .fw-bold.text-primary { font-size: 16px !important; }
     .badge { font-size: 13px !important; padding: 6px 12px !important; }
-    .form-control { font-size: 15px !important; padding: 10px 15px !important; }
-    .btn-primary { font-size: 15px !important; font-weight: 600 !important; }
+    .btn-soft-warning { background-color: rgba(255, 193, 7, 0.1); color: #ffc107; border: none; }
+    .btn-soft-danger { background-color: rgba(220, 53, 69, 0.1); color: #dc3545; border: none; }
 </style>
 
 <div class="container-xxl py-4">
@@ -30,7 +29,6 @@
         </a>
     </div>
 
-    {{-- Alert Thông báo --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
             <div class="d-flex align-items-center">
@@ -41,7 +39,6 @@
         </div>
     @endif
 
-    {{-- Tìm kiếm --}}
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-3">
             <form method="GET" action="{{ route('admin.vouchers.index') }}">
@@ -50,7 +47,7 @@
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
                             <input type="search" name="keyword" class="form-control bg-light border-start-0" 
-                                    placeholder="Tìm kiếm theo mã voucher hoặc mô tả..." value="{{ request('keyword') }}">
+                                   placeholder="Tìm kiếm theo mã voucher hoặc mô tả..." value="{{ request('keyword') }}">
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -61,7 +58,6 @@
         </div>
     </div>
 
-    {{-- Bảng danh sách voucher --}}
     <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -81,13 +77,11 @@
                             <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         @forelse ($vouchers as $key => $item)
                             <tr>
                                 <td class="text-center text-muted">{{ $vouchers->firstItem() + $key }}</td>
                                 <td class="fw-bold text-primary">{{ $item->voucher_code }}</td>
-
                                 <td class="text-center">
                                     @if ($item->discount_type === 'fixed')
                                         <span class="fw-bold text-dark">{{ number_format($item->discount_value) }}đ</span>
@@ -97,15 +91,10 @@
                                         <br><small class="badge bg-info-subtle text-info border border-info-subtle">Phần trăm</small>
                                     @endif
                                 </td>
-                                
                                 <td class="text-center text-danger fw-medium">
                                     {{ $item->discount_type === 'percent' && $item->sale_price ? number_format($item->sale_price) . 'đ' : '—' }}
                                 </td>
-
-                                <td class="text-center">
-                                    {{ number_format($item->min_order_value) }}đ
-                                </td>
-
+                                <td class="text-center">{{ number_format($item->min_order_value) }}đ</td>
                                 <td class="text-center">
                                     @if($item->points_required > 0)
                                         <span class="badge bg-warning text-dark">
@@ -115,52 +104,51 @@
                                         <span class="text-muted small">Công khai</span>
                                     @endif
                                 </td>
-                                
                                 <td class="text-center fw-medium">
-                                    <span class="text-success">{{ $item->quantity - $item->total_used }}</span> / <span class="text-muted">{{ $item->quantity }}</span>
+                                    <span class="{{ ($item->quantity - $item->total_used) <= 0 ? 'text-danger' : 'text-success' }}">
+                                        {{ $item->quantity - $item->total_used }}
+                                    </span> / <span class="text-muted">{{ $item->quantity }}</span>
                                 </td>
-
                                 <td class="text-center small">
                                     <div class="text-dark">{{ \Carbon\Carbon::parse($item->start_date)->format('d-m-Y') }}</div>
                                     <div class="text-muted">{{ \Carbon\Carbon::parse($item->end_date)->format('d-m-Y') }}</div>
                                 </td>
-
                                 <td class="text-center">
                                     @switch($item->display_status)
+                                        @case('disabled')
+                                            <span class="badge bg-danger-subtle text-danger px-3 py-2 border border-danger-subtle">Tạm dừng</span>
+                                            @break
+                                        @case('upcoming')
+                                            <span class="badge bg-info-subtle text-info px-3 py-2 border border-info-subtle">Sắp diễn ra</span>
+                                            @break
                                         @case('expired')
-                                            <span class="badge bg-secondary-subtle text-secondary px-3 py-2">Hết hạn</span>
+                                            <span class="badge bg-secondary-subtle text-secondary px-3 py-2 border border-secondary-subtle">Hết hạn</span>
                                             @break
                                         @case('out_of_stock')
-                                            <span class="badge bg-warning-subtle text-warning px-3 py-2">Hết mã</span>
+                                            <span class="badge bg-warning-subtle text-warning px-3 py-2 border border-warning-subtle">Hết mã</span>
                                             @break
                                         @default
                                             <span class="badge bg-success-subtle text-success px-3 py-2 border border-success-subtle">Hoạt động</span>
                                     @endswitch
                                 </td>
-                                
                                 <td class="text-center">
                                     @if ($item->products->count() > 0)
-                                        <span class="badge bg-info text-white cursor-pointer" 
-                                              data-bs-toggle="tooltip" title="{{ $item->products->pluck('name')->implode(', ') }}">
+                                        <span class="badge bg-info text-white" data-bs-toggle="tooltip" title="{{ $item->products->pluck('name')->implode(', ') }}">
                                             {{ $item->products->count() }} SP <i class="bi bi-tag-fill ms-1"></i>
                                         </span>
                                     @else
                                         <span class="text-muted small">Tất cả</span>
                                     @endif
                                 </td>
-
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
-                                        <a href="{{ route('admin.vouchers.edit', $item->id) }}"
-                                            class="btn btn-soft-warning p-2" title="Sửa voucher">
-                                             <iconify-icon icon="solar:pen-new-square-broken" class="fs-4"></iconify-icon>
+                                        <a href="{{ route('admin.vouchers.edit', $item->id) }}" class="btn btn-soft-warning p-2">
+                                            <iconify-icon icon="solar:pen-new-square-broken" class="fs-4"></iconify-icon>
                                         </a>
-
                                         <form action="{{ route('admin.vouchers.destroy', $item->id) }}" method="POST" class="d-inline">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-soft-danger p-2" 
-                                                    onclick="return confirm('Xóa voucher {{ $item->voucher_code }}?')">
-                                                 <iconify-icon icon="solar:trash-bin-minimalistic-broken" class="fs-4"></iconify-icon>
+                                            <button type="submit" class="btn btn-soft-danger p-2" onclick="return confirm('Xóa voucher {{ $item->voucher_code }}?')">
+                                                <iconify-icon icon="solar:trash-bin-minimalistic-broken" class="fs-4"></iconify-icon>
                                             </button>
                                         </form>
                                     </div>
@@ -178,7 +166,6 @@
                 </table>
             </div>
         </div>
-
         <div class="card-footer bg-white py-3 border-top">
             <div class="d-flex justify-content-between align-items-center">
                 <span class="fw-medium text-muted">Tổng cộng: {{ $vouchers->total() }} voucher</span>
@@ -192,7 +179,6 @@
 @section('script')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Tự ẩn alert sau 4 giây
         setTimeout(() => {
             document.querySelectorAll('.alert').forEach(alert => {
                 let bsAlert = new bootstrap.Alert(alert);
@@ -200,7 +186,6 @@
             });
         }, 4000);
 
-        // Kích hoạt Tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)

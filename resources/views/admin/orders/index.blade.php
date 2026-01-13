@@ -144,16 +144,19 @@
 
                                 // Logic chuẩn bị nội dung Tooltip cho sản phẩm hoàn
                                 $returnTooltip = '';
-                                if($order->orderReturn && $order->orderReturn->product_details) {
-                                    $returnedProducts = json_decode($order->orderReturn->product_details, true);
-                                    if($returnedProducts) {
-                                        $returnTooltip = "<b>Sản phẩm khách trả:</b><br>";
-                                        foreach($returnedProducts as $rp) {
-                                            $returnTooltip .= "• " . ($rp['product_name'] ?? 'SP') . " (x" . ($rp['quantity'] ?? 1) . ")<br>";
-                                        }
-                                        $returnTooltip .= "<i>Lý do: " . ($order->orderReturn->reason ?? 'Không có') . "</i>";
-                                    }
-                                }
+    if($order->orderReturn && $order->orderReturn->product_details) {
+        // Kiểm tra nếu nó đã là mảng thì dùng luôn, nếu là chuỗi thì mới decode
+        $details = $order->orderReturn->product_details;
+        $returnedProducts = is_array($details) ? $details : json_decode($details, true);
+
+        if(is_array($returnedProducts)) {
+            $returnTooltip = "<b>Sản phẩm khách trả:</b><br>";
+            foreach($returnedProducts as $rp) {
+                $returnTooltip .= "• " . ($rp['product_name'] ?? 'SP') . " (x" . ($rp['quantity'] ?? 1) . ")<br>";
+            }
+            $returnTooltip .= "<i>Lý do: " . ($order->orderReturn->reason ?? 'Không có') . "</i>";
+        }
+    }
                             @endphp
                             <tr>
                                 <td><span class="fw-bold text-dark">{{ $order->order_code }}</span></td>

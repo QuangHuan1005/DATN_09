@@ -13,6 +13,7 @@ class AdminReturnController extends Controller
 {
     /**
      * Hiển thị danh sách yêu cầu hoàn hàng
+     * Tích hợp tìm kiếm và lọc trạng thái
      */
     public function index(Request $request)
     {
@@ -34,7 +35,7 @@ class AdminReturnController extends Controller
             });
         }
 
-        // Lọc theo trạng thái hệ thống (7 trạng thái)
+        // Lọc theo trạng thái hệ thống
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
@@ -56,7 +57,7 @@ class AdminReturnController extends Controller
     }
 
     /**
-     * Xem chi tiết yêu cầu
+     * Xem chi tiết yêu cầu hoàn hàng
      */
     public function show(OrderReturn $return)
     {
@@ -74,38 +75,47 @@ class AdminReturnController extends Controller
 
     /**
      * Cập nhật trạng thái quy trình hoàn hàng
+     * Xử lý logic cộng kho và cập nhật đơn hàng khi hoàn tất
      */
-    public function updateStatus(Request $request, OrderReturn $return)
+   public function updateStatus(Request $request, OrderReturn $return)
     {
-        // 1. Cấu hình Validation (Phải đủ 7 trạng thái để không bị lỗi chặn logic)
+        // 1. Cấu hình Validation (Admin KHÔNG được chọn completed)
         $rules = [
-            'status' => 'required|in:pending,approved,returning,received,refund_processing,completed,rejected',
+            'status' => 'required|in:pending,approved,returning,received,refund_processing,rejected',
             'admin_refund_proof' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ];
 
-        // Nếu từ chối, bắt buộc lý do
+        // Nếu từ chối, bắt buộc nhập lý do
         if ($request->status === 'rejected') {
             $rules['rejection_reason'] = 'required|string|min:5|max:1000';
         }
 
-        // Nếu hoàn tất (Bước 6), bắt buộc phải có minh chứng biên lai
-        if ($request->status === 'completed' && !$return->admin_refund_proof) {
+        // Nếu chuyển sang trạng thái "Đang xử lý hoàn tiền", bắt buộc phải tải biên lai
+        if ($request->status === 'refund_processing' && !$return->admin_refund_proof) {
             $rules['admin_refund_proof'] = 'required|image|mimes:jpeg,png,jpg,webp|max:2048';
         }
 
-        $request->validate($rules);
+        $request->validate($rules, [
+            'rejection_reason.required' => 'Vui lòng nhập lý do từ chối yêu cầu.',
+            'admin_refund_proof.required' => 'Vui lòng tải lên ảnh minh chứng đã hoàn tiền (Biên lai).',
+            'admin_refund_proof.image' => 'Minh chứng phải là định dạng ảnh.',
+        ]);
 
         try {
             DB::beginTransaction();
 
+            // Chặn tuyệt đối nếu Admin cố tình gửi status 'completed' qua request
+            if ($request->status === 'completed') {
+                return redirect()->back()->with('error', 'Trạng thái này chỉ được xác nhận bởi khách hàng!');
+            }
+
             $updateData = ['status' => $request->status];
 
-            // Lưu lý do từ chối (Giai đoạn 2)
             if ($request->status === 'rejected') {
                 $updateData['rejection_reason'] = $request->rejection_reason;
             }
 
-            // Xử lý upload biên lai chuyển tiền (Giai đoạn 5/6)
+            // Xử lý upload biên lai chuyển tiền
             if ($request->hasFile('admin_refund_proof')) {
                 if ($return->admin_refund_proof) {
                     Storage::disk('public')->delete($return->admin_refund_proof);
@@ -120,31 +130,6 @@ class AdminReturnController extends Controller
             // Cập nhật Model Hoàn hàng
             $return->update($updateData);
 
-            // LOGIC KHI HOÀN TẤT (Trạng thái Completed)
-            if ($request->status === 'completed') {
-                // A. Cập nhật trạng thái Đơn hàng gốc
-                $return->order->update([
-                    'order_status_id' => 7,   // ID trạng thái "Hoàn trả" trong DB của bạn
-                    'payment_status_id' => 3  // ID trạng thái "Đã hoàn tiền"
-                ]);
-
-                // B. Cộng lại tồn kho sản phẩm
-                $returnedItems = is_array($return->product_details) 
-                    ? $return->product_details 
-                    : json_decode($return->product_details, true);
-
-                if ($returnedItems) {
-                    foreach ($returnedItems as $item) {
-                        $variantId = $item['product_variant_id'] ?? null;
-                        $quantity  = $item['quantity'] ?? 0;
-
-                        if ($variantId && $quantity > 0) {
-                            ProductVariant::where('id', $variantId)->increment('quantity', $quantity);
-                        } 
-                    }
-                }
-            }
-
             // Ghi Log lịch sử thao tác
             if (class_exists(\App\Models\OrderReturnStatusLog::class)) {
                 \App\Models\OrderReturnStatusLog::create([
@@ -156,7 +141,7 @@ class AdminReturnController extends Controller
             }
 
             DB::commit();
-            return redirect()->back()->with('success', 'Cập nhật trạng thái quy trình thành công!');
+            return redirect()->back()->with('success', 'Cập nhật trạng thái thành công. Chờ khách hàng xác nhận nhận tiền!');
 
         } catch (\Exception $e) {
             DB::rollBack();

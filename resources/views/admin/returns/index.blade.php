@@ -43,24 +43,24 @@
                     <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
                         {{ match (request('status')) {
                             'pending' => 'Chờ duyệt',
-                            'approved' => 'Đã duyệt (Chờ khách gửi)',
+                            'approved' => 'Chấp nhận',
                             'returning' => 'Đang trả hàng',
                             'received' => 'Đã nhận/Kiểm tra',
                             'refund_processing' => 'Đang xử lý hoàn tiền',
                             'completed' => 'Hoàn tất',
-                            'rejected' => 'Bị từ chối',
+                            'rejected' => 'Từ chối',
                             default => 'Tất cả trạng thái',
                         } }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">
                         <a href="{{ route('admin.returns.index') }}" class="dropdown-item">Tất cả trạng thái</a>
                         <a href="{{ route('admin.returns.index', ['status' => 'pending']) }}" class="dropdown-item">Chờ duyệt</a>
-                        <a href="{{ route('admin.returns.index', ['status' => 'approved']) }}" class="dropdown-item">Đã duyệt</a>
+                        <a href="{{ route('admin.returns.index', ['status' => 'approved']) }}" class="dropdown-item">Chấp nhận</a>
                         <a href="{{ route('admin.returns.index', ['status' => 'returning']) }}" class="dropdown-item">Đang trả hàng</a>
                         <a href="{{ route('admin.returns.index', ['status' => 'received']) }}" class="dropdown-item">Đã nhận/Kiểm tra</a>
                         <a href="{{ route('admin.returns.index', ['status' => 'refund_processing']) }}" class="dropdown-item">Đang xử lý hoàn tiền</a>
                         <a href="{{ route('admin.returns.index', ['status' => 'completed']) }}" class="dropdown-item text-success fw-bold">Hoàn tất</a>
-                        <a href="{{ route('admin.returns.index', ['status' => 'rejected']) }}" class="dropdown-item text-danger">Bị từ chối</a>
+                        <a href="{{ route('admin.returns.index', ['status' => 'rejected']) }}" class="dropdown-item text-danger">Từ chối</a>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,6 @@
                                     ];
                                     $statusColor = $statusColors[$return->status] ?? 'badge bg-secondary';
                                     
-                                    // Mảng thứ tự trạng thái để kiểm soát logic
                                     $statusOrder = ['pending', 'approved', 'returning', 'received', 'refund_processing', 'completed'];
                                     $currentIndex = array_search($return->status, $statusOrder);
                                     $isFinal = in_array($return->status, ['completed', 'rejected']);
@@ -115,11 +114,7 @@
                                         </a>
                                     </td>
                                     <td>{{ $return->created_at?->format('d/m/Y H:i') ?? '-' }}</td>
-                                    <td>
-                                        <a href="{{ route('admin.users.show', $return->user_id ?? 0) }}" class="link-primary">
-                                            {{ $return->user->name ?? 'Khách lẻ' }}
-                                        </a>
-                                    </td>
+                                    <td>{{ $return->user->name ?? 'Khách lẻ' }}</td>
                                     <td class="text-danger fw-bold">{{ number_format($return->refund_amount, 0, ',', '.') }}đ</td>
                                     <td>
                                         <span class="text-truncate d-inline-block" style="max-width: 150px;" title="{{ $return->reason }}">
@@ -138,7 +133,7 @@
                                                     class="form-select form-select-sm {{ $statusColor }}"
                                                     style="min-width: 165px; height: 32px;"
                                                     onchange="confirmReturnStatusChange(this)"
-                                                    {{ $isFinal ? 'disabled' : '' }}>
+                                                    {{ $isFinal || $return->status === 'refund_processing' ? 'disabled' : '' }}>
                                                 
                                                 <option value="pending" data-color="badge border border-warning text-warning"
                                                     {{ $return->status === 'pending' ? 'selected' : '' }} {{ $currentIndex > 0 ? 'disabled' : '' }}>
@@ -148,10 +143,9 @@
                                                 <option value="approved" data-color="badge border border-info text-info"
                                                     {{ $return->status === 'approved' ? 'selected' : '' }}
                                                     {{ $currentIndex > 1 ? 'disabled' : '' }}>
-                                                    Đã duyệt
+                                                    Chấp nhận
                                                 </option>
                                                 
-                                                {{-- Sửa Logic ở đây: Cho phép chọn nếu đang ở bước approved (1) --}}
                                                 <option value="returning" data-color="badge border border-primary text-primary"
                                                     {{ $return->status === 'returning' ? 'selected' : '' }}
                                                     {{ ($currentIndex < 1 || $currentIndex > 2) && $return->status !== 'returning' ? 'disabled' : '' }}>
@@ -172,13 +166,13 @@
 
                                                 <option value="completed" data-color="badge border border-success text-success"
                                                     {{ $return->status === 'completed' ? 'selected' : '' }}
-                                                    {{ $currentIndex < 4 ? 'disabled' : '' }}>
-                                                    Hoàn tất
+                                                    disabled> 
+                                                    Hoàn tất 
                                                 </option>
                                                 
                                                 <option value="rejected" data-color="badge border border-dark text-dark"
                                                     {{ $return->status === 'rejected' ? 'selected' : '' }}>
-                                                    Bị từ chối
+                                                    Từ chối
                                                 </option>
                                             </select>
                                         </form>
@@ -186,7 +180,7 @@
 
                                     <td>
                                         <a href="{{ route('admin.returns.show', $return->id) }}" class="btn btn-sm btn-soft-info">
-                                            <i class="mdi mdi-eye"></i> Chi tiết
+                                            <i class="bx bx-show align-middle"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -208,12 +202,12 @@
 
     </div>
 
-    {{-- Modals Giữ Nguyên --}}
+    {{-- Modal Từ chối --}}
     <div class="modal fade" id="rejectionModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title text-white">Giai đoạn 2: Từ chối yêu cầu</h5>
+                    <h5 class="modal-title text-white">Từ chối yêu cầu hoàn hàng</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -237,11 +231,12 @@
         </div>
     </div>
 
+    {{-- Modal Hoàn tiền --}}
     <div class="modal fade" id="refundModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title text-white"><i class='mdi mdi-bank me-1'></i> Giai đoạn 5: Chuyển khoản & Minh chứng</h5>
+                    <h5 class="modal-title text-white"><i class='mdi mdi-bank me-1'></i> Minh chứng hoàn tiền</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="refundForm" method="POST" enctype="multipart/form-data">
@@ -262,7 +257,7 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="status" value="completed">
+                        <input type="hidden" name="status" value="refund_processing">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Ảnh biên lai giao dịch <span class="text-danger">*</span></label>
                             <input type="file" name="admin_refund_proof" class="form-control" accept="image/*" required>
@@ -270,7 +265,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
-                        <button type="submit" class="btn btn-success fw-bold">Xác nhận hoàn tất</button>
+                        <button type="submit" class="btn btn-success fw-bold">Xác nhận Đã Chuyển Tiền</button>
                     </div>
                 </form>
             </div>
@@ -337,7 +332,7 @@
                 return;
             }
 
-            if (newStatus === 'completed') {
+            if (newStatus === 'refund_processing') {
                 try {
                     const bankData = JSON.parse(form.dataset.bankJson);
                     document.getElementById('bank_name_display').innerText = bankData.bank_name;
@@ -360,6 +355,7 @@
             }
         }
     </script>
+    
     <style>
         .badge.border { padding: 4px 10px; font-weight: 600; text-transform: uppercase; font-size: 10px; }
         .btn-soft-info { background: rgba(59, 175, 218, 0.1); color: #3bafda; border: none; }

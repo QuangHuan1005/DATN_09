@@ -23,43 +23,62 @@ class Voucher extends Model
         'end_date',
         'status',
         'description',
-        'points_required', // 👈 QUAN TRỌNG
+        'points_required',
     ];
 
     /**
-     * Trạng thái hiển thị (chuẩn thực tế)
+     * Ép kiểu dữ liệu (QUAN TRỌNG)
+     * Giúp start_date và end_date luôn là đối tượng Carbon để so sánh chính xác
+     */
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date'   => 'datetime',
+        'status'     => 'integer',
+        'quantity'   => 'integer',
+        'total_used' => 'integer',
+    ];
+
+    /**
+     * Trạng thái hiển thị thông minh (Sửa lỗi Logic thời gian)
      */
     public function getDisplayStatusAttribute()
     {
         $now = now();
 
-        if ($this->status == 0) {
-            return 'stopped'; // Admin tắt
+        // 1. Kiểm tra Admin có chủ động tắt hay không
+        if ($this->status === 0) {
+            return 'disabled'; // Tạm dừng
         }
 
+        // 2. Kiểm tra thời gian bắt đầu (Sắp diễn ra)
         if ($this->start_date && $now->lt($this->start_date)) {
-            return 'upcoming'; // Chưa tới ngày
+            return 'upcoming';
         }
 
+        // 3. Kiểm tra thời gian kết thúc (Hết hạn)
         if ($this->end_date && $now->gt($this->end_date)) {
-            return 'expired'; // Hết hạn
+            return 'expired';
         }
 
-        if ($this->quantity <= 0) {
-            return 'out_of_stock'; // Hết voucher
+        // 4. Kiểm tra số lượng còn lại (Hết mã)
+        if (($this->quantity - $this->total_used) <= 0) {
+            return 'out_of_stock';
         }
 
-        return 'active';
+        return 'active'; // Đang hoạt động
     }
 
     /**
-     * Kiểm tra dùng được hay không
+     * Helper kiểm tra khả dụng để áp dụng vào giỏ hàng
      */
     public function canBeUsed()
     {
         return $this->display_status === 'active';
     }
 
+    /**
+     * Quan hệ với sản phẩm
+     */
     public function products()
     {
         return $this->belongsToMany(

@@ -38,7 +38,7 @@
                                                 ];
                                                 $statusLabels = [
                                                     'pending'           => 'Chờ duyệt',
-                                                    'approved'          => 'Đã duyệt',
+                                                    'approved'          => 'Chấp nhận',
                                                     'returning'         => 'Đang trả hàng',
                                                     'received'          => 'Đã nhận/Kiểm tra',
                                                     'refund_processing' => 'Đang xử lý hoàn tiền',
@@ -66,7 +66,7 @@
                                     // Định nghĩa 6 bước tiến độ (không tính rejected vì nó là nhánh cụt)
                                     $steps = [
                                         ['status' => 'pending',           'label' => 'Chờ duyệt'],
-                                        ['status' => 'approved',          'label' => 'Đã duyệt'],
+                                        ['status' => 'approved',          'label' => 'Chấp nhận'],
                                         ['status' => 'returning',         'label' => 'Đang trả hàng'],
                                         ['status' => 'received',          'label' => 'Đã nhận hàng'],
                                         ['status' => 'refund_processing', 'label' => 'Đang hoàn tiền'],

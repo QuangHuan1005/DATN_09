@@ -66,7 +66,7 @@
 
         {{-- Ô 2: Doanh thu gộp --}}
         <div class="col-md-4">
-            <a href="{{ route('admin.orders.index', array_merge($dateFilterParams, ['order_status_id' => 5])) }}" class="text-decoration-none">
+            <a href="{{ route('admin.orders.index', array_merge($dateFilterParams, ['order_status_id' => '5,7'])) }}" class="text-decoration-none">
                 <div class="card shadow-sm border-0 border-start border-4 border-primary h-100 btn-reveal">
                     <div class="card-body">
                         <div class="text-uppercase small fw-bold text-muted mb-1">Doanh thu gộp (Hóa đơn)</div>
@@ -104,7 +104,7 @@
     <div class="row g-3 mb-4">
         {{-- Ô 4: Đơn hàng hoàn thành --}}
         <div class="col-md-4">
-            <a href="{{ route('admin.orders.index', array_merge($dateFilterParams, ['order_status_id' => 5])) }}" class="text-decoration-none">
+            <a href="{{ route('admin.orders.index', array_merge($dateFilterParams, ['order_status_id' => '5,7'])) }}" class="text-decoration-none">
                 <div class="card shadow-sm border-0 border-start border-4 h-100 border-orange">
                     <div class="card-body">
                         <div class="text-uppercase small fw-bold text-muted mb-1">Đơn hàng hoàn thành</div>
@@ -317,7 +317,6 @@ const money = v => new Intl.NumberFormat('vi-VN').format(v) + ' ₫';
 
 document.addEventListener('DOMContentLoaded', function() {
     // --- 0. KHỞI TẠO BIẾN DÙNG CHUNG ---
-    const COMPLETED_STATUS_ID = 5;
     const START_DATE = "{{ $startDate }}";
     const END_DATE = "{{ $endDate }}";
     const statusMapIds = [1, 2, 3, 4, 5, 6, 7];
@@ -350,95 +349,93 @@ document.addEventListener('DOMContentLoaded', function() {
     if(fromInput) fromInput.addEventListener('change', validateDates);
     if(toInput) toInput.addEventListener('change', validateDates);
 
-   // --- 2. BIỂU ĐỒ DOANH THU THÁNG (BAR CHART) ---
-const ctxMonthly = document.getElementById('revenueMonthly');
-if (ctxMonthly) {
-    new Chart(ctxMonthly, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($monthlyLabels ?? []) !!},
-            datasets: [{
-                label: 'Doanh thu thực tế',
-                data: {!! json_encode($monthlyRevenues ?? []) !!},
-                backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1, 
-                borderRadius: 4
-            }]
-        },
-        options: {
-            responsive: true, 
-            maintainAspectRatio: false,
-            onClick: (e, els) => {
-                if (els.length > 0) {
-                    const month = els[0].index + 1;
-                    const year = {{ request('year', $year ?? date('Y')) }};
-                    // CẬP NHẬT: Gửi order_status_id=5,7 để khớp với logic tính toán của biểu đồ
-                    window.location.href = `{{ route('admin.orders.index') }}?month=${month}&year=${year}&order_status_id=5,7`;
-                }
+    // --- 2. BIỂU ĐỒ DOANH THU THÁNG (BAR CHART) ---
+    const ctxMonthly = document.getElementById('revenueMonthly');
+    if (ctxMonthly) {
+        new Chart(ctxMonthly, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($monthlyLabels ?? []) !!},
+                datasets: [{
+                    label: 'Doanh thu thực tế',
+                    data: {!! json_encode($monthlyRevenues ?? []) !!},
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1, 
+                    borderRadius: 4
+                }]
             },
-            plugins: { 
-                tooltip: { 
-                    callbacks: { 
-                        label: ctx => ' Doanh thu thuần: ' + money(ctx.parsed.y) 
+            options: {
+                responsive: true, 
+                maintainAspectRatio: false,
+                onClick: (e, els) => {
+                    if (els.length > 0) {
+                        const month = els[0].index + 1;
+                        const year = {{ request('year', $year ?? date('Y')) }};
+                        window.location.href = `{{ route('admin.orders.index') }}?month=${month}&year=${year}&order_status_id=5,7`;
+                    }
+                },
+                plugins: { 
+                    tooltip: { 
+                        callbacks: { 
+                            label: ctx => ' Doanh thu thuần: ' + money(ctx.parsed.y) 
+                        } 
                     } 
-                } 
-            },
-            scales: { 
-                y: { 
-                    beginAtZero: true,
-                    ticks: { callback: v => money(v) } 
-                } 
+                },
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        ticks: { callback: v => money(v) } 
+                    } 
+                }
             }
-        }
-    });
-}
+        });
+    }
 
-// --- 3. BIỂU ĐỒ DOANH THU NGÀY (LINE CHART) ---
-const ctxLine = document.getElementById('revenueLine');
-if (ctxLine) {
-    new Chart(ctxLine, {
-        type: 'line',
-        data: {
-            labels: {!! json_encode($labels ?? []) !!},
-            datasets: [{
-                label: 'Doanh thu thực tế',
-                data: {!! json_encode($revenues ?? []) !!},
-                borderColor: '#0dcaf0', 
-                backgroundColor: 'rgba(13, 202, 240, 0.1)',
-                fill: true, 
-                tension: 0.4, 
-                pointRadius: 4, 
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            responsive: true, 
-            maintainAspectRatio: false,
-            onClick: (e, els) => {
-                if (els.length > 0) {
-                    const idx = els[0].index;
-                    const date = {!! json_encode($labels ?? []) !!}[idx];
-                    // CẬP NHẬT: Gửi order_status_id=5,7 để khớp với dữ liệu hiển thị trên Line Chart
-                    window.location.href = `{{ route('admin.orders.index') }}?date=${date}&order_status_id=5,7`;
-                }
+    // --- 3. BIỂU ĐỒ DOANH THU NGÀY (LINE CHART) ---
+    const ctxLine = document.getElementById('revenueLine');
+    if (ctxLine) {
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: {!! json_encode($labels ?? []) !!},
+                datasets: [{
+                    label: 'Doanh thu thực tế',
+                    data: {!! json_encode($revenues ?? []) !!},
+                    borderColor: '#0dcaf0', 
+                    backgroundColor: 'rgba(13, 202, 240, 0.1)',
+                    fill: true, 
+                    tension: 0.4, 
+                    pointRadius: 4, 
+                    pointHoverRadius: 7
+                }]
             },
-            plugins: { 
-                tooltip: { 
-                    callbacks: { 
-                        label: ctx => ' Doanh thu thuần: ' + money(ctx.parsed.y) 
+            options: {
+                responsive: true, 
+                maintainAspectRatio: false,
+                onClick: (e, els) => {
+                    if (els.length > 0) {
+                        const idx = els[0].index;
+                        const date = {!! json_encode($labels ?? []) !!}[idx];
+                        window.location.href = `{{ route('admin.orders.index') }}?date=${date}&order_status_id=5,7`;
+                    }
+                },
+                plugins: { 
+                    tooltip: { 
+                        callbacks: { 
+                            label: ctx => ' Doanh thu thuần: ' + money(ctx.parsed.y) 
+                        } 
                     } 
-                } 
-            },
-            scales: { 
-                y: { 
-                    beginAtZero: true,
-                    ticks: { callback: v => money(v) } 
-                } 
+                },
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        ticks: { callback: v => money(v) } 
+                    } 
+                }
             }
-        }
-    });
-}
+        });
+    }
 
     // --- 4. BIỂU ĐỒ TRẠNG THÁI (DOUGHNUT CHART) ---
     const ctxPie = document.getElementById('orderStatusPie');
@@ -467,7 +464,7 @@ if (ctxLine) {
                         callbacks: {
                             label: function(ctx) {
                                 const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                                const perc = ((ctx.raw / total) * 100).toFixed(1);
+                                const perc = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
                                 return ` ${ctx.label}: ${ctx.raw} đơn (${perc}%)`;
                             }
                         }
@@ -548,5 +545,8 @@ if (ctxLine) {
     .italic { font-style: italic; }
     canvas { cursor: pointer; }
     .border-orange { border-left-color: #ff6b00 !important; }
+    .btn-reveal { transition: 0.2s; }
+    .btn-reveal:hover { filter: brightness(0.95); }
+    .fs-24 { font-size: 24px; }
 </style>
 @endsection
