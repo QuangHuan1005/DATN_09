@@ -22,6 +22,12 @@ class CheckoutController extends Controller
     /**
      * Hiển thị trang thanh toán
      */
+ /**
+     * Hiển thị trang thanh toán
+     */
+   /**
+     * Hiển thị trang thanh toán - Bản hoàn chỉnh đầy đủ logic lọc
+     */
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -84,34 +90,26 @@ class CheckoutController extends Controller
             }
         }
 
-       /** ================= 3. XỬ LÝ ĐỊA CHỈ ================= */
-// 1. Lấy tất cả địa chỉ chưa xóa của user
-$addresses = $user->addresses()->whereNull('deleted_at')->latest()->get();
+        /** ================= 3. XỬ LÝ ĐỊA CHỈ ================= */
+        $addresses = $user->addresses()->whereNull('deleted_at')->latest()->get();
+        $defaultAddress = $addresses->where('is_default', 1)->first();
 
-// 2. TÌM ĐỊA CHỈ MẶC ĐỊNH TRONG DATABASE (Ưu tiên số 1)
-// Theo dữ liệu của bạn, bản ghi ID 22 sẽ được tìm thấy ở đây
-$defaultAddress = $addresses->where('is_default', 1)->first();
+        if (!$defaultAddress) {
+            $selectedAddressId = session('checkout_address_id');
+            if ($selectedAddressId) {
+                $defaultAddress = $addresses->where('id', $selectedAddressId)->first();
+            }
+        }
 
-// 3. Nếu không có mặc định trong DB, mới kiểm tra Session cũ
-if (!$defaultAddress) {
-    $selectedAddressId = session('checkout_address_id');
-    if ($selectedAddressId) {
-        $defaultAddress = $addresses->where('id', $selectedAddressId)->first();
-    }
-}
+        if (!$defaultAddress) {
+            $defaultAddress = $addresses->first();
+        }
 
-// 4. Cuối cùng nếu vẫn không có, lấy địa chỉ mới nhất
-if (!$defaultAddress) {
-    $defaultAddress = $addresses->first();
-}
+        if ($defaultAddress) {
+            session(['checkout_address_id' => $defaultAddress->id]);
+        }
 
-// 5. ĐỒNG BỘ LẠI SESSION
-// Sau khi tìm thấy ID 22 là mặc định, ta ghi đè vào session để các hàm Store() dùng đúng
-if ($defaultAddress) {
-    session(['checkout_address_id' => $defaultAddress->id]);
-}
-
-$addressCount = $addresses->count();
+        $addressCount = $addresses->count();
 
         /** ================= 4. XỬ LÝ VOUCHER ĐÃ ÁP DỤNG ================= */
         $voucherData = session('applied_voucher');
@@ -148,10 +146,37 @@ $addressCount = $addresses->count();
         }
         $grandTotal = max(0, $totalAmount + $shippingFee - $discountAmount);
 
+        /** ================= 5. LẤY DANH SÁCH VOUCHER GỢI Ý (ĐÃ LỌC) ================= */
+        
+        // A. Lọc theo bảng trung gian user_vouchers (Voucher đổi thưởng đã dùng)
+        $usedInRewardIds = DB::table('user_vouchers')
+            ->where('user_id', Auth::id())
+            ->where('is_used', 1)
+            ->pluck('voucher_id')
+            ->toArray();
+
+        // B. Lọc theo bảng orders (Voucher công khai đã dùng hết lượt cá nhân - user_limit)
+        // Đây chính là phần xử lý cho dữ liệu SALE10 mà bạn đã truy vấn SQL
+        $overLimitVoucherIds = DB::table('orders')
+            ->select('voucher_id')
+            ->where('user_id', Auth::id())
+            ->whereNotNull('voucher_id')
+            ->whereNotIn('order_status_id', [7, 8]) // Không tính đơn hủy/hoàn
+            ->groupBy('voucher_id')
+            ->havingRaw('COUNT(*) >= (SELECT user_limit FROM vouchers WHERE vouchers.id = orders.voucher_id)')
+            ->pluck('voucher_id')
+            ->toArray();
+
+        // Gộp tất cả ID cần ẩn
+        $allInvalidVoucherIds = array_unique(array_merge($usedInRewardIds, $overLimitVoucherIds));
+
+        // Truy vấn danh sách voucher cuối cùng
         $vouchers = Voucher::where('status', 1)
-            ->where('start_date', '<=', now())->where('end_date', '>=', now())
-            ->whereColumn('total_used', '<', 'quantity')
-            ->where('min_order_value', '<=', $totalAmount)
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->whereColumn('total_used', '<', 'quantity') // Còn lượt dùng tổng hệ thống
+            ->where('min_order_value', '<=', $totalAmount) // Đủ điều kiện đơn hàng tối thiểu
+            ->whereNotIn('id', $allInvalidVoucherIds)      // ẨN HOÀN TOÀN CÁC MÃ ĐÃ DÙNG HOẶC QUÁ GIỚI HẠN
             ->get();
 
         return view('checkout.index', compact(
@@ -168,7 +193,6 @@ $addressCount = $addresses->count();
             'addressCount'
         ));
     }
-
     /**
      * Xử lý Mua Ngay
      */
@@ -192,6 +216,9 @@ $addressCount = $addresses->count();
 
     /**
      * Lưu đơn hàng vào Database
+     */
+   /**
+     * Lưu đơn hàng vào Database và cập nhật trạng thái Voucher
      */
     public function store(Request $request)
     {
@@ -222,7 +249,6 @@ $addressCount = $addresses->count();
                 $variantsToOrder = [];
                 $voucherData = session('applied_voucher');
                 $appliedVoucher = $voucherData ? Voucher::find($voucherData['id']) : null;
-
 
                 foreach ($sourceItems as $variantId => $item) {
                     $variant = ProductVariant::lockForUpdate()->find($variantId);
@@ -270,7 +296,7 @@ $addressCount = $addresses->count();
                     'address'           => "{$address->address}, {$address->ward}, {$address->district}, {$address->province}",
                     'phone'             => $address->phone,
                     'payment_method_id' => $validated['payment_method'],
-                    'note'              => $request->input('note'), // Dùng input('note') để an toàn nếu key ko tồn tại
+                    'note'              => $request->input('note'),
                     'payment_status_id' => 1,
                 ]);
 
@@ -285,14 +311,30 @@ $addressCount = $addresses->count();
                         'price'              => $item['price'],
                     ]);
                 }
+
+                /** ================= XỬ LÝ VOUCHER ================= */
+                if ($appliedVoucher) {
+                    // 1. Tăng lượt dùng chung của hệ thống
+                    $appliedVoucher->increment('total_used');
+
+                    // 2. Cập nhật is_used = 1 cho cá nhân user trong bảng trung gian
+                    DB::table('user_vouchers')
+                        ->where('user_id', Auth::id())
+                        ->where('voucher_id', $appliedVoucher->id)
+                        ->where('is_used', 0) 
+                        ->update([
+                            'is_used' => 1,
+                            'updated_at' => now()
+                        ]);
+                }
+                /** ================================================= */
+
                 if ($validated['payment_method'] != 2) {
                     $userEmail = Auth::user()->email;
                     if ($userEmail) {
                         Mail::to($userEmail)->send(new OrderConfirmationMail($order));
                     }
                 }
-
-                if ($appliedVoucher) $appliedVoucher->increment('total_used');
 
                 if ($buyNow) {
                     Session::forget('buy_now');
@@ -336,91 +378,131 @@ $addressCount = $addresses->count();
     /**
      * Áp dụng Voucher
      */
-    public function applyVoucher(Request $request)
-    {
-        $request->validate(['voucher_code' => 'required|string']);
+    /**
+     * Áp dụng Voucher (Bao gồm kiểm tra trạng thái đã sử dụng của User)
+     */
+   public function applyVoucher(Request $request)
+{
+    $request->validate(['voucher_code' => 'required|string']);
+    $userId = Auth::id();
 
-        $voucher = Voucher::with('products')
-            ->where('voucher_code', $request->voucher_code)
-            ->where('status', 1)
-            ->where('start_date', '<=', now())
-            ->where('end_date', '>=', now())
-            ->whereColumn('total_used', '<', 'quantity')
-            ->first();
+    // 1. Tìm voucher theo mã code và các điều kiện hệ thống cơ bản
+    $voucher = Voucher::with('products')
+        ->where('voucher_code', $request->voucher_code)
+        ->where('status', 1)
+        ->where('start_date', '<=', now())
+        ->where('end_date', '>=', now())
+        ->whereColumn('total_used', '<', 'quantity')
+        ->first();
 
-        if (!$voucher) {
-            return response()->json(['success' => false, 'message' => 'Voucher không hợp lệ hoặc hết lượt']);
-        }
+    if (!$voucher) {
+        return response()->json(['success' => false, 'message' => 'Voucher không hợp lệ hoặc đã hết lượt sử dụng']);
+    }
 
-        $buyNow = session('buy_now');
-        $cart = session('cart', []);
+    /** ================= KIỂM TRA GIỚI HẠN/KHÁCH (user_limit) ================= */
+    // Đếm số đơn hàng mà User này đã sử dụng mã này (loại trừ các đơn đã hủy/hoàn trả nếu cần)
+    $userUsedCount = DB::table('orders')
+        ->where('user_id', $userId)
+        ->where('voucher_id', $voucher->id)
+        ->whereNotIn('order_status_id', [7, 8]) // Giả sử 7 là Hủy, 8 là Hoàn trả
+        ->count();
 
-        if ($buyNow) {
-            $sourceItems = [$buyNow['variant_id'] => ['quantity' => $buyNow['quantity']]];
-        } else {
-            $selectedIds = session('selected_items_for_checkout');
-            $sourceItems = $selectedIds ? array_filter($cart, fn($k) => in_array((string)$k, $selectedIds), ARRAY_FILTER_USE_KEY) : $cart;
-        }
-
-        if (empty($sourceItems)) {
-            return response()->json(['success' => false, 'message' => 'Không có sản phẩm để áp dụng']);
-        }
-
-        $totalAmount = 0;
-        $eligibleAmount = 0;
-        $hasEligibleProduct = false; // Biến kiểm tra có SP hợp lệ không
-        $isSpecificVoucher = $voucher->products()->exists(); // Kiểm tra voucher có giới hạn SP không
-
-        foreach ($sourceItems as $variantId => $item) {
-            $variant = ProductVariant::with('product')->find($variantId);
-            if (!$variant) continue;
-
-            $price = $variant->sale > 0 ? $variant->sale : $variant->price;
-            $itemTotal = $price * (int)$item['quantity'];
-            $totalAmount += $itemTotal;
-
-            // Kiểm tra nếu voucher áp dụng cho toàn sàn (không có SP giới hạn)
-            // hoặc SP này nằm trong danh sách được áp dụng của voucher
-            if (!$isSpecificVoucher || $voucher->products->pluck('id')->contains($variant->product_id)) {
-                $eligibleAmount += $itemTotal;
-                $hasEligibleProduct = true;
-            }
-        }
-
-        // --- BƯỚC FIX LỖI: Chặn nếu không có sản phẩm nào hợp lệ ---
-        if ($isSpecificVoucher && !$hasEligibleProduct) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mã này không áp dụng cho các sản phẩm hiện có trong đơn hàng của bạn'
-            ]);
-        }
-
-        if ($voucher->min_order_value > 0 && $totalAmount < $voucher->min_order_value) {
-            return response()->json(['success' => false, 'message' => 'Đơn hàng tối thiểu ' . number_format($voucher->min_order_value) . ' đ']);
-        }
-
-        // Tính toán số tiền giảm
-        $discountAmount = ($voucher->discount_type === 'percent')
-            ? min($eligibleAmount * $voucher->discount_value / 100, $voucher->sale_price > 0 ? $voucher->sale_price : 999999999)
-            : min($voucher->discount_value, $eligibleAmount);
-
-        // Chốt chặn cuối cùng: Nếu số tiền giảm vẫn bằng 0 thì không cho áp dụng
-        if ($discountAmount <= 0) {
-            return response()->json(['success' => false, 'message' => 'Đơn hàng không đủ điều kiện để giảm giá']);
-        }
-
-        session(['applied_voucher' => [
-            'id' => $voucher->id,
-            'voucher_code' => $voucher->voucher_code,
-            'discount_amount' => round($discountAmount)
-        ]]);
-
+    if ($userUsedCount >= $voucher->user_limit) {
         return response()->json([
-            'success' => true,
-            'message' => 'Giảm ' . number_format(round($discountAmount)) . ' đ',
-            'discount_amount' => round($discountAmount)
+            'success' => false, 
+            'message' => 'Bạn đã đạt giới hạn sử dụng tối đa mã này (Tối đa ' . $voucher->user_limit . ' lần)'
         ]);
     }
+    /** ======================================================================== */
+
+    /** ================= KIỂM TRA TRẠNG THÁI RIÊNG CỦA USER (ĐỔI ĐIỂM) ================= */
+    // Kiểm tra trong bảng trung gian xem user này đã đổi và dùng voucher này chưa
+    $userVoucherRecord = DB::table('user_vouchers')
+        ->where('user_id', $userId)
+        ->where('voucher_id', $voucher->id)
+        ->first();
+
+    // Nếu là voucher đổi thưởng (có bản ghi trong user_vouchers) và đã đánh dấu dùng
+    if ($userVoucherRecord && $userVoucherRecord->is_used == 1) {
+        return response()->json([
+            'success' => false, 
+            'message' => 'Bạn đã sử dụng voucher này cho đơn hàng khác trước đó rồi!'
+        ]);
+    }
+    /** ====================================================================== */
+
+    $buyNow = session('buy_now');
+    $cart = session('cart', []);
+
+    if ($buyNow) {
+        $sourceItems = [$buyNow['variant_id'] => ['quantity' => $buyNow['quantity']]];
+    } else {
+        $selectedIds = session('selected_items_for_checkout');
+        $sourceItems = $selectedIds ? array_filter($cart, fn($k) => in_array((string)$k, $selectedIds), ARRAY_FILTER_USE_KEY) : $cart;
+    }
+
+    if (empty($sourceItems)) {
+        return response()->json(['success' => false, 'message' => 'Không có sản phẩm để áp dụng']);
+    }
+
+    $totalAmount = 0;
+    $eligibleAmount = 0;
+    $hasEligibleProduct = false; 
+    $isSpecificVoucher = $voucher->products()->exists(); 
+
+    foreach ($sourceItems as $variantId => $item) {
+        $variant = ProductVariant::with('product')->find($variantId);
+        if (!$variant) continue;
+
+        $price = $variant->sale > 0 ? $variant->sale : $variant->price;
+        $itemTotal = $price * (int)$item['quantity'];
+        $totalAmount += $itemTotal;
+
+        // Kiểm tra SP có nằm trong danh sách áp dụng của voucher không
+        if (!$isSpecificVoucher || $voucher->products->pluck('id')->contains($variant->product_id)) {
+            $eligibleAmount += $itemTotal;
+            $hasEligibleProduct = true;
+        }
+    }
+
+    // Chặn nếu voucher có giới hạn SP nhưng giỏ hàng không có SP nào thuộc danh sách đó
+    if ($isSpecificVoucher && !$hasEligibleProduct) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Mã này không áp dụng cho các sản phẩm hiện có trong đơn hàng của bạn'
+        ]);
+    }
+
+    // Kiểm tra giá trị đơn hàng tối thiểu
+    if ($voucher->min_order_value > 0 && $totalAmount < $voucher->min_order_value) {
+        return response()->json([
+            'success' => false, 
+            'message' => 'Đơn hàng chưa đạt giá trị tối thiểu ' . number_format($voucher->min_order_value) . ' đ'
+        ]);
+    }
+
+    // Tính toán số tiền giảm
+    $discountAmount = ($voucher->discount_type === 'percent')
+        ? min($eligibleAmount * $voucher->discount_value / 100, $voucher->sale_price > 0 ? $voucher->sale_price : 999999999)
+        : min($voucher->discount_value, $eligibleAmount);
+
+    if ($discountAmount <= 0) {
+        return response()->json(['success' => false, 'message' => 'Đơn hàng không đủ điều kiện để giảm giá']);
+    }
+
+    // Lưu thông tin voucher vào session
+    session(['applied_voucher' => [
+        'id' => $voucher->id,
+        'voucher_code' => $voucher->voucher_code,
+        'discount_amount' => round($discountAmount)
+    ]]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Áp dụng thành công, giảm ' . number_format(round($discountAmount)) . ' đ',
+        'discount_amount' => round($discountAmount)
+    ]);
+}
 
     /**
      * Chuẩn hóa URL ảnh

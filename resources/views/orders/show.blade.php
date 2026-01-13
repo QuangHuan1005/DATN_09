@@ -706,7 +706,7 @@ align-items: center;
                                     data-name="{{ $bank->bank_name }}" 
                                     data-number="{{ $bank->account_number }}" 
                                     data-holder="{{ $bank->account_holder }}">
-                                    {{ $bank->bank_name }} - {{ $bank->account_number }}
+                                    {{ $bank->bank_name }} - {{ $bank->account_number }} - {{ $bank->account_holder }}
                                 </option>
                             @endforeach
                             <option value="new">+ Thêm tài khoản mới</option>

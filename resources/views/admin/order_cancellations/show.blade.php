@@ -227,7 +227,7 @@
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 fw-bold">Tổng tiền hoàn:</h5>
+                        <h5 class="mb-0 fw-bold">Tổng tiền hủy:</h5>
                         <h4 class="mb-0 fw-bold text-success">{{ number_format($calc_total + ($order->shipping_fee ?? 30000)) }}₫</h4>
                     </div>
                 </div>

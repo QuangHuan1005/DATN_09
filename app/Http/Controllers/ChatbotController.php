@@ -120,7 +120,7 @@ class ChatbotController extends Controller
             $query->havingRaw('COALESCE(MIN(NULLIF(product_variants.sale, 0)), MIN(product_variants.price)) ' . $priceFilter['operator'] . ' ?', [$priceFilter['value']]);
         }
 
-        $products = $query->limit(15)->get();
+        $products = $query->limit(100)->get();
 
         // 4. FORMAT DỮ LIỆU
         $resultString = $products->map(function ($p) {

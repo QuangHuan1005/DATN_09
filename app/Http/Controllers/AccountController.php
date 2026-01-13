@@ -55,77 +55,82 @@ class AccountController extends Controller
      * Cập nhật thông tin hồ sơ & Địa chỉ Checkout
      * Giữ nguyên 100% logic cũ và bổ sung xử lý Session + Database khi đặt địa chỉ mặc định.
      */
-    public function update(Request $request)
-    {
-        $user = Auth::user();
+   public function update(Request $request)
+{
+    $user = Auth::user();
 
-        // TRƯỜNG HỢP 1: Cập nhật nhanh address_id từ trang Checkout
-        if ($request->has('address_id')) {
-            try {
-                $addressId = $request->address_id;
-
-                // Kiểm tra xem địa chỉ có thuộc về user này không để bảo mật
-                $exists = $user->addresses()->where('id', $addressId)->exists();
-                
-                if (!$exists && $addressId != 0) {
-                    return response()->json(['success' => false, 'message' => 'Địa chỉ không hợp lệ.'], 403);
-                }
-
-                // --- LOGIC: CHỈ CẬP NHẬT KHI LÀ ĐỊA CHỈ MẶC ĐỊNH ---
-                // Lưu ID địa chỉ vào session để CheckoutController nhận diện ngay sau khi reload
-                session(['checkout_address_id' => $addressId]);
-                
-                // Cập nhật trạng thái mặc định trong Database để đảm bảo tính nhất quán
-                if ($addressId != 0) {
-                    // Bỏ mặc định tất cả các địa chỉ cũ của User này
-                    $user->addresses()->update(['is_default' => 0]); 
-                    
-                    // Thiết lập địa chỉ được chọn thành mặc định
-                    $user->addresses()->where('id', $addressId)->update(['is_default' => 1]);
-                }
-                // ------------------------------------------------
-
-                return response()->json([
-                    'success' => true, 
-                    'message' => 'Đã thay đổi địa chỉ giao hàng mặc định.',
-                    'address_id' => $addressId
-                ]);
-            } catch (\Exception $e) {
-                return response()->json(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()], 500);
+    // TRƯỜNG HỢP 1: Cập nhật nhanh address_id từ trang Checkout (Giữ nguyên)
+    if ($request->has('address_id')) {
+        try {
+            $addressId = $request->address_id;
+            $exists = $user->addresses()->where('id', $addressId)->exists();
+            
+            if (!$exists && $addressId != 0) {
+                return response()->json(['success' => false, 'message' => 'Địa chỉ không hợp lệ.'], 403);
             }
-        }
 
-        // TRƯỜNG HỢP 2: Cập nhật hồ sơ bình thường (Giữ nguyên toàn bộ code cũ)
-        $request->validate([
-            'username' => [
-                'required', 'string', 'max:50',
-                \Illuminate\Validation\Rule::unique('users', 'username')->ignore($user->id)->whereNull('deleted_at'),
-                'regex:/^[a-zA-Z0-9_.-]+$/',
-            ],
-            'name'  => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\-\s()]*$/'],
-            'email' => [
-                'required', 'email', 'max:255',
-                \Illuminate\Validation\Rule::unique('users', 'email')->ignore($user->id),
-            ],
-        ], [
-            'username.regex' => 'Username chỉ gồm chữ, số, dấu chấm, gạch dưới hoặc gạch nối.',
-            'phone.regex'    => 'Số điện thoại chỉ chứa 0-9, +, -, khoảng trắng, ().',
-        ]);
-        
-        $data = $request->only(['username', 'name', 'phone', 'email']);
-        
-        if ($request->hasFile('image')) {
-            if ($user->image) {
-                \Illuminate\Support\Facades\Storage::delete('public/' . $user->image);
+            session(['checkout_address_id' => $addressId]);
+            
+            if ($addressId != 0) {
+                $user->addresses()->update(['is_default' => 0]); 
+                $user->addresses()->where('id', $addressId)->update(['is_default' => 1]);
             }
-            $data['image'] = $request->file('image')->store('avatars', 'public');
+
+            return response()->json([
+                'success' => true, 
+                'message' => 'Đã thay đổi địa chỉ giao hàng mặc định.',
+                'address_id' => $addressId
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()], 500);
         }
-        
-        $user->update($data);
-        
-        return redirect()->route('account.profile')->with('success', 'Cập nhật thông tin thành công!');
     }
+
+    // TRƯỜNG HỢP 2: Cập nhật hồ sơ bình thường & Thông tin ngân hàng
+    $request->validate([
+        'name'           => ['required', 'string', 'max:255'],
+        'phone'          => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\-\s()]*$/'],
+        'email'          => [
+            'required', 'email', 'max:255',
+            \Illuminate\Validation\Rule::unique('users', 'email')->ignore($user->id),
+        ],
+        // Thêm validate cho thông tin ngân hàng
+        'bank_name'      => ['required', 'string', 'max:100'],
+        'account_number' => ['required', 'string', 'max:30'],
+        'account_holder' => ['required', 'string', 'max:100'],
+    ], [
+        'phone.regex'             => 'Số điện thoại chỉ chứa 0-9, +, -, khoảng trắng, ().',
+        'bank_name.required'      => 'Vui lòng nhập tên ngân hàng.',
+        'account_number.required' => 'Vui lòng nhập số tài khoản.',
+        'account_holder.required' => 'Vui lòng nhập tên chủ tài khoản.',
+    ]);
+
+    // 1. Cập nhật thông tin bảng Users
+    $data = $request->only(['name', 'phone', 'email']);
+    
+    if ($request->hasFile('image')) {
+        if ($user->image) {
+            \Illuminate\Support\Facades\Storage::delete('public/' . $user->image);
+        }
+        $data['image'] = $request->file('image')->store('avatars', 'public');
+    }
+    
+    $user->update($data);
+
+    // 2. Cập nhật thông tin bảng UserBankAccount (Thông tin ngân hàng)
+    // Sử dụng updateOrCreate để tự động tạo mới nếu chưa có hoặc cập nhật nếu đã tồn tại
+    $user->bankAccount()->updateOrCreate(
+        ['user_id' => $user->id], // Điều kiện tìm kiếm theo user_id
+        [
+            'bank_name'      => $request->bank_name,
+            'account_number' => $request->account_number,
+            'account_holder' => strtoupper($request->account_holder), // Viết hoa tên chủ tài khoản cho chuyên nghiệp
+            'is_default'     => 1
+        ]
+    );
+
+    return redirect()->route('account.profile')->with('success', 'Cập nhật thông tin thành công!');
+}
 
 
     // Trang đổi mật khẩu

@@ -9,16 +9,20 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    /**
+     * Dashboard Thống Kê Chi Tiết
+     * Đã xử lý: Khấu trừ tiền hoàn trả (refund) trực tiếp vào doanh thu đơn hàng gốc.
+     */
     public function index(Request $request)
     {
-        // ====== 1. Xử lý Bộ lọc thời gian ======
+        // ====== 1. XỬ LÝ BỘ LỌC THỜI GIAN ======
         $year = $request->input('year', date('Y'));
         
-        // Mặc định xem 30 ngày gần nhất nếu không có input
+        // Mặc định xem 30 ngày gần nhất nếu không có input từ người dùng
         $to   = $request->input('to') ? Carbon::parse($request->input('to'))->endOfDay() : now()->endOfDay();
         $from = $request->input('from') ? Carbon::parse($request->input('from'))->startOfDay() : now()->subDays(29)->startOfDay();
 
-        // Đảo ngược nếu ngày bắt đầu lớn hơn ngày kết thúc
+        // Tự động đảo ngược nếu ngày bắt đầu > ngày kết thúc
         if ($from->gt($to)) {
             $temp = $from;
             $from = $to->copy()->startOfDay();
@@ -27,11 +31,13 @@ class DashboardController extends Controller
 
         $dbDateFormat = 'Y-m-d';
 
-        // Danh sách tên rác cần loại bỏ
+        // Danh sách tên cần loại bỏ (dữ liệu rác/test)
         $excludedNames = ['N/A', 'aaaa', 'ghbhfdj', 'test', 'Admin'];
 
         /**
-         * Điều kiện lọc đơn hàng "Sạch"
+         * Điều kiện lọc đơn hàng "Sạch":
+         * - Tổng tiền > 0
+         * - Tên khách hàng không null và không nằm trong danh sách loại trừ
          */
         $cleanOrdersOnly = function($query) use ($excludedNames) {
             $query->where('o.total_amount', '>', 0)
@@ -39,71 +45,59 @@ class DashboardController extends Controller
                   ->whereNotIn('o.name', $excludedNames);
         };
 
-        // ====== 2. Doanh thu theo THÁNG (Cho Bar Chart - Dòng tiền thực tế) ======
-        // Doanh thu phát sinh từ đơn mới
-        $monthlyGross = DB::table('orders as o')
-            ->selectRaw('MONTH(o.created_at) as month, SUM(o.total_amount) as total')
+        // ====== 2. DOANH THU THEO THÁNG (Cho Bar Chart) ======
+        // Doanh thu thực (Net) = (Tổng tiền đơn) - (Tiền hoàn của chính đơn đó)
+        $monthlyData = DB::table('orders as o')
+            ->leftJoin('order_returns as re', function($join) {
+                $join->on('o.id', '=', 're.order_id')
+                     ->where('re.status', '=', 'completed');
+            })
+            ->selectRaw('
+                MONTH(o.created_at) as month, 
+                SUM(o.total_amount - IFNULL(re.refund_amount, 0)) as net_total
+            ')
             ->whereYear('o.created_at', $year)
-            ->whereIn('o.order_status_id', [5, 7]) // Hoàn thành hoặc Hoàn trả
+            ->whereIn('o.order_status_id', [5, 7]) // Hoàn thành (5) hoặc Hoàn trả (7)
             ->where($cleanOrdersOnly)
             ->groupBy('month')
-            ->pluck('total', 'month');
-
-        // Tiền hoàn trả tính theo thời điểm hoàn tiền thành công (updated_at của phiếu hoàn)
-        $monthlyRefunds = DB::table('order_returns as re')
-            ->selectRaw('MONTH(re.updated_at) as month, SUM(re.refund_amount) as total')
-            ->whereYear('re.updated_at', $year)
-            ->where('re.status', 'completed')
-            ->groupBy('month')
-            ->pluck('total', 'month');
+            ->pluck('net_total', 'month');
 
         $monthlyLabels = [];
         $monthlyRevenues = [];
         for ($m = 1; $m <= 12; $m++) {
             $monthlyLabels[] = "Tháng $m";
-            $netMonth = ($monthlyGross[$m] ?? 0) - ($monthlyRefunds[$m] ?? 0);
-            $monthlyRevenues[] = (float)$netMonth; // Cho phép số âm nếu hoàn tiền > bán được
+            $monthlyRevenues[] = (float)($monthlyData[$m] ?? 0);
         }
 
-        // ====== 3. Doanh thu theo NGÀY (Line Chart) ======
+        // ====== 3. DOANH THU THEO NGÀY (Line Chart) ======
+        // Khấu trừ tiền hoàn trực tiếp để khớp với danh sách đơn hàng thực tế của ngày đó
+        $dailyData = DB::table('orders as o')
+            ->leftJoin('order_returns as re', function($join) {
+                $join->on('o.id', '=', 're.order_id')
+                     ->where('re.status', '=', 'completed');
+            })
+            ->selectRaw("
+                DATE(o.created_at) as d, 
+                SUM(o.total_amount - IFNULL(re.refund_amount, 0)) as net_total
+            ")
+            ->whereBetween('o.created_at', [$from, $to])
+            ->whereIn('o.order_status_id', [5, 7]) 
+            ->where($cleanOrdersOnly)
+            ->groupBy('d')
+            ->pluck('net_total', 'd');
 
-// Lấy TIỀN THU VÀO (Tính theo ngày đơn hàng phát sinh)
-$dailyGross = DB::table('orders as o')
-    ->selectRaw('DATE(o.created_at) as d, SUM(o.total_amount) as total')
-    ->whereBetween('o.created_at', [$from, $to])
-    ->whereIn('o.order_status_id', [5, 7]) // Hoàn thành & Hoàn trả
-    ->where($cleanOrdersOnly)
-    ->groupBy('d')
-    ->pluck('total', 'd');
+        $labels = [];
+        $revenues = [];
+        $cursor = (clone $from)->startOfDay();
 
-// Lấy TIỀN CHI RA (Dựa vào cột refund_amount riêng của bạn)
-// Tính theo ngày bạn thực hiện bấm "Hoàn tiền thành công"
-$dailyRefunds = DB::table('order_returns as re')
-    ->selectRaw('DATE(re.updated_at) as d, SUM(re.refund_amount) as total')
-    ->whereBetween('re.updated_at', [$from, $to])
-    ->where('re.status', 'completed')
-    ->groupBy('d')
-    ->pluck('total', 'd');
+        while ($cursor <= $to) {
+            $dateKey = $cursor->format($dbDateFormat);
+            $labels[] = $dateKey; 
+            $revenues[] = (float)($dailyData[$dateKey] ?? 0);
+            $cursor->addDay();
+        }
 
-$labels = [];
-$revenues = [];
-$cursor = (clone $from)->startOfDay();
-
-while ($cursor <= $to) {
-    $dateKey = $cursor->format($dbDateFormat);
-    $labels[] = $dateKey; 
-
-    // DOANH THU THỰC TẾ = (Tổng thu từ đơn hàng) - (Số tiền thực trả khách)
-    // Nếu đơn 1 triệu hoàn 200k, Gross là 1tr, Refund là 200k => Bạn vẫn còn 800k. 
-    // Không cần quan tâm đơn đó có mấy sản phẩm.
-    $netDay = ($dailyGross[$dateKey] ?? 0) - ($dailyRefunds[$dateKey] ?? 0);
-    $revenues[] = (float)$netDay;
-    
-    $cursor->addDay();
-}
-
-        // ====== 4. KPIs Tổng quan (Thực nhận trong kỳ) ======
-        // Tổng tiền đơn hàng phát sinh trong kỳ
+        // ====== 4. KPIs TỔNG QUAN (Trong kỳ báo cáo) ======
         $grossData = DB::table('orders as o')
             ->selectRaw('SUM(o.total_amount) as gross_revenue, COUNT(o.id) as total_paid_orders')
             ->whereBetween('o.created_at', [$from, $to])
@@ -114,13 +108,11 @@ while ($cursor <= $to) {
         $totalGrossRevenueInPeriod = (float)($grossData->gross_revenue ?? 0);
         $totalPaidOrders           = (int)($grossData->total_paid_orders ?? 0);
 
-        // Tổng tiền hoàn trả thực hiện trong kỳ (re.updated_at)
         $totalRefundAmountInPeriod = DB::table('order_returns as re')
             ->whereBetween('re.updated_at', [$from, $to])
             ->where('re.status', 'completed')
             ->sum('re.refund_amount');
 
-        // Doanh thu thực nhận cuối cùng trong kỳ
         $netRevenue = $totalGrossRevenueInPeriod - $totalRefundAmountInPeriod;
 
         $allOrders = DB::table('orders as o')
@@ -135,7 +127,7 @@ while ($cursor <= $to) {
             ->where($cleanOrdersOnly)
             ->sum('od.quantity');
 
-        // ====== 5. Tỉ lệ đơn hàng theo trạng thái (Pie Chart) ======
+        // ====== 5. TỶ LỆ ĐƠN HÀNG THEO TRẠNG THÁI (Pie Chart) ======
         $statusCounts = DB::table('orders as o')
             ->select('o.order_status_id', DB::raw('COUNT(*) as c'))
             ->whereBetween('o.created_at', [$from, $to])
@@ -154,7 +146,7 @@ while ($cursor <= $to) {
             $statusValues[] = (int)($statusCounts[$sid] ?? 0);
         }
 
-        // ====== 6. Top 10 sản phẩm (Trừ đi tỉ lệ hoàn trả) ======
+        // ====== 6. TOP 10 SẢN PHẨM HIỆU QUẢ ======
         $topProducts = DB::table('order_details as od')
             ->join('orders as o', 'o.id', '=', 'od.order_id')
             ->join('product_variants as pv', 'pv.id', '=', 'od.product_variant_id')
@@ -177,7 +169,7 @@ while ($cursor <= $to) {
             ->limit(10)
             ->get();
 
-        // ====== 7. Top danh mục bán chạy ======
+        // ====== 7. TOP DANH MỤC ĐÓNG GÓP DOANH THU ======
         $topCategories = DB::table('order_details as od')
             ->join('orders as o', 'o.id', '=', 'od.order_id')
             ->join('product_variants as pv', 'pv.id', '=', 'od.product_variant_id')
@@ -200,7 +192,7 @@ while ($cursor <= $to) {
             ->limit(10)
             ->get();
 
-        // ====== 8. Top khách hàng VIP ======
+        // ====== 8. KHÁCH HÀNG VIP ======
         $topCustomers = DB::table('orders as o')
             ->join('users as u', 'u.id', '=', 'o.user_id')
             ->leftJoin('order_returns as re', function($join) {
@@ -219,15 +211,25 @@ while ($cursor <= $to) {
             ->limit(10)
             ->get();
 
-        // ====== 9. Sản phẩm tồn kho thấp ======
+        // ====== 9. SẢN PHẨM TỒN KHO THẤP ======
         $lowStocks = DB::table('product_variants as pv')
             ->join('products as p', 'p.id', '=', 'pv.product_id')
             ->leftJoin('colors as c', 'c.id', '=', 'pv.color_id')
             ->leftJoin('sizes as s', 's.id', '=', 'pv.size_id')
-            ->select('p.product_code', 'p.name as product_name', 'c.name as color', 's.name as size', 'pv.quantity', 'p.id as product_id', 'pv.id as variant_id')
-            ->orderBy('pv.quantity', 'asc')->limit(10)->get();
+            ->select(
+                'p.product_code', 
+                'p.name as product_name', 
+                'c.name as color', 
+                's.name as size', 
+                'pv.quantity', 
+                'p.id as product_id', 
+                'pv.id as variant_id'
+            )
+            ->orderBy('pv.quantity', 'asc')
+            ->limit(10)
+            ->get();
 
-        // ====== 10. Hoàn hàng theo sản phẩm ======
+        // ====== 10. TỶ LỆ HOÀN HÀNG THEO SẢN PHẨM ======
         $returnByProduct = DB::table('orders as o')
             ->join('order_details as od', 'od.order_id', '=', 'o.id')
             ->join('product_variants as pv', 'pv.id', '=', 'od.product_variant_id')
@@ -236,7 +238,10 @@ while ($cursor <= $to) {
             ->whereBetween('o.created_at', [$from, $to])
             ->where('o.order_status_id', 7) 
             ->where($cleanOrdersOnly)
-            ->groupBy('p.name')->orderByDesc('qty_return')->limit(8)->get();
+            ->groupBy('p.name')
+            ->orderByDesc('qty_return')
+            ->limit(8)
+            ->get();
 
         return view('admin.dashboard', [
             'year'            => $year,

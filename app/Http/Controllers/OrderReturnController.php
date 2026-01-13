@@ -140,7 +140,6 @@ class OrderReturnController extends Controller
                     $itemVoucherDeduction = ($itemOriginalTotal / $orderSubtotal) * $totalOrderDiscount;
                 } else {
                     // Nếu voucher cho sản phẩm cụ thể: Khấu trừ trực tiếp trên sản phẩm đó
-                    // Công thức: (Tổng giảm giá / Tổng số lượng SP đó đã mua) * Số lượng khách hoàn trả
                     $totalQtyOfThisProductInOrder = $detail->quantity > 0 ? $detail->quantity : 1; 
                     $itemVoucherDeduction = ($totalOrderDiscount / $totalQtyOfThisProductInOrder) * $inputQty;
                 }
@@ -164,12 +163,13 @@ class OrderReturnController extends Controller
         }
 
         // 4. LƯU VÀO DATABASE BẢNG YÊU CẦU HOÀN HÀNG
-        OrderReturn::create([
+        // Gán biến $newReturn để lấy ID chính xác cho việc redirect
+        $newReturn = OrderReturn::create([
             'order_id'          => $order->id,
             'user_id'           => Auth::id(),
             'refund_account_id' => $request->refund_account_id,
             'reason'            => $request->reason,
-            'notes'             => $request->notes, // Đã đổi tên khớp với form Request (notes)
+            'notes'             => $request->notes, 
             'images'            => json_encode($imagePaths), 
             'product_details'   => json_encode($productDetails),
             'status'            => 'pending',
@@ -180,7 +180,7 @@ class OrderReturnController extends Controller
         // 5. Cập nhật trạng thái Đơn hàng sang "Yêu cầu hoàn hàng" (ID: 7)
         $order->order_status_id = 7;
 
-        // 6. Thu hồi điểm tích lũy theo số tiền thực hoàn (Ví dụ: 10.000đ = 1 điểm)
+        // 6. Thu hồi điểm tích lũy theo số tiền thực hoàn
         $pointsToDeduct = (int) floor($totalRefundAmount / 10000);
         if ($pointsToDeduct > 0) {
             $user = Auth::user();
@@ -206,7 +206,8 @@ class OrderReturnController extends Controller
 
         DB::commit();
         
-        return redirect()->route('orders.show', $order->id)
+        // CHUYỂN HƯỚNG: Sử dụng ID của phiếu hoàn ($newReturn->id) thay vì ID đơn hàng
+        return redirect()->route('orders.return.show', $newReturn->id)
             ->with('success', 'Gửi yêu cầu hoàn hàng thành công! Tiền hoàn đã được tính dựa trên số tiền thực tế bạn đã thanh toán cho sản phẩm đó.');
 
     } catch (\Exception $e) {

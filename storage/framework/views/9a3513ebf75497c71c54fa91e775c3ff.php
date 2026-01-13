@@ -653,10 +653,7 @@
                                                         <div id="review_form_wrapper" class="mt-4">
                                                             <div id="review_form">
                                                                 <div id="respond" class="comment-respond">
-                                                                    <span id="reply-title" class="comment-reply-title"
-                                                                        role="heading" aria-level="3">
-                                                                        Thêm đánh giá
-                                                                    </span>
+                                            
 
                                                                     <?php if(auth()->guard()->check()): ?>
                                                                         <?php if($canReview): ?>
