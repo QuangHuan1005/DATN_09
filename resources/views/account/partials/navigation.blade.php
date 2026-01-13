@@ -8,11 +8,7 @@
             <a href="{{ route('orders.index') }}">
                 Đơn hàng </a>
         </li>
-
-        <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-address">
-            <a href="{{ route('account.addresses') }}">
-                Địa chỉ </a>
-        </li>
+        
         <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--edit-account">
             <a href="{{ route('account.profile') }}">
                 Chi tiết tài khoản </a>

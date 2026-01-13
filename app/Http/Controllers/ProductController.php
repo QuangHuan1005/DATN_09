@@ -68,31 +68,25 @@ class ProductController extends Controller
         }
 
         // ----- LỌC THEO GIÁ (Dựa trên giá của biến thể CÒN HÀNG) -----
-        if ($request->filled('min_price')) {
-            $min = (int) $request->min_price;
-            $query->whereHas('variants', function($q) use ($min) {
-                $q->where('quantity', '>', 0)
-                  ->where(function($sub) use ($min) {
-                      $sub->where('price', '>=', $min)
-                          ->orWhere(function($s) use ($min) {
-                              $s->where('sale', '>', 0)->where('sale', '>=', $min);
-                          });
-                  });
-            });
-        }
+        // ----- LỌC THEO GIÁ THỰC TẾ (Ưu tiên giá sale, tính trên biến thể còn hàng) -----
+if ($request->filled('min_price') || $request->filled('max_price')) {
+    $min = $request->input('min_price') ? (int)$request->min_price : 0;
+    $max = $request->input('max_price') ? (int)$request->max_price : null;
 
-        if ($request->filled('max_price')) {
-            $max = (int) $request->max_price;
-            $query->whereHas('variants', function($q) use ($max) {
-                $q->where('quantity', '>', 0)
-                  ->where(function($sub) use ($max) {
-                      $sub->where('price', '<=', $max)
-                          ->orWhere(function($s) use ($max) {
-                              $s->where('sale', '>', 0)->where('sale', '<=', $max);
-                          });
-                  });
-            });
-        }
+    $query->whereHas('variants', function ($q) use ($min, $max) {
+        $q->where('quantity', '>', 0)
+          ->where(function ($sub) use ($min, $max) {
+                // Logic: Nếu sale > 0 thì lấy sale, ngược lại lấy price
+                $actualPriceSql = 'IF(sale > 0, sale, price)';
+                
+                $sub->whereRaw("$actualPriceSql >= ?", [$min]);
+
+                if ($max !== null) {
+                    $sub->whereRaw("$actualPriceSql <= ?", [$max]);
+                }
+          });
+    });
+}
 
         // ----- SẮP XẾP (Chỉ tính trên giá biến thể CÒN HÀNG) -----
         if ($request->filled('sort')) {

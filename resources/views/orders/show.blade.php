@@ -706,7 +706,7 @@ align-items: center;
                                     data-name="{{ $bank->bank_name }}" 
                                     data-number="{{ $bank->account_number }}" 
                                     data-holder="{{ $bank->account_holder }}">
-                                    {{ $bank->bank_name }} - {{ $bank->account_number }}
+                                    {{ $bank->bank_name }} - {{ $bank->account_number }} - {{ $bank->account_holder }}
                                 </option>
                             @endforeach
                             <option value="new">+ Thêm tài khoản mới</option>
@@ -946,7 +946,7 @@ align-items: center;
                                                                             </div>
                                                                         </div>
 
-                                                                        {{-- Box Thông tin người nhận --}}
+                                                
                                                                         {{-- Box Thông tin người nhận --}}
 <div class="card">
     <div class="card-hd" style="text-align: left; font-weight: 700;">Thông tin người nhận</div>
@@ -969,22 +969,42 @@ align-items: center;
         @if ($order->user?->email)
             <p class="mb-1" style="text-align: left; margin-left: 0; color: #000;">
                 <strong style="font-weight: 700;">Email:</strong>
-<a href="mailto:{{ $order->user->email }}" style="color: inherit; text-decoration: underline;">
+                <a href="mailto:{{ $order->user->email }}" style="color: inherit; text-decoration: underline;">
                     {{ $order->user->email }}
                 </a>
             </p>
         @endif
 
-        @if ($order->note)
-            <p class="mt-2" style="text-align: left; margin-left: 0; color: #000;">
-                <strong style="font-weight: 700;">Ghi chú:</strong>
-                <span>{{ $order->note }}</span>
+        {{-- Bổ sung Lý do Hoàn hàng (Từ bảng order_returns) --}}
+        @if ($order->returnOrder)
+            <p class="mt-2 mb-1" style="text-align: left; margin-left: 0; color: #000;">
+                <strong style="font-weight: 700; color: #dc3545;">Lý do hoàn:</strong>
+                <span>{{ $order->returnOrder->reason }}</span>
             </p>
+            @if ($order->returnOrder->rejection_reason)
+                <p class="mb-1" style="text-align: left; margin-left: 0; color: #000;">
+                    <strong style="font-weight: 700; color: #dc3545;">Lý do từ chối:</strong>
+                    <span>{{ $order->returnOrder->rejection_reason }}</span>
+                </p>
+            @endif
+        @endif
+
+        {{-- Bổ sung Lý do Hủy đơn (Từ bảng order_cancel_requests) --}}
+        @if ($order->cancelRequest)
+            <p class="mt-2 mb-1" style="text-align: left; margin-left: 0; color: #000;">
+                <strong style="font-weight: 700; color: #0d6efd;">Lý do hủy:</strong>
+                <span>{{ $order->cancelRequest->reason_user }}</span>
+            </p>
+            @if ($order->cancelRequest->reason_admin)
+                <p class="mb-1" style="text-align: left; margin-left: 0; color: #000;">
+                    <strong style="font-weight: 700; color: #0d6efd;">Phản hồi Admin:</strong>
+                    <span>{{ $order->cancelRequest->reason_admin }}</span>
+                </p>
+            @endif
         @endif
     </div>
+</div></div>
 </div>
-                                                                    </div>
-                                                                </div>
 
                                                                 {{-- MODAL XÁC NHẬN NHẬN TIỀN (Đặt ngoài cùng) --}}
                                                                 <div class="complete-order-overlay"

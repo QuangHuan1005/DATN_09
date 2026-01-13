@@ -823,7 +823,5 @@ document.querySelectorAll('.js-qty').forEach(function (inp) {
 
 
 </script>
-<div id="custom-footer-wrapper">
-  @include('layouts.footer')
-</div>
+
 @endsection

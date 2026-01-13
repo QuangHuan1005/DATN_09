@@ -9,6 +9,25 @@
 
             <div id="site-content" class="site-content-wrapper">
                 <div class="container">
+
+                    {{-- PHẦN BỔ SUNG: HIỂN THỊ THÔNG BÁO --}}
+                    <div class="grid-x">
+                        <div class="cell small-12">
+                            @if(session('success'))
+                                <div class="woocommerce-message" role="alert" style="margin-top: 20px;">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if(session('error'))
+                                <ul class="woocommerce-error" role="alert" style="margin-top: 20px;">
+                                    <li>{{ session('error') }}</li>
+                                </ul>
+                            @endif
+                        </div>
+                    </div>
+                    {{-- HẾT PHẦN BỔ SUNG --}}
+
                     <div class="grid-x">
                         <div class="cell small-12">
                             <div class="site-content">
@@ -30,43 +49,44 @@
                                                 <div class="woocommerce-order-details">
                                                     
                                                     @php
-                                                        // Định nghĩa nhãn thủ công để tránh lỗi "Không xác định"
+                                                        // Định nghĩa nhãn thủ công khớp với Admin
                                                         $statusLabels = [
-                                                            'pending'            => 'Chờ xác nhận',
-                                                            'approved'           => 'Đã chấp nhận',
-                                                            'waiting_for_return' => 'Chờ gửi hàng',
-                                                            'returned'           => 'Đã nhận hàng',
-                                                            'refunded'           => 'Đã hoàn tiền',
-                                                            'completed'          => 'Hoàn tất',
-                                                            'rejected'           => 'Bị từ chối'
+                                                            'pending'           => 'Chờ xác nhận',
+                                                            'approved'          => 'Đã chấp nhận',
+                                                            'returning'         => 'Chờ gửi hàng',
+                                                            'received'          => 'Đã nhận hàng',
+                                                            'refund_processing' => 'Đang hoàn tiền',
+                                                            'completed'         => 'Hoàn tất',
+                                                            'rejected'          => 'Bị từ chối'
                                                         ];
 
                                                         $statusBadges = [
-                                                            'pending'            => 'badge-on-hold',
-                                                            'approved'           => 'badge-processing',
-                                                            'waiting_for_return' => 'badge-shipping',
-                                                            'returned'           => 'badge-shipping',
-                                                            'refunded'           => 'badge-processing',
-                                                            'completed'          => 'badge-completed',
-                                                            'rejected'           => 'badge-cancelled'
+                                                            'pending'           => 'badge-on-hold',
+                                                            'approved'          => 'badge-processing',
+                                                            'returning'         => 'badge-shipping',
+                                                            'received'          => 'badge-shipping',
+                                                            'refund_processing' => 'badge-processing',
+                                                            'completed'         => 'badge-completed',
+                                                            'rejected'          => 'badge-cancelled'
                                                         ];
 
                                                         $currentReturnStatus = $return->status;
                                                         $displayLabel = $statusLabels[$currentReturnStatus] ?? 'Không xác định';
                                                         $displayBadge = $statusBadges[$currentReturnStatus] ?? '';
                                                         
+                                                        // Meta data cho thanh tiến trình 6 bước
                                                         $returnStepMeta = [
-                                                            'pending' => ['label' => 'Chờ xác nhận', 'desc' => 'Yêu cầu đã gửi'],
-                                                            'approved' => ['label' => 'Đã chấp nhận', 'desc' => 'Yêu cầu đã duyệt'],
-                                                            'waiting_for_return' => ['label' => 'Chờ gửi hàng', 'desc' => 'Vui lòng gửi hàng'],
-                                                            'returned' => ['label' => 'Đã nhận hàng', 'desc' => 'Shop đã nhận hàng'],
-                                                            'refunded' => ['label' => 'Đã hoàn tiền', 'desc' => 'Chờ bạn xác nhận'],
-                                                            'completed' => ['label' => 'Hoàn tất', 'desc' => 'Giao dịch kết thúc'],
+                                                            'pending'           => ['label' => 'Chờ xác nhận', 'desc' => 'Yêu cầu đã gửi'],
+                                                            'approved'          => ['label' => 'Đã chấp nhận', 'desc' => 'Yêu cầu đã duyệt'],
+                                                            'returning'         => ['label' => 'Chờ gửi hàng', 'desc' => 'Vui lòng gửi hàng'],
+                                                            'received'          => ['label' => 'Đã nhận hàng', 'desc' => 'Shop đã nhận hàng'],
+                                                            'refund_processing' => ['label' => 'Đã hoàn tiền', 'desc' => 'Chờ bạn xác nhận'],
+                                                            'completed'         => ['label' => 'Hoàn tất',     'desc' => 'Giao dịch kết thúc'],
                                                         ];
 
                                                         $returnStatusMap = [
-                                                            'pending' => 1, 'approved' => 2, 'waiting_for_return' => 3,
-                                                            'returned' => 4, 'refunded' => 5, 'completed' => 6, 'rejected' => 1,
+                                                            'pending' => 1, 'approved' => 2, 'returning' => 3,
+                                                            'received' => 4, 'refund_processing' => 5, 'completed' => 6, 'rejected' => 1,
                                                         ];
 
                                                         $activeReturnStep = $returnStatusMap[$currentReturnStatus] ?? 1;
@@ -92,7 +112,7 @@
                                                         </p>
                                                     </div>
 
-                                                    {{-- Thanh tiến trình --}}
+                                                    {{-- Thanh tiến trình (PHẦN ĐÃ SỬA) --}}
                                                     @if($currentReturnStatus !== 'rejected')
                                                         <div class="return-progress-container">
                                                             <h3 style="font-size: 1rem; color: #374151; margin-bottom: 15px;">Trạng thái hoàn hàng</h3>
@@ -106,7 +126,7 @@
                                                                     <div class="step">
                                                                         <span class="dot {{ $isReached ? 'active' : '' }}"></span>
                                                                         <div style="display:flex;flex-direction:column;align-items:flex-start">
-                                                                            <span style="font-size:.83rem;color:#374151">{{ $meta['label'] }}</span>
+                                                                            <span style="font-size:.83rem;color:#374151;font-weight:{{ $isReached ? '600' : '400' }}">{{ $meta['label'] }}</span>
                                                                             <span style="font-size:.78rem;color:#6b7280">{{ $meta['desc'] }}</span>
                                                                             @if($isReached)
                                                                                 <span style="font-size:.75rem;color:#9ca3af">
@@ -137,37 +157,57 @@
                                                     @endif
 
                                                     {{-- Chi tiết yêu cầu --}}
-                                                    <div class="return-details">
-                                                        <div class="detail-row">
-                                                            <span class="label">Sản phẩm:</span>
-                                                            <div class="product-list">
-                                                                @php
-                                                                    $productDetails = is_array($return->product_details) ? $return->product_details : json_decode($return->product_details, true);
-                                                                @endphp
-                                                                @if(!empty($productDetails))
-                                                                    @foreach($productDetails as $item)
-                                                                        @php
-                                                                            $detailId = $item['order_detail_id'] ?? null;
-                                                                            $detail = $detailId ? $return->order->details->where('id', $detailId)->first() : null;
-                                                                            $imageUrl = ($detail && $detail->productVariant && $detail->productVariant->image) ? asset($detail->productVariant->image) : null;
-                                                                        @endphp
-                                                                        <div class="product-item">
-                                                                            <div class="product-thumbnail-wrapper">
-                                                                                @if($imageUrl) <img src="{{ $imageUrl }}" class="product-thumbnail">
-                                                                                @else <div class="product-thumbnail-placeholder"><span>📦</span></div> @endif
-                                                                            </div>
-                                                                            <div class="product-info">
-                                                                                <strong>{{ $item['product_name'] ?? 'Sản phẩm' }}</strong><br>
-                                                                                <small>Số lượng: {{ $item['quantity'] }} | Giá: {{ number_format($item['original_price'] ?? 0) }}đ</small>
-                                                                            </div>
-                                                                        </div>
-                                                                    @endforeach
-                                                                @endif
-                                                            </div>
-                                                        </div>
+                                                   {{-- Chi tiết yêu cầu --}}
+<div class="return-details">
+    <div class="detail-row" style="flex-direction: column; align-items: flex-start;">
+        <span class="label" style="margin-bottom: 10px;">Sản phẩm hoàn trả:</span>
+        <div class="product-list" style="width: 100%;">
+            @php
+                $productDetails = is_array($return->product_details) ? $return->product_details : json_decode($return->product_details, true);
+            @endphp
+            
+            @if(!empty($productDetails))
+                @foreach($productDetails as $item)
+                    @php
+                        // Lấy thông tin biến thể để hiển thị ảnh và phân loại
+                        $variantId = $item['product_variant_id'] ?? null;
+                        $detail = $return->order->details->where('product_variant_id', $variantId)->first();
+                        $imageUrl = ($detail && $detail->productVariant && $detail->productVariant->image) 
+                                    ? asset('storage/' . $detail->productVariant->image) 
+                                    : asset('storage/' . ($detail->product->thumbnail ?? ''));
+                        
+                        // Kiểm tra tên key của giá trong JSON (thường là 'price' hoặc 'original_price')
+                        $itemPrice = $item['price'] ?? ($item['original_price'] ?? 0);
+                        $itemTotal = $item['total'] ?? ($itemPrice * ($item['quantity'] ?? 0));
+                    @endphp
+                    <div class="product-item" style="display: flex; align-items: center; gap: 15px; padding: 12px; border: 1px solid #f3f4f6; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="product-thumbnail-wrapper">
+                            <img src="{{ $imageUrl }}" class="product-thumbnail" style="width: 70px; height: 70px; object-fit: cover; border-radius: 6px;">
+                        </div>
+                        <div class="product-info" style="flex: 1;">
+                            <strong style="color: #111827; font-size: 14px;">{{ $item['product_name'] ?? 'Sản phẩm' }}</strong><br>
+                            <span style="font-size: 12px; color: #6b7280;">
+                                Phân loại: {{ $item['color_name'] ?? ($detail->productVariant->color->name ?? 'N/A') }} / 
+                                {{ $item['size_name'] ?? ($detail->productVariant->size->name ?? 'N/A') }}
+                            </span>
+                            <div style="display: flex; justify-content: space-between; margin-top: 5px; align-items: center;">
+                                <span style="font-size: 13px; color: #374151;">
+                                    Giá: <b style="color: #ef4444;">{{ number_format($itemPrice) }}đ</b> x {{ $item['quantity'] }}
+                                </span>
+                                <span style="font-size: 14px; font-weight: 700; color: #111827;">
+                                    {{ number_format($itemTotal) }}đ
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div>
 
-                                                        <div class="detail-row"><span class="label">Lý do:</span><span>{{ $return->reason }}</span></div>
-                                                        <div class="detail-row"><span class="label">Số tiền hoàn:</span><strong style="color: #b91c1c;">{{ number_format($return->refund_amount) }}đ</strong></div>
+    <div class="detail-row"><span class="label">Lý do hoàn trả:</span><span>{{ $return->reason }}</span></div>
+    <div class="detail-row"><span class="label">Tổng cộng tiền hoàn:</span><strong style="color: #b91c1c; font-size: 18px;">{{ number_format($return->refund_amount) }}đ</strong></div>
+    
 
                                                         {{-- BIÊN LAI HOÀN TIỀN --}}
                                                         <div class="detail-row" style="flex-direction: column; margin-top: 20px; border-bottom: none;">
@@ -180,7 +220,7 @@
                                                                     <p style="font-size: 12px; color: #166534; margin-top: 5px; font-style: italic;">Đã xác nhận hoàn tiền thành công.</p>
                                                                 </div>
 
-                                                                @if($currentReturnStatus === 'refunded')
+                                                                @if($currentReturnStatus === 'refund_processing')
                                                                     <div style="margin-top: 20px;">
                                                                         <button type="button" class="confirm-received-btn" id="btnConfirmOpen">
                                                                             <i class="fa fa-check-circle"></i> Tôi đã nhận được tiền

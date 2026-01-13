@@ -66,103 +66,80 @@ class ChatbotController extends Controller
             return response()->json(['reply' => 'Lỗi kết nối.'], 500);
         }
     }
-    private function getAdvancedDatabaseContext($message)
-    {
-        $cleanMessage = mb_strtolower($message);
+   private function getAdvancedDatabaseContext($message)
+{
+    $cleanMessage = mb_strtolower($message);
 
-        // 1. CÁC BỘ LỌC (GIỮ NGUYÊN)
-        $onlySale = preg_match('/(sale|giảm giá|khuyến mãi)/i', $cleanMessage);
+    // 1. Phân tích ý định (Intent)
+    $onlySale = preg_match('/(sale|giảm giá|khuyến mãi|rẻ hơn)/i', $cleanMessage);
 
-        $priceFilter = null;
-        if (preg_match('/từ\s*(\d+).*đến\s*(\d+)/i', $cleanMessage, $matches)) {
-            $min = intval($matches[1]) * ($matches[1] < 1000 ? 1000 : 1);
-            $max = intval($matches[2]) * ($matches[2] < 1000 ? 1000 : 1);
-            $priceFilter = ['operator' => 'BETWEEN', 'from' => $min, 'to' => $max];
-        } elseif (preg_match('/(\d+)[.,]?(\d+)?\s*(k|nghìn|đ)/i', $cleanMessage, $matches)) {
-            $number = intval(preg_replace('/[^0-9]/', '', $matches[0])) * ($matches[1] < 1000 ? 1000 : 1);
-            if (preg_match('/(dưới|rẻ hơn)/i', $cleanMessage))
-                $priceFilter = ['operator' => '<=', 'value' => $number];
-            elseif (preg_match('/(trên|đắt hơn)/i', $cleanMessage))
-                $priceFilter = ['operator' => '>=', 'value' => $number];
-        }
+    // 2. Xử lý từ khóa thông minh (Stop Words)
+    $stopWords = ['shop', 'có', 'sản', 'phẩm', 'nào', 'đang', 'không', 'tìm', 'giúp', 'cho', 'mình', 'với', 'là', 'của', 'giá', 'size', 'màu', 'loại'];
+    $words = explode(' ', $cleanMessage);
+    $keywords = array_filter($words, function($word) use ($stopWords) {
+        return !in_array($word, $stopWords) && mb_strlen($word) > 1;
+    });
 
-        $keywords = array_filter(explode(' ', str_replace(['là', 'của', 'tìm', 'giá', 'size', 'màu'], '', $cleanMessage)));
+    // 3. Truy vấn Database
+    $query = DB::table('products')
+        // Sử dụng Left Join để tránh mất sản phẩm nếu thiếu biến thể
+        ->leftJoin('product_variants', 'products.id', '=', 'product_variants.product_id')
+        ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+        ->leftJoin('colors', 'product_variants.color_id', '=', 'colors.id')
+        ->leftJoin('sizes', 'product_variants.size_id', '=', 'sizes.id')
+        ->whereNull('products.deleted_at')
+        ->select(
+            'products.id',
+            'products.name',
+            'categories.name as category_name',
+            DB::raw('COALESCE(MIN(product_variants.price), 0) as min_price'),
+            DB::raw('COALESCE(MIN(NULLIF(product_variants.sale, 0)), 0) as min_sale'),
+            DB::raw('GROUP_CONCAT(DISTINCT colors.name SEPARATOR ", ") as colors_list'),
+            DB::raw('GROUP_CONCAT(DISTINCT sizes.size_code SEPARATOR ", ") as sizes_list')
+        )
+        ->groupBy('products.id', 'products.name', 'categories.name');
 
-        // 2. TRUY VẤN DATABASE (CẬP NHẬT: XỬ LÝ NULL NGAY TRONG SQL)
-        $query = DB::table('products')
-            ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-            ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
-            ->leftJoin('colors', 'product_variants.color_id', '=', 'colors.id')
-            ->leftJoin('sizes', 'product_variants.size_id', '=', 'sizes.id') // Đảm bảo bảng sizes tồn tại
-            ->whereNull('products.deleted_at')
-            ->select(
-                'products.id',
-                'products.name',
-                'categories.name as category_name',
-                'products.material',
-                // [FIX QUAN TRỌNG] Dùng COALESCE để không bao giờ bị NULL
-                DB::raw('COALESCE(MIN(product_variants.price), 0) as min_price'),
-                DB::raw('COALESCE(MIN(NULLIF(product_variants.sale, 0)), 0) as min_sale'),
-                DB::raw('GROUP_CONCAT(DISTINCT colors.name SEPARATOR ", ") as colors_list'),
-                DB::raw('GROUP_CONCAT(DISTINCT sizes.size_code SEPARATOR ", ") as sizes_list')
-            )
-            ->groupBy('products.id', 'products.name', 'categories.name', 'products.material');
-
-        // ÁP DỤNG BỘ LỌC
-        if ($onlySale)
-            $query->where('product_variants.sale', '>', 0);
-
-        if (!empty($keywords)) {
-            foreach ($keywords as $word) {
-                $query->where(function ($q) use ($word) {
-                    $q->orWhere('products.name', 'LIKE', "%{$word}%")
-                        ->orWhere('categories.name', 'LIKE', "%{$word}%")
-                        ->orWhere('colors.name', 'LIKE', "%{$word}%")
-                        ->orWhere('sizes.size_code', 'LIKE', "{$word}");
-                });
-            }
-        }
-
-        if ($priceFilter) {
-            $sqlPrice = 'COALESCE(MIN(NULLIF(product_variants.sale, 0)), MIN(product_variants.price))';
-            if ($priceFilter['operator'] === 'BETWEEN') {
-                $query->havingRaw("$sqlPrice >= ? AND $sqlPrice <= ?", [$priceFilter['from'], $priceFilter['to']]);
-            } else {
-                $query->havingRaw("$sqlPrice {$priceFilter['operator']} ?", [$priceFilter['value']]);
-            }
-        }
-
-        $products = $query->limit(100)->get();
-
-        // 3. FORMAT DỮ LIỆU (CỰC KỲ CHI TIẾT ĐỂ AI KHÔNG BỊ MÙ)
-        $resultString = $products->map(function ($p) {
-            // Tính toán giá bằng PHP cho chắc chắn
-            $price_goc = intval($p->min_price);
-            $price_sale = intval($p->min_sale);
-
-            // Logic chọn giá hiển thị
-            $final_price = ($price_sale > 0 && $price_sale < $price_goc) ? $price_sale : $price_goc;
-
-            // Nếu giá = 0 (Lỗi dữ liệu) -> Bỏ qua hoặc ghi "Liên hệ"
-            if ($final_price <= 0)
-                return null;
-
-            $price_text = number_format($final_price) . " VNĐ";
-            $note_sale = ($price_sale > 0 && $price_sale < $price_goc) ? "(ĐANG GIẢM - Gốc: " . number_format($price_goc) . "đ)" : "";
-
-            $colors = $p->colors_list ?: "Đủ màu";
-            $sizes = $p->sizes_list ?: "Đủ size"; // Fallback nếu null
-            $link = url("/products/{$p->id}");
-
-            // Chuỗi text gửi cho AI (Dùng định dạng Key: Value rõ ràng)
-            return "SẢN_PHẨM: {$p->name}
-            - LINK: {$link}
-            - GIÁ_BÁN: {$price_text} {$note_sale}
-            - MÀU_SẮC: {$colors}
-            - KÍCH_CỠ: {$sizes}
-            ---";
-        })->filter()->unique()->implode("\n"); // filter() loại bỏ null, unique() bỏ trùng
-
-        return empty($resultString) ? "Không tìm thấy sản phẩm phù hợp." : $resultString;
+    // Áp dụng bộ lọc Sale
+    if ($onlySale) {
+        $query->where('product_variants.sale', '>', 0);
     }
+
+    // Áp dụng bộ lọc Từ khóa (Chỉ lọc nếu có từ khóa thực sự có nghĩa)
+    if (!empty($keywords)) {
+        $query->where(function ($q) use ($keywords) {
+            foreach ($keywords as $word) {
+                $q->orWhere('products.name', 'LIKE', "%{$word}%")
+                  ->orWhere('categories.name', 'LIKE', "%{$word}%")
+                  ->orWhere('colors.name', 'LIKE', "%{$word}%");
+            }
+        });
+    }
+
+    $products = $query->limit(10)->get(); // Lấy 10 sản phẩm tiêu biểu để không bị tràn Prompt
+
+    // 4. Format dữ liệu
+    if ($products->isEmpty()) {
+        return "Hiện tại không có sản phẩm nào khớp chính xác. Shop có các mẫu mới về trong danh mục Thời trang Friday.";
+    }
+
+    return $products->map(function ($p) {
+        $price_goc = intval($p->min_price);
+        $price_sale = intval($p->min_sale);
+        $final_price = ($price_sale > 0 && $price_sale < $price_goc) ? $price_sale : $price_goc;
+
+        // Nếu dữ liệu giá lỗi, mặc định hiển thị giá gốc
+        $display_price = $final_price > 0 ? number_format($final_price) : "Liên hệ";
+        
+        $link = url("/products/{$p->id}");
+        $colors = $p->colors_list ?: "Liên hệ shop";
+        $sizes = $p->sizes_list ?: "Liên hệ shop";
+
+        return "SẢN_PHẨM: {$p->name}
+        - LINK: {$link}
+        - GIÁ_BÁN: {$display_price} VNĐ " . ($price_sale > 0 ? "(GIẢM GIÁ)" : "") . "
+        - MÀU_SẮC: {$colors}
+        - KÍCH_CỠ: {$sizes}
+        ---";
+    })->implode("\n");
+}
 }

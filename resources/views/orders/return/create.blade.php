@@ -203,7 +203,7 @@
     </div>
 </div>
                                                             <div class="woocommerce-order-details__actions">
-                                                                <button type="submit" class="woocommerce-button button">Gửi yê cầu hoàn hàng</button>
+                                                                <button type="submit" class="woocommerce-button button">Gửi yêu cầu hoàn hàng</button>
                                                                 <a href="{{ route('orders.show', $order->id) }}" class="woocommerce-button button">Quay lại</a>
                                                             </div>
                                                         </form>

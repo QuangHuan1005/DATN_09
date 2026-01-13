@@ -51,73 +51,76 @@ class AdminOrderController extends Controller
      * Trang danh sách đơn hàng
      * CẬP NHẬT: Thêm logic lọc order_status_id để khớp với Dashboard
      */
- public function index(Request $request)
-    {
-        // Khởi tạo query với đầy đủ các quan hệ cần thiết
-        // Thêm 'orderReturn' để fix lỗi tính tiền hoàn và hiển thị tooltip sản phẩm hoàn
-        $query = Order::with(['status', 'user', 'paymentStatus', 'staff', 'paymentMethod', 'orderReturn'])
-            ->withSum('details', 'quantity')
-            ->orderByDesc('id');
+public function index(Request $request)
+{
+    // Khởi tạo query với đầy đủ các quan hệ cần thiết
+    $query = Order::with(['status', 'user', 'paymentStatus', 'staff', 'paymentMethod', 'orderReturn'])
+        ->withSum('details', 'quantity')
+        ->orderByDesc('id');
 
-        // 1. Lọc theo ngày cụ thể (Click từ biểu đồ Line Chart)
-        if ($request->filled('date')) {
-            $query->whereDate('created_at', $request->date);
-        }
-
-        // 1b. MỚI: Lọc theo khoảng ngày (Từ ngày... Đến ngày...)
-        if ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date);
-        }
-        if ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->end_date);
-        }
-
-        // 2. Lọc theo tháng và năm (Click từ biểu đồ Bar Chart)
-        if ($request->filled('month') && $request->filled('year')) {
-            $query->whereMonth('created_at', $request->month)
-                  ->whereYear('created_at', $request->year);
-        } elseif ($request->filled('year')) {
-            $query->whereYear('created_at', $request->year);
-        }
-
-        // 3. Lọc theo trạng thái (Ưu tiên order_status_id từ Dashboard truyền sang)
-        if ($request->filled('order_status_id')) {
-            $query->where('order_status_id', $request->order_status_id);
-        } elseif ($request->filled('status')) {
-            $query->where('order_status_id', $request->status);
-        }
-
-        // 4. Lọc theo trạng thái thanh toán
-        if ($request->filled('payment_status')) {
-            $query->where('payment_status_id', $request->payment_status);
-        }
-
-        // 5. Lọc theo sản phẩm (Click từ biểu đồ Top sản phẩm)
-        if ($request->filled('product_id')) {
-            $query->whereHas('details.productVariant', function ($q) use ($request) {
-                $q->where('product_id', $request->product_id);
-            });
-        }
-
-        // 6. Tìm kiếm theo từ khóa (Mã đơn hoặc tên khách)
-        if ($request->filled('keyword')) {
-            $kw = $request->keyword;
-            $query->where(function ($q) use ($kw) {
-                $q->where('order_code', 'like', "%$kw%")
-                  ->orWhere('name', 'like', "%$kw%");
-            });
-        }
-
-        // Phân trang 15 đơn hàng trên 1 trang
-        $orders = $query->paginate(15); 
-        
-        // Lấy danh sách trạng thái để hiển thị trong select bộ lọc và bảng
-        $statuses = $this->getStatuses();
-
-        return view('admin.orders.index', compact('orders', 'statuses'), [
-            'pageTitle' => 'Danh sách đơn hàng'
-        ]);
+    // 1. Lọc theo ngày cụ thể (Click từ biểu đồ Line Chart)
+    if ($request->filled('date')) {
+        $query->whereDate('created_at', $request->date);
     }
+
+    // 1b. Lọc theo khoảng ngày (Từ ngày... Đến ngày...)
+    if ($request->filled('start_date')) {
+        $query->whereDate('created_at', '>=', $request->start_date);
+    }
+    if ($request->filled('end_date')) {
+        $query->whereDate('created_at', '<=', $request->end_date);
+    }
+
+    // 2. Lọc theo tháng và năm (Click từ biểu đồ Bar Chart)
+    if ($request->filled('month') && $request->filled('year')) {
+        $query->whereMonth('created_at', $request->month)
+              ->whereYear('created_at', $request->year);
+    } elseif ($request->filled('year')) {
+        $query->whereYear('created_at', $request->year);
+    }
+
+    // 3. XỬ LÝ LỌC TRẠNG THÁI (Đã sửa để nhận diện 5,7)
+    $statusInput = $request->input('order_status_id') ?? $request->input('status');
+    
+    if ($statusInput) {
+        // Nếu input là chuỗi có dấu phẩy (ví dụ: "5,7")
+        if (is_string($statusInput) && str_contains($statusInput, ',')) {
+            $statusIds = explode(',', $statusInput);
+            $query->whereIn('order_status_id', $statusIds);
+        } else {
+            // Nếu chỉ là 1 ID đơn lẻ
+            $query->where('order_status_id', $statusInput);
+        }
+    }
+
+    // 4. Lọc theo trạng thái thanh toán
+    if ($request->filled('payment_status')) {
+        $query->where('payment_status_id', $request->payment_status);
+    }
+
+    // 5. Lọc theo sản phẩm (Click từ biểu đồ Top sản phẩm)
+    if ($request->filled('product_id')) {
+        $query->whereHas('details.productVariant', function ($q) use ($request) {
+            $q->where('product_id', $request->product_id);
+        });
+    }
+
+    // 6. Tìm kiếm theo từ khóa
+    if ($request->filled('keyword')) {
+        $kw = $request->keyword;
+        $query->where(function ($q) use ($kw) {
+            $q->where('order_code', 'like', "%$kw%")
+              ->orWhere('name', 'like', "%$kw%");
+        });
+    }
+
+    $orders = $query->paginate(15); 
+    $statuses = $this->getStatuses();
+
+    return view('admin.orders.index', compact('orders', 'statuses'), [
+        'pageTitle' => 'Danh sách đơn hàng'
+    ]);
+}
 
     /**
      * Chi tiết đơn hàng

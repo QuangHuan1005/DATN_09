@@ -140,12 +140,12 @@ class User extends Authenticatable
     /**
      * Voucher mà user đang sở hữu thông qua bảng trung gian
      */
-    public function ownedVouchers()
-    {
-        return $this->belongsToMany(Voucher::class, 'user_vouchers')
-                    ->withPivot('status', 'code')
-                    ->withTimestamps();
-    }
+        public function ownedVouchers()
+{
+    return $this->belongsToMany(Voucher::class, 'user_vouchers')
+                ->withPivot('is_used') 
+                ->withTimestamps();
+}
 
     /**
      * Truy cập trực tiếp bản ghi trong bảng trung gian vouchers

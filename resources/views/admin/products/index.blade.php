@@ -39,7 +39,7 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table align-middle mb-0 table-hover table-centered">
                                 <thead class="bg-light-subtle">
@@ -132,7 +132,7 @@
                                                     $avgRating = number_format($product->avg_rating ?? 0, 1);
                                                     $totalReviews = $product->total_reviews ?? 0;
                                                 @endphp
-                                                <span class="badge p-1 bg-light text-dark fs-12 me-1 border">
+                                                <span class="badge p-1 bg-light text-dark fs-12 me-1 border border-secondary-subtle">
                                                     @if ($totalReviews > 0)
                                                         <i class="bx bxs-star align-text-top fs-14 text-warning me-1"></i>
                                                     @endif
@@ -143,7 +143,7 @@
                                             <td>
                                                 <div class="d-flex gap-1">
                                                     @if (!$product->trashed())
-                                                        {{-- NHÓM NÚT KHI ĐANG BÁN --}}
+                                                        {{-- NHÓM NÚT KHI ĐANG HOẠT ĐỘNG --}}
                                                         <a href="{{ route('admin.products.variants.product', $product->id) }}"
                                                             class="btn btn-soft-success btn-sm" title="Quản lý biến thể">
                                                             <iconify-icon icon="solar:list-broken" class="align-middle fs-18"></iconify-icon>
@@ -165,20 +165,12 @@
                                                             </button>
                                                         </form>
                                                     @else
-                                                        {{-- NHÓM NÚT KHI TRONG THÙNG RÁC --}}
+                                                        {{-- NHÓM NÚT KHI TRONG THÙNG RÁC (ĐÃ BỎ XÓA CỨNG) --}}
                                                         <form action="{{ route('admin.products.restore', $product->id) }}"
                                                             method="POST" class="d-inline-block swal-confirm-form" data-text="Khôi phục sản phẩm này về danh sách bán?">
                                                             @csrf
                                                             <button type="submit" class="btn btn-soft-success btn-sm" title="Khôi phục">
-                                                                <iconify-icon icon="solar:restart-circle-broken" class="align-middle fs-18"></iconify-icon>
-                                                            </button>
-                                                        </form>
-                                                        <form action="{{ route('admin.products.forceDelete', $product->id) }}"
-                                                            method="POST" class="d-inline-block swal-confirm-form" data-text="XÓA VĨNH VIỄN: Dữ liệu và hình ảnh sẽ mất hoàn toàn!">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-soft-secondary btn-sm" title="Xóa cứng">
-                                                                <iconify-icon icon="solar:trash-bin-minimalistic-broken" class="align-middle fs-18"></iconify-icon>
+                                                                <iconify-icon icon="solar:restart-circle-broken" class="align-middle fs-18 me-1"></iconify-icon> 
                                                             </button>
                                                         </form>
                                                     @endif
@@ -187,15 +179,18 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7" class="text-center py-4 text-muted">Không có dữ liệu nào để hiển thị.</td>
+                                            <td colspan="7" class="text-center py-5 text-muted">
+                                                <iconify-icon icon="solar:box-minimalistic-broken" class="fs-1 text-secondary opacity-50 mb-2"></iconify-icon>
+                                                <p class="mb-0">Không có dữ liệu nào để hiển thị.</p>
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="card-footer border-top">
-                        <nav aria-label="Page navigation example">
+                    <div class="card-footer border-top bg-transparent">
+                        <nav>
                             {{ $products->links() }}
                         </nav>
                     </div>
@@ -212,7 +207,7 @@
 <script>
     (function($) {
         $(document).ready(function() {
-            // Cấu hình Toast
+            // Cấu hình Toast thông báo nhanh
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -228,16 +223,16 @@
                 Toast.fire({ icon: 'error', title: "{{ session('error') }}" });
             @endif
 
-            // Xử lý xác nhận Form
+            // Xử lý xác nhận hành động bằng SweetAlert2
             $(document).on('submit', '.swal-confirm-form', function(e) {
                 e.preventDefault();
                 const form = this;
                 const text = $(form).data('text');
 
                 Swal.fire({
-                    title: 'Xác nhận?',
+                    title: 'Xác nhận hành động?',
                     text: text,
-                    icon: 'warning',
+                    icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -251,7 +246,7 @@
                 });
             });
 
-            // Chọn tất cả Checkbox
+            // Chọn tất cả các mục qua Checkbox đầu bảng
             $('#checkAll').on('change', function() {
                 $('.checkItem').prop('checked', this.checked);
             });
@@ -260,12 +255,23 @@
 </script>
 
 <style>
-    /* Làm mờ nhẹ hàng trong thùng rác */
+    /* CSS hỗ trợ giao diện thùng rác */
     .table-danger-subtle {
-        background-color: rgba(255, 0, 0, 0.03);
+        background-color: rgba(239, 71, 111, 0.05) !important;
     }
     .avatar-md {
+        width: 48px;
+        height: 48px;
         object-fit: cover;
+    }
+    .btn-soft-success {
+        background-color: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+        border: none;
+    }
+    .btn-soft-success:hover {
+        background-color: #22c55e;
+        color: #fff;
     }
 </style>
 @endsection

@@ -252,7 +252,6 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 |--------------------------------------------------------------------------
 */
 
-Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login.form');
 Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login');
 Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
@@ -287,14 +286,19 @@ Route::prefix('admin')
         Route::delete('products/{product}/album/{album}', [AdminProductController::class, 'destroyAlbum'])->name('products.photoAlbums.destroy');
 
         // Biến thể sản phẩm
-        Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
-        Route::get('products/{productId}/variants', [AdminProductController::class, 'productVariants'])->name('products.variants.product');
-        Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('products.variants.type');
-        Route::post('products/{productId}/variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
-        Route::post('products/{productId}/variants/bulk', [AdminProductController::class, 'bulkStoreVariants'])->name('products.variants.bulk-store');
-        Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
-        Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
-        Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
+       // Biến thể sản phẩm
+Route::get('product-variants', [AdminProductController::class, 'variants'])->name('products.variants');
+Route::get('products/{productId}/variants', [AdminProductController::class, 'productVariants'])->name('products.variants.product');
+Route::get('product-variants/{type}', [AdminProductController::class, 'variantsByType'])->name('products.variants.type');
+Route::post('products/{productId}/variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
+Route::post('products/{productId}/variants/bulk', [AdminProductController::class, 'bulkStoreVariants'])->name('products.variants.bulk-store');
+
+// Thêm route này để xử lý cập nhật hàng loạt từ bảng
+Route::put('products/{product}/variants/bulk-update', [AdminProductController::class, 'bulkUpdate'])->name('products.variants.bulkUpdate');
+
+Route::get('product-variants/{variant}/edit', [AdminProductController::class, 'editVariant'])->name('products.variants.edit');
+Route::put('product-variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('products.variants.update');
+Route::delete('product-variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.destroy');
 
         // Voucher
         Route::prefix('vouchers')->name('vouchers.')->group(function () {
