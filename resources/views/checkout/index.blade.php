@@ -347,73 +347,91 @@
                     $hasVisibleVoucher = false;
                 @endphp
 
-                @foreach($vouchers as $v)
-                    @php
-                        // 2. Logic kiểm tra hiển thị:
-                        // - Nếu voucher không giới hạn sản phẩm ($v->products()->exists() == false) -> HIỂN THỊ
-                        // - Nếu voucher có giới hạn sản phẩm -> Chỉ HIỂN THỊ nếu sản phẩm đó nằm trong đơn hàng
-                        $isSpecificVoucher = $v->products()->exists();
-                        $isProductMatch = false;
-                        
-                        if (!$isSpecificVoucher) {
-                            $isProductMatch = true;
-                        } else {
-                            $voucherProductIds = $v->products->pluck('id')->toArray();
-                            // Kiểm tra giao thoa giữa SP trong giỏ và SP được áp dụng mã
-                            if (!empty(array_intersect($currentProductIds, $voucherProductIds))) {
-                                $isProductMatch = true;
-                            }
-                        }
+              @foreach($vouchers as $v)
+    @php
+        // 1. Logic kiểm tra hiển thị sản phẩm phù hợp
+        $isSpecificVoucher = $v->products()->exists();
+        $isProductMatch = false;
+        
+        if (!$isSpecificVoucher) {
+            $isProductMatch = true;
+        } else {
+            $voucherProductIds = $v->products->pluck('id')->toArray();
+            if (!empty(array_intersect($currentProductIds, $voucherProductIds))) {
+                $isProductMatch = true;
+            }
+        }
 
-                        // Nếu không khớp sản phẩm thì ẩn hoàn toàn (continue)
-                        if (!$isProductMatch) continue;
+        if (!$isProductMatch) continue;
 
-                        // Đánh dấu là có ít nhất 1 voucher được hiện
-                        $hasVisibleVoucher = true;
+        $hasVisibleVoucher = true;
 
-                        // Kiểm tra điều kiện số tiền tối thiểu để đổi màu nút
-                        $isMinOrderReached = isset($totalAmount) && $totalAmount >= ($v->min_order_value ?? 0);
-                    @endphp
+        // 2. Kiểm tra điều kiện số tiền đơn hàng tối thiểu
+        $isMinOrderReached = isset($totalAmount) && $totalAmount >= ($v->min_order_value ?? 0);
+        
+        // 3. Xác định mức giảm tối đa (Dùng trường sale_price từ DB của bạn)
+        $maxDiscount = ($v->discount_type == 'percent' && $v->sale_price > 0) ? $v->sale_price : null;
+    @endphp
 
-                    <div class="voucher-item-modal mb-3 shadow-sm d-flex bg-white" style="border-radius: 12px; border: 1px solid #eee; min-height: 110px;">
-                        <div class="voucher-left d-flex flex-column align-items-center justify-content-center text-white" 
-                             style="background: {{ $isMinOrderReached ? 'linear-gradient(135deg, #ff4747, #ff6b6b)' : '#adb5bd' }}; width: 85px; flex-shrink: 0;">
-                            <i class="fa fa-ticket-alt fa-2x mb-1"></i>
-                            <small class="fw-bold text-uppercase" style="font-size: 0.65rem;">
-                                {{ $v->discount_type == 'percent' ? 'Giảm %' : 'Giảm tiền' }}
-                            </small>
-                        </div>
-                        
-                        <div class="p-3 flex-grow-1 position-relative">
-                            <h6 class="fw-bold mb-1 text-dark">{{ $v->voucher_code }}</h6>
-                            <p class="text-danger small fw-bold mb-1">
-                                Giảm {{ $v->discount_type == 'percent' ? $v->discount_value.'%' : number_format($v->discount_value).'đ' }}
-                            </p>
-                            <div class="text-muted mb-1" style="font-size: 0.75rem;">
-                                Đơn tối thiểu: <b>{{ number_format($v->min_order_value ?? 0) }}đ</b>
-                            </div>
-                            <div class="text-muted" style="font-size: 0.75rem;">
-                                HSD: {{ $v->end_date ? \Carbon\Carbon::parse($v->end_date)->format('d/m/Y') : 'Không giới hạn' }}
-                            </div>
-                        </div>
-
-                        <div class="p-3 d-flex align-items-center bg-white">
-                            @if(!$isMinOrderReached)
-                                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3 fw-bold opacity-50" 
-                                        style="font-size: 0.75rem;" 
-                                        onclick="showToast('Đơn hàng chưa đủ {{ number_format($v->min_order_value) }}đ để dùng mã này', 'error')">
-                                    Thiếu tiền
-                                </button>
-                            @else
-                                <button type="button" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm" 
-                                        style="font-size: 0.75rem;" 
-                                        onclick="pickVoucher('{{ $v->voucher_code }}')">
-                                    Dùng ngay
-                                </button>
-                            @endif
-                        </div>
+    <div class="voucher-item-modal mb-3 shadow-sm d-flex bg-white" style="border-radius: 12px; border: 1px solid #eee; min-height: 110px; overflow: hidden;">
+        <div class="voucher-left d-flex flex-column align-items-center justify-content-center text-white" 
+             style="background: {{ $isMinOrderReached ? 'linear-gradient(135deg, #ff4747, #ff6b6b)' : '#adb5bd' }}; width: 85px; flex-shrink: 0;">
+            <i class="fa fa-ticket-alt fa-2x mb-1"></i>
+            <small class="fw-bold text-uppercase" style="font-size: 0.65rem; text-align: center;">
+                {{ $v->discount_type == 'percent' ? 'Giảm %' : 'Giảm tiền' }}
+            </small>
+        </div>
+        
+        <div class="p-3 flex-grow-1 position-relative">
+            <h6 class="fw-bold mb-1 text-dark">{{ $v->voucher_code }}</h6>
+            
+            <div class="mb-1">
+                <span class="text-danger fw-bold">
+                    Giảm {{ $v->discount_type == 'percent' ? (float)$v->discount_value.'%' : number_format($v->discount_value).'đ' }}
+                </span>
+                
+                {{-- Hiển thị Giảm tối đa nếu là voucher % --}}
+                @if($maxDiscount)
+                    <div class="text-muted" style="font-size: 0.7rem; margin-top: -2px;">
+                        <i class="fa fa-info-circle"></i> Giảm tối đa: {{ number_format($maxDiscount) }}đ
                     </div>
-                @endforeach
+                @endif
+            </div>
+
+            <div class="text-muted mb-1" style="font-size: 0.75rem;">
+                Đơn tối thiểu: <b>{{ number_format($v->min_order_value ?? 0) }}đ</b>
+            </div>
+            
+            @if($v->description)
+                <div class="text-primary mb-1" style="font-size: 0.7rem; font-style: italic;">
+                    {{ Str::limit($v->description, 40) }}
+                </div>
+            @endif
+
+            <div class="text-muted" style="font-size: 0.75rem;">
+                HSD: {{ $v->end_date ? \Carbon\Carbon::parse($v->end_date)->format('d/m/Y') : 'Không giới hạn' }}
+            </div>
+        </div>
+
+        <div class="p-3 d-flex align-items-center bg-white border-start border-dashed">
+            @if(!$isMinOrderReached)
+                <div class="text-center">
+                    <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3 fw-bold opacity-50" 
+                            style="font-size: 0.7rem;" 
+                            onclick="showToast('Cần thêm {{ number_format($v->min_order_value - $totalAmount) }}đ để sử dụng', 'info')">
+                        Chưa đủ ĐK
+                    </button>
+                </div>
+            @else
+                <button type="button" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm" 
+                        style="font-size: 0.75rem;" 
+                        onclick="pickVoucher('{{ $v->voucher_code }}')">
+                    Dùng ngay
+                </button>
+            @endif
+        </div>
+    </div>
+@endforeach
 
                 @if(!$hasVisibleVoucher)
                     <div class="text-center py-5">

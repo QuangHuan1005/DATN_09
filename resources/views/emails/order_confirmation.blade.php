@@ -229,11 +229,12 @@
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="{{ route('home') }}"
-                    style="background-color: #004d40; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Tiếp
-                    tục mua sắm</a>
-            </div>
+           <div style="text-align: center; margin-top: 30px;">
+    <a href="{{ route('orders.show', $order->id) }}"
+       style="background-color: #004d40; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+        Xem chi tiết đơn hàng
+    </a>
+</div>
         </div>
 
         <div class="footer">

@@ -380,7 +380,7 @@
                             <p class="fw-medium text-dark mb-0">Tổng Số Tiền</p>
                         </div>
                         <div>
-                            <p class="fw-medium text-dark mb-0">{{ number_format($calc_total + 30000, 0, ',', '.') }}₫
+                            <p class="fw-medium text-dark mb-0">{{ number_format($calc_total , 0, ',', '.') }}₫
                             </p>
                         </div>
 

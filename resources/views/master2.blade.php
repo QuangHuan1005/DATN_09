@@ -6,8 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
-    <meta name="auth-check" content="<?php echo e(auth()->check() ? 'true' : 'false'); ?>">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="auth-check" content="{{ auth()->check() ? 'true' : 'false' }}">
     <link rel="profile" href="https://gmpg.org/xfn/11" />
     <script>
         document.documentElement.className = document.documentElement.className + ' yes-js js_active js'
@@ -15,7 +15,11 @@
     <title>Friday &#8211; Fridaywear redesign - branding, website, mobile.</title>
 
     <meta name='robots' content='max-image-preview:large' />
-    
+    {{-- <style>
+        img:is([sizes="auto" i], [sizes^="auto," i]) {
+            contain-intrinsic-size: 3000px 1500px
+        }
+    </style> --}}
     <meta property="description"
         content="Urban Muse City Chic with a Feminine Twist Shop now Travel bags Shop now Urban Muse Classic Beauties for Modern Women Shop now You are innew arrivalsbest sellertrending Add to wishlist Browse wishlist Add to cart Hoodies Dime Classic Remastered Hoodie, black &#036;140.00 Add to wishlist Browse wishlist Select options Men Dime Sunny Tee, forest green &#036;55.00 Add to wishlist…" />
     <meta property="og:locale" content="en_US" />
@@ -41,23 +45,22 @@
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <?php echo $__env->make('layouts.css', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    @include('layouts.css')
 
 </head>
 
-<?php echo $__env->yieldContent('content'); ?>
+@yield('content')
+{{-- @include('components.chat-widget') --}}
 
 
-<?php echo $__env->make('components.chat-widget', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <!-- .kitify-site-wrapper -->
-<?php echo $__env->make('layouts.js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+@include('layouts.js')
 
-<?php echo $__env->yieldContent('scripts'); ?>
+@yield('scripts')
 
-<script src="<?php echo e(asset('js/wishlist-handler.js')); ?>"></script>
+<script src="{{ asset('js/wishlist-handler.js') }}"></script>
 
 
 </body>
 
 </html>
-<?php /**PATH C:\laragon\www\DATN09\resources\views/master.blade.php ENDPATH**/ ?>
